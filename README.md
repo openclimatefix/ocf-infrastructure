@@ -1,6 +1,6 @@
 # Nowcasting Infrastrucutre
 
-This repo contains 'infrastructure as code' for the 'Nowcasting' project. 
+This repo contains 'infrastructure as code' for the 'Nowcasting' project.
 
 ![Nowcasting](diagram.png)
 
