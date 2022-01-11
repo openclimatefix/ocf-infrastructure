@@ -15,3 +15,10 @@ module "networking" {
   private_subnets_cidr = "${var.private_subnets_cidr}"
   availability_zones   = "${local.production_availability_zones}"
 }
+
+module "s3" {
+  source = "./modules/s3"
+
+  region               = "${var.region}"
+  environment          = "${var.environment}"
+}
