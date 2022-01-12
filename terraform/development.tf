@@ -22,3 +22,10 @@ module "s3" {
   region               = "${var.region}"
   environment          = "${var.environment}"
 }
+
+module "ecs" {
+  source = "./modules/ecs"
+
+  region               = "${var.region}"
+  environment          = "${var.environment}"
+}
