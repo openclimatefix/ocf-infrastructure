@@ -1,4 +1,4 @@
-# use blog - https://engineering.finleap.com/posts/2020-02-20-ecs-fargate-terraform/
+# useful blog - https://engineering.finleap.com/posts/2020-02-20-ecs-fargate-terraform/
 resource "aws_ecs_cluster" "main" {
   name = "ECS-cluster-${var.environment}"
 
@@ -8,4 +8,3 @@ resource "aws_ecs_cluster" "main" {
   }
 }
 
-# make sure its running fargate - perhaps this is done with the services
