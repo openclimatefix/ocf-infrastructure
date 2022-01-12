@@ -44,7 +44,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = "aws-elasticbeanstalk-ec2-role" # TODO
+    value     = aws_iam_instance_profile.ec2.arn
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
@@ -62,6 +62,51 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     name = "MaxSize"
     value = "1"
   }
+
+    ###=========================== Logging ========================== ###
+
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs"
+    name      = "StreamLogs"
+    value     = "true"
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs"
+    name      = "DeleteOnTerminate"
+    value     = "false"
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs"
+    name      = "RetentionInDays"
+    value     = "30"
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "HealthStreamingEnabled"
+    value     = "true"
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "DeleteOnTerminate"
+    value     = "false"
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "RetentionInDays"
+    value     = "30"
+    resource  = ""
+  }
+
 
   # make sure that when the application is made, the latest version is deployed to it
   provisioner "local-exec" {
