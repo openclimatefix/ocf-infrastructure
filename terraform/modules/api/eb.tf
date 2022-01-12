@@ -1,6 +1,3 @@
-# TODO
-# 1. add launch role
-# 2. add cloudwatch logs + add permission to role, create streams and push to streams
 
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
   name        = "nowcasting-${var.environment}"
