@@ -124,4 +124,3 @@ resource "aws_elastic_beanstalk_application_version" "latest" {
   bucket      = aws_s3_bucket.eb.id
   key         = aws_s3_bucket_object.eb-object.id
 }
-

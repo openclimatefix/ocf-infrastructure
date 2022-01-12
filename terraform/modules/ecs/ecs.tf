@@ -7,4 +7,3 @@ resource "aws_ecs_cluster" "main" {
     value = "enabled"
   }
 }
-
