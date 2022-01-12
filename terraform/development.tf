@@ -29,3 +29,12 @@ module "ecs" {
   region               = "${var.region}"
   environment          = "${var.environment}"
 }
+
+module "api" {
+  source = "./modules/api"
+
+  region               = "${var.region}"
+  environment          = "${var.environment}"
+  vpc_id = module.networking.vpc_id
+  subnets = module.networking.public_subnets
+}
