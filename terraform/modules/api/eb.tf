@@ -1,11 +1,6 @@
 # TODO
-# 1. add security groups
-
-#2, Environment health has transitioned from Warning to Severe.
-#Initialization completed 7 seconds ago and took 2 minutes.
-#Access denied while accessing Auto Scaling and Elastic Load Balancing using
-#role "arn:aws:iam::008129123253:role/api-development-service-role".
-# Verify the role policy. ELB health is failing or not available for all instances.
+# 1. add launch role
+# 2. add cloudwatch logs + add permission to role, create streams and push to streams
 
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
   name        = "nowcasting-${var.environment}"
@@ -43,8 +38,13 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
+    name      = "SecurityGroups"
+    value     = aws_security_group.api-sg.id
+  }
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = "aws-elasticbeanstalk-ec2-role"
+    value     = "aws-elasticbeanstalk-ec2-role" # TODO
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
@@ -63,11 +63,15 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value = "1"
   }
 
+  # make sure that when the application is made, the latest version is deployed to it
   provisioner "local-exec" {
-    command = "./deploy.sh"
+    command = join("", ["aws elasticbeanstalk update-environment ",
+      "--region ${var.region} ",
+    "--application-name ${aws_elastic_beanstalk_application.eb-api-application.name} ",
+    "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
+    "--environment-name ${aws_elastic_beanstalk_environment.eb-api-env.name}"
+    ])
   }
-
-
 
 }
 
@@ -78,3 +82,4 @@ resource "aws_elastic_beanstalk_application_version" "latest" {
   bucket      = aws_s3_bucket.eb.id
   key         = aws_s3_bucket_object.eb-object.id
 }
+
