@@ -7,5 +7,5 @@ resource "aws_s3_bucket" "eb" {
 resource "aws_s3_bucket_object" "eb-object" {
   bucket = aws_s3_bucket.eb.id
   key    = "beanstalk/docker-compose.yml"
-  source = "./modules/api/docker-compose.yml"
+  source = "${path.module}/docker-compose.yml"
 }
