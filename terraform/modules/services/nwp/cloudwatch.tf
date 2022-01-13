@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "nwp" {
-  name = "ecs/consumer/nwp/"
+  name = var.log-group-name
 
   retention_in_days=7
 

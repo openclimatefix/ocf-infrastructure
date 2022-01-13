@@ -30,6 +30,7 @@ resource "aws_iam_policy" "nwp-secret-read" {
     Statement = [
       {
         Action = [
+          "secretsmanager:ListSecretVersionIds",
           "secretsmanager:GetSecretValue",
         ]
         Effect   = "Allow"
@@ -53,13 +54,14 @@ resource "aws_iam_policy" "cloudwatch-nwp" {
         Action = [
           "logs:PutLogEvents",
         "logs:CreateLogStream",
+          "logs:CreateLogGroup",
         "logs:DescribeLogStreams",
         "logs:DescribeLogGroups",
           "logs:DeleteLogGroup",
            "logs:PutRetentionPolicy"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:logs:*:*:log-group:/ecs/consumer/nwp/*"
+        Resource = "arn:aws:logs:*:*:log-group:${var.log-group-name}*"
       },
     ]
   })

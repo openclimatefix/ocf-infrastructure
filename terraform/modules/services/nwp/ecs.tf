@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       logConfiguration: {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "ecs/consumer/nwp/",
+        "awslogs-group": var.log-group-name,
         "awslogs-region": var.region,
         "awslogs-stream-prefix": "streaming"
       }
