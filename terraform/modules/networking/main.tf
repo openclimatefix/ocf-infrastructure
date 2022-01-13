@@ -1,3 +1,12 @@
+# Creats lots of network things
+# 1. VPC
+# 2. Elastic IP address
+# 3. NAT gateway - so things inside the VPC can reach the internet
+# 4. Subnets in the VPC. Both private and public
+# 5. Routing tables
+# 5. Security groups
+
+
 /*==== The VPC ======*/
 resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr
@@ -8,7 +17,7 @@ resource "aws_vpc" "vpc" {
     Environment = "${var.environment}"
   }
 }
-/*==== Subnets ======*/
+
 /* Internet gateway for the public subnet */
 resource "aws_internet_gateway" "ig" {
   vpc_id = aws_vpc.vpc.id
@@ -32,6 +41,8 @@ resource "aws_nat_gateway" "nat" {
     Environment = "${var.environment}"
   }
 }
+
+/*==== Subnets ======*/
 /* Public subnet */
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.vpc.id

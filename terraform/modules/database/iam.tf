@@ -1,4 +1,4 @@
-# read access to secret
+# IAM policy for reading reds secret
 
 resource "aws_iam_policy" "rds-secret-policy" {
   name        = "RDS-secret-policy"

@@ -1,3 +1,9 @@
+# Creates various objects to do with elastic beanstalk (EB)
+# 1. EB Application
+# 2. EB Environment
+# 3. EB application version
+# 4. Application version gets deployed to environment using docker compose file
+
 
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
   name        = "nowcasting-${var.environment}"

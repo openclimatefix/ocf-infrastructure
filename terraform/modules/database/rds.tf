@@ -1,4 +1,4 @@
-
+# RDS postgres database
 
 resource "aws_db_instance" "DB-forecast" {
   allocated_storage          = 10

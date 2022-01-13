@@ -1,3 +1,7 @@
+# Define the IAM task execution role and the instance role
+# Execution role is used to deploy the task
+# Instance role is used to run the task
+
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "role-name"
 

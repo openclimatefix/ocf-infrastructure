@@ -1,3 +1,5 @@
+# Security groups for the database
+
 resource "aws_security_group" "rds-postgres-sg" {
   name   = "${var.environment}-rds-sg"
   vpc_id = var.vpc_id

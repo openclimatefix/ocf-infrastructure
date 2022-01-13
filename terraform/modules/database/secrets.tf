@@ -1,5 +1,7 @@
-# Firstly we will create a random generated password which we will use in secrets.
+# Create secret for database password and connection details.
+# This connection details will be used to read and write to the database
 
+# Firstly we will create a random generated password which we will use in secrets.
 resource "random_password" "DB-forecast-password" {
   length           = 16
   special          = true
