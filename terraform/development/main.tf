@@ -6,7 +6,7 @@ locals {
 }
 
 module "networking" {
-  source = "./modules/networking"
+  source = "../modules/networking"
 
   region               = var.region
   environment          = var.environment
@@ -17,21 +17,21 @@ module "networking" {
 }
 
 module "s3" {
-  source = "./modules/s3"
+  source = "../modules/s3"
 
   region      = var.region
   environment = var.environment
 }
 
 module "ecs" {
-  source = "./modules/ecs"
+  source = "../modules/ecs"
 
   region      = var.region
   environment = var.environment
 }
 
 module "api" {
-  source = "./modules/services/api"
+  source = "../modules/services/api"
 
   region      = var.region
   environment = var.environment
@@ -40,7 +40,7 @@ module "api" {
 }
 
 module "database" {
-  source = "./modules/database"
+  source = "../modules/database"
 
   region          = var.region
   environment     = var.environment
@@ -49,7 +49,7 @@ module "database" {
 }
 
 module "nwp" {
-  source = "./modules/services/nwp"
+  source = "../modules/services/nwp"
 
   region                  = var.region
   environment             = var.environment
