@@ -10,4 +10,5 @@ terram apply
 
 You can then destroy the stack:
 ```bash
-terraform destroy```
+terraform destroy
+```
