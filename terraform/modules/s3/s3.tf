@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "s3-nwp-bucket" {
   bucket = "nowcasting-nwp-${var.environment}"
   acl    = "private"
 
-  # make private
+  # TODO remove 30 day old data https://github.com/openclimatefix/nowcasting_infrastructure/issues/15
 
   tags = {
     Name        = "${var.environment}-s3"
