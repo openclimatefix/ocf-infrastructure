@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "instance" {
 
 
 resource "aws_iam_policy" "cloudwatch" {
-  name        = "Cloudwatch-read-and-write"
+  name        = "Cloudwatch-read-and-write-api"
   path        = "/"
   description = "Policy to allow read and write to cloudwatch logs"
 
