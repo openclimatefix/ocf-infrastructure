@@ -1,7 +1,7 @@
 resource "aws_security_group" "api-sg" {
   name        = "api-${var.environment}-sg"
   description = "API security group to allow inbound/outbound traffic"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port = "80"

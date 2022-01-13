@@ -9,11 +9,11 @@ resource "aws_iam_policy" "iam-policy-s3-nwp-read" {
     Statement = [
       {
         Action = ["s3:ListBucket",
-      "s3:GetObject",
+          "s3:GetObject",
         ]
-        Effect   = "Allow"
+        Effect = "Allow"
         Resource = [
-        aws_s3_bucket.s3-nwp-bucket.arn,
+          aws_s3_bucket.s3-nwp-bucket.arn,
         "${aws_s3_bucket.s3-nwp-bucket.arn}/*"]
       },
     ]
@@ -31,13 +31,13 @@ resource "aws_iam_policy" "iam-policy-s3-nwp-write" {
     Statement = [
       {
         Action = ["s3:ListBucket",
-      "s3:GetObject",
-      "s3:PutObject",
-      "s3:DeleteObject"
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
         ]
-        Effect   = "Allow"
+        Effect = "Allow"
         Resource = [
-        aws_s3_bucket.s3-nwp-bucket.arn,
+          aws_s3_bucket.s3-nwp-bucket.arn,
         "${aws_s3_bucket.s3-nwp-bucket.arn}/*"]
       },
     ]

@@ -47,11 +47,11 @@ resource "aws_iam_policy" "cloudwatch" {
       {
         Action = [
           "logs:PutLogEvents",
-        "logs:CreateLogStream",
-        "logs:DescribeLogStreams",
-        "logs:DescribeLogGroups",
+          "logs:CreateLogStream",
+          "logs:DescribeLogStreams",
+          "logs:DescribeLogGroups",
           "logs:DeleteLogGroup",
-           "logs:PutRetentionPolicy"
+          "logs:PutRetentionPolicy"
         ]
         Effect   = "Allow"
         Resource = "arn:aws:logs:*:*:log-group:/aws/elasticbeanstalk*"

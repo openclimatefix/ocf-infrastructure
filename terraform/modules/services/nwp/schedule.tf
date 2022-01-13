@@ -22,7 +22,7 @@ resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
     task_definition_arn = aws_ecs_task_definition.nwp-task-definition.arn
     network_configuration {
 
-      subnets = var.subnet_ids
+      subnets          = var.subnet_ids
       assign_public_ip = true
 
     }

@@ -15,5 +15,5 @@ variable "vpc_id" {
 
 variable "subnets" {
   description = "List of subnets where this application will run"
-  type        = list
+  type        = list(any)
 }

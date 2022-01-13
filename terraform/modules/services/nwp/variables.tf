@@ -15,7 +15,7 @@ variable "iam-policy-s3-nwp-write" {
 
 variable "log-group-name" {
   description = "The log group name where log streams are saved"
-  default = "/aws/ecs/consumer/nwp/"
+  default     = "/aws/ecs/consumer/nwp/"
 }
 
 

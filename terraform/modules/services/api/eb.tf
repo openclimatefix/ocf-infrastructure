@@ -5,13 +5,13 @@ resource "aws_elastic_beanstalk_application" "eb-api-application" {
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {
-  name                = "nowcasting-api-${var.environment}"
-  application         = aws_elastic_beanstalk_application.eb-api-application.name
+  name        = "nowcasting-api-${var.environment}"
+  application = aws_elastic_beanstalk_application.eb-api-application.name
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
-    name = "InstanceType"
-    value = "t3.small"
+    name      = "InstanceType"
+    value     = "t3.small"
   }
 
   # the next line IS NOT RANDOM, see "final notes" at the bottom
@@ -24,15 +24,15 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
-    value     = "${var.vpc_id}"
+    value     = var.vpc_id
   }
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
-#    value     = "${join(",", var.subnets)}"
-#    value     = var.subnets
-    value = var.subnets[0].id
-    resource=""
+    #    value     = "${join(",", var.subnets)}"
+    #    value     = var.subnets
+    value    = var.subnets[0].id
+    resource = ""
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -52,16 +52,16 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:autoscaling:asg"
-    name = "MinSize"
-    value = "1"
+    name      = "MinSize"
+    value     = "1"
   }
   setting {
     namespace = "aws:autoscaling:asg"
-    name = "MaxSize"
-    value = "1"
+    name      = "MaxSize"
+    value     = "1"
   }
 
-    ###=========================== Logging ========================== ###
+  ###=========================== Logging ========================== ###
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"
@@ -110,9 +110,9 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   provisioner "local-exec" {
     command = join("", ["aws elasticbeanstalk update-environment ",
       "--region ${var.region} ",
-    "--application-name ${aws_elastic_beanstalk_application.eb-api-application.name} ",
-    "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
-    "--environment-name ${aws_elastic_beanstalk_environment.eb-api-env.name}"
+      "--application-name ${aws_elastic_beanstalk_application.eb-api-application.name} ",
+      "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
+      "--environment-name ${aws_elastic_beanstalk_environment.eb-api-env.name}"
     ])
   }
 

@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "cloudwatch" {
     actions = ["iam:PassRole"]
     resources = concat([
       aws_iam_role.ecs_task_execution_role.arn,
-     aws_iam_role.consumer-nwp-iam-role.arn])
+    aws_iam_role.consumer-nwp-iam-role.arn])
   }
 }
 

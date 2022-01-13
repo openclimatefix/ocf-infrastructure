@@ -33,19 +33,19 @@ module "ecs" {
 module "api" {
   source = "./modules/services/api"
 
-  region               = "${var.region}"
-  environment          = "${var.environment}"
-  vpc_id               = module.networking.vpc_id
-  subnets              = module.networking.public_subnets
+  region      = var.region
+  environment = var.environment
+  vpc_id      = module.networking.vpc_id
+  subnets     = module.networking.public_subnets
 }
 
 module "database" {
   source = "./modules/database"
 
-  region               = "${var.region}"
-  environment          = "${var.environment}"
-  db_subnet_group      = module.networking.private_subnet_group
-  vpc_id               = module.networking.vpc_id
+  region          = var.region
+  environment     = var.environment
+  db_subnet_group = module.networking.private_subnet_group
+  vpc_id          = module.networking.vpc_id
 }
 
 module "nwp" {
@@ -55,6 +55,6 @@ module "nwp" {
   environment             = var.environment
   iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
   s3-bucket               = module.s3.s3-nwp-bucket
-  ecs-cluster = module.ecs.ecs_cluster
-  subnet_ids = [module.networking.public_subnets[0].id]
+  ecs-cluster             = module.ecs.ecs_cluster
+  subnet_ids              = [module.networking.public_subnets[0].id]
 }
