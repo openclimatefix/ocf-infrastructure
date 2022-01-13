@@ -32,6 +32,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 #    value     = "${join(",", var.subnets)}"
 #    value     = var.subnets
     value = var.subnets[0].id
+    resource=""
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"

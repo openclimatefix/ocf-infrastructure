@@ -56,6 +56,13 @@ resource "aws_subnet" "private_subnet" {
     Environment = "${var.environment}"
   }
 }
+
+resource "aws_db_subnet_group" "private_subnet_group" {
+  name        = "private-subnet-group"
+  description = "Terraform example RDS subnet group"
+  subnet_ids  = ["${aws_subnet.private_subnet[0].id}","${aws_subnet.private_subnet[1].id}"]
+}
+
 /* Routing table for private subnet */
 resource "aws_route_table" "private" {
   vpc_id = "${aws_vpc.vpc.id}"

@@ -18,7 +18,7 @@ variable "private_subnets_cidr" {
 }
 
 variable "region" {
-  description = "The region to launch the bastion host"
+  description = "The AWS region"
 }
 
 variable "availability_zones" {
