@@ -4,7 +4,7 @@
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "nwp-schedule-${var.environment}"
-  schedule_expression = "cron(5 6 * * ? *)"
+  schedule_expression = "cron(30 6 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
