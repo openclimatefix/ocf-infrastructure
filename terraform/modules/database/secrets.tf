@@ -5,7 +5,7 @@
 resource "random_password" "DB-forecast-password" {
   length           = 16
   special          = true
-  override_special = "_%@"
+  override_special = "%"
 }
 
 
@@ -24,11 +24,11 @@ resource "aws_secretsmanager_secret_version" "sversion" {
   secret_string = jsonencode(
     {
       username : "main",
-      password : "${random_password.DB-forecast-password.result}",
+      password : random_password.DB-forecast-password.result,
       dbname : aws_db_instance.DB-forecast.name,
       engine : "postgresql",
       address : aws_db_instance.DB-forecast.address,
-      post : "5432",
-      url : "postgresql://main:${random_password.DB-forecast-password.result}@:${aws_db_instance.DB-forecast.address}/${aws_db_instance.DB-forecast.name}"
+      port : "5432",
+      url : "postgresql://main:${random_password.DB-forecast-password.result}@${aws_db_instance.DB-forecast.address}:5432/${aws_db_instance.DB-forecast.name}"
   })
 }
