@@ -5,5 +5,3 @@ output "iam-policy-db-read" {
 output "database-secret" {
   value = aws_secretsmanager_secret.DB-forecast-secret
 }
-
-
