@@ -17,15 +17,15 @@ resource "aws_s3_bucket" "s3-nwp-bucket" {
   bucket = "nowcasting-nwp-${var.environment}"
   acl    = "private"
 
-    lifecycle_rule {
-      id = "remove_old_files"
-      enabled = true
+  lifecycle_rule {
+    id      = "remove_old_files"
+    enabled = true
 
-      prefix = "data/"
+    prefix = "data/"
 
-      expiration {
-          days = 180
-      }
+    expiration {
+      days = 180
+    }
   }
 
   tags = {

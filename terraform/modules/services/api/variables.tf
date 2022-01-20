@@ -26,6 +26,6 @@ variable "database_secret_url" {
   description = "Secret url that gives connection details to the database"
 }
 
-variable docker_version {
+variable "docker_version" {
   description = "The version of the docker that should be used"
 }
