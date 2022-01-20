@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch" {
 
 resource "aws_iam_role_policy_attachment" "cloudwatch-secret" {
   role       = aws_iam_role.cloudwatch_role.name
-  policy_arn = var.iam-policy-read-secret.arn
+  policy_arn = var.iam-policy-rds-read-secret.arn
 }
 
 resource "aws_iam_policy" "cloudwatch" {

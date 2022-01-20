@@ -28,6 +28,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   # This should be the minimally required set for Docker.
 
   setting {
+      namespace = "aws:elasticbeanstalk:application:environment"
+      name      = "DB_URL"
+      value     = var.database_secret_url
+    }
+
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.vpc_id
@@ -111,6 +117,14 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     resource  = ""
   }
 
+}
+
+resource "aws_elastic_beanstalk_application_version" "latest" {
+  name        = "nowcasting-api-${var.docker_version}"
+  application = aws_elastic_beanstalk_application.eb-api-application.name
+  description = "application version created by terraform (${var.docker_version})"
+  bucket      = aws_s3_bucket.eb.id
+  key         = aws_s3_bucket_object.eb-object.id
 
   # make sure that when the application is made, the latest version is deployed to it
   provisioner "local-exec" {
@@ -121,13 +135,4 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
       "--environment-name ${aws_elastic_beanstalk_environment.eb-api-env.name}"
     ])
   }
-
-}
-
-resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "latest-nowcasting-api"
-  application = aws_elastic_beanstalk_application.eb-api-application.name
-  description = "application version created by terraform"
-  bucket      = aws_s3_bucket.eb.id
-  key         = aws_s3_bucket_object.eb-object.id
 }

@@ -28,7 +28,7 @@ variable "subnet_ids" {
   description = "Public subnet ids"
 }
 
-variable "iam-policy-read-secret" {
+variable "iam-policy-rds-read-secret" {
   description = "IAM policy to be able to read the RDS secret"
 }
 

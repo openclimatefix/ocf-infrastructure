@@ -5,3 +5,7 @@ output "iam-policy-db-read" {
 output "database-secret" {
   value = aws_secretsmanager_secret.DB-forecast-secret
 }
+
+output "database-secret-url" {
+  value = jsondecode(aws_secretsmanager_secret_version.sversion.secret_string)["url"]
+}
