@@ -24,7 +24,7 @@ resource "aws_s3_bucket" "s3-nwp-bucket" {
     prefix = "data/"
 
     expiration {
-      days = 180
+      days = 30
     }
   }
 

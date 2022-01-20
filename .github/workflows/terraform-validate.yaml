@@ -1,4 +1,5 @@
 name: Validate Terraform
+# This work flow runs 'terraform validate' to check there isn't anything obviously wrong
 
 on: [push]
 

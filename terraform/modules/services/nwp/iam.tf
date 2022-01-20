@@ -25,7 +25,7 @@ EOF
 resource "aws_iam_policy" "nwp-secret-read" {
   name        = "nwp-secret-read"
   path        = "/consumer/nwp/"
-  description = "Policy to allow read access to NWP secret"
+  description = "Policy to allow read access to NWP API secret."
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.

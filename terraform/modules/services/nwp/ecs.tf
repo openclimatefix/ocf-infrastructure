@@ -51,13 +51,5 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
     }
   ])
 
-  #  volume {
-  #    name      = "service-storage"
-  #    host_path = "/ecs/service-storage"
-  #  }
-  #
-  #  placement_constraints {
-  #    type       = "memberOf"
-  #    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
-  #  }
+  # add volume? So we dont have to keep downloading same docker image
 }

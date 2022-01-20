@@ -1,7 +1,8 @@
 # RDS postgres database
 
 resource "aws_db_instance" "DB-forecast" {
-  allocated_storage            = 10
+  allocated_storage            = 10 # TODO automatically expand storage
+  # https://github.com/openclimatefix/nowcasting_infrastructure/issues/23
   engine                       = "postgres"
   engine_version               = "13.4"
   instance_class               = "db.t3.micro"
