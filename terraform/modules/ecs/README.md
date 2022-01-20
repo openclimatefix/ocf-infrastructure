@@ -1,3 +1,5 @@
-This module currently makes
-- creates ECS cluster
-- IAM role to execute ECS task
+# Modules/ECS
+
+This module makes
+- an ECS cluster
+- an IAM role to execute ECS task

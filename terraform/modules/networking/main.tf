@@ -70,7 +70,7 @@ resource "aws_subnet" "private_subnet" {
 
 resource "aws_db_subnet_group" "private_subnet_group" {
   name        = "private-subnet-group-${var.environment}"
-  description = "Terraform example RDS subnet group"
+  description = "Terraform private subnet group"
   subnet_ids  = ["${aws_subnet.private_subnet[0].id}", "${aws_subnet.private_subnet[1].id}"]
 }
 

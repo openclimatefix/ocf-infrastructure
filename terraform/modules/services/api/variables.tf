@@ -17,6 +17,7 @@ variable "subnets" {
   description = "List of subnets where this application will run"
   type        = list(any)
 }
+# the type is any, as the subnets are terraform resources
 
 variable "iam-policy-rds-read-secret" {
   description = "IAM policy to be able to read the RDS secret"

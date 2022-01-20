@@ -1,4 +1,6 @@
-This module currently makes
+# Modules/Services/API
+
+This module makes
 - Elastic Beanstalk application
 - IAM role to setup application (service)
 - IAM role for running application (ec2)

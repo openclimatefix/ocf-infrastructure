@@ -10,6 +10,9 @@ The [terraform](https://learn.hashicorp.com/terraform) folder contains code inor
 
 ### Install
 
+If you aren't on Mac or don't want to use Brew, 
+[check out the official terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform).
+
 To install terraform run
 ```bash
 brew tap hashicorp/tap

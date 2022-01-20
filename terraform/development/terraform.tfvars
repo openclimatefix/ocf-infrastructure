@@ -1,5 +1,5 @@
 
-region      = "eu-west-2"
+region      = "eu-west-1"
 environment = "development"
 
 /* module networking */

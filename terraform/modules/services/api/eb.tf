@@ -20,7 +20,8 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = "t3.small"
   }
 
-  # the next line IS NOT RANDOM, see "final notes" at the bottom
+  # the next line IS NOT RANDOM,
+#  see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
   solution_stack_name = "64bit Amazon Linux 2 v3.4.10 running Docker"
 
   # There are a LOT of settings, see here for the basic list:

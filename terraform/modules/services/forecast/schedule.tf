@@ -1,10 +1,10 @@
-# This is an temporary module.
+# This is a temporary module.
 # This will schedule the aws task to run on cron job.
 # We want to move to Dagster but for the moment its useful to have this setup
 
 resource "aws_cloudwatch_event_rule" "event_rule-forecast" {
   name                = "forecast-schedule-${var.environment}"
-  schedule_expression = "cron(0,5,10,15,20,25,30,35,40,45,50,55 * * * ? *)" # runs every 5 mins
+  schedule_expression = "cron(*/5 * * * ? *)" # runs every 5 mins
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task-forecast" {

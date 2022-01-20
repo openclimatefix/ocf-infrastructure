@@ -27,7 +27,7 @@ variable "ecs-cluster" {
   description = "The ECS cluster"
 }
 
-variable "subnet_ids" {
+variable "public_subnet_ids" {
   type        = list(string)
   description = "Public subnet ids"
 }

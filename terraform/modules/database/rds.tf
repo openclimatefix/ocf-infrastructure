@@ -21,7 +21,7 @@ resource "aws_db_instance" "DB-forecast" {
 
   tags = {
     Name        = "${var.environment}-rds"
-    Environment = "${var.environment}"
+    Environment = "var.environment"
   }
 
 }

@@ -56,5 +56,5 @@ module "nwp" {
   iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
   s3-bucket               = module.s3.s3-nwp-bucket
   ecs-cluster             = module.ecs.ecs_cluster
-  subnet_ids              = [module.networking.public_subnets[0].id]
+  public_subnet_ids              = [module.networking.public_subnets[0].id]
 }
