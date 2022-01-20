@@ -5,6 +5,7 @@ variable "environment" {
 
 variable "region" {
   description = "The AWS region"
+  default     = "eu-west-1"
 }
 
 variable "db_subnet_group" {
