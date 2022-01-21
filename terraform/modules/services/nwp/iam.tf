@@ -3,7 +3,7 @@
 # Instance role is used to run the task
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "role-name"
+  name = "nwp-execution-role"
 
   assume_role_policy = <<EOF
 {

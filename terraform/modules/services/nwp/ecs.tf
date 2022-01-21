@@ -23,6 +23,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
 
       environment : [
         { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
+        { "name" : "LOG_LEVEL", "value" : "DEBUG"},
       ]
 
       secrets : [
@@ -33,11 +34,11 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
         {
           "name" : "API_SECRET",
           "valueFrom" : "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:API_SECRET::",
-        },
-        {
-          "name" : "LOG_LEVEL",
-          "valueFrom" : "DEBUG",
         }
+#        {
+#          "name" : "LOG_LEVEL",
+#          "valueFrom" : "DEBUG",
+#        }
       ]
 
       logConfiguration : {
