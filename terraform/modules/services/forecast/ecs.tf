@@ -22,7 +22,8 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
       essential = true
 
       environment : [
-        { "name" : "FAKE", "value" : "True" },
+        { "name" : "FAKE", "value" : "False" },
+        { "name" : "GIT_PYTHON_REFRESH", "value" : "quiet" },
       ]
 
       secrets : [
