@@ -22,6 +22,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "vnshanmukh",
+      "name": "Shanmukh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67438038?v=4",
+      "profile": "https://github.com/vnshanmukh",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
