@@ -35,6 +35,13 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   }
 
   setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "ORIGINS"
+    value     = "*" #TODO change
+  }
+
+
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.vpc_id
