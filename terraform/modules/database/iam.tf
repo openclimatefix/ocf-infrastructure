@@ -1,8 +1,8 @@
 # IAM policy for reading rds secret
 
 resource "aws_iam_policy" "rds-secret-policy" {
-  name        = "RDS-secret-policy"
-  path        = "/RDS/"
+  name        = "rds-secret-policy"
+  path        = "/rds/"
   description = "Read access to RDS secret, in order to connect to database"
 
   # Terraform's "jsonencode" function converts a

@@ -128,6 +128,6 @@ resource "aws_iam_role_policy_attachment" "attach-logs" {
 
 resource "aws_iam_instance_profile" "ec2" {
 
-  name = "api-instance-eb-ec2-${var.environment}"
+  name = "api-instance-eb-${var.environment}"
   role = join("", aws_iam_role.instance-role.*.name)
 }

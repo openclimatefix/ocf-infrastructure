@@ -39,7 +39,7 @@ module "api" {
   subnets                    = module.networking.public_subnets
   database_secret_url        = module.database.database-secret-url
   iam-policy-rds-read-secret = module.database.iam-policy-db-read
-  docker_version             = "0.1.10"
+  docker_version             = "0.1.13"
 }
 
 module "database" {
