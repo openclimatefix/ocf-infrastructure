@@ -16,7 +16,7 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
   container_definitions = jsonencode([
     {
       name  = "forecast"
-      image = "openclimatefix/nowcasting_forecast:latest"
+      image = "openclimatefix/nowcasting_forecast:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true

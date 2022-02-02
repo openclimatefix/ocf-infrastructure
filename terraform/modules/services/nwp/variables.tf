@@ -31,3 +31,8 @@ variable "public_subnet_ids" {
   type        = list(string)
   description = "Public subnet ids"
 }
+
+variable "docker_version" {
+  description = "The version of the docker that should be used"
+}
+

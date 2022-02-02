@@ -35,3 +35,8 @@ variable "iam-policy-rds-read-secret" {
 variable "database_secret" {
   description = "AWS secret that gives connection details to the database"
 }
+
+variable "docker_version" {
+  description = "The version of the docker that should be used"
+}
+

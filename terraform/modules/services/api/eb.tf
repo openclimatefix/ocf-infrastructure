@@ -40,6 +40,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = "*" #TODO change
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "API_VERSION"
+    value     = var.docker_version
+  }
+
 
   setting {
     namespace = "aws:ec2:vpc"

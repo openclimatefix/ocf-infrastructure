@@ -39,7 +39,7 @@ module "api" {
   subnets                    = module.networking.public_subnets
   database_secret_url        = module.database.database-secret-url
   iam-policy-rds-read-secret = module.database.iam-policy-db-read
-  docker_version             = "0.1.15"
+  docker_version             = var.api_version
 }
 
 module "database" {
@@ -60,6 +60,7 @@ module "nwp" {
   s3-bucket               = module.s3.s3-nwp-bucket
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
+  docker_version          = var.nwp_version
 }
 
 
@@ -73,4 +74,5 @@ module "forecast" {
   iam-policy-rds-read-secret = module.database.iam-policy-db-read
   iam-policy-s3-nwp-read     = module.s3.iam-policy-s3-nwp-read
   database_secret            = module.database.database-secret
+  docker_version             = var.forecast_version
 }

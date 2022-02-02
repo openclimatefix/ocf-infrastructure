@@ -16,7 +16,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   container_definitions = jsonencode([
     {
       name  = "nwp-consumer"
-      image = "openclimatefix/metoffice_weather_datahub:latest"
+      image = "openclimatefix/metoffice_weather_datahub:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true

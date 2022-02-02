@@ -20,3 +20,15 @@ variable "private_subnets_cidr" {
   type        = list(string)
   description = "The CIDR block for the private subnet"
 }
+
+variable "api_version" {
+  description = "The API version"
+}
+
+variable "forecast_version" {
+  description = "The Forecast version"
+}
+
+variable "nwp_version" {
+  description = "The NWP version"
+}
