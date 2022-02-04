@@ -1,0 +1,60 @@
+version: "3.7"
+
+
+volumes:
+   nwp_data:
+
+services:
+  postgres:
+    image: postgres:13.4
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+
+  nwp:
+    image: openclimatefix/metoffice_weather_datahub:1.0.10
+    environment:
+      - DB_URL=postgresql://postgres:postgres@postgres:5432/postgres
+      - GIT_PYTHON_REFRESH=quiet
+      - LOG_LEVEL=DEBUG
+      - SAVE_DIR=data
+      - API_KEY=$API_KEY
+      - API_SECRET=$API_SECRET
+    volumes:
+      - type: volume
+        source: nwp_data
+        target: /app/data
+
+
+  forecast:
+    image: openclimatefix/nowcasting_forecast:0.0.51
+    environment:
+      - DB_URL=postgresql://postgres:postgres@postgres:5432/postgres
+      - GIT_PYTHON_REFRESH=quiet
+      - LOG_LEVEL=DEBUG
+      - NWP_PATH=./data/latest.netcdf
+    depends_on:
+      - "postgres"
+    restart: on-failure
+    volumes:
+      - type: volume
+        source: nwp_data
+        target: /app/data
+
+
+  api:
+    image: openclimatefix/nowcasting_api:0.0.16
+    environment:
+      - DB_URL=postgresql://postgres:postgres@postgres:5432/postgres
+      - GIT_PYTHON_REFRESH=quiet
+      - LOG_LEVEL=DEBUG
+    depends_on:
+      - "postgres"
+      - "forecast"
+    command: [ "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80" ]
+    ports:
+      - 80:80
+
