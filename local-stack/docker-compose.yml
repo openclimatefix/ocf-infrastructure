@@ -30,7 +30,7 @@ services:
 
 
   forecast:
-    image: openclimatefix/nowcasting_forecast:0.0.51
+    image: openclimatefix/nowcasting_forecast:0.0.53
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres:5432/postgres
       - GIT_PYTHON_REFRESH=quiet
@@ -46,7 +46,7 @@ services:
 
 
   api:
-    image: openclimatefix/nowcasting_api:0.0.16
+    image: openclimatefix/nowcasting_api:0.1.17
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres:5432/postgres
       - GIT_PYTHON_REFRESH=quiet
