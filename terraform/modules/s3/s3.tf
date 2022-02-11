@@ -33,3 +33,10 @@ resource "aws_s3_bucket" "s3-nwp-bucket" {
     Environment = "${var.environment}"
   }
 }
+
+
+# get s3 bucket
+# This means this bucket is not destroyed, we are just referencing it
+data "aws_s3_bucket" "s3-ml" {
+  bucket = "nowcasting-ml-${var.environment}"
+}

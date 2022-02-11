@@ -45,3 +45,26 @@ resource "aws_iam_policy" "iam-policy-s3-nwp-write" {
     ]
   })
 }
+
+
+resource "aws_iam_policy" "iam-policy-s3-ml-read" {
+  name        = "s3-ml-read-policy"
+  description = "Policy to read bucket: ${data.aws_s3_bucket.s3-ml.bucket}"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = ["s3:ListBucket",
+          "s3:GetObject",
+        ]
+        Effect = "Allow"
+        Resource = [
+          data.aws_s3_bucket.s3-ml-bucket.arn,
+        "${data.aws_s3_bucket.s3-ml-bucket.arn}/*"]
+      },
+    ]
+  })
+}
