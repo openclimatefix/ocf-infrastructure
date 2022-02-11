@@ -35,4 +35,3 @@ variable "public_subnet_ids" {
 variable "docker_version" {
   description = "The version of the docker that should be used"
 }
-

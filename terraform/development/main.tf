@@ -73,6 +73,7 @@ module "forecast" {
   subnet_ids                 = [module.networking.public_subnets[0].id]
   iam-policy-rds-read-secret = module.database.iam-policy-db-read
   iam-policy-s3-nwp-read     = module.s3.iam-policy-s3-nwp-read
+  iam-policy-s3-ml-read     = module.s3.iam-policy-s3-ml-read
   database_secret            = module.database.database-secret
   docker_version             = var.forecast_version
 }
