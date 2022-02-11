@@ -13,6 +13,10 @@ variable "iam-policy-s3-nwp-read" {
   description = "IAM policy to read to s3 bucket for NWP data"
 }
 
+variable "iam-policy-s3-ml-read" {
+  description = "IAM policy to read to s3 bucket for ML models"
+}
+
 variable "log-group-name" {
   description = "The log group name where log streams are saved"
   default     = "/aws/ecs/forecast/"
