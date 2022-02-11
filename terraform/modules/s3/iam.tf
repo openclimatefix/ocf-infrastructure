@@ -62,8 +62,8 @@ resource "aws_iam_policy" "iam-policy-s3-ml-read" {
         ]
         Effect = "Allow"
         Resource = [
-          data.aws_s3_bucket.s3-ml-bucket.arn,
-        "${data.aws_s3_bucket.s3-ml-bucket.arn}/*"]
+          data.aws_s3_bucket.s3-ml.arn,
+        "${data.aws_s3_bucket.s3-ml.arn}/*"]
       },
     ]
   })
