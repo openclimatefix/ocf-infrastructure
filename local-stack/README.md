@@ -15,3 +15,4 @@ Idea:
 Useful commands
  - `docker-compose up`: run the stack but detach from the terminal
  - `docker kill $(docker ps -q)`: kill all contains
+ - `docker system prune`: get rid of docker files not needed
