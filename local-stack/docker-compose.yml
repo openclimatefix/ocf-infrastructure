@@ -30,12 +30,15 @@ services:
 
 
   forecast:
-    image: openclimatefix/nowcasting_forecast:0.0.55
+    image: openclimatefix/nowcasting_forecast:0.1.0
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres:5432/postgres
       - GIT_PYTHON_REFRESH=quiet
       - LOG_LEVEL=DEBUG
       - NWP_PATH=./data/latest.netcdf
+      - MODEL_NAME=nwp_simple_trained
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     depends_on:
       - "postgres"
     restart: on-failure

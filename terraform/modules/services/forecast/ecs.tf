@@ -8,8 +8,8 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
 
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-  cpu    = 256
-  memory = 512
+  cpu    = 1024
+  memory = 2048
 
   task_role_arn      = aws_iam_role.forecast-iam-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role-forecast.arn
@@ -24,6 +24,7 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
       environment : [
         { "name" : "FAKE", "value" : "False" },
         { "name" : "GIT_PYTHON_REFRESH", "value" : "quiet" },
+        {"name": "MODEL_NAME", "value":"nwp_simple_trained"}
       ]
 
       secrets : [
