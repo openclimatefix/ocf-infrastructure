@@ -17,22 +17,16 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Pip Install
+    - name: Run
       run: |
         cd local-stack/
         pip install -r tests/requirements.txt
 
-    - name: Docker up
-      run: |
-        cd local-stack/
+        # start up the stack
         docker-compose up -d
 
-    - name: Run tests
-      run: |
-        cd local-stack/
+        # run tests
         pytest
 
-    - name: Docker down
-      run: |
-        cd local-stack/
+        # pull down stack
         docker-compose down
