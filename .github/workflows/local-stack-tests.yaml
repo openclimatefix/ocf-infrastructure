@@ -1,4 +1,4 @@
-name: Validate Terraform
+name: Local Stack tests
 # This work flow runs 'terraform validate' to check there isn't anything obviously wrong
 
 on: [push]
@@ -19,8 +19,8 @@ jobs:
 
     - name: Pip Install
       run: |
-        - cd local-stack
-        - pip install -r tests/requirements.txt
+        cd local-stack/
+        pip install -r tests/requirements.txt
 
     - name: Docker up
       run: docker-compose up -d
