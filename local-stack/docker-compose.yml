@@ -21,8 +21,8 @@ services:
       - GIT_PYTHON_REFRESH=quiet
       - LOG_LEVEL=DEBUG
       - SAVE_DIR=data
-      - API_KEY=$API_KEY
-      - API_SECRET=$API_SECRET
+      - API_KEY=$NWP_API_KEY
+      - API_SECRET=$NWP_API_SECRET
     volumes:
       - type: volume
         source: nwp_data

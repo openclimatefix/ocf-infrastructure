@@ -26,6 +26,7 @@ jobs:
         docker-compose up -d
 
         # wait 30 seconds
+        echo "Sleeping for 30 seconds, to let the local stackrun"
         sleep 30
 
         # run tests
