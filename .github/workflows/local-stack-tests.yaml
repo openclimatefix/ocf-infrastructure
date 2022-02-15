@@ -25,6 +25,9 @@ jobs:
         # start up the stack
         docker-compose up -d
 
+        # wait 30 seconds
+        sleep 30
+
         # run tests
         pytest
 
