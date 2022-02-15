@@ -31,4 +31,3 @@ def test_get_latest_national_forecast():
     with connection.get_session() as session:
         forecast = get_latest_national_forecast(session=session)
         assert forecast.forecast_creation_time > datetime.now().replace(tzinfo=timezone.utc) - timedelta(minutes=5)
-

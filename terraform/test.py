@@ -9,11 +9,11 @@ This can work in person, or it can be sent to someone
 """
 
 """
-The function 
-1. adds up the square numbers between the first two arguments 
+The function
+1. adds up the square numbers between the first two arguments
 2. then adds all the values in the initial_series
 
-sum(2, 3, initial_series = [7,9]) 
+sum(2, 3, initial_series = [7,9])
 = 2*2 + 3*3 + 7 + 9 = 4 + 9 + 7 + 9 = 29
 """
 
@@ -23,7 +23,7 @@ Answers / Hints
 2. Shouldn't use list in function definition
 3. while loop doesnt include end
 4. while loop adds start*start, it should use 'number'
-5. Perhaps for loop is better than while loop? 
+5. Perhaps for loop is better than while loop?
 6. Can shorten to number =+ 1
 7. Bad variable names, should be same as python default, and shouldn't be the same as function name
 8. Dont need the for loop, can just use 'sum'
@@ -45,4 +45,3 @@ def sum(start, e, initial_series=[]):
     sum = 0
     for i in initial_series:
         sum = sum + i
-

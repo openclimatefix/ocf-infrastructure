@@ -6,4 +6,4 @@ The idea is to run tests against the local stack
 2. Run tests with `pytest`
 3. Bring the stack down `docker-compose down`
 
-## 
+##
