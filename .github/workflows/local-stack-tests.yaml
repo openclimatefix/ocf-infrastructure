@@ -24,15 +24,15 @@ jobs:
 
     - name: Docker up
       run: |
-      cd local-stack/
-      docker-compose up -d
+        cd local-stack/
+        docker-compose up -d
 
     - name: Run tests
       run: |
-      cd local-stack/
-      pytest
+        cd local-stack/
+        pytest
 
     - name: Docker down
       run: |
-      cd local-stack/
-      docker-compose down
+        cd local-stack/
+        docker-compose down
