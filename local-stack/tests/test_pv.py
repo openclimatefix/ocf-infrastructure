@@ -14,7 +14,7 @@ def test_database():
 
 
 def test_pv_systems():
-    """ Check that there are forecasts in the database """
+    """ Check that there are pv systems in the database """
 
     connection = DatabaseConnection(url=db_url, base=Base_PV,echo=True)
     with connection.get_session() as session:
@@ -23,7 +23,11 @@ def test_pv_systems():
 
 
 def test_pv_yields():
-    """ Check that there are forecasts in the database """
+    """ Check that there are pv data in the database
+    
+    Warning: This test might not work early in the morning,
+    as there seems to be no PV data avaialbe then.
+    """
 
     connection = DatabaseConnection(url=db_url,base=Base_PV,echo=True)
     with connection.get_session() as session:
