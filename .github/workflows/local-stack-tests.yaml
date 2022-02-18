@@ -34,7 +34,9 @@ jobs:
 
         # pull down stack
         docker-compose down
-      env: # 
+      env: #
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         NWP_API_KEY: ${{ secrets.NWP_API_KEY }}
         NWP_API_SECRET: ${{ secrets.NWP_API_SECRET }}
         PVOUTPUT_API_KEY: ${{ secrets.PVOUTPUT_API_KEY }}
