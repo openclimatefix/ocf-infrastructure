@@ -23,7 +23,7 @@ jobs:
         pip install -r tests/requirements.txt
 
         # start up the stack
-        docker-compose up -d
+        docker-compose up
 
         # wait 60 seconds
         echo "Sleeping for 30 seconds, to let the local stackrun"
