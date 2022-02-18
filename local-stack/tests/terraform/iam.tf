@@ -46,5 +46,3 @@ resource "aws_iam_user_policy_attachment" "attach-s3-policy" {
   user       = aws_iam_user.local-stack-tests-user.name
   policy_arn = aws_iam_policy.user-policy-s3-ml-read.arn
 }
-
-
