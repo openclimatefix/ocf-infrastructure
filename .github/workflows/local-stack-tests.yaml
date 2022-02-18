@@ -23,11 +23,11 @@ jobs:
         pip install -r tests/requirements.txt
 
         # start up the stack
-        docker-compose up
+        docker-compose up -d
 
-        # wait 60 seconds
-        echo "Sleeping for 30 seconds, to let the local stackrun"
-        sleep 60
+        # wait 2 minutes
+        echo "Sleeping for 2 minutes, to let the local stackrun"
+        sleep 120
 
         # run tests
         pytest
