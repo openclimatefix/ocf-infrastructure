@@ -25,9 +25,9 @@ jobs:
         # start up the stack
         docker-compose up -d
 
-        # wait 30 seconds
+        # wait 60 seconds
         echo "Sleeping for 30 seconds, to let the local stackrun"
-        sleep 30
+        sleep 60
 
         # run tests
         pytest
