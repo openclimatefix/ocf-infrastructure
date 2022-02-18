@@ -24,7 +24,7 @@ def test_pv_systems():
 
 def test_pv_yields():
     """ Check that there are pv data in the database
-    
+
     Warning: This test might not work early in the morning,
     as there seems to be no PV data avaialbe then.
     """
