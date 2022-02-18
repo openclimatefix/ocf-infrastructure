@@ -29,5 +29,3 @@ def test_pv_yields():
     with connection.get_session() as session:
         pv_yields = session.query(PVYieldSQL).all()
         assert len(pv_yields) > 0
-
-
