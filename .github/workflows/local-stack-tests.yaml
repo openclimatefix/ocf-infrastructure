@@ -34,7 +34,7 @@ jobs:
 
         # pull down stack
         docker-compose down
-      env: # 
+      env: #
         NWP_API_KEY: ${{ secrets.NWP_API_KEY }}
         NWP_API_SECRET: ${{ secrets.NWP_API_SECRET }}
         PVOUTPUT_API_KEY: ${{ secrets.PVOUTPUT_API_KEY }}
