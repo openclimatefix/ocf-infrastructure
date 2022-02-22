@@ -83,4 +83,3 @@ resource "aws_s3_bucket" "s3-sat-bucket" {
 data "aws_s3_bucket" "s3-ml" {
   bucket = "nowcasting-ml-models-${var.environment}"
 }
-
