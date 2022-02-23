@@ -14,6 +14,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   name        = "nowcasting-api-${var.environment}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   cname_prefix = "nowcasting-api-${var.environment}"
+  version_label = "nowcasting-api-${var.docker_version}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
