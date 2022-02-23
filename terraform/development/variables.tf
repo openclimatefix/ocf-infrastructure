@@ -32,3 +32,7 @@ variable "forecast_version" {
 variable "nwp_version" {
   description = "The NWP version"
 }
+
+variable "cloudflare_zone_id" {
+  description = "The ZoneID of the nowcasting domain"
+}
