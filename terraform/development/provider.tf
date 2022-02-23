@@ -19,6 +19,6 @@ provider "aws" {
 }
 
 provider "cloudflare" {
-  email = "flo@openclimatefix.org"
+  # email is populated via env var
   # api_token is populated via env var
 }
