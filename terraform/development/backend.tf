@@ -1,9 +1,10 @@
 terraform {
-  # TODO move to terraform cloud #28
-  backend "s3" {
-    encrypt = true
-    bucket  = "nowcasting-terraform"
-    key     = "terraform.tfstate"
-    region  = "eu-west-2"
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "openclimatefix"
+
+    workspaces {
+      name = "nowcasting_infrastructure_development-eu-west-1"
+    }
   }
 }
