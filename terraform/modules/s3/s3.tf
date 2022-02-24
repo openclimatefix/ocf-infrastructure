@@ -57,7 +57,7 @@ resource "aws_s3_bucket_public_access_block" "s3-sat-block-public-access" {
 
 # Documentation: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
 resource "aws_s3_bucket" "s3-sat-bucket" {
-  bucket = "nowcasting-nwp-${var.environment}"
+  bucket = "nowcasting-sat-${var.environment}"
   acl    = "private"
 
   lifecycle_rule {
