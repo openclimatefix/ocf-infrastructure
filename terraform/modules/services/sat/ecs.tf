@@ -1,8 +1,8 @@
 # define aws ecs task definition
 # needs access to the internet
 
-resource "aws_ecs_task_definition" "nwp-task-definition" {
-  family                   = "nwp"
+resource "aws_ecs_task_definition" "sat-task-definition" {
+  family                   = "sat"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
@@ -11,12 +11,12 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   cpu    = 512
   memory = 1024
 
-  task_role_arn      = aws_iam_role.consumer-nwp-iam-role.arn
+  task_role_arn      = aws_iam_role.consumer-sat-iam-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "nwp-consumer"
-      image = "openclimatefix/metoffice_weather_datahub:${var.docker_version}"
+      name  = "sat-consumer"
+      image = "openclimatefix/satip:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true
@@ -29,11 +29,11 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       secrets : [
         {
           "name" : "API_KEY",
-          "valueFrom" : "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:API_KEY::",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.sat-api-version.arn}:API_KEY::",
         },
         {
           "name" : "API_SECRET",
-          "valueFrom" : "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:API_SECRET::",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.sat-api-version.arn}:API_SECRET::",
         }
 #        {
 #          "name" : "LOG_LEVEL",

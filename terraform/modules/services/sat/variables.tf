@@ -9,18 +9,18 @@ variable "region" {
 }
 
 
-variable "iam-policy-s3-nwp-write" {
-  description = "IAM policy to write to s3 bucket for NWP data"
+variable "iam-policy-s3-sat-write" {
+  description = "IAM policy to write to s3 bucket for Satellite data"
 }
 
 variable "log-group-name" {
   description = "The log group name where log streams are saved"
-  default     = "/aws/ecs/consumer/nwp/"
+  default     = "/aws/ecs/consumer/sat/"
 }
 
 
 variable "s3-bucket" {
-  description = "s3 Bucket for NWP data to be saved to"
+  description = "s3 Bucket for Satellite data to be saved to"
 }
 
 variable "ecs-cluster" {

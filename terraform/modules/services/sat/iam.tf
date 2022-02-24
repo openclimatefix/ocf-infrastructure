@@ -3,7 +3,7 @@
 # Instance role is used to run the task
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "nwp-execution-role"
+  name = "sat-execution-role"
 
   assume_role_policy = <<EOF
 {
@@ -22,10 +22,10 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 EOF
 }
 
-resource "aws_iam_policy" "nwp-secret-read" {
-  name        = "nwp-secret-read"
-  path        = "/consumer/nwp/"
-  description = "Policy to allow read access to NWP API secret."
+resource "aws_iam_policy" "sat-secret-read" {
+  name        = "sat-secret-read"
+  path        = "/consumer/sat/"
+  description = "Policy to allow read access to Satellite API secret."
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -38,15 +38,15 @@ resource "aws_iam_policy" "nwp-secret-read" {
           "secretsmanager:GetSecretValue",
         ]
         Effect   = "Allow"
-        Resource = data.aws_secretsmanager_secret_version.nwp-api-version.arn
+        Resource = data.aws_secretsmanager_secret_version.sat-api-version.arn
       },
     ]
   })
 }
 
-resource "aws_iam_policy" "cloudwatch-nwp" {
+resource "aws_iam_policy" "cloudwatch-sat" {
   name        = "cloudwatch-read-and-write"
-  path        = "/consumer/nwp/"
+  path        = "/consumer/sat/"
   description = "Policy to allow read and write to cloudwatch logs"
 
   # Terraform's "jsonencode" function converts a
@@ -78,7 +78,7 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
 
 resource "aws_iam_role_policy_attachment" "attach-logs-execution" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.cloudwatch-nwp.arn
+  policy_arn = aws_iam_policy.cloudwatch-sat.arn
 }
 
 

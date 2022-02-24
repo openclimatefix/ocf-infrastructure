@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "cloudwatch" {
   statement {
     effect    = "Allow"
     actions   = ["ecs:RunTask"]
-    resources = [aws_ecs_task_definition.nwp-task-definition.arn]
+    resources = [aws_ecs_task_definition.sat-task-definition.arn]
   }
   statement {
     effect  = "Allow"
@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "cloudwatch" {
 }
 
 resource "aws_iam_role" "cloudwatch_role" {
-  name               = "nwp-schedule-cloudwatch-execution"
+  name               = "sat-schedule-cloudwatch-execution"
   assume_role_policy = data.aws_iam_policy_document.cloudwatch_assume_role.json
 
 }
@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch" {
 
 resource "aws_iam_role_policy_attachment" "cloudwatch-secret" {
   role       = aws_iam_role.cloudwatch_role.name
-  policy_arn = aws_iam_policy.nwp-secret-read.arn
+  policy_arn = aws_iam_policy.sat-secret-read.arn
 }
 
 resource "aws_iam_policy" "cloudwatch" {
