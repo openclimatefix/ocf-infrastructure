@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "statusdash-task-definition" {
 # IAM
 # +++++++++++++++++++++++++++
 resource "aws_iam_role" "ecs_task_execution_role-statusdash" {
-  name = "ecs-forecast-execution-role"
+  name = "ecs-statusdash-execution-role"
 
   assume_role_policy = <<EOF
 {
