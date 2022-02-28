@@ -77,3 +77,11 @@ module "forecast" {
   database_secret            = module.database.database-secret
   docker_version             = var.forecast_version
 }
+
+module "statusdash" {
+  source = "../modules/statusdash"
+
+  region                     = var.region
+  environment                = var.environment
+  ecs-cluster                = module.ecs.ecs_cluster
+}
