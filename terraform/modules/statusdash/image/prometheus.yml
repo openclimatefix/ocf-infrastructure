@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  external_labels:
+    monitor: "prometheus"
+
+scrape_configs:
+  - job_name: "nowcasting-website"
+    metrics_path: /api/metrics
+    static_configs:
+      - targets: ["nowcasting.io"]
+
+remote_write:
+  - url: https://aps-workspaces.eu-west-1.amazonaws.com/workspaces/ws-dcdefd46-7af3-483d-a430-24811887ff36/api/v1/remote_write
+    queue_config:
+      max_samples_per_send: 1000
+      max_shards: 200
+      capacity: 2500
+    sigv4:
+      region: eu-west-1

@@ -10,3 +10,8 @@ variable "region" {
 variable "ecs-cluster" {
   description = "The ECS cluster"
 }
+
+variable "log-group-name" {
+  description = "The log group name where log streams are saved"
+  default     = "/aws/ecs/statusdash/"
+}
