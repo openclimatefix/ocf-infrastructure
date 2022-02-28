@@ -1,9 +1,5 @@
 resource "aws_prometheus_workspace" "statusdash" {
   alias = "statusdash-nowcasting"
-
-  tags = {
-    Environment = var.environment
-  }
 }
 
 # resource "aws_ecs_service" "monitoring" {
