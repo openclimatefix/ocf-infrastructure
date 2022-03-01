@@ -5,6 +5,7 @@ resource "aws_prometheus_workspace" "statusdash" {
 resource "aws_ecs_service" "monitoring" {
   name            = "monitoring"
   cluster         = var.ecs-cluster.id
+  launch_type     = "FARGATE"
 
   task_definition = aws_ecs_task_definition.statusdash-task-definition.arn
   desired_count   = 1
