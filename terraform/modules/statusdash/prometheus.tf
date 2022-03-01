@@ -13,7 +13,7 @@ resource "aws_ecs_service" "monitoring" {
 resource "aws_ecs_task_definition" "statusdash-task-definition" {
   family = "statusdash"
   requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
+  network_mode             = "host"
 
   cpu    = 256
   memory = 512
