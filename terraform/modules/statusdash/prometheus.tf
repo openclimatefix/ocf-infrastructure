@@ -76,6 +76,13 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# IAM Role for Task
+resource "aws_iam_role" "statusdash-iam-role" {
+  name               = "statusdash-iam-role"
+  path               = "/statusdash/"
+  assume_role_policy = data.aws_iam_policy_document.statusdash-assume-role-policy.json
+}
+
 resource "aws_iam_policy" "write_to_prometheus" {
   name        = "write-to-prometheus"
   description = "Gives write access to nowcasting prometheus instance."
@@ -100,15 +107,8 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "test-attach" {
-  role       = aws_iam_role.ecs_task_execution_role-statusdash.name
+  role       = aws_iam_role.statusdash-iam-role.name
   policy_arn = aws_iam_policy.write_to_prometheus.arn
-}
-
-# IAM Role for Task
-resource "aws_iam_role" "statusdash-iam-role" {
-  name               = "statusdash-iam-role"
-  path               = "/statusdash/"
-  assume_role_policy = data.aws_iam_policy_document.statusdash-assume-role-policy.json
 }
 
 data "aws_iam_policy_document" "statusdash-assume-role-policy" {
