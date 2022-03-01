@@ -84,4 +84,5 @@ module "statusdash" {
   region                     = var.region
   environment                = var.environment
   ecs-cluster                = module.ecs.ecs_cluster
+  subnet_ids                 = [module.networking.public_subnets[0].id]
 }

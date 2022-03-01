@@ -8,12 +8,19 @@ resource "aws_ecs_service" "monitoring" {
 
   task_definition = aws_ecs_task_definition.statusdash-task-definition.arn
   desired_count   = 1
+
+  network_configuration {
+
+      subnets          = var.subnet_ids
+      assign_public_ip = true
+
+    }
 }
 
 resource "aws_ecs_task_definition" "statusdash-task-definition" {
   family = "statusdash"
   requires_compatibilities = ["FARGATE"]
-  network_mode             = "host"
+  network_mode             = "awsvpc"
 
   cpu    = 256
   memory = 512

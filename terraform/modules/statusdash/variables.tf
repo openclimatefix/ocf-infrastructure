@@ -15,3 +15,8 @@ variable "log-group-name" {
   description = "The log group name where log streams are saved"
   default     = "/aws/ecs/statusdash/"
 }
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Public subnet ids"
+}
