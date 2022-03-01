@@ -90,3 +90,14 @@ data "aws_iam_policy_document" "statusdash-assume-role-policy" {
     }
   }
 }
+
+resource "aws_cloudwatch_log_group" "statusdash" {
+  name = var.log-group-name
+
+  retention_in_days = 7
+
+  tags = {
+    Environment = var.environment
+    Application = "nowcasting"
+  }
+}
