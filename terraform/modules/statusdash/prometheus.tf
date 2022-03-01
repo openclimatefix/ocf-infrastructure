@@ -56,15 +56,33 @@ resource "aws_iam_role" "ecs_task_execution_role-statusdash" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action = [
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ]
+        Action = "sts:AssumeRole"
         Effect = "Allow"
-        Resource = "*"
+        Principal = {
+          Type    = "Service"
+          Service = "ecs-tasks.amazonaws.com"
+        }
       },
     ]
   })
+
+  inline_policy {
+    name = "allow_logs_rw"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action   = [
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ]
+          Effect   = "Allow"
+          Resource = "*"
+        },
+      ]
+    })
+  }
 }
 
 resource "aws_iam_role" "statusdash-iam-role" {
