@@ -13,7 +13,7 @@ resource "aws_ecs_service" "monitoring" {
   network_configuration {
 
       subnets          = var.subnet_ids
-      assign_public_ip = false
+      assign_public_ip = true
 
     }
 }
