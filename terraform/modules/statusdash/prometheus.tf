@@ -53,7 +53,7 @@ resource "aws_ecs_task_definition" "statusdash-task-definition" {
 # +++++++++++++++++++++++++++
 resource "aws_iam_role" "ecs_task_execution_role-statusdash" {
   name = "ecs-statusdash-execution-role"
-  
+
     assume_role_policy = <<EOF
 {
  "Version": "2012-10-17",
@@ -93,8 +93,8 @@ resource "aws_iam_policy" "write_to_prometheus" {
   "Statement": [
     {
       "Action": [
-        "aps:RemoteWrite", 
-        "aps:GetSeries", 
+        "aps:RemoteWrite",
+        "aps:GetSeries",
         "aps:GetLabels",
         "aps:GetMetricMetadata"
       ],

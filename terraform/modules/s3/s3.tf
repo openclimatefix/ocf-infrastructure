@@ -76,5 +76,3 @@ resource "aws_s3_bucket" "s3-sat-bucket" {
     Environment = "${var.environment}"
   }
 }
-
-
