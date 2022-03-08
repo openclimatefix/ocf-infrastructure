@@ -62,7 +62,7 @@ module "nwp" {
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.nwp_version
 }
-    
+
 module "sat" {
   source = "../modules/services/sat"
 
