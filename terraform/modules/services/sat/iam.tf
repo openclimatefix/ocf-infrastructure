@@ -45,7 +45,7 @@ resource "aws_iam_policy" "sat-secret-read" {
 }
 
 resource "aws_iam_policy" "cloudwatch-sat" {
-  name        = "cloudwatch-read-and-write"
+  name        = "cloudwatch-read-and-write-sat"
   path        = "/consumer/sat/"
   description = "Policy to allow read and write to cloudwatch logs"
 
