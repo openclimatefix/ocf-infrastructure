@@ -22,7 +22,7 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
       essential = true
 
       environment : [
-        { "name" : "LOG_LEVEL", "value" : "DEBUG"},
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"}
       ]
 
