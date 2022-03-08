@@ -105,13 +105,13 @@ resource "aws_iam_role_policy_attachment" "attach-write-s3" {
 }
 
 resource "aws_iam_role_policy_attachment" "attach-logs" {
-  role       = aws_iam_role.consumer-nwp-iam-role.name
-  policy_arn = aws_iam_policy.cloudwatch-nwp.arn
+  role       = aws_iam_role.consumer-sat-iam-role.name
+  policy_arn = aws_iam_policy.cloudwatch-sat.arn
 }
 
 resource "aws_iam_role_policy_attachment" "read-secret-execution" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.nwp-secret-read.arn
+  policy_arn = aws_iam_policy.sat-secret-read.arn
 }
 
 resource "aws_iam_role_policy_attachment" "read-secret" {
