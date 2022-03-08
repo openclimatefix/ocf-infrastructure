@@ -45,6 +45,7 @@ resource "aws_db_instance" "db-pv" {
   db_subnet_group_name         = var.db_subnet_group.name # update name with private/public
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
+  allow_major_version_upgrade = true
 
   tags = {
     Name        = "${var.environment}-rds"
