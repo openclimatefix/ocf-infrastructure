@@ -5,7 +5,7 @@
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "sat-schedule-${var.environment}"
   schedule_expression = "cron(*/5 * * * *)"
-  # runs every day 8.00, 14.00 and 20.00, will have to update this for production
+  # runs every 5 minutes
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
