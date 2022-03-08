@@ -33,6 +33,11 @@ variable "nwp_version" {
   description = "The NWP version"
 }
 
+variable "sat_version" {
+  description = "The Satellite version"
+}
+
+
 variable "cloudflare_zone_id" {
   description = "The ZoneID of the nowcasting domain"
 }
