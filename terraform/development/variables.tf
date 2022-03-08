@@ -37,6 +37,10 @@ variable "sat_version" {
   description = "The Satellite version"
 }
 
+variable "pv_version" {
+  description = "The PV Consumer version"
+}
+
 
 variable "cloudflare_zone_id" {
   description = "The ZoneID of the nowcasting domain"
