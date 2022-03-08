@@ -93,8 +93,8 @@ data "aws_iam_policy_document" "ec2-instance-assume-role-policy" {
   }
 }
 
-resource "aws_iam_role" "consumer-nwp-iam-role" {
-  name               = "consumer-nwp-iam-role"
+resource "aws_iam_role" "consumer-sat-iam-role" {
+  name               = "consumer-sat-iam-role"
   path               = "/consumer/"
   assume_role_policy = data.aws_iam_policy_document.ec2-instance-assume-role-policy.json
 }
