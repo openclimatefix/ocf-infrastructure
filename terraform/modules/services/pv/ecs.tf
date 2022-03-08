@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 128
-  memory = 128
+  memory = 256
 
   task_role_arn      = aws_iam_role.consumer-pv-iam-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
