@@ -47,7 +47,7 @@ resource "aws_iam_policy" "iam-policy-s3-nwp-write" {
 }
 
 resource "aws_iam_policy" "iam-policy-s3-sat-read" {
-  name        = "s3-nwp-read-policy"
+  name        = "s3-sat-read-policy"
   description = "Policy to read bucket: ${aws_s3_bucket.s3-sat-bucket.bucket}"
 
   # Terraform's "jsonencode" function converts a
