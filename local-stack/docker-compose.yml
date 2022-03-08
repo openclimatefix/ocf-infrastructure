@@ -40,7 +40,7 @@ services:
         target: /app/data
 
   pv:
-    image: openclimatefix/pvconsumer:0.0.8
+    image: openclimatefix/pvconsumer:0.0.11
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-pv:5432/postgres
       - LOGLEVEL=DEBUG
