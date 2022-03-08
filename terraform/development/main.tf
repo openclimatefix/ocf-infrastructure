@@ -37,7 +37,7 @@ module "api" {
   environment                = var.environment
   vpc_id                     = module.networking.vpc_id
   subnets                    = module.networking.public_subnets
-  database_secret_url        = module.database.forecast-database-secret
+  database_secret_url        = module.database.forecast-database-secret-url
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
   docker_version             = var.api_version
 }
