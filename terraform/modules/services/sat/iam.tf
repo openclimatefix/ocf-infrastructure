@@ -100,8 +100,8 @@ resource "aws_iam_role" "consumer-sat-iam-role" {
 }
 
 resource "aws_iam_role_policy_attachment" "attach-write-s3" {
-  role       = aws_iam_role.consumer-nwp-iam-role.name
-  policy_arn = var.iam-policy-s3-nwp-write.arn
+  role       = aws_iam_role.consumer-sat-iam-role.name
+  policy_arn = var.iam-policy-s3-sat-write.arn
 }
 
 resource "aws_iam_role_policy_attachment" "attach-logs" {
@@ -115,6 +115,6 @@ resource "aws_iam_role_policy_attachment" "read-secret-execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "read-secret" {
-  role       = aws_iam_role.consumer-nwp-iam-role.name
-  policy_arn = aws_iam_policy.nwp-secret-read.arn
+  role       = aws_iam_role.consumer-sat-iam-role.name
+  policy_arn = aws_iam_policy.sat-secret-read.arn
 }
