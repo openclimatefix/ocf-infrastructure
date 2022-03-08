@@ -68,8 +68,8 @@ module "sat" {
 
   region                  = var.region
   environment             = var.environment
-  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
-  s3-bucket               = module.s3.s3-nwp-bucket
+  iam-policy-s3-sat-write = module.s3.iam-policy-s3-sat-write
+  s3-bucket               = module.s3.s3-sat-bucket
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.sat_version
