@@ -3,10 +3,11 @@ version: "3.7"
 
 volumes:
    nwp_data:
+   sat_data:
 
 services:
   postgres-forecast:
-    image: postgres:13.6
+    image: postgres:14.1
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -16,7 +17,7 @@ services:
       - "5432:5432"
 
   postgres-pv:
-    image: postgres:13.6
+    image: postgres:14.1
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -26,7 +27,7 @@ services:
       - "5433:5432"
 
   nwp:
-    image: openclimatefix/metoffice_weather_datahub:1.0.10
+    image: openclimatefix/metoffice_weather_datahub:1.0.12
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-forecast:5432/postgres
       - GIT_PYTHON_REFRESH=quiet
@@ -39,8 +40,20 @@ services:
         source: nwp_data
         target: /app/data
 
+  sat:
+    image: openclimatefix/satip:2.4.8
+    environment:
+      - LOG_LEVEL=DEBUG
+      - SAVE_DIR=data
+      - API_KEY=$SAT_API_KEY
+      - API_SECRET=$SAT_API_SECRET
+    volumes:
+      - type: volume
+        source: sat_data
+        target: /app/data
+
   pv:
-    image: openclimatefix/pvconsumer:0.0.8
+    image: openclimatefix/pvconsumer:0.0.9
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-pv:5432/postgres
       - LOGLEVEL=DEBUG
