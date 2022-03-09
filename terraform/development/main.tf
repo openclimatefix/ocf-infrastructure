@@ -76,6 +76,19 @@ module "sat" {
 }
 
 
+module "pv" {
+  source = "../modules/services/pv"
+
+  region                  = var.region
+  environment             = var.environment
+  ecs-cluster             = module.ecs.ecs_cluster
+  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  database_secret         = module.database.pv-database-secret
+  docker_version          = var.pv_version
+  iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
+}
+
+
 module "forecast" {
   source = "../modules/services/forecast"
 

@@ -1,44 +1,44 @@
 # define aws ecs task definition
 # needs access to the internet
 
-resource "aws_ecs_task_definition" "sat-task-definition" {
-  family                   = "sat"
+resource "aws_ecs_task_definition" "pv-task-definition" {
+  family                   = "pv"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-  cpu    = 512
-  memory = 2048
+  cpu    = 256
+  memory = 512
 
-  task_role_arn      = aws_iam_role.consumer-sat-iam-role.arn
+  task_role_arn      = aws_iam_role.consumer-pv-iam-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "sat-consumer"
-      image = "openclimatefix/satip:${var.docker_version}"
+      name  = "pv-consumer"
+      image = "openclimatefix/pvconsumer:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true
 
       environment : [
-        { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
-        { "name" : "LOG_LEVEL", "value" : "DEBUG"},
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"}
       ]
 
       secrets : [
         {
           "name" : "API_KEY",
-          "valueFrom" : "${data.aws_secretsmanager_secret_version.sat-api-version.arn}:API_KEY::",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-api-version.arn}:api_key::",
         },
         {
-          "name" : "API_SECRET",
-          "valueFrom" : "${data.aws_secretsmanager_secret_version.sat-api-version.arn}:API_SECRET::",
+          "name" : "SYSTEM_ID",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-api-version.arn}:system_id::",
+        },
+        {
+          "name" : "DB_URL",
+          "valueFrom" : "${var.database_secret.arn}:url::",
         }
-#        {
-#          "name" : "LOG_LEVEL",
-#          "valueFrom" : "DEBUG",
-#        }
       ]
 
       logConfiguration : {
