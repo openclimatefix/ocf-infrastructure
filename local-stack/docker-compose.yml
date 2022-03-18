@@ -53,15 +53,17 @@ services:
         target: /app/data
 
   pv:
-    image: openclimatefix/pvconsumer:0.0.11
+    image: openclimatefix/pvconsumer:0.0.21
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-pv:5432/postgres
       - LOGLEVEL=DEBUG
       - API_KEY=$PVOUTPUT_API_KEY
       - SYSTEM_ID=$PVOUTPUT_SYSTEM_ID
       - DATA_SERVICE_URL=https://pvoutput.org/
+      - FILENAME=./pvconsumer/data/pv_systems_10.csv
     depends_on:
       - "postgres-pv"
+    restart: on-failure
 
   forecast:
     image: openclimatefix/nowcasting_forecast:0.1.0
