@@ -1,6 +1,6 @@
 
-from nowcasting_datamodel.connection import DatabaseConnection, Base_PV
-from nowcasting_datamodel.models.pv import PVYieldSQL, PVSystemSQL
+from nowcasting_datamodel.connection import DatabaseConnection
+from nowcasting_datamodel.models.pv import PVYieldSQL, PVSystemSQL, Base_PV
 
 db_url = 'postgresql://postgres:postgres@localhost:5433/postgres'
 
