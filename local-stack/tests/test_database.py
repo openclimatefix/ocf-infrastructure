@@ -1,7 +1,7 @@
 import requests
 from nowcasting_datamodel.connection import DatabaseConnection
 from nowcasting_datamodel.models import MLModelSQL, ForecastSQL, Forecast
-from nowcasting_datamodel.read import get_latest_national_forecast
+from nowcasting_datamodel.read.read import get_latest_national_forecast
 from datetime import datetime, timedelta, timezone
 
 db_url = 'postgresql://postgres:postgres@localhost:5432/postgres'
