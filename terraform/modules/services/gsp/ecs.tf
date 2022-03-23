@@ -23,7 +23,8 @@ resource "aws_ecs_task_definition" "gsp-task-definition" {
 
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
-        { "name" :"REGIME", "value" : "in-day"}
+        { "name" :"REGIME", "value" : "in-day"},
+        { "name" :"N_GSPS", "value" : "339"}
       ]
 
       secrets : [
@@ -69,7 +70,8 @@ resource "aws_ecs_task_definition" "gsp-day-after-task-definition" {
 
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
-        { "name" :"REGIME", "value" : "day-after"}
+        { "name" :"REGIME", "value" : "day-after"},
+        { "name" :"N_GSPS", "value" : "339"}
       ]
 
       secrets : [
