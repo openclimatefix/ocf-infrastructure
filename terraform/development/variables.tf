@@ -41,6 +41,10 @@ variable "pv_version" {
   description = "The PV Consumer version"
 }
 
+variable "gsp_version" {
+  description = "The GSP Consumer version"
+}
+
 
 variable "cloudflare_zone_id" {
   description = "The ZoneID of the nowcasting domain"
