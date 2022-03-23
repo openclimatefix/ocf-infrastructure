@@ -26,6 +26,17 @@ services:
     ports:
       - "5433:5432"
 
+
+  # database migrations
+  datamodel:
+    image: openclimatefix/nowcasting_datamodel:0.0.24
+    environment:
+      - DB_URL=postgresql://postgres:postgres@postgres-forecast:5432/postgres
+      - DB_URL_PV=postgresql://postgres:postgres@postgres-pv:5432/postgres
+    depends_on:
+      - "postgres-pv"
+      - "postgres-forecast"
+
   nwp:
     image: openclimatefix/metoffice_weather_datahub:1.0.12
     environment:
@@ -77,7 +88,7 @@ services:
 
 
   forecast:
-    image: openclimatefix/nowcasting_forecast:0.1.0
+    image: openclimatefix/nowcasting_forecast:0.1.4
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-forecast:5432/postgres
       - GIT_PYTHON_REFRESH=quiet
@@ -96,7 +107,7 @@ services:
 
 
   api:
-    image: openclimatefix/nowcasting_api:0.1.18
+    image: openclimatefix/nowcasting_api:0.1.20
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-forecast:5432/postgres
       - GIT_PYTHON_REFRESH=quiet
