@@ -43,6 +43,7 @@ variable "pv_version" {
 
 variable "gsp_version" {
   description = "The GSP Consumer version"
+  default = "0.0.2"
 }
 
 
