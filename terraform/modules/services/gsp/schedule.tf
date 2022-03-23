@@ -32,16 +32,16 @@ resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
 
 }
 
-resource "aws_cloudwatch_event_rule" "event_rule" {
+resource "aws_cloudwatch_event_rule" "event_rule_day_after" {
   name                = "gsp-day-after-schedule-${var.environment}"
   schedule_expression = "cron(0 6 * * ? *)"
   # runs every morning at 6
 }
 
-resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
+resource "aws_cloudwatch_event_target" "ecs_scheduled_task_day_after" {
 
   rule      = aws_cloudwatch_event_rule.event_rule.name
-  target_id = "gsp-schedule-${var.environment}"
+  target_id = "gsp-schedule-day-after-${var.environment}"
   arn       = var.ecs-cluster.arn
   role_arn  = aws_iam_role.cloudwatch_role.arn
 
