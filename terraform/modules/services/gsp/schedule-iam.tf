@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "cloudwatch" {
 }
 
 resource "aws_iam_role" "cloudwatch_role" {
-  name               = "pv-schedule-cloudwatch-execution"
+  name               = "gsp-schedule-cloudwatch-execution"
   assume_role_policy = data.aws_iam_policy_document.cloudwatch_assume_role.json
 
 }
@@ -44,6 +44,6 @@ resource "aws_iam_role_policy_attachment" "cloudwatch" {
 }
 
 resource "aws_iam_policy" "cloudwatch" {
-  name   = "pv-schedule-cloudwatch-execution"
+  name   = "gsp-schedule-cloudwatch-execution"
   policy = data.aws_iam_policy_document.cloudwatch.json
 }

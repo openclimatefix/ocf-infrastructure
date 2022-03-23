@@ -2,7 +2,7 @@
 # needs access to the internet
 
 resource "aws_ecs_task_definition" "gsp-task-definition" {
-  family                   = "pv"
+  family                   = "gsp"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
@@ -15,7 +15,7 @@ resource "aws_ecs_task_definition" "gsp-task-definition" {
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "pv-consumer"
+      name  = "gsp-consumer"
       image = "openclimatefix/gspconsumer:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
@@ -48,7 +48,7 @@ resource "aws_ecs_task_definition" "gsp-task-definition" {
 }
 
 resource "aws_ecs_task_definition" "gsp-day-after-task-definition" {
-  family                   = "pv"
+  family                   = "gsp-day-after"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
@@ -61,7 +61,7 @@ resource "aws_ecs_task_definition" "gsp-day-after-task-definition" {
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "pv-consumer"
+      name  = "gsp-consumer-day-after"
       image = "openclimatefix/gspconsumer:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128

@@ -3,7 +3,7 @@
 # We want to move to Dagster but for the moment its useful to have this setup
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
-  name                = "pv-schedule-${var.environment}"
+  name                = "gsp-schedule-${var.environment}"
   schedule_expression = "cron(10,40 * * * ? *)"
   # runs every 30 minutes at 10 and 40 past
 }
@@ -41,7 +41,7 @@ resource "aws_cloudwatch_event_rule" "event_rule" {
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
 
   rule      = aws_cloudwatch_event_rule.event_rule.name
-  target_id = "pv-schedule-${var.environment}"
+  target_id = "gsp-schedule-${var.environment}"
   arn       = var.ecs-cluster.arn
   role_arn  = aws_iam_role.cloudwatch_role.arn
 

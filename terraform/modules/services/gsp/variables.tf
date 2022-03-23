@@ -11,7 +11,7 @@ variable "region" {
 
 variable "log-group-name" {
   description = "The log group name where log streams are saved"
-  default     = "/aws/ecs/consumer/pv/"
+  default     = "/aws/ecs/consumer/gsp/"
 }
 
 
