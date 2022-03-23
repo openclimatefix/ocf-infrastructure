@@ -65,6 +65,17 @@ services:
       - "postgres-pv"
     restart: on-failure
 
+  gsp:
+    image: openclimatefix/gspconsumer:0.0.2
+    environment:
+      - DB_URL=postgresql://postgres:postgres@postgres-forecast:5432/postgres
+      - LOGLEVEL=DEBUG
+      - N_GSPS=339 # 338 + 1 national
+    depends_on:
+      - "postgres-forecast"
+    restart: on-failure
+
+
   forecast:
     image: openclimatefix/nowcasting_forecast:0.1.0
     environment:
