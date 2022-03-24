@@ -22,6 +22,7 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
       essential = true
 
       environment : [
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" : "FAKE", "value" : "False" },
         { "name" : "GIT_PYTHON_REFRESH", "value" : "quiet" },
         {"name": "MODEL_NAME", "value":"nwp_simple_trained"}
