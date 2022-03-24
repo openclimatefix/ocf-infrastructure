@@ -4,8 +4,8 @@
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "gsp-schedule-${var.environment}"
-  schedule_expression = "cron(10,40 * * * ? *)"
-  # runs every 30 minutes at 10 and 40 past
+  schedule_expression = "cron(9,39 * * * ? *)"
+  # runs every 30 minutes at 9 and 39 past
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {

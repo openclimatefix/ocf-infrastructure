@@ -25,7 +25,7 @@ def test_gsp_systems():
 
 def test_gsp_yields():
     """
-    Check that there are gsp data in the database
+    Check that there are gsp yields in the database
     """
 
     connection = DatabaseConnection(url=db_url, base=Base_Forecast,echo=True)
