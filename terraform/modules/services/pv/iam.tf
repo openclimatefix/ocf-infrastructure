@@ -124,3 +124,13 @@ resource "aws_iam_role_policy_attachment" "read-db-secret" {
   role       = aws_iam_role.consumer-pv-iam-role.name
   policy_arn = var.iam-policy-rds-read-secret.arn
 }
+
+resource "aws_iam_role_policy_attachment" "read-db-secret-execution-forecast" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = var.iam-policy-rds-read-secret_forecast.arn
+}
+
+resource "aws_iam_role_policy_attachment" "read-db-secret-forecast" {
+  role       = aws_iam_role.consumer-pv-iam-role.name
+  policy_arn = var.iam-policy-rds-read-secret_forecast.arn
+}
