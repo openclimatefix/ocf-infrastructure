@@ -129,4 +129,3 @@ resource "aws_iam_role_policy_attachment" "read-db-secret" {
   role       = aws_iam_role.consumer-nwp-iam-role.name
   policy_arn = var.iam-policy-rds-read-secret.arn
 }
-
