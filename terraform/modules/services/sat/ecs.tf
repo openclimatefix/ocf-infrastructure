@@ -34,11 +34,11 @@ resource "aws_ecs_task_definition" "sat-task-definition" {
         {
           "name" : "API_SECRET",
           "valueFrom" : "${data.aws_secretsmanager_secret_version.sat-api-version.arn}:API_SECRET::",
+        },
+        {
+          "name" : "DB_URL",
+          "valueFrom" : "${var.database_secret.arn}:url::",
         }
-#        {
-#          "name" : "LOG_LEVEL",
-#          "valueFrom" : "DEBUG",
-#        }
       ]
 
       logConfiguration : {
