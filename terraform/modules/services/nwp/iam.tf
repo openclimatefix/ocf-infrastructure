@@ -118,3 +118,15 @@ resource "aws_iam_role_policy_attachment" "read-secret" {
   role       = aws_iam_role.consumer-nwp-iam-role.name
   policy_arn = aws_iam_policy.nwp-secret-read.arn
 }
+
+
+resource "aws_iam_role_policy_attachment" "read-db-secret-execution" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = var.iam-policy-rds-read-secret.arn
+}
+
+resource "aws_iam_role_policy_attachment" "read-db-secret" {
+  role       = aws_iam_role.consumer-nwp-iam-role.name
+  policy_arn = var.iam-policy-rds-read-secret.arn
+}
+
