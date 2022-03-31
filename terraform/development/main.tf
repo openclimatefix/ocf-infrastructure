@@ -84,8 +84,10 @@ module "pv" {
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   database_secret         = module.database.pv-database-secret
+  database_secret_forecast = module.database.forecast-database-secret
   docker_version          = var.pv_version
   iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
+  iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
 }
 
 module "gsp" {
