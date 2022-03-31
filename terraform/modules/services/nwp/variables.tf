@@ -35,3 +35,12 @@ variable "public_subnet_ids" {
 variable "docker_version" {
   description = "The version of the docker that should be used"
 }
+
+
+variable "database_secret" {
+  description = "AWS secret that gives connection details to the database"
+}
+
+variable "iam-policy-rds-read-secret" {
+  description = "IAM policy to be able to read the RDS secret"
+}
