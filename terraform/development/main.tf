@@ -75,6 +75,8 @@ module "sat" {
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.sat_version
+  database_secret         = module.database.forecast-database-secret
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
 
