@@ -4,8 +4,8 @@
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "nwp-schedule-${var.environment}"
-  schedule_expression = "cron(0 8,14,20 * * ? *)"
-  # runs every day 8.00, 14.00 and 20.00, will have to update this for production
+  schedule_expression = "cron(30 * * * ? *)"
+  # runs every day on every 30 mins, will have to update this for production
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
