@@ -24,7 +24,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   # the next line IS NOT RANDOM,
 #  see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
-  solution_stack_name = "64bit Amazon Linux 2 v3.4.11 running Docker"
+  solution_stack_name = "64bit Amazon Linux 2 v3.4.13 running Docker"
 
   # There are a LOT of settings, see here for the basic list:
   # https://is.gd/vfB51g
@@ -33,7 +33,13 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
-    value     = var.database_secret_url
+    value     = var.database_forecast_secret_url
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "DB_URL_PV"
+    value     = var.database_pv_secret_url
   }
 
   setting {

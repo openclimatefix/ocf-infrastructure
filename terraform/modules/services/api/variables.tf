@@ -19,12 +19,20 @@ variable "subnets" {
 }
 # the type is any, as the subnets are terraform resources
 
-variable "iam-policy-rds-read-secret" {
+variable "iam-policy-rds-forecast-read-secret" {
   description = "IAM policy to be able to read the RDS secret"
 }
 
-variable "database_secret_url" {
+variable "database_forecast_secret_url" {
   description = "Secret url that gives connection details to the database"
+}
+
+variable "iam-policy-rds-pv-read-secret" {
+  description = "IAM policy to be able to read the RDS PV secret"
+}
+
+variable "database_pv_secret_url" {
+  description = "Secret url that gives connection details to the PV database"
 }
 
 variable "docker_version" {
