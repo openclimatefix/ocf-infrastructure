@@ -90,12 +90,12 @@ resource "aws_iam_role_policy_attachment" "attach-logs-service" {
   policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
-resource "aws_iam_role_policy_attachment" "attach-db-secret-service" {
+resource "aws_iam_role_policy_attachment" "attach-db-forecast-secret-service" {
   role       = aws_iam_role.api-service-role.name
   policy_arn = var.iam-policy-rds-forecast-read-secret.arn
 }
 
-resource "aws_iam_role_policy_attachment" "attach-db-secret-service" {
+resource "aws_iam_role_policy_attachment" "attach-db-pv-secret-service" {
   role       = aws_iam_role.api-service-role.name
   policy_arn = var.iam-policy-rds-pv-read-secret.arn
 }
