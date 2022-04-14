@@ -139,10 +139,6 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     resource  = ""
   }
 
-  depends_on = [
-    aws_elastic_beanstalk_application_version.latest,
-  ]
-
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
