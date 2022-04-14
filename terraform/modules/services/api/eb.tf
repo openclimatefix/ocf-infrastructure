@@ -139,6 +139,16 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     resource  = ""
   }
 
+    # make sure that when the application is made, the latest version is deployed to it
+  provisioner "local-exec" {
+    command = join("", ["aws elasticbeanstalk update-environment ",
+      "--region ${var.region} ",
+      "--application-name ${aws_elastic_beanstalk_application.eb-api-application.name} ",
+      "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
+      "--environment-name ${aws_elastic_beanstalk_environment.eb-api-env.name}"
+    ])
+  }
+
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
@@ -148,13 +158,4 @@ resource "aws_elastic_beanstalk_application_version" "latest" {
   bucket      = aws_s3_bucket.eb.id
   key         = aws_s3_bucket_object.eb-object.id
 
-  # make sure that when the application is made, the latest version is deployed to it
-  provisioner "local-exec" {
-    command = join("", ["aws elasticbeanstalk update-environment ",
-      "--region ${var.region} ",
-      "--application-name ${aws_elastic_beanstalk_application.eb-api-application.name} ",
-      "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
-      "--environment-name ${aws_elastic_beanstalk_environment.eb-api-env.name}"
-    ])
-  }
 }
