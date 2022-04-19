@@ -23,6 +23,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
 
       environment : [
         { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
+        { "name" : "CACHE_DIR", "value" : "s3://${var.s3-bucket.id}/raw" },
         { "name" : "LOG_LEVEL", "value" : "DEBUG"},
       ]
 

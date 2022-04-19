@@ -33,15 +33,15 @@ module "ecs" {
 module "api" {
   source = "../modules/services/api"
 
-  region                     = var.region
-  environment                = var.environment
-  vpc_id                     = module.networking.vpc_id
-  subnets                    = module.networking.public_subnets
-  docker_version             = var.api_version
-  database_forecast_secret_url = module.database.forecast-database-secret-url
-  database_pv_secret_url = module.database.pv-database-secret-url
+  region                              = var.region
+  environment                         = var.environment
+  vpc_id                              = module.networking.vpc_id
+  subnets                             = module.networking.public_subnets
+  docker_version                      = var.api_version
+  database_forecast_secret_url        = module.database.forecast-database-secret-url
+  database_pv_secret_url              = module.database.pv-database-secret-url
   iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
-  iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
+  iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
 }
 
 module "database" {
@@ -53,19 +53,19 @@ module "database" {
   vpc_id          = module.networking.vpc_id
 }
 
-#module "nwp" {
-#  source = "../modules/services/nwp"
-#
-#  region                  = var.region
-#  environment             = var.environment
-#  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
-#  s3-bucket               = module.s3.s3-nwp-bucket
-#  ecs-cluster             = module.ecs.ecs_cluster
-#  public_subnet_ids       = [module.networking.public_subnets[0].id]
-#  docker_version          = var.nwp_version
-#  database_secret         = module.database.forecast-database-secret
-#  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
-#}
+module "nwp" {
+  source = "../modules/services/nwp"
+
+  region                  = var.region
+  environment             = var.environment
+  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
+  s3-bucket               = module.s3.s3-nwp-bucket
+  ecs-cluster             = module.ecs.ecs_cluster
+  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  docker_version          = var.nwp_version
+  database_secret         = module.database.forecast-database-secret
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+}
 
 module "sat" {
   source = "../modules/services/sat"
