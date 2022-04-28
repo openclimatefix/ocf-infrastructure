@@ -10,4 +10,4 @@ services:
     container_name: nowcasting_data_visualization
     command: ["python", "application/app.py"]
     ports:
-      - 80:80
+      - 8000:8000
