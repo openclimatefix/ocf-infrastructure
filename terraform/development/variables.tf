@@ -25,6 +25,10 @@ variable "api_version" {
   description = "The API version"
 }
 
+variable "data_visualization_version" {
+  description = "The Data Visualization version"
+}
+
 variable "forecast_version" {
   description = "The Forecast version"
 }
