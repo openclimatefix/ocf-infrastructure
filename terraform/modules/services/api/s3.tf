@@ -9,3 +9,8 @@ resource "aws_s3_bucket_object" "eb-object" {
   key    = "beanstalk/docker-compose-${var.docker_version}.yml"
   source = "${path.module}/docker-compose.yml"
 }
+
+resource "aws_s3_bucket_acl" "eb-acl" {
+  bucket = aws_s3_bucket.eb.id
+  acl    = "private"
+}
