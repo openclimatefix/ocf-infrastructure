@@ -146,7 +146,7 @@ resource "aws_elastic_beanstalk_environment" "eb-data_visualization-env" {
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "nowcasting-data_visualization-${var.docker_version}"
+  name        = "nowcasting-data-visualization-${var.docker_version}"
   application = aws_elastic_beanstalk_application.eb-data_visualization-application.name
   description = "application version created by terraform (${var.docker_version})"
   bucket      = aws_s3_bucket.eb_data_visualization.id
