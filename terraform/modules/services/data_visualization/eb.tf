@@ -45,7 +45,7 @@ resource "aws_elastic_beanstalk_environment" "eb-data_visualization-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "API_URL"
-    value     = var.api_url
+    value     = 'http://' + var.api_url
   }
 
   setting {
