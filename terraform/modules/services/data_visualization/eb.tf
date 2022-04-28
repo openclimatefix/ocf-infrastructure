@@ -6,7 +6,7 @@
 
 
 resource "aws_elastic_beanstalk_application" "eb-data_visualization-application" {
-  name        = "nowcasting-${var.environment}"
+  name        = "nowcasting-data-visualization-${var.environment}"
   description = "Nowcasting data_visualization"
 }
 
