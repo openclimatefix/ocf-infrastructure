@@ -56,6 +56,7 @@ module "data_visualization" {
   database_pv_secret_url              = module.database.pv-database-secret-url
   iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
+  api_url                             = module.api.api_url
 }
 
 module "database" {
