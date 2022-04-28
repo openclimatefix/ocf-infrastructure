@@ -44,7 +44,7 @@ module "api" {
   iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
 }
 
-module "api" {
+module "data_visualization" {
   source = "../modules/services/data_visualization"
 
   region                              = var.region
