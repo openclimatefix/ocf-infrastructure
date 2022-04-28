@@ -11,7 +11,7 @@ resource "aws_elastic_beanstalk_application" "eb-data_visualization-application"
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-data_visualization-env" {
-  name        = "nowcasting-data_visualization-${var.environment}"
+  name        = "nowcasting-data-visual-${var.environment}"
   application = aws_elastic_beanstalk_application.eb-data_visualization-application.name
   cname_prefix = "nowcasting-data_visualization-${var.environment}"
   version_label = "nowcasting-data_visualization-${var.docker_version}"
