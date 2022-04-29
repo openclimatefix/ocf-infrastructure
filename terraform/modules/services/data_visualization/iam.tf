@@ -139,10 +139,10 @@ resource "aws_iam_instance_profile" "ec2_data_visualization" {
 
 resource "aws_iam_role_policy_attachment" "attach-s3-nwp" {
   role       = aws_iam_role.instance-role_data_visualization.name
-  policy_arn = var.iam-policy-s3-nwp-read
+  policy_arn = var.iam-policy-s3-nwp-read.arn
 }
 
 resource "aws_iam_role_policy_attachment" "attach-s3-sat" {
   role       = aws_iam_role.instance-role_data_visualization.name
-  policy_arn = var.iam-policy-s3-sat-read
+  policy_arn = var.iam-policy-s3-sat-read.arn
 }
