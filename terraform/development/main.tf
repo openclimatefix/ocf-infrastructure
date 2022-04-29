@@ -57,6 +57,8 @@ module "data_visualization" {
   iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
   api_url                             = module.api.api_url
+  iam-policy-s3-nwp-read              = module.s3.iam-policy-s3-nwp-read
+  iam-policy-s3-sat-read              = module.s3.iam-policy-s3-sat-read
 }
 
 module "database" {

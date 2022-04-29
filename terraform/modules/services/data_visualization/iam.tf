@@ -136,3 +136,13 @@ resource "aws_iam_instance_profile" "ec2_data_visualization" {
   name = "data_visualization-instance-eb-${var.environment}"
   role = join("", aws_iam_role.instance-role_data_visualization.*.name)
 }
+
+resource "aws_iam_role_policy_attachment" "attach-s3-nwp" {
+  role       = aws_iam_role.instance-role_data_visualization.name
+  policy_arn = var.iam-policy-s3-nwp-read
+}
+
+resource "aws_iam_role_policy_attachment" "attach-s3-sat" {
+  role       = aws_iam_role.instance-role_data_visualization.name
+  policy_arn = var.iam-policy-s3-sat-read
+}
