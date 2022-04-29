@@ -42,3 +42,11 @@ variable "api_url" {
 variable "docker_version" {
   description = "The version of the docker that should be used"
 }
+
+variable "iam-policy-s3-nwp-read" {
+  description = "IAM policy to read to s3 bucket for NWP data"
+}
+
+variable "iam-policy-s3-sat-read" {
+  description = "IAM policy to read to s3 bucket for Satellite data"
+}
