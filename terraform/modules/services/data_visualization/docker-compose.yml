@@ -8,7 +8,7 @@ services:
       DB_URL: $DB_URL
       DB_URL_PV: $DB_URL_PV
       API_URL: $API_URL
-      NWP_AWS_PATH: $NWP_AWS_PATH
+      NWP_AWS_FILENAME: $NWP_AWS_FILENAME
     container_name: nowcasting_data_visualization
     command: ["python", "application/app.py"]
     ports:

@@ -56,8 +56,8 @@ resource "aws_elastic_beanstalk_environment" "eb-data_visualization-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "NWP_AWS_PATH"
-    value     = "s3://nowcasting-nwp-development/data"
+    name      = "NWP_AWS_FILENAME"
+    value     = "s3://nowcasting-nwp-development/data/latest.netcdf"
   }
 
 
