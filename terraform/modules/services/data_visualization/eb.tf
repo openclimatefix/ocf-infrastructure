@@ -54,6 +54,12 @@ resource "aws_elastic_beanstalk_environment" "eb-data_visualization-env" {
     value     = var.docker_version
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "NWP_AWS_PATH"
+    value     = "s3://nowcasting-nwp-development/data"
+  }
+
 
   setting {
     namespace = "aws:ec2:vpc"
