@@ -10,11 +10,6 @@ resource "aws_s3_bucket_object" "eb-object" {
   source = "${path.module}/docker-compose.yml"
 }
 
-resource "aws_s3_bucket_acl" "eb-acl" {
-  bucket = aws_s3_bucket.eb.id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_public_access_block" "eb-pab" {
   bucket = aws_s3_bucket.eb.id
 
