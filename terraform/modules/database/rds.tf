@@ -4,7 +4,7 @@ resource "aws_db_instance" "db-forecast" {
   allocated_storage            = 10
   max_allocated_storage        = 100
   engine                       = "postgres"
-  engine_version               = "14.1"
+  engine_version               = "14.2"
   instance_class               = "db.t3.micro"
   name                         = "forecast${var.environment}"
   identifier                   = "forecast-${var.environment}"
@@ -31,7 +31,7 @@ resource "aws_db_instance" "db-pv" {
   allocated_storage            = 10
   max_allocated_storage        = 100
   engine                       = "postgres"
-  engine_version               = "14.1"
+  engine_version               = "14.2"
   instance_class               = "db.t3.micro"
   name                         = "pv${var.environment}"
   identifier                   = "pv-${var.environment}"
