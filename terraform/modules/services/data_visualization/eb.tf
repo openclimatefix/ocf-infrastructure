@@ -60,6 +60,13 @@ resource "aws_elastic_beanstalk_environment" "eb-data_visualization-env" {
     value     = "s3://nowcasting-nwp-development/data/latest.netcdf"
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "SATELLITE_AWS_FILENAME"
+    value     = "s3://nowcasting-sat-development/data/latest/latest.zarr.zip"
+  }
+
+
 
   setting {
     namespace = "aws:ec2:vpc"
