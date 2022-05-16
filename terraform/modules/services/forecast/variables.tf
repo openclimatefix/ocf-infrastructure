@@ -33,7 +33,11 @@ variable "subnet_ids" {
 }
 
 variable "iam-policy-rds-read-secret" {
-  description = "IAM policy to be able to read the RDS secret"
+  description = "IAM policy to be able to read the RDS secret for forecast database"
+}
+
+variable "iam-policy-rds-pv-read-secret" {
+  description = "IAM policy to be able to read the RDS secret for the pv database"
 }
 
 variable "database_secret" {
