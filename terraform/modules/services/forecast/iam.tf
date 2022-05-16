@@ -82,6 +82,11 @@ resource "aws_iam_role_policy_attachment" "attach-write-s3" {
   policy_arn = var.iam-policy-s3-nwp-read.arn
 }
 
+resource "aws_iam_role_policy_attachment" "attach-write-s3-sat" {
+  role       = aws_iam_role.forecast-iam-role.name
+  policy_arn = var.iam-policy-s3-sat-read.arn
+}
+
 resource "aws_iam_role_policy_attachment" "attach-write-s3-ml" {
   role       = aws_iam_role.forecast-iam-role.name
   policy_arn = var.iam-policy-s3-ml-read.arn
