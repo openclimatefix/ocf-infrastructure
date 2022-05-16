@@ -129,15 +129,16 @@ module "gsp" {
 module "forecast" {
   source = "../modules/services/forecast"
 
-  region                     = var.region
-  environment                = var.environment
-  ecs-cluster                = module.ecs.ecs_cluster
-  subnet_ids                 = [module.networking.public_subnets[0].id]
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
-  iam-policy-s3-nwp-read     = module.s3.iam-policy-s3-nwp-read
-  iam-policy-s3-ml-read     = module.s3.iam-policy-s3-ml-read
-  database_secret            = module.database.forecast-database-secret
-  docker_version             = var.forecast_version
+  region                        = var.region
+  environment                   = var.environment
+  ecs-cluster                   = module.ecs.ecs_cluster
+  subnet_ids                    = [module.networking.public_subnets[0].id]
+  iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
+  iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
+  iam-policy-s3-nwp-read        = module.s3.iam-policy-s3-nwp-read
+  iam-policy-s3-ml-read         = module.s3.iam-policy-s3-ml-read
+  database_secret               = module.database.forecast-database-secret
+  docker_version                = var.forecast_version
 }
 
 module "statusdash" {

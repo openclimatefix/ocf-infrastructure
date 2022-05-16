@@ -101,3 +101,13 @@ resource "aws_iam_role_policy_attachment" "read-secret" {
   role       = aws_iam_role.forecast-iam-role.name
   policy_arn = var.iam-policy-rds-read-secret.arn
 }
+
+resource "aws_iam_role_policy_attachment" "pv-read-secret-execution" {
+  role       = aws_iam_role.ecs_task_execution_role-forecast.name
+  policy_arn = var.iam-policy-rds-pv-read-secret.arn
+}
+
+resource "aws_iam_role_policy_attachment" "pv-read-secret" {
+  role       = aws_iam_role.forecast-iam-role.name
+  policy_arn = var.iam-policy-rds-pv-read-secret.arn
+}
