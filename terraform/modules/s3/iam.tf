@@ -138,4 +138,3 @@ resource "aws_iam_policy" "iam-policy-s3-ml-write" {
     ]
   })
 }
-
