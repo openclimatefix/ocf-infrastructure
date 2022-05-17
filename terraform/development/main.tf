@@ -139,6 +139,7 @@ module "forecast" {
   iam-policy-s3-sat-read        = module.s3.iam-policy-s3-sat-read
   iam-policy-s3-ml-read         = module.s3.iam-policy-s3-ml-write #TODO update name
   database_secret               = module.database.forecast-database-secret
+  pv_database_secret            = module.database.pv-database-secret
   docker_version                = var.forecast_version
 }
 

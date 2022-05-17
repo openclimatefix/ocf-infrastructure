@@ -45,7 +45,11 @@ variable "iam-policy-rds-pv-read-secret" {
 }
 
 variable "database_secret" {
-  description = "AWS secret that gives connection details to the database"
+  description = "AWS secret that gives connection details to the forecast database"
+}
+
+variable "pv_database_secret" {
+  description = "AWS secret that gives connection details to the pv database"
 }
 
 variable "docker_version" {
