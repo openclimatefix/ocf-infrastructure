@@ -33,6 +33,10 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
         {
           "name" : "DB_URL",
           "valueFrom" : "${var.database_secret.arn}:url::",
+        },
+        {
+          "name" : "DB_URL_PV",
+          "valueFrom" : "${var.pv_database_secret.arn}:url::",
         }
       ]
 
