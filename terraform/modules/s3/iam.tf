@@ -116,7 +116,7 @@ resource "aws_iam_policy" "iam-policy-s3-ml-read" {
 
 
 resource "aws_iam_policy" "iam-policy-s3-ml-write" {
-  name        = "s3-ml-read-policy"
+  name        = "s3-ml-write-policy"
   description = "Policy to read bucket: ${data.aws_s3_bucket.s3-ml.bucket}"
 
   # Terraform's "jsonencode" function converts a
