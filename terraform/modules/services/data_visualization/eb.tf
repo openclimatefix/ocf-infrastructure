@@ -19,7 +19,7 @@ resource "aws_elastic_beanstalk_environment" "eb-data_visualization-env" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "t4g.small"
+    value     = "t3.small"
   }
 
   setting {
