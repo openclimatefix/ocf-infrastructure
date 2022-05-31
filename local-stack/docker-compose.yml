@@ -32,7 +32,7 @@ services:
     image: openclimatefix/nowcasting_datamodel
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-forecast:5432/postgres
-      - DB_URL_PV=postgresql://postgres:postgres@postgres-pv:5432/postgres
+      - DB_URL_PV=postgresql://postgres:postgres@postgres-pv:5433/postgres
     depends_on:
       - "postgres-pv"
       - "postgres-forecast"
@@ -55,7 +55,7 @@ services:
     image: openclimatefix/satip
     environment:
       - LOG_LEVEL=DEBUG
-      - SAVE_DIR=data
+      - SAVE_DIR=sat_data
       - API_KEY=$SAT_API_KEY
       - API_SECRET=$SAT_API_SECRET
     volumes:
@@ -66,7 +66,8 @@ services:
   pv:
     image: openclimatefix/pvconsumer
     environment:
-      - DB_URL=postgresql://postgres:postgres@postgres-pv:5432/postgres
+      - DB_URL_FORECAST=postgresql://postgres:postgres@postgres-pv:5432/postgres
+      - DB_URL=postgresql://postgres:postgres@postgres-pv:5433/postgres
       - LOGLEVEL=DEBUG
       - API_KEY=$PVOUTPUT_API_KEY
       - SYSTEM_ID=$PVOUTPUT_SYSTEM_ID

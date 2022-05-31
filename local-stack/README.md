@@ -3,8 +3,8 @@
 Within this folder are the files to be able to run the stack locally on your laptop
 
 You'll need to add the following environmental variables
-- API_KEY for Metoffice API
-- API_SECRET for Metoffice API
+- NWP_API_KEY for Metoffice API
+- NWP_API_SECRET for Metoffice API
 - AWS_ACCESS_KEY_ID for AWS
 - AWS_SECRET_ACCESS_KEY for AWS
 - PVOUTPUT_API_KEY for PV api key
