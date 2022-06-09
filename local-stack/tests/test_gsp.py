@@ -30,5 +30,5 @@ def test_gsp_yields():
 
     connection = DatabaseConnection(url=db_url, base=Base_Forecast,echo=True)
     with connection.get_session() as session:
-        gsp_yields = session.query(GSPYieldSQL).all()
+        gsp_yields = session.query(GSPYieldSQL).all() # Errors because a column is VARCHAR when it should be Float maybe?
         assert len(gsp_yields) > 0
