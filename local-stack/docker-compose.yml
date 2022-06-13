@@ -29,10 +29,10 @@ services:
 
   # database migrations
   datamodel:
-    image: openclimatefix/nowcasting_datamodel
+    image: jacobbieker/datamodel
     environment:
       - DB_URL=postgresql://postgres:postgres@postgres-forecast:5432/postgres
-      - DB_URL_PV=postgresql://postgres:postgres@postgres-pv:5433/postgres
+      - DB_URL_PV=postgresql://postgres:postgres@postgres-pv:5432/postgres
     depends_on:
       - "postgres-pv"
       - "postgres-forecast"
@@ -66,8 +66,8 @@ services:
   pv:
     image: openclimatefix/pvconsumer
     environment:
-      - DB_URL_FORECAST=postgresql://postgres:postgres@postgres-pv:5432/postgres
-      - DB_URL=postgresql://postgres:postgres@postgres-pv:5433/postgres
+      - DB_URL_FORECAST=postgresql://postgres:postgres@postgres-forecast:5432/postgres
+      - DB_URL=postgresql://postgres:postgres@postgres-pv:5432/postgres
       - LOGLEVEL=DEBUG
       - API_KEY=$PVOUTPUT_API_KEY
       - SYSTEM_ID=$PVOUTPUT_SYSTEM_ID
