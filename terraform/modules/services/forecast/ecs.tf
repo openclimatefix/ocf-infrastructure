@@ -26,7 +26,8 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
         { "name" : "FAKE", "value" : "False" },
         { "name" : "GIT_PYTHON_REFRESH", "value" : "quiet" },
         {"name": "MODEL_NAME", "value":"cnn"},
-        {"name": "BATCH_SAVE_DIR", "value": "s3://nowcasting-ml-models-development/"}
+        {"name": "BATCH_SAVE_DIR", "value": "s3://nowcasting-ml-models-development/"},
+        {"name": "ENVIRONMENT", "value": var.environment}
       ]
 
       secrets : [
