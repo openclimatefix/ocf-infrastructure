@@ -26,8 +26,8 @@ jobs:
         docker-compose up -d
 
         # wait 2 minutes
-        echo "Sleeping for 2 minutes, to let the local stackrun"
-        sleep 120
+        echo "Sleeping for 10 minutes, to let the local stackrun"
+        sleep 600
 
         # run tests
         pytest
@@ -41,3 +41,5 @@ jobs:
         NWP_API_SECRET: ${{ secrets.NWP_API_SECRET }}
         PVOUTPUT_API_KEY: ${{ secrets.PVOUTPUT_API_KEY }}
         PVOUTPUT_SYSTEM_ID: ${{ secrets.PVOUTPUT_SYSTEM_ID }}
+        SAT_API_KEY: ${{ secrets.SAT_API_KEY }}
+        SAT_API_SECRET: ${{ secrets.SAT_API_SECRET }}
