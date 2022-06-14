@@ -29,3 +29,7 @@ output "iam-policy-s3-ml-read" {
 output "iam-policy-s3-ml-write" {
   value = aws_iam_policy.iam-policy-s3-ml-write
 }
+
+output "s3-ml-bucket" {
+  value = data.aws_s3_bucket.s3-ml
+}

@@ -55,3 +55,15 @@ variable "pv_database_secret" {
 variable "docker_version" {
   description = "The version of the docker that should be used"
 }
+
+variable "s3-sat-bucket" {
+  description = "s3 satellite bucket"
+}
+
+variable "s3-nwp-bucket" {
+  description = "s3 nwp bucket"
+}
+
+variable "s3-ml-bucket" {
+  description = "s3 ml bucket"
+}
