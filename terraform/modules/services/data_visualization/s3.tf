@@ -1,7 +1,7 @@
 # create s3 bucket for application verions
 
 resource "aws_s3_bucket" "eb_data_visualization" {
-  bucket = "nowcasting-eb-applicationversion-data-visualization"
+  bucket = "nowcasting-eb-applicationversion-data-visualization-${var.environment}"
   acl    = "private"
 }
 

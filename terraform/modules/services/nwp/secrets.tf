@@ -1,7 +1,7 @@
 # Read in secrets for API for MetOffice Weather DataHub
 
 data "aws_secretsmanager_secret" "nwp-api" {
-  name = "development/consumer/nwp"
+  name = "${var.environment}/consumer/nwp"
   #  arn = "arn:aws:secretsmanager:eu-west-2::secret:development/consumer/nwp"
 }
 
