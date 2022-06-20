@@ -141,9 +141,9 @@ module "forecast" {
   database_secret               = module.database.forecast-database-secret
   pv_database_secret            = module.database.pv-database-secret
   docker_version                = var.forecast_version
-  s3-nwp-bucket = module.s3.s3-nwp-bucket
-  s3-sat-bucket = module.s3.s3-sat-bucket
-  s3-ml-bucket = module.s3.s3-ml-bucket
+  s3-nwp-bucket                 = module.s3.s3-nwp-bucket
+  s3-sat-bucket                 = module.s3.s3-sat-bucket
+  s3-ml-bucket                  = module.s3.s3-ml-bucket
 }
 
 module "statusdash" {
