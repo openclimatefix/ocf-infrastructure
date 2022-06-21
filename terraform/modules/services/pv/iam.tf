@@ -38,7 +38,8 @@ resource "aws_iam_policy" "pv-secret-read" {
           "secretsmanager:GetSecretValue",
         ]
         Effect   = "Allow"
-        Resource = data.aws_secretsmanager_secret_version.pv-api-version.arn
+        Resource = [data.aws_secretsmanager_secret_version.pv-api-version.arn,
+          data.aws_secretsmanager_secret_version.pv-ss-version.arn]
       },
     ]
   })

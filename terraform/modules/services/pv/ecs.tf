@@ -42,6 +42,22 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
         {
           "name" : "DB_URL_FORECAST",
           "valueFrom" : "${var.database_secret_forecast.arn}:url::",
+        },
+        {
+          "name" : "SS_USER_ID",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-ss-version.arn}:user_id::",
+        },
+        {
+          "name" : "SS_KEY",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-ss-version.arn}:key::",
+        },
+        {
+          "name" : "SS_URL",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-ss-version.arn}:url::",
+        },
+        {
+          "name" : "PROVIDER",
+          "valueFrom" : var.pv_provider,
         }
       ]
 
