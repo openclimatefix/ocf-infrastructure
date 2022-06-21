@@ -57,7 +57,7 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
         },
         {
           "name" : "PROVIDER",
-          "valueFrom" : var.provider,
+          "valueFrom" : var.pv_provider,
         }
       ]
 

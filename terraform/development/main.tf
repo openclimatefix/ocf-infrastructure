@@ -125,7 +125,7 @@ module "pv-ss" {
   docker_version          = var.pv_version
   iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
-  provider = "solar_sheffield_passiv"
+  pv_provider = "solar_sheffield_passiv"
 }
 
 module "gsp" {
