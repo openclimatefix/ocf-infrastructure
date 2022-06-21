@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"},
-        { "name" : "PROVIDER", "valueFrom" : "pvoutput.org"}
+        { "name" : "PROVIDER", "value" : "pvoutput.org"}
       ]
 
       secrets : [
@@ -65,7 +65,7 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"},
-        { "name" : "PROVIDER", "valueFrom" : "solar_sheffield_passiv"}
+        { "name" : "PROVIDER", "value" : "solar_sheffield_passiv"}
       ]
 
       secrets : [
