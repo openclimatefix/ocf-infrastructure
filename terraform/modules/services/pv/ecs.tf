@@ -60,7 +60,7 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
     },
     {
       name  = "pv-ss-consumer"
-      image = "openclimatefix/pvconsumer:${var.docker_version}"
+      image = "openclimatefix/pvconsumer:${var.docker_version_ss}"
       #      cpu       = 128
       #      memory    = 128
       essential = true

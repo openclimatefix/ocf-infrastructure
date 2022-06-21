@@ -44,7 +44,7 @@ variable "docker_version" {
   description = "The version of the docker that should be used"
 }
 
-variable "docker_version-ss" {
+variable "docker_version_ss" {
   description = "The version of the docker that should be used for the solar sheffield pv consumer"
 }
 
