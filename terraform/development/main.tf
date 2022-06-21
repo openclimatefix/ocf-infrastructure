@@ -113,6 +113,21 @@ module "pv" {
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
 }
 
+module "pv-ss" {
+  source = "../modules/services/pv"
+
+  region                  = var.region
+  environment             = var.environment
+  ecs-cluster             = module.ecs.ecs_cluster
+  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  database_secret         = module.database.pv-database-secret
+  database_secret_forecast = module.database.forecast-database-secret
+  docker_version          = var.pv_version
+  iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
+  iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  provider = "solar_sheffield_passiv"
+}
+
 module "gsp" {
   source = "../modules/services/gsp"
 
