@@ -23,7 +23,8 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
 
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
-        { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"}
+        { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"},
+        { "name" : "PROVIDER", "valueFrom" : "pvoutput.org"}
       ]
 
       secrets : [
@@ -42,11 +43,7 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
         {
           "name" : "DB_URL_FORECAST",
           "valueFrom" : "${var.database_secret_forecast.arn}:url::",
-        },
-        {
-          "name" : "PROVIDER",
-          "valueFrom" : "pvoutput.org",
-        },
+        }
       ]
 
       logConfiguration : {
@@ -67,7 +64,8 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
 
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
-        { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"}
+        { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"},
+        { "name" : "PROVIDER", "valueFrom" : "solar_sheffield_passiv"}
       ]
 
       secrets : [
@@ -90,10 +88,6 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
         {
           "name" : "DB_URL_FORECAST",
           "valueFrom" : "${var.database_secret_forecast.arn}:url::",
-        },
-        {
-          "name" : "PROVIDER",
-          "valueFrom" : "solar_sheffield_passiv",
         },
       ]
 
