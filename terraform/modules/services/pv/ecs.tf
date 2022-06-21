@@ -44,6 +44,34 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
           "valueFrom" : "${var.database_secret_forecast.arn}:url::",
         },
         {
+          "name" : "PROVIDER",
+          "valueFrom" : "pvoutput.org",
+        },
+      ]
+
+      logConfiguration : {
+        "logDriver" : "awslogs",
+        "options" : {
+          "awslogs-group" : var.log-group-name,
+          "awslogs-region" : var.region,
+          "awslogs-stream-prefix" : "streaming"
+        }
+      }
+    },
+    {
+      name  = "pv-ss-consumer"
+      image = "openclimatefix/pvconsumer:${var.docker_version_ss}"
+      #      cpu       = 128
+      #      memory    = 128
+      essential = true
+
+      environment : [
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" :"DATA_SERVICE_URL", "value" : "https://pvoutput.org/"}
+      ]
+
+      secrets : [
+        {
           "name" : "SS_USER_ID",
           "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-ss-version.arn}:user_id::",
         },
@@ -56,9 +84,17 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
           "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-ss-version.arn}:url::",
         },
         {
+          "name" : "DB_URL",
+          "valueFrom" : "${var.database_secret.arn}:url::",
+        },
+        {
+          "name" : "DB_URL_FORECAST",
+          "valueFrom" : "${var.database_secret_forecast.arn}:url::",
+        },
+        {
           "name" : "PROVIDER",
-          "valueFrom" : var.pv_provider,
-        }
+          "valueFrom" : "solar_sheffield_passiv",
+        },
       ]
 
       logConfiguration : {

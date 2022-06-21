@@ -44,6 +44,11 @@ variable "docker_version" {
   description = "The version of the docker that should be used"
 }
 
+variable "docker_version_ss" {
+  description = "The version of the docker that should be used for the solar sheffield pv consumer"
+}
+
+
 variable "pv_provider" {
   description = "The provider that this service uses. Can be pvoutput.org or solar_sheffield_passiv"
   default = "pvoutput.org"
