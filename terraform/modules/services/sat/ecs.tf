@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "sat-task-definition" {
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 512
-  memory = 3072
+  memory = 4096
 
 
   task_role_arn      = aws_iam_role.consumer-sat-iam-role.arn
