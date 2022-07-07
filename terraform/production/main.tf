@@ -109,6 +109,7 @@ module "pv" {
   database_secret         = module.database.pv-database-secret
   database_secret_forecast = module.database.forecast-database-secret
   docker_version          = var.pv_version
+    docker_version_ss          = var.pv_ss_version
   iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
 }

@@ -45,6 +45,11 @@ variable "pv_version" {
   description = "The PV Consumer version"
 }
 
+variable "pv_ss_version" {
+  description = "The PV Consumer version for solar sheffield"
+}
+
+
 variable "gsp_version" {
   description = "The GSP Consumer version"
   default = "0.0.2"
