@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "gsp-task-definition" {
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"REGIME", "value" : "in-day"},
-        { "name" :"N_GSPS", "value" : "339"}
+        { "name" :"N_GSPS", "value" : "317"}
       ]
 
       secrets : [
