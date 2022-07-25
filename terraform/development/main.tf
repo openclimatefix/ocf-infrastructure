@@ -147,11 +147,11 @@ module "forecast" {
   s3-ml-bucket                  = module.s3.s3-ml-bucket
 }
 
-module "statusdash" {
-  source = "../modules/statusdash"
-
-  region                     = var.region
-  environment                = var.environment
-  ecs-cluster                = module.ecs.ecs_cluster
-  subnet_ids                 = [module.networking.public_subnets[0].id]
-}
+#module "statusdash" {
+#  source = "../modules/statusdash"
+#
+#  region                     = var.region
+#  environment                = var.environment
+#  ecs-cluster                = module.ecs.ecs_cluster
+#  subnet_ids                 = [module.networking.public_subnets[0].id]
+#}
