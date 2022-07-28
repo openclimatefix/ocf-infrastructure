@@ -4,8 +4,18 @@ data "template_file" "user_data" {
   template = file("${path.module}/user_data.sh")
 }
 
+data "aws_ami" "ami_latest" {
+  owners = ["amazon"]
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
+  }
+}
+
 resource "aws_instance" "ec2-bastion" {
-  ami           = "ami-005e54dee72cc1d00" # us-west-2
+  ami           = data.aws_ami.ami_latest.id 
   instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.ec2-ssh.id]
   user_data = "${data.template_file.user_data.rendered}"
