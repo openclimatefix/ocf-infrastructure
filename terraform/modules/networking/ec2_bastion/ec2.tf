@@ -25,7 +25,7 @@ resource "aws_instance" "ec2-bastion" {
   key_name ="PD_2021_11_24.pem"
 
   tags = {
-    Name = "EC2 Bastion"
+    Name = "ec2-bastion"
   }
 }
 
