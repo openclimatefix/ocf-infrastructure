@@ -7,7 +7,7 @@ locals {
 
 
 module "networking" {
-  source = "../modules/networking/vpc"
+  source = "../modules/networking"
 
   region               = var.region
   environment          = var.environment
