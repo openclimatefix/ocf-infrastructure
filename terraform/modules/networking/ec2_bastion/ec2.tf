@@ -1,4 +1,4 @@
-https://www.middlewareinventory.com/blog/terraform-aws-ec2-user_data-example/
+# https://www.middlewareinventory.com/blog/terraform-aws-ec2-user_data-example/
 
 resource "aws_instance" "ec2-bastion" {
   ami           = "ami-005e54dee72cc1d00" # us-west-2
