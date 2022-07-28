@@ -22,7 +22,7 @@ resource "aws_instance" "ec2-bastion" {
   subnet_id = var.public_subnets_id
 
   # temp
-  key_name ='PD_2021_11_24.pem'
+  key_name ="PD_2021_11_24.pem"
 
   tags = {
     Name = "EC2 Bastion"
