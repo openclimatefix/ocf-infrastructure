@@ -9,4 +9,3 @@ variable "region" {
 variable "vpc_id" {
   description = "The id of the vpc where this application will run"
 }
-
