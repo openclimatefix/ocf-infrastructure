@@ -1,7 +1,7 @@
 # https://www.middlewareinventory.com/blog/terraform-aws-ec2-user_data-example/
 
 data "template_file" "user_data" {
-  template = "${file("user_data.sh")}"
+  template = file("${path.module}/user_data.sh")
 }
 
 resource "aws_instance" "ec2-bastion" {
