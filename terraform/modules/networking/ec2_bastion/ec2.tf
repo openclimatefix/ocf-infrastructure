@@ -15,11 +15,15 @@ data "aws_ami" "ami_latest" {
 }
 
 resource "aws_instance" "ec2-bastion" {
-  ami           = data.aws_ami.ami_latest.id 
+  ami           = data.aws_ami.ami_latest.id
   instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.ec2-ssh.id]
   user_data = "${data.template_file.user_data.rendered}"
   subnet_id = var.public_subnets_id
+
+  tags = {
+    Name = "EC2 Bastion"
+  }
 }
 
 resource "aws_eip" "ip-bastion" {
