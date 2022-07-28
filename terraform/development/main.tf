@@ -18,7 +18,7 @@ module "networking" {
 }
 
 module "ec2-bastion" {
-  source = "../modules/networking/ec2"
+  source = "../modules/networking/ec2_bastion"
 
   region               = var.region
   vpc_id               = module.networking.vpc_id
