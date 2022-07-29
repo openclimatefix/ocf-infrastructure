@@ -5,6 +5,7 @@ locals {
   production_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
 }
 
+
 module "networking" {
   source = "../modules/networking"
 
@@ -14,6 +15,14 @@ module "networking" {
   public_subnets_cidr  = var.public_subnets_cidr
   private_subnets_cidr = var.private_subnets_cidr
   availability_zones   = local.production_availability_zones
+}
+
+module "ec2-bastion" {
+  source = "../modules/networking/ec2_bastion"
+
+  region               = var.region
+  vpc_id               = module.networking.vpc_id
+  public_subnets_id    = module.networking.public_subnets[0].id
 }
 
 module "s3" {
@@ -147,11 +156,11 @@ module "forecast" {
   s3-ml-bucket                  = module.s3.s3-ml-bucket
 }
 
-module "statusdash" {
-  source = "../modules/statusdash"
-
-  region                     = var.region
-  environment                = var.environment
-  ecs-cluster                = module.ecs.ecs_cluster
-  subnet_ids                 = [module.networking.public_subnets[0].id]
-}
+#module "statusdash" {
+#  source = "../modules/statusdash"
+#
+#  region                     = var.region
+#  environment                = var.environment
+#  ecs-cluster                = module.ecs.ecs_cluster
+#  subnet_ids                 = [module.networking.public_subnets[0].id]
+#}

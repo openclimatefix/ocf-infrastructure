@@ -34,8 +34,8 @@ resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
 
 resource "aws_cloudwatch_event_rule" "event_rule_day_after" {
   name                = "gsp-day-after-schedule-${var.environment}"
-  schedule_expression = "cron(0 6 * * ? *)"
-  # runs every morning at 6
+  schedule_expression = "cron(0 7 * * ? *)"
+  # runs every morning at 7 UTC
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task_day_after" {
