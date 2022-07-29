@@ -5,6 +5,6 @@
 touch /home/ec2-user/.ssh/authorized_keys
 
 # add users public keys
-echo "ssh-rsa MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsF0G+f0SQpNaWnuK1YtrxUxjeVCyig5282XdOoqtzd6eM6/OcJyHF7hVkmvltgvNtpdRFCuYFoi/a+ErP00yy6iQbKwJ9SNtKZ2fsvzenQpByStZeqYoZptq2XmgQZ18ozz3Q8a4zATcww81BMm0KxckEKpy7vykg8EfKHvQlE+YsQZYfJrQSUFvMV+DL8p1/NCesR59OAW5wANrlNSI9fJvlvFnwqDhdT7KS2vDr5yH9xcCunLRY/uxTF32qvWSaOnLkBAVukIglR9XpURfshQHhWPMSXJNdo6qBK42gVYbvGWrVd+g5rx4PXvVhGygE8iuoRX1SlznfH2NaRNXNwIDAQAB peter" >> ./authorized_keys
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDG81UYCveCjecpem2ayi4z1LXBD8FWcBKldFodzJGv6YS290Y+FQy88SVjYp/Z+jm2s9AxuO62rFqSvu8flIbZnBAqWpQZj8QPRoP/GwFmV1KU33kVphs527Iev/PTEtCizkCiX8GJqTJtcH3Tv6ntYxI7vGE3s6IP0+VdyHVpwvMm+xT0j8oFFYs7JZvZOzNjPDGRUvKYH68m+hQkFfZatO2dCYB27eEacuo0MysdNLGTGwR0xB50d+AVp4sph34/OU1u76m7HUM1yu3BV70lMJY3AOMDG/uJgwj67xmp7F/g3zI6RRCEhbTe8GZ4oMamRq8mvSGkY3kh4K9qyzWX PD_2021_11_24" >> ./authorized_keys
 echo "ssh-rsa fff jacob" >> /home/ec2-user/.ssh/authorized_keys
 echo "ssh-rsa fff jack" >> /home/ec2-user/.ssh/authorized_keys

@@ -19,12 +19,12 @@ resource "aws_instance" "ec2-bastion" {
   ami = "ami-0069d66985b09d219"
   instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.ec2-ssh.id]
-#  user_data = "${data.template_file.user_data.rendered}"
+  user_data = "${data.template_file.user_data.rendered}"
   subnet_id = var.public_subnets_id
   associate_public_ip_address = true
 
   # temp
-  key_name ="PD_2021_11_24"
+#  key_name ="PD_2021_11_24"
 
   tags = {
     Name = "ec2-bastion"
