@@ -24,7 +24,7 @@ resource "aws_instance" "ec2-bastion" {
   associate_public_ip_address = true
 
   # temp
-#  key_name ="PD_2021_11_24"
+  key_name ="PD_2021_11_24"
 
   tags = {
     Name = "ec2-bastion"
