@@ -71,7 +71,7 @@ resource "aws_ecs_task_definition" "gsp-day-after-task-definition" {
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"REGIME", "value" : "day-after"},
-        { "name" :"N_GSPS", "value" : "339"}
+        { "name" :"N_GSPS", "value" : "318"}
       ]
 
       secrets : [
