@@ -114,7 +114,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"
     name      = "RetentionInDays"
-    value     = "30"
+    value     = "7"
     resource  = ""
   }
 
@@ -135,7 +135,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
     name      = "RetentionInDays"
-    value     = "30"
+    value     = "7"
     resource  = ""
   }
 
