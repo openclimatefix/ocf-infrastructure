@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "gsp-task-definition" {
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"REGIME", "value" : "in-day"},
-        { "name" :"N_GSPS", "value" : "318"}
+        { "name" :"N_GSPS", "value" : "317"}
       ]
 
       secrets : [
@@ -71,7 +71,8 @@ resource "aws_ecs_task_definition" "gsp-day-after-task-definition" {
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"REGIME", "value" : "day-after"},
-        { "name" :"N_GSPS", "value" : "339"}
+        { "name" :"N_GSPS", "value" : "317"},
+        { "name" :"UK_LONDON_HOUR", "value" : "11"}
       ]
 
       secrets : [

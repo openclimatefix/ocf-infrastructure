@@ -34,10 +34,10 @@ resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
 
 resource "aws_cloudwatch_event_rule" "event_rule_day_after" {
   name                = "gsp-day-after-schedule-${var.environment}"
-  schedule_expression = "cron(30 11 * * ? *)"
-  # Data is run at 10.30 local time by sheffield solar. At most this takes 1 hour.
-  # Therefore we run this every morning at 11:30 UTC.
-  # This is 12.30 BST (summer) and 11.30 GMT (winter)
+  schedule_expression = "cron(30 10,11 * * ? *)"
+  # Calculation is run at 10.30 local time by sheffield solar. At most this takes 1 hour.
+  # Therefore we run this every morning at 10:30 and 11:30 UTC.
+  # Service only runs when local time is between 11 and 12.
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task_day_after" {
