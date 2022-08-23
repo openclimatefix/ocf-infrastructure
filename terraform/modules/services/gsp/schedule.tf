@@ -74,7 +74,7 @@ resource "aws_cloudwatch_event_rule" "event_rule_national_day_after" {
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task_national_day_after" {
 
-  rule      = aws_cloudwatch_event_rule.event_rule_day_after.name
+  rule      = aws_cloudwatch_event_rule.event_rule_national_day_after.name
   target_id = "national-schedule-day-after-${var.environment}"
   arn       = var.ecs-cluster.arn
   role_arn  = aws_iam_role.cloudwatch_role.arn
