@@ -34,5 +34,5 @@ variable "iam-policy-rds-read-secret" {
 
 variable "docker_version" {
   description = "The version of the docker that should be used"
-  default = "0.0.1"
+  default = "0.0.2"
 }
