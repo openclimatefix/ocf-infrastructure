@@ -58,3 +58,8 @@ variable "gsp_version" {
 variable "cloudflare_zone_id" {
   description = "The ZoneID of the nowcasting domain"
 }
+
+variable "metrics_version" {
+  description = "The Metrics version"
+  default = "0.0.2"
+}

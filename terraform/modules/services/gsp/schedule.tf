@@ -34,10 +34,10 @@ resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
 
 resource "aws_cloudwatch_event_rule" "event_rule_day_after" {
   name                = "gsp-day-after-schedule-${var.environment}"
-  schedule_expression = "cron(30 11 * * ? *)"
-  # Data is run at 10.30 local time by sheffield solar. At most this takes 1 hour.
-  # Therefore we run this every morning at 11:30 UTC.
-  # This is 12.30 BST (summer) and 11.30 GMT (winter)
+  schedule_expression = "cron(30 10,11 * * ? *)"
+  # Calculation is run at 10.30 local time by sheffield solar. At most this takes 1 hour.
+  # Therefore we run this every morning at 10:30 and 11:30 UTC.
+  # Service only runs when local time is between 11 and 12.
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task_day_after" {
@@ -53,6 +53,38 @@ resource "aws_cloudwatch_event_target" "ecs_scheduled_task_day_after" {
     platform_version    = "1.4.0"
     task_count          = 1
     task_definition_arn = aws_ecs_task_definition.gsp-day-after-task-definition.arn
+    network_configuration {
+
+      subnets          = var.public_subnet_ids
+      assign_public_ip = true
+
+    }
+
+  }
+
+}
+
+resource "aws_cloudwatch_event_rule" "event_rule_national_day_after" {
+  name                = "national-day-after-schedule-${var.environment}"
+  schedule_expression = "cron(45 9,10 * * ? *)"
+  # Calculation is made at 10.30 local time by sheffield solar.
+  # Therefore we run this every morning at 9:45 UTC and 10.45 UTC.
+  # Service only runs when local time is between 10 and 11.
+}
+
+resource "aws_cloudwatch_event_target" "ecs_scheduled_task_national_day_after" {
+
+  rule      = aws_cloudwatch_event_rule.event_rule_national_day_after.name
+  target_id = "national-schedule-day-after-${var.environment}"
+  arn       = var.ecs-cluster.arn
+  role_arn  = aws_iam_role.cloudwatch_role.arn
+
+  ecs_target {
+
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.national-day-after-task-definition.arn
     network_configuration {
 
       subnets          = var.public_subnet_ids
