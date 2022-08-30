@@ -134,6 +134,18 @@ module "gsp" {
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
+module "metrics" {
+  source = "../modules/services/metrics"
+
+  region                  = var.region
+  environment             = var.environment
+  ecs-cluster             = module.ecs.ecs_cluster
+  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  database_secret         = module.database.forecast-database-secret
+  docker_version          = var.metrics_version
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+}
+
 
 module "forecast" {
   source = "../modules/services/forecast"
