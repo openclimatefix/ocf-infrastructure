@@ -22,7 +22,8 @@ data "aws_iam_policy_document" "cloudwatch" {
     effect    = "Allow"
     actions   = ["ecs:RunTask"]
     resources = [aws_ecs_task_definition.gsp-task-definition.arn,
-    aws_ecs_task_definition.gsp-day-after-task-definition.arn]
+    aws_ecs_task_definition.gsp-day-after-task-definition.arn,
+    aws_ecs_task_definition.national-day-after-task-definition.arn]
   }
   statement {
     effect  = "Allow"
