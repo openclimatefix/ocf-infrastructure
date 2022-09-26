@@ -110,7 +110,7 @@ resource "aws_ecs_task_definition" "national-day-after-task-definition" {
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "gsp-consumer-day-after"
+      name  = "national-day-after"
       image = "openclimatefix/gspconsumer:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
