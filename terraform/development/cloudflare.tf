@@ -11,7 +11,7 @@ resource "cloudflare_record" "api-dev" {
 resource "cloudflare_record" "api-prod" {
   zone_id = var.cloudflare_zone_id
   name    = "api"
-  value   = "nowcasting-api-dev.eba-ubddnyyw.eu-west-1.elasticbeanstalk.com"
+  value   = "nowcasting-api-production.eu-west-1.elasticbeanstalk.com"
   type    = "CNAME"
   ttl     = 1
   proxied = true
