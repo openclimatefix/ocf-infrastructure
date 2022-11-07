@@ -37,8 +37,8 @@ module "api" {
   environment       = var.environment
   vpc_id            = module.networking.vpc_id
   subnets           = module.networking.public_subnets
-  auth_api_audience = "nowcasting-dev.eu.auth0.com"
-  auth_domain       = "https://nowcasting-api-eu-auth0.com/"
+  auth_api_audience = var.auth_api_audience
+  auth_domain       = var.auth_domain
 }
 
 module "database" {
