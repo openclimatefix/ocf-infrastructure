@@ -33,12 +33,12 @@ module "ecs" {
 module "api" {
   source = "../modules/services/api"
 
-  region      = var.region
-  environment = var.environment
-  vpc_id      = module.networking.vpc_id
-  subnets     = module.networking.public_subnets
-  auth_domain = var.auth_domain
-  auth_api_audience = var.auth_api_audience
+  region            = var.region
+  environment       = var.environment
+  vpc_id            = module.networking.vpc_id
+  subnets           = module.networking.public_subnets
+  auth_api_audience = "nowcasting-dev.eu.auth0.com"
+  auth_domain       = "https://nowcasting-api-eu-auth0.com/"
 }
 
 module "database" {
