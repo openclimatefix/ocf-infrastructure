@@ -7,6 +7,8 @@ services:
     environment:
       DB_URL: $DB_URL
       DB_URL_PV: $DB_URL_PV
+      AUTH0_DOMAIN: $AUTH0_DOMAIN
+      AUTH0_API_AUDIENCE: $AUTH0_API_AUDIENCE
       ORIGINS: $ORIGINS
     container_name: nowcasting_api
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]

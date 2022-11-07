@@ -38,3 +38,11 @@ variable "database_pv_secret_url" {
 variable "docker_version" {
   description = "The version of the docker that should be used"
 }
+
+variable "auth_domain" {
+  description = "The Auth domain that should be used"
+}
+
+variable "auth_api_audience" {
+  description = "The Auth API Audience that should be used"
+}
