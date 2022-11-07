@@ -44,6 +44,18 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AUTH0_DOMAIN"
+    value     = var.auth_domain
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AUTH0_API_AUDIENCE"
+    value     = var.auth_api_audience
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ORIGINS"
     value     = "*" #TODO change
   }
