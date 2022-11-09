@@ -20,3 +20,11 @@ variable "private_subnets_cidr" {
   type        = list(string)
   description = "The CIDR block for the private subnet"
 }
+
+variable "auth_domain" {
+  description = "The Auth domain that should be used"
+}
+
+variable "auth_api_audience" {
+  description = "The Auth API Audience that should be used"
+}
