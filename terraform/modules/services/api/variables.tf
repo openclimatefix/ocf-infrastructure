@@ -46,3 +46,8 @@ variable "auth_domain" {
 variable "auth_api_audience" {
   description = "The Auth API Audience that should be used"
 }
+
+variable n_history_days {
+  description = "The number of days to load. 'yesterday' loads up to yesterday morning"
+  default = "yesterday"
+}
