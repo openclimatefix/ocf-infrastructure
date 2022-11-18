@@ -62,10 +62,15 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "N_HISTORY_DAYS"
+    value     = var.n_history_days
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "API_VERSION"
     value     = var.docker_version
   }
-
 
   setting {
     namespace = "aws:ec2:vpc"
