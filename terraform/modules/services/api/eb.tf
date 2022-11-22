@@ -44,8 +44,26 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AUTH0_DOMAIN"
+    value     = var.auth_domain
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AUTH0_API_AUDIENCE"
+    value     = var.auth_api_audience
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ORIGINS"
     value     = "*" #TODO change
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "N_HISTORY_DAYS"
+    value     = var.n_history_days
   }
 
   setting {
@@ -53,7 +71,6 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     name      = "API_VERSION"
     value     = var.docker_version
   }
-
 
   setting {
     namespace = "aws:ec2:vpc"

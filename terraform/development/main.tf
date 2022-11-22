@@ -51,6 +51,9 @@ module "api" {
   database_pv_secret_url              = module.database.pv-database-secret-url
   iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
+  auth_domain = "nowcasting-dev.eu.auth0.com"
+  auth_api_audience = "https://nowcasting-api-eu-auth0.com/"
+  n_history_days = "2"
 }
 
 module "data_visualization" {
