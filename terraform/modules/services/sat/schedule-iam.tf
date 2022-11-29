@@ -21,7 +21,8 @@ data "aws_iam_policy_document" "cloudwatch" {
   statement {
     effect    = "Allow"
     actions   = ["ecs:RunTask"]
-    resources = [aws_ecs_task_definition.sat-task-definition.arn]
+    resources = [aws_ecs_task_definition.sat-task-definition.arn,
+                 aws_ecs_task_definition.sat-clean-up-task-definition.arn]
   }
   statement {
     effect  = "Allow"
