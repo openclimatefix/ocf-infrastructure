@@ -81,6 +81,7 @@ resource "aws_ecs_task_definition" "sat-clean-up-task-definition" {
       environment : [
         { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
         { "name" : "LOG_LEVEL", "value" : "DEBUG"},
+        { "name" : "CLEANUP",  "valueFrom" : "1" }
       ]
 
       secrets : [
@@ -95,10 +96,6 @@ resource "aws_ecs_task_definition" "sat-clean-up-task-definition" {
         {
           "name" : "DB_URL",
           "valueFrom" : "${var.database_secret.arn}:url::",
-        },
-        {
-          "name" : "CLEANUP",
-          "valueFrom" : "1",
         }
       ]
 
