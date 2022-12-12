@@ -63,3 +63,13 @@ variable "metrics_version" {
   description = "The Metrics version"
   default = "0.0.2"
 }
+
+variable "auth_domain" {
+  description = "The Auth domain that should be used"
+  default = "not-set"
+}
+
+variable "auth_api_audience" {
+  description = "The Auth API Audience that should be used"
+  default = "not-set"
+}
