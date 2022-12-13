@@ -39,6 +39,10 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
         {
           "name" : "DB_URL",
           "valueFrom" : "${var.database_secret.arn}:url::",
+        },
+        {
+          "name": "ORDER_IDS",
+          "valueFrom": "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:ORDER_IDS::",
         }
       ]
 
