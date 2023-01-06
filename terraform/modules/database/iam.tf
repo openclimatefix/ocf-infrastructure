@@ -42,3 +42,24 @@ resource "aws_iam_policy" "rds-pv-secret-policy" {
     ]
   })
 }
+
+resource "aws_iam_policy" "rds-pvsite-secret-policy" {
+  name        = "rds-pvsite-secret-policy"
+  path        = "/rds/"
+  description = "Read access to RDS secret, in order to connect to pvsite database"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "secretsmanager:GetSecretValue",
+        ]
+        Effect   = "Allow"
+        Resource = aws_secretsmanager_secret.db-pvsite-secret.arn
+      },
+    ]
+  })
+}

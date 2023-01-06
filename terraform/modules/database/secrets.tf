@@ -14,6 +14,12 @@ resource "random_password" "db-pv-password" {
   override_special = "%"
 }
 
+resource "random_password" "db-pvsite-password" {
+  length           = 16
+  special          = true
+  override_special = "%"
+}
+
 
 # Now create secret and secret versions for database main account
 resource "aws_secretsmanager_secret" "db-forecast-secret" {
@@ -31,7 +37,16 @@ resource "aws_secretsmanager_secret" "db-pv-secret" {
   # If we don't do this, then a new secret can be made with the same name until the recovery window is over
   recovery_window_in_days = 0
 
-  description = "Secret to hold log in details for RDS forecast database"
+  description = "Secret to hold log in details for RDS pv database"
+}
+
+resource "aws_secretsmanager_secret" "db-pvsite-secret" {
+  name = "${var.environment}/rds/pvsite/"
+  # Once the secret is deleted, we cant get it back.
+  # If we don't do this, then a new secret can be made with the same name until the recovery window is over
+  recovery_window_in_days = 0
+
+  description = "Secret to hold log in details for RDS pvsite database"
 }
 
 resource "aws_secretsmanager_secret_version" "forecast-version" {
@@ -59,5 +74,19 @@ resource "aws_secretsmanager_secret_version" "pv-version" {
       address : aws_db_instance.db-pv.address,
       port : "5432",
       url : "postgresql://main:${random_password.db-pv-password.result}@${aws_db_instance.db-pv.address}:5432/${aws_db_instance.db-pv.name}"
+  })
+}
+
+resource "aws_secretsmanager_secret_version" "pvsite-version" {
+  secret_id = aws_secretsmanager_secret.db-pvsite-secret.id
+  secret_string = jsonencode(
+    {
+      username : "main",
+      password : random_password.db-pvsite-password.result,
+      dbname : aws_db_instance.db-pvsite.name,
+      engine : "postgresql",
+      address : aws_db_instance.db-pvsite.address,
+      port : "5432",
+      url : "postgresql://main:${random_password.db-pvsite-password.result}@${aws_db_instance.db-pvsite.address}:5432/${aws_db_instance.db-pvsite.name}"
   })
 }
