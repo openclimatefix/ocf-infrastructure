@@ -14,7 +14,7 @@ nowcasting:
 
 ## Nowcasting Environment Architecture
 
-![Nowcasting](/diagram.png)
+![Nowcasting](/assets/nowcasting-domain.svg)
 TODO - update
 
 ## Using Terraform

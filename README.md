@@ -9,8 +9,8 @@
 [![Local Stack Tests](https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/local-stack-tests.yaml?label=local-stack)](https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/local-stack-tests.yaml)
 [![All Contributors][contributors-shield]](#contributors-)
 
-
 Terraform infrastructure-as-code for cloud environments and services in use by OCF.
+
 
 ## Repository Structure
 
@@ -24,6 +24,11 @@ ocf-infrastructure:
   local-stack: # Code to run the terraform stack locally for local testing/development
   .github: # Contains github-specific code for automated CI workflows
 ```
+
+See the README's in the domain folders for more information on their architecture:
+- [Nowcasting Domain](terraform/nowcasting/README.md)
+- [PVSite Domain](terraform/pvsite/README.md)
+
 
 ## Terraform Overview
 
