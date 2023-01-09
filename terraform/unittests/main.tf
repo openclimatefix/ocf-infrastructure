@@ -6,7 +6,7 @@ locals {
 }
 
 module "networking" {
-  source = "../modules/networking"
+  source = "terraform/modules/networking"
 
   region               = var.region
   environment          = var.environment
@@ -17,21 +17,21 @@ module "networking" {
 }
 
 module "s3" {
-  source = "../modules/s3"
+  source = "terraform/modules/s3"
 
   region      = var.region
   environment = var.environment
 }
 
 module "ecs" {
-  source = "../modules/ecs"
+  source = "terraform/modules/ecs"
 
   region      = var.region
   environment = var.environment
 }
 
 module "api" {
-  source = "../modules/services/api"
+  source = "terraform/modules/services/api"
 
   region            = var.region
   environment       = var.environment
@@ -42,7 +42,7 @@ module "api" {
 }
 
 module "database" {
-  source = "../modules/database"
+  source = "terraform/modules/database"
 
   region          = var.region
   environment     = var.environment
@@ -51,7 +51,7 @@ module "database" {
 }
 
 module "nwp" {
-  source = "../modules/services/nwp"
+  source = "terraform/modules/services/nwp"
 
   region                  = var.region
   environment             = var.environment

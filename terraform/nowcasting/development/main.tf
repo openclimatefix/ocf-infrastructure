@@ -7,7 +7,7 @@ locals {
 
 
 module "networking" {
-  source = "../modules/networking"
+  source = "terraform/modules/networking"
 
   region               = var.region
   environment          = var.environment
@@ -18,7 +18,7 @@ module "networking" {
 }
 
 module "ec2-bastion" {
-  source = "../modules/networking/ec2_bastion"
+  source = "terraform/modules/networking/ec2_bastion"
 
   region               = var.region
   vpc_id               = module.networking.vpc_id
@@ -26,21 +26,21 @@ module "ec2-bastion" {
 }
 
 module "s3" {
-  source = "../modules/s3"
+  source = "terraform/modules/s3"
 
   region      = var.region
   environment = var.environment
 }
 
 module "ecs" {
-  source = "../modules/ecs"
+  source = "terraform/modules/ecs"
 
   region      = var.region
   environment = var.environment
 }
 
 module "api" {
-  source = "../modules/services/api"
+  source = "terraform/modules/services/api"
 
   region                              = var.region
   environment                         = var.environment
@@ -57,7 +57,7 @@ module "api" {
 }
 
 module "data_visualization" {
-  source = "../modules/services/data_visualization"
+  source = "terraform/modules/services/data_visualization"
 
   region                              = var.region
   environment                         = var.environment
@@ -74,7 +74,7 @@ module "data_visualization" {
 }
 
 module "database" {
-  source = "../modules/database"
+  source = "terraform/modules/database"
 
   region          = var.region
   environment     = var.environment
@@ -83,7 +83,7 @@ module "database" {
 }
 
 module "nwp" {
-  source = "../modules/services/nwp"
+  source = "terraform/modules/services/nwp"
 
   region                  = var.region
   environment             = var.environment
@@ -97,7 +97,7 @@ module "nwp" {
 }
 
 module "sat" {
-  source = "../modules/services/sat"
+  source = "terraform/modules/services/sat"
 
   region                  = var.region
   environment             = var.environment
@@ -112,7 +112,7 @@ module "sat" {
 
 
 module "pv" {
-  source = "../modules/services/pv"
+  source = "terraform/modules/services/pv"
 
   region                  = var.region
   environment             = var.environment
@@ -127,7 +127,7 @@ module "pv" {
 }
 
 module "gsp" {
-  source = "../modules/services/gsp"
+  source = "terraform/modules/services/gsp"
 
   region                  = var.region
   environment             = var.environment
@@ -139,7 +139,7 @@ module "gsp" {
 }
 
 module "metrics" {
-  source = "../modules/services/metrics"
+  source = "terraform/modules/services/metrics"
 
   region                  = var.region
   environment             = var.environment
@@ -152,7 +152,7 @@ module "metrics" {
 
 
 module "forecast" {
-  source = "../modules/services/forecast"
+  source = "terraform/modules/services/forecast"
 
   region                        = var.region
   environment                   = var.environment
@@ -172,7 +172,7 @@ module "forecast" {
 }
 
 #module "statusdash" {
-#  source = "../modules/statusdash"
+#  source = "terraform/modules/statusdash"
 #
 #  region                     = var.region
 #  environment                = var.environment

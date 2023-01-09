@@ -1,27 +1,33 @@
-# Nowcasting Infrastrucutre
+# OCF Infrastrucutre
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-This repo contains 'infrastructure as code' for the 'Nowcasting' project.
+Terraform infrastructure-as-code for cloud environments and services in use by OCF.
 
-![Nowcasting](diagram.png)
-TODO - update
+## Repository Structure
 
-## Terraform
-
-The [terraform](https://learn.hashicorp.com/terraform) folder contains code inorder to deploy various services to AWS.
-
-### Install
-
-If you aren't on Mac or don't want to use Brew,
-[check out the official terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform).
-
-To install terraform run
-```bash
-brew tap hashicorp/tap
-brew install hashicorp/tap/terraform
+```yaml
+ocf-infrastructure:
+  terraform: # Contains all the terraform code for OCF's cloud infrastructure
+    modules: # Portable terraform modules defining specific cloud infrastructure blocks
+    nowcasting: # Specific code for the nowcasting domain's cloud infrastructure
+    pvsite: # Specific code for the nowcasting domain's cloud infrastruture
+    unittests: # Specific infrastructure code for a environment to test the modules
+  local-stack: # Code to run the terraform stack locally for local testing/development
+  .github: # Contains github-specific code for automated CI workflows
 ```
+
+## Terraform Overview
+
+[Terraform](https://learn.hashicorp.com/terraform) is a declariative language which is used to specify and build cloud environments. To install the CLI locally, ensure [Homebrew](https://brew.sh/) is installed, then run
+
+```bash
+$ brew install terraform
+```
+
+If you aren't on Mac or don't want to use Homebrew,
+[check out the official terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform).
 
 ## Contributors ✨
 
