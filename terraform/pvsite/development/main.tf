@@ -28,15 +28,3 @@ module "pvsite_database" {
   db_name            = "pvsite"
   rds_instance_class = "db.t3.small"
 }
-
-module "metrics" {
-  source = "../../modules/services/metrics"
-
-  region                  = var.region
-  environment             = var.environment
-  ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids       = [module.networking.public_subnets[0].id]
-  database_secret         = module.pvsite_database.secret
-  docker_version          = var.metrics_version
-  iam-policy-rds-read-secret = module.pvsite_database.secret-policy
-}
