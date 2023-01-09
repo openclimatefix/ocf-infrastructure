@@ -6,7 +6,7 @@ locals {
 }
 
 module "networking" {
-  source = "../../modules/networking"
+  source = "../modules/networking"
 
   region               = var.region
   environment          = var.environment
@@ -17,21 +17,21 @@ module "networking" {
 }
 
 module "s3" {
-  source = "../../modules/s3"
+  source = "../modules/s3"
 
   region      = var.region
   environment = var.environment
 }
 
 module "ecs" {
-  source = "../../modules/ecs"
+  source = "../modules/ecs"
 
   region      = var.region
   environment = var.environment
 }
 
 module "api" {
-  source = "../../modules/services/api"
+  source = "../modules/services/api"
 
   region            = var.region
   environment       = var.environment
@@ -41,17 +41,20 @@ module "api" {
   auth_domain       = var.auth_domain
 }
 
-module "database" {
-  source = "../../modules/database"
+module "postgres" {
+  source = "../modules/postgres"
 
   region          = var.region
   environment     = var.environment
   db_subnet_group = module.networking.private_subnet_group
   vpc_id          = module.networking.vpc_id
+  db_name            = "testdb"
+  rds_instance_class = "db.t3.micro"
+  allow_major_version_upgrade = true
 }
 
 module "nwp" {
-  source = "../../modules/services/nwp"
+  source = "../modules/services/nwp"
 
   region                  = var.region
   environment             = var.environment
