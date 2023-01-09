@@ -7,7 +7,7 @@ locals {
 
 
 module "networking" {
-  source = "terraform/modules/networking"
+  source = "../../modules/networking"
 
   region               = var.region
   environment          = var.environment
@@ -18,7 +18,7 @@ module "networking" {
 }
 
 module "ec2-bastion" {
-  source = "terraform/modules/networking/ec2_bastion"
+  source = "../../modules/networking/ec2_bastion"
 
   region               = var.region
   vpc_id               = module.networking.vpc_id
@@ -26,55 +26,55 @@ module "ec2-bastion" {
 }
 
 module "s3" {
-  source = "terraform/modules/s3"
+  source = "../../modules/s3"
 
   region      = var.region
   environment = var.environment
 }
 
 module "ecs" {
-  source = "terraform/modules/ecs"
+  source = "../../modules/ecs"
 
   region      = var.region
   environment = var.environment
 }
 
 module "api" {
-  source = "terraform/modules/services/api"
+  source = "../../modules/services/api"
 
   region                              = var.region
   environment                         = var.environment
   vpc_id                              = module.networking.vpc_id
   subnets                             = module.networking.public_subnets
   docker_version                      = var.api_version
-  database_forecast_secret_url        = module.database.forecast-database-secret-url
-  database_pv_secret_url              = module.database.pv-database-secret-url
-  iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
-  iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
+  database_forecast_secret_url        = module.forecast-database.secret-url
+  database_pv_secret_url              = module.pv-database.secret-url
+  iam-policy-rds-forecast-read-secret = module.forecast-database.secret-policy
+  iam-policy-rds-pv-read-secret       = module.pv-database.secret-policy
   auth_domain = var.auth_domain
   auth_api_audience = var.auth_api_audience
   n_history_days = "2"
 }
 
 module "data_visualization" {
-  source = "terraform/modules/services/data_visualization"
+  source = "../../modules/services/data_visualization"
 
   region                              = var.region
   environment                         = var.environment
   vpc_id                              = module.networking.vpc_id
   subnets                             = module.networking.public_subnets
   docker_version                      = var.data_visualization_version
-  database_forecast_secret_url        = module.database.forecast-database-secret-url
-  database_pv_secret_url              = module.database.pv-database-secret-url
-  iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
-  iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
+  database_forecast_secret_url        = module.forecast-database.secret-url
+  database_pv_secret_url              = module.pv-database.secret-url
+  iam-policy-rds-forecast-read-secret = module.forecast-database.secret-policy
+  iam-policy-rds-pv-read-secret       = module.pv-database.secret-policy
   api_url                             = module.api.api_url
   iam-policy-s3-nwp-read              = module.s3.iam-policy-s3-nwp-read
   iam-policy-s3-sat-read              = module.s3.iam-policy-s3-sat-read
 }
 
 module "forecast-database" {
-  source = "terraform/modules/postgres"
+  source = "../../modules/postgres"
 
   region             = var.region
   environment        = var.environment
@@ -85,7 +85,7 @@ module "forecast-database" {
 }
 
 module "pv-database" {
-  source = "terraform/modules/postgres"
+  source = "../../modules/postgres"
 
   region             = var.region
   environment        = var.environment
@@ -97,7 +97,7 @@ module "pv-database" {
 }
 
 module "nwp" {
-  source = "terraform/modules/services/nwp"
+  source = "../../modules/services/nwp"
 
   region                  = var.region
   environment             = var.environment
@@ -106,12 +106,12 @@ module "nwp" {
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.nwp_version
-  database_secret         = module.database.forecast-database-secret
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  database_secret         = module.forecast-database.secret
+  iam-policy-rds-read-secret = module.forecast-database.secret-policy
 }
 
 module "sat" {
-  source = "terraform/modules/services/sat"
+  source = "../../modules/services/sat"
 
   region                  = var.region
   environment             = var.environment
@@ -120,65 +120,65 @@ module "sat" {
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.sat_version
-  database_secret         = module.database.forecast-database-secret
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  database_secret         = module.forecast-database.secret
+  iam-policy-rds-read-secret = module.forecast-database.secret-policy
 }
 
 
 module "pv" {
-  source = "terraform/modules/services/pv"
+  source = "../../modules/services/pv"
 
   region                  = var.region
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
-  database_secret         = module.database.pv-database-secret
-  database_secret_forecast = module.database.forecast-database-secret
+  database_secret         = module.pv-database.secret
+  database_secret_forecast = module.forecast-database.secret
   docker_version          = var.pv_version
   docker_version_ss          = var.pv_ss_version
-  iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
-  iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  iam-policy-rds-read-secret = module.pv-database.secret-policy
+  iam-policy-rds-read-secret_forecast = module.forecast-database.secret-policy
 }
 
 module "gsp" {
-  source = "terraform/modules/services/gsp"
+  source = "../../modules/services/gsp"
 
   region                  = var.region
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
-  database_secret         = module.database.forecast-database-secret
+  database_secret         = module.forecast-database.secret
   docker_version          = var.gsp_version
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  iam-policy-rds-read-secret = module.forecast-database.secret-policy
 }
 
 module "metrics" {
-  source = "terraform/modules/services/metrics"
+  source = "../../modules/services/metrics"
 
   region                  = var.region
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
-  database_secret         = module.database.forecast-database-secret
+  database_secret         = module.forecast-database.secret
   docker_version          = var.metrics_version
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  iam-policy-rds-read-secret = module.forecast-database.secret-policy
 }
 
 
 module "forecast" {
-  source = "terraform/modules/services/forecast"
+  source = "../../modules/services/forecast"
 
   region                        = var.region
   environment                   = var.environment
   ecs-cluster                   = module.ecs.ecs_cluster
   subnet_ids                    = [module.networking.public_subnets[0].id]
-  iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
-  iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
+  iam-policy-rds-read-secret    = module.forecast-database.secret-policy
+  iam-policy-rds-pv-read-secret = module.pv-database.secret-policy
   iam-policy-s3-nwp-read        = module.s3.iam-policy-s3-nwp-read
   iam-policy-s3-sat-read        = module.s3.iam-policy-s3-sat-read
   iam-policy-s3-ml-read         = module.s3.iam-policy-s3-ml-write #TODO update name
-  database_secret               = module.database.forecast-database-secret
-  pv_database_secret            = module.database.pv-database-secret
+  database_secret               = module.forecast-database.secret
+  pv_database_secret            = module.pv-database.secret
   docker_version                = var.forecast_version
   s3-nwp-bucket                 = module.s3.s3-nwp-bucket
   s3-sat-bucket                 = module.s3.s3-sat-bucket
@@ -186,7 +186,7 @@ module "forecast" {
 }
 
 #module "statusdash" {
-#  source = "terraform/modules/statusdash"
+#  source = "../../modules/statusdash"
 #
 #  region                     = var.region
 #  environment                = var.environment
