@@ -1,7 +1,14 @@
 # OCF Infrastrucutre
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[contributors-shield]: https://img.shields.io/badge/all_contributors-5-orange.svg
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+[![Issues](https://img.shields.io/github/issues/openclimatefix/ocf-infrastructure)](https://github.com/openclimatefix/ocf-infrastructure/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+[![Validation](https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/terraform-validate.yaml?label=validate)](https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/terraform-validate.yaml)
+[![Local Stack Tests](https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/local-stack-tests.yaml?label=local-stack)](https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/local-stack-tests.yaml)
+[![All Contributors][contributors-shield]](#contributors-)
+
 
 Terraform infrastructure-as-code for cloud environments and services in use by OCF.
 
