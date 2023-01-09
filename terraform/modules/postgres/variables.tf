@@ -37,6 +37,6 @@ variable "rds_instance_class" {
 
   validation {
     condition     = contains(["db.t3.small", "db.t3.micro"], var.rds_instance_class)
-    error_message = "Valid values for var: test_variable are (db.t3.small, db.t3.micro)."
-  } 
+    error_message = "Valid values for var: rds_instance_class are (db.t3.small, db.t3.micro)."
+  }
 }
