@@ -12,7 +12,6 @@ variable "region" {
 
 variable "db_subnet_group" {
   description = "The subnet group where the RDS database will be launched"
-  type = string
 }
 
 variable "vpc_id" {
