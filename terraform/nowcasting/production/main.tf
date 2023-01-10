@@ -38,10 +38,10 @@ module "api" {
   vpc_id                              = module.networking.vpc_id
   subnets                             = module.networking.public_subnets
   docker_version                      = var.api_version
-  database_forecast_secret_url        = module.forecast-database.secret-url
-  database_pv_secret_url              = module.pv-database.secret-url
-  iam-policy-rds-forecast-read-secret = module.forecast-database.secret-policy
-  iam-policy-rds-pv-read-secret       = module.pv-database.secret-policy
+  database_forecast_secret_url        = module.database.forecast-database-secret-url
+  database_pv_secret_url              = module.database.pv-database-secret-url
+  iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
+  iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
   auth_domain = var.auth_domain
   auth_api_audience = var.auth_api_audience
 }
@@ -54,36 +54,22 @@ module "data_visualization" {
   vpc_id                              = module.networking.vpc_id
   subnets                             = module.networking.public_subnets
   docker_version                      = var.data_visualization_version
-  database_forecast_secret_url        = module.forecast-database.secret-url
-  database_pv_secret_url              = module.pv-database.secret-url
-  iam-policy-rds-forecast-read-secret = module.forecast-database.secret-policy
-  iam-policy-rds-pv-read-secret       = module.pv-database.secret-policy
+  database_forecast_secret_url        = module.database.forecast-database-secret-url
+  database_pv_secret_url              = module.database.pv-database-secret-url
+  iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
+  iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
   api_url                             = module.api.api_url
   iam-policy-s3-nwp-read              = module.s3.iam-policy-s3-nwp-read
   iam-policy-s3-sat-read              = module.s3.iam-policy-s3-sat-read
 }
 
-module "forecast-database" {
-  source = "../../modules/postgres"
+module "database" {
+  source = "../../modules/database-pair"
 
-  region             = var.region
-  environment        = var.environment
-  db_subnet_group    = module.networking.private_subnet_group
-  vpc_id             = module.networking.vpc_id
-  db_name            = "forecast"
-  rds_instance_class = "db.t3.small"
-}
-
-module "pv-database" {
-  source = "../../modules/postgres"
-
-  region             = var.region
-  environment        = var.environment
-  db_subnet_group    = module.networking.private_subnet_group
-  vpc_id             = module.networking.vpc_id
-  db_name            = "pv"
-  rds_instance_class = "db.t3.micro"
-  allow_major_version_upgrade = true
+  region          = var.region
+  environment     = var.environment
+  db_subnet_group = module.networking.private_subnet_group
+  vpc_id          = module.networking.vpc_id
 }
 
 module "ec2-bastion" {
@@ -104,8 +90,8 @@ module "nwp" {
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.nwp_version
-  database_secret         = module.forecast-database.secret
-  iam-policy-rds-read-secret = module.forecast-database.secret-policy
+  database_secret         = module.database.forecast-database-secret
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
 module "sat" {
@@ -118,8 +104,8 @@ module "sat" {
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.sat_version
-  database_secret         = module.forecast-database.secret
-  iam-policy-rds-read-secret = module.forecast-database.secret-policy
+  database_secret         = module.database.forecast-database-secret
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
 
@@ -130,12 +116,12 @@ module "pv" {
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
-  database_secret         = module.pv-database.secret
-  database_secret_forecast = module.forecast-database.secret
+  database_secret         = module.database.pv-database-secret
+  database_secret_forecast = module.database.forecast-database-secret
   docker_version          = var.pv_version
     docker_version_ss          = var.pv_ss_version
-  iam-policy-rds-read-secret = module.pv-database.secret-policy
-  iam-policy-rds-read-secret_forecast = module.forecast-database.secret-policy
+  iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
+  iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
 }
 
 module "gsp" {
@@ -145,9 +131,9 @@ module "gsp" {
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
-  database_secret         = module.forecast-database.secret
+  database_secret         = module.database.forecast-database-secret
   docker_version          = var.gsp_version
-  iam-policy-rds-read-secret = module.forecast-database.secret-policy
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
 module "metrics" {
@@ -157,9 +143,9 @@ module "metrics" {
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
-  database_secret         = module.forecast-database.secret
+  database_secret         = module.database.forecast-database-secret
   docker_version          = var.metrics_version
-  iam-policy-rds-read-secret = module.forecast-database.secret-policy
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
 
@@ -170,13 +156,13 @@ module "forecast" {
   environment                   = var.environment
   ecs-cluster                   = module.ecs.ecs_cluster
   subnet_ids                    = [module.networking.public_subnets[0].id]
-  iam-policy-rds-read-secret    = module.forecast-database.secret-policy
-  iam-policy-rds-pv-read-secret = module.pv-database.secret-policy
+  iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
+  iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-s3-nwp-read        = module.s3.iam-policy-s3-nwp-read
   iam-policy-s3-sat-read        = module.s3.iam-policy-s3-sat-read
   iam-policy-s3-ml-read         = module.s3.iam-policy-s3-ml-write #TODO update name
-  database_secret               = module.forecast-database.secret
-  pv_database_secret            = module.pv-database.secret
+  database_secret               = module.database.forecast-database-secret
+  pv_database_secret            = module.database.pv-database-secret
   docker_version                = var.forecast_version
   s3-nwp-bucket                 = module.s3.s3-nwp-bucket
   s3-sat-bucket                 = module.s3.s3-sat-bucket
