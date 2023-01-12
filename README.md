@@ -1,27 +1,49 @@
-# Nowcasting Infrastrucutre
+# OCF Infrastrucutre
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+[contributors-shield]: https://img.shields.io/badge/all_contributors-5-orange.svg
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-This repo contains 'infrastructure as code' for the 'Nowcasting' project.
+[![Issues](https://img.shields.io/github/issues/openclimatefix/ocf-infrastructure)](https://github.com/openclimatefix/ocf-infrastructure/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+[![Validation](https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/terraform-validate.yaml?label=validate)](https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/terraform-validate.yaml)
+[![Local Stack Tests](https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/local-stack-tests.yaml?label=local-stack)](https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/local-stack-tests.yaml)
+[![All Contributors][contributors-shield]](#contributors-)
 
-![Nowcasting](diagram.png)
-TODO - update
+Terraform infrastructure-as-code for cloud environments and services in use by OCF.
 
-## Terraform
 
-The [terraform](https://learn.hashicorp.com/terraform) folder contains code inorder to deploy various services to AWS.
+## Repository Structure
 
-### Install
+```yaml
+ocf-infrastructure:
+  terraform: # Contains all the terraform code for OCF's cloud infrastructure
+    modules: # Portable terraform modules defining specific cloud infrastructure blocks
+    nowcasting: # Specific code for the nowcasting domain's cloud infrastructure
+    pvsite: # Specific code for the nowcasting domain's cloud infrastruture
+    unittests: # Specific infrastructure code for a environment to test the modules
+  local-stack: # Code to run the terraform stack locally for local testing/development
+  .github: # Contains github-specific code for automated CI workflows
+```
 
-If you aren't on Mac or don't want to use Brew,
+See the README's in the domain folders for more information on their architecture:
+- [Nowcasting Domain](terraform/nowcasting/README.md)
+- [PVSite Domain](terraform/pvsite/README.md)
+
+
+## Terraform Overview
+
+[Terraform](https://learn.hashicorp.com/terraform) is a declariative language which is used to specify and build cloud environments. To install the CLI locally, ensure [Homebrew](https://brew.sh/) is installed, then run
+
+```bash
+$ brew install terraform
+```
+
+If you aren't on Mac or don't want to use Homebrew,
 [check out the official terraform installation instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform).
 
-To install terraform run
-```bash
-brew tap hashicorp/tap
-brew install hashicorp/tap/terraform
-```
+## Pre-Commit
+
+This repository implements a [pre-commit](https://pre-commit.com/#install) config that enables automatic fixes to code when you create a commit. This helps to maintin consistency in the main repo. To enable this, follow the [installation instructions on the precommit website](https://pre-commit.com/#install).
 
 ## Contributors ✨
 

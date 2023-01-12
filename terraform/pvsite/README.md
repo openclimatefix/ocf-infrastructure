@@ -1,35 +1,41 @@
-# Nowcasting Infrastructure
+# PVSite Infrastructure
 
-## Modules
+Contains all the infrastructure as code for the pvsite domain.
 
-This folder contains all the terraform code for the different modules.
-The different environments will run off these modules.
+## Folder structure
 
-## Environments
+The subfolders specify the two environments for the nowcasting domain:
 
-- `Unittest`: This environment is only used for unittesting
-- `Development`: This is for development purposes, eg trying new things out. It is not meant to be up 100% of the time.
+```yaml
+pvsite:
+  development: # This is for development purposes, eg trying new things out. It is not meant to be up 100% of the time.
+  production: # The production environment
+```
+
+## Nowcasting Environment Architecture
+
+TODO - diagram
 
 ## Using Terraform
 
 To setup the project:
 
 ```bash
-cd development
-terraform init
+$ cd terraform/pvsite/development
+$ terraform init
 ```
 
 To push changes:
 
 ```bash
-terraform plan
-terraform apply
+$ terraform plan
+$ terraform apply
 ```
 
 You can then destroy the stack:
 
 ```bash
-terraform destroy
+$ terraform destroy
 ```
 
 ## Check List

@@ -10,5 +10,3 @@ resource "aws_s3_bucket_object" "eb-object_data_visualization" {
   key    = "beanstalk/docker-compose-${var.docker_version}.yml"
   source = "${path.module}/docker-compose.yml"
 }
-
-

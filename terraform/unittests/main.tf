@@ -41,13 +41,16 @@ module "api" {
   auth_domain       = var.auth_domain
 }
 
-module "database" {
-  source = "../modules/database"
+module "postgres" {
+  source = "../modules/postgres"
 
   region          = var.region
   environment     = var.environment
   db_subnet_group = module.networking.private_subnet_group
   vpc_id          = module.networking.vpc_id
+  db_name            = "testdb"
+  rds_instance_class = "db.t3.micro"
+  allow_major_version_upgrade = true
 }
 
 module "nwp" {
