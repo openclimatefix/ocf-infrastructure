@@ -43,3 +43,8 @@ variable "public_internet_gateway_id" {
   type = string
   description = "The ID of the public internet gateway to use"
 }
+
+variable "pvsite_api_version" {
+  type = string
+  description = "This gives the version of the PV Site API"
+}
