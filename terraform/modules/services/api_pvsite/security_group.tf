@@ -1,7 +1,7 @@
 # Add secruity group for API
 
 resource "aws_security_group" "api-sg" {
-  name        = "api-site-${var.environment}-sg"
+  name        = "${var.domain}-${var.environment}-api-site-sg"
   description = "API security group to allow inbound/outbound traffic"
   vpc_id      = var.vpc_id
 

@@ -1,7 +1,7 @@
 # create s3 bucket for application verions
 
 resource "aws_s3_bucket" "eb" {
-  bucket = "nowcasting-eb-api-sites-${var.environment}"
+  bucket = "${var.domain}-${var.environment}-eb-api-sites"
 }
 
 resource "aws_s3_bucket_object" "eb-object" {

@@ -48,3 +48,8 @@ variable "pvsite_api_version" {
   type = string
   description = "This gives the version of the PV Site API"
 }
+
+variable "public_subnets" {
+  type = list(string)
+  description = "The name of the desired public subnet"
+}

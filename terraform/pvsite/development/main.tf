@@ -31,12 +31,13 @@ module "pvsite_database" {
   rds_instance_class = "db.t3.small"
 }
 
-module "api" {
+module "pvsite_api" {
   source = "../../modules/services/api_pvsite"
 
   region                              = var.region
   environment                         = var.environment
   vpc_id                              = var.vpc_id
-  subnets                             = module.pvsite_subnetworking.public_subnets
+  subnets                             = var.public_subnets
   docker_version                      = var.pvsite_api_version
+  domain                              = local.domain
 }

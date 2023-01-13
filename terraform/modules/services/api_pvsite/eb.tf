@@ -6,15 +6,15 @@
 
 
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
-  name        = "nowcasting-api-sites-${var.environment}"
-  description = "Site API for SBRI"
+  name        = "${var.domain}-${var.environment}-api-sites"
+  description = "Beanstalk API"
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {
-  name        = "nowcasting-api-sites-${var.environment}"
+  name        = "${var.domain}-${var.environment}-api-sites"
   application = aws_elastic_beanstalk_application.eb-api-application.name
-  cname_prefix = "nowcasting-api-sites-${var.environment}"
-  version_label = "nowcasting-api-sites-${var.docker_version}"
+  cname_prefix = "${var.domain}-${var.environment}-api-sites"
+  version_label = "${var.domain}-${var.environment}-api-sites-${var.docker_version}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -146,7 +146,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "nowcasting-api-sites-${var.docker_version}"
+  name        = "${var.domain}-${var.environment}-api-sites-${var.docker_version}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   description = "application version created by terraform (${var.docker_version})"
   bucket      = aws_s3_bucket.eb.id

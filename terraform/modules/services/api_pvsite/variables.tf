@@ -21,3 +21,7 @@ variable "subnets" {
 variable "docker_version" {
   description = "The version of the docker that should be used"
 }
+
+variable "domain" {
+  description = "The domain/name of the api"
+}
