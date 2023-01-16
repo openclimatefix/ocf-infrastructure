@@ -1,6 +1,6 @@
 # Nowcasting Infrastructure
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 This repo contains 'infrastructure as code' for the 'Nowcasting' project.
@@ -39,6 +39,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/lordsonfernando"><img src="https://avatars.githubusercontent.com/u/68499565?v=4?s=100" width="100px;" alt="lordsonfernando"/><br /><sub><b>lordsonfernando</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=lordsonfernando" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/gmlyth"><img src="https://avatars.githubusercontent.com/u/88547342?v=4?s=100" width="100px;" alt="gmlyth"/><br /><sub><b>gmlyth</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=gmlyth" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://bio.link/klj"><img src="https://avatars.githubusercontent.com/u/2559382?v=4?s=100" width="100px;" alt="Keenan Johnson"/><br /><sub><b>Keenan Johnson</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=keenanjohnson" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/devsjc"><img src="https://avatars.githubusercontent.com/u/47188100?v=4?s=100" width="100px;" alt="devsjc"/><br /><sub><b>devsjc</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=devsjc" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
