@@ -89,6 +89,10 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
           "name" : "DB_URL_FORECAST",
           "valueFrom" : "${var.database_secret_forecast.arn}:url::",
         },
+        {
+          "name" : "DB_URL_PV_SITE",
+          "valueFrom" : "${data.aws_secretsmanager_secret_version.pv-sites-database-version.arn}:url::",
+        },
       ]
 
       logConfiguration : {
