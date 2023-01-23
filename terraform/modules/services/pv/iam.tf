@@ -39,7 +39,8 @@ resource "aws_iam_policy" "pv-secret-read" {
         ]
         Effect   = "Allow"
         Resource = [data.aws_secretsmanager_secret_version.pv-api-version.arn,
-          data.aws_secretsmanager_secret_version.pv-ss-version.arn]
+          data.aws_secretsmanager_secret_version.pv-ss-version.arn,
+          data.aws_secretsmanager_secret.pv-sites-database.arn]
       },
     ]
   })
