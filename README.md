@@ -13,7 +13,7 @@
         <img src="https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/terraform-validate.yaml?label=validate"/></a>
   <a href="https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/local-stack-tests.yaml" alt="Local Stack Tests">
         <img src="https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/local-stack-tests.yaml?label=local-stack"/></a>
-  <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
+  <a href="https://github.com/openclimatefix/ocf-infrastructure/graphs/contributors" alt="Contributors">
         <img src="https://img.shields.io/github/contributors/openclimatefix/ocf-infrastructure"/></a>
 </p>
 
