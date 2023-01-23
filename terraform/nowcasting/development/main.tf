@@ -26,34 +26,11 @@ module "ec2-bastion" {
   public_subnets_id    = module.networking.public_subnets[0].id
 }
 
-module "s3-sat-bucket" {
-  source = "../../modules/storage/s3-private"
+module "s3" {
+  source = "../../modules/storage/s3-trio"
 
   region      = var.region
   environment = var.environment
-  service_name = "sat"
-  domain = local.domain
-  lifecycled_prefixes = ["data"]
-}
-
-module "s3-nwp-bucket" {
-  source = "../../modules/storage/s3-private"
-
-  region      = var.region
-  environment = var.environment
-  service_name = "nwp"
-  domain = local.domain
-  lifecycled_prefixes = ["data", "raw"]
-}
-
-module "s3-ml" {
-  source = "../../modules/storage/s3-private"
-
-  region = var.region
-  environment = var.environment
-  service_name = "ml-models"
-  domain = local.domain
-  lifecycled_prefixes = []
 }
 
 module "ecs" {
@@ -93,8 +70,8 @@ module "data_visualization" {
   iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
   api_url                             = module.api.api_url
-  iam-policy-s3-nwp-read              = module.s3-nwp-bucket.read-policy
-  iam-policy-s3-sat-read              = module.s3-sat-bucket.read-policy
+  iam-policy-s3-nwp-read              = module.s3.iam-policy-s3-nwp-read
+  iam-policy-s3-sat-read              = module.s3.iam-policy-s3-sat-read
 }
 
 module "database" {
@@ -111,8 +88,8 @@ module "nwp" {
 
   region                  = var.region
   environment             = var.environment
-  iam-policy-s3-nwp-write = module.s3-nwp-bucket.write-policy
-  s3-bucket               = module.s3-nwp-bucket.bucket
+  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
+  s3-bucket               = module.s3.s3-nwp-bucket
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.nwp_version
@@ -125,8 +102,8 @@ module "sat" {
 
   region                  = var.region
   environment             = var.environment
-  iam-policy-s3-sat-write = module.s3-sat-bucket.write-policy
-  s3-bucket               = module.s3-sat-bucket.bucket
+  iam-policy-s3-sat-write = module.s3.iam-policy-s3-sat-write
+  s3-bucket               = module.s3.s3-sat-bucket
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.sat_version
@@ -184,15 +161,15 @@ module "forecast" {
   subnet_ids                    = [module.networking.public_subnets[0].id]
   iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
-  iam-policy-s3-nwp-read        = module.s3-nwp-bucket.read-policy
-  iam-policy-s3-sat-read        = module.s3-sat-bucket.read-policy
-  iam-policy-s3-ml-read         = module.s3-ml.read-policy
+  iam-policy-s3-nwp-read        = module.s3.iam-policy-s3-nwp-read
+  iam-policy-s3-sat-read        = module.s3.iam-policy-s3-sat-read
+  iam-policy-s3-ml-read         = module.s3.iam-policy-s3-ml-write #TODO update name
   database_secret               = module.database.forecast-database-secret
   pv_database_secret            = module.database.pv-database-secret
   docker_version                = var.forecast_version
-  s3-nwp-bucket                 = module.s3-nwp-bucket.bucket
-  s3-sat-bucket                 = module.s3-sat-bucket.bucket
-  s3-ml-bucket                  = module.s3-ml.bucket
+  s3-nwp-bucket                 = module.s3.s3-nwp-bucket
+  s3-sat-bucket                 = module.s3.s3-sat-bucket
+  s3-ml-bucket                  = module.s3.s3-ml-bucket
 }
 
 #module "statusdash" {
