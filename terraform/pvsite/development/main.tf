@@ -21,7 +21,7 @@ module "pvsite_subnetworking" {
 }
 
 module "pvsite_database" {
-  source = "../../modules/postgres"
+  source = "../../modules/storage/postgres"
 
   region             = var.region
   environment        = var.environment
@@ -40,4 +40,14 @@ module "pvsite_api" {
   subnets                             = var.public_subnets
   docker_version                      = var.pvsite_api_version
   domain                              = local.domain
+}
+
+module "pvsite_ml_bucket" {
+  source = "../../modules/storage/s3-private"
+
+  region = var.region
+  environment = var.environment
+  service_name = "ml-models"
+  domain = local.domain
+  lifecycled_prefixes = []
 }

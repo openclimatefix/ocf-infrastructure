@@ -98,9 +98,9 @@ services:
       - MODEL_NAME=nwp_simple_trained
       - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-      - NWP_ZARR_PATH=s3://nowcasting-nwp-production/data/latest.netcdf
-      - SATELLITE_ZARR_PATH=s3://nowcasting-sat-production/data/latest/latest.zarr.zip
-      - HRV_SATELLITE_ZARR_PATH=s3://nowcasting-sat-production/data/latest/hrv_latest.zarr.zip
+      - NWP_ZARR_PATH=s3-private://nowcasting-nwp-production/data/latest.netcdf
+      - SATELLITE_ZARR_PATH=s3-private://nowcasting-sat-production/data/latest/latest.zarr.zip
+      - HRV_SATELLITE_ZARR_PATH=s3-private://nowcasting-sat-production/data/latest/hrv_latest.zarr.zip
     depends_on:
       - "postgres-forecast"
     restart: on-failure

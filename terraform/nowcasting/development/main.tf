@@ -26,11 +26,34 @@ module "ec2-bastion" {
   public_subnets_id    = module.networking.public_subnets[0].id
 }
 
-module "s3" {
-  source = "../../modules/s3"
+module "s3-sat-bucket" {
+  source = "../../modules/storage/s3-private"
 
   region      = var.region
   environment = var.environment
+  service_name = "sat"
+  domain = local.domain
+  lifecycled_prefixes = ["data"]
+}
+
+module "s3-nwp-bucket" {
+  source = "../../modules/storage/s3-private"
+
+  region      = var.region
+  environment = var.environment
+  service_name = "nwp"
+  domain = local.domain
+  lifecycled_prefixes = ["data", "raw"]
+}
+
+module "s3-ml" {
+  source = "../../modules/storage/s3-private"
+
+  region = var.region
+  environment = var.environment
+  service_name = "ml-models"
+  domain = local.domain
+  lifecycled_prefixes = []
 }
 
 module "ecs" {
@@ -75,7 +98,7 @@ module "data_visualization" {
 }
 
 module "database" {
-  source = "../../modules/database-pair"
+  source = "../../modules/storage/database-pair"
 
   region          = var.region
   environment     = var.environment

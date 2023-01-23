@@ -1,4 +1,4 @@
-# create s3 bucket for application verions
+# create s3-private bucket for application verions
 
 resource "aws_s3_bucket" "eb" {
   bucket = "nowcasting-eb-applicationversion-${var.environment}"
