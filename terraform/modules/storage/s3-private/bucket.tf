@@ -35,9 +35,9 @@ resource "aws_s3_bucket_acl" "acl" {
 resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
   for_each = var.lifecycled_prefixes
 
+  bucket = aws_s3_bucket.bucket.id
   rule {
     id = "remove_old_${each.key}_files"
-    bucket = aws_s3_bucket.bucket.id
     status = "Enabled"
     filter {
       prefix = "${each.key}/"
