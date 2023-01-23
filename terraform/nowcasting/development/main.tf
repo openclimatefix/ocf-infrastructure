@@ -27,7 +27,7 @@ module "ec2-bastion" {
 }
 
 module "s3" {
-  source = "../../modules/s3"
+  source = "../../modules/storage/s3-trio"
 
   region      = var.region
   environment = var.environment
@@ -75,7 +75,7 @@ module "data_visualization" {
 }
 
 module "database" {
-  source = "../../modules/database-pair"
+  source = "../../modules/storage/database-pair"
 
   region          = var.region
   environment     = var.environment

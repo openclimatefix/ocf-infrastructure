@@ -17,7 +17,7 @@ module "networking" {
 }
 
 module "s3" {
-  source = "../modules/s3"
+  source = "../modules/storage/s3-private"
 
   region      = var.region
   environment = var.environment
@@ -42,7 +42,7 @@ module "api" {
 }
 
 module "postgres" {
-  source = "../modules/postgres"
+  source = "../modules/storage/postgres"
 
   region          = var.region
   environment     = var.environment

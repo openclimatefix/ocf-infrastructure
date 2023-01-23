@@ -24,10 +24,10 @@ resource "aws_secretsmanager_secret_version" "db-secret-version" {
     {
       username : "main",
       password : random_password.db-password.result,
-      dbname : aws_db_instance.postgres-db.name,
+      dbname : aws_db_instance.postgres-db.db_name,
       engine : "postgresql",
       address : aws_db_instance.postgres-db.address,
       port : "5432",
-      url : "postgresql://main:${random_password.db-password.result}@${aws_db_instance.postgres-db.address}:5432/${aws_db_instance.postgres-db.name}"
+      url : "postgresql://main:${random_password.db-password.result}@${aws_db_instance.postgres-db.address}:5432/${aws_db_instance.postgres-db.db_name}"
   })
 }

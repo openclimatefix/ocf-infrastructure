@@ -6,7 +6,7 @@ resource "aws_db_instance" "db-forecast" {
   engine                       = "postgres"
   engine_version               = "14.4"
   instance_class               = "db.t3.small"
-  name                         = "forecast${var.environment}"
+  db_name                         = "forecast${var.environment}"
   identifier                   = "forecast-${var.environment}"
   username                     = "main"
   password                     = random_password.db-forecast-password.result
@@ -33,7 +33,7 @@ resource "aws_db_instance" "db-pv" {
   engine                       = "postgres"
   engine_version               = "14.4"
   instance_class               = "db.t3.micro"
-  name                         = "pv${var.environment}"
+  db_name                         = "pv${var.environment}"
   identifier                   = "pv-${var.environment}"
   username                     = "main"
   password                     = random_password.db-pv-password.result

@@ -6,7 +6,7 @@ resource "aws_db_instance" "postgres-db" {
   engine                       = "postgres"
   engine_version               = "14.4"
   instance_class               = var.rds_instance_class
-  name                         = "${var.db_name}${var.environment}"
+  db_name                         = "${var.db_name}${var.environment}"
   identifier                   = "${var.db_name}-${var.environment}"
   username                     = "main"
   password                     = random_password.db-password.result
