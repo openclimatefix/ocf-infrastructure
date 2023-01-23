@@ -1,9 +1,5 @@
 # https://www.middlewareinventory.com/blog/terraform-aws-ec2-user_data-example/
 
-data "template_file" "user_data" {
-  template = file("${path.module}/user_data.sh")
-}
-
 data "aws_ami" "ami_latest" {
   owners = ["amazon"]
   most_recent = true
@@ -19,7 +15,7 @@ resource "aws_instance" "ec2-bastion" {
   ami = "ami-0069d66985b09d219"
   instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.ec2-ssh.id]
-  user_data = data.template_file.user_data.rendered
+  user_data = file("${path.module}/user_data.sh")
   subnet_id = var.public_subnets_id
   associate_public_ip_address = true
 
