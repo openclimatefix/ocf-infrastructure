@@ -40,7 +40,7 @@ resource "aws_secretsmanager_secret_version" "forecast-version" {
     {
       username : "main",
       password : random_password.db-forecast-password.result,
-      dbname : aws_db_instance.db-forecast.name,
+      dbname : aws_db_instance.db-forecast.db_name,
       engine : "postgresql",
       address : aws_db_instance.db-forecast.address,
       port : "5432",
@@ -54,7 +54,7 @@ resource "aws_secretsmanager_secret_version" "pv-version" {
     {
       username : "main",
       password : random_password.db-pv-password.result,
-      dbname : aws_db_instance.db-pv.name,
+      dbname : aws_db_instance.db-pv.db_name,
       engine : "postgresql",
       address : aws_db_instance.db-pv.address,
       port : "5432",

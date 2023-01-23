@@ -175,6 +175,5 @@ resource "aws_elastic_beanstalk_application_version" "latest" {
   application = aws_elastic_beanstalk_application.eb-data_visualization-application.name
   description = "application version created by terraform (${var.docker_version})"
   bucket      = aws_s3_bucket.eb_data_visualization.id
-  key         = aws_s3_bucket_object.eb-object_data_visualization.id
-
+  key         = aws_s3_object.eb-object_data_visualization.id
 }
