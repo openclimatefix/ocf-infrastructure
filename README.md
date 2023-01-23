@@ -1,13 +1,21 @@
-# OCF Infrastrucutre
+<h1 align="center">ocf-infrastructure</h1>
+<p align="center">
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [contributors-shield]: https://img.shields.io/badge/all_contributors-5-orange.svg
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-[![Issues](https://img.shields.io/github/issues/openclimatefix/ocf-infrastructure)](https://github.com/openclimatefix/ocf-infrastructure/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-[![Validation](https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/terraform-validate.yaml?label=validate)](https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/terraform-validate.yaml)
-[![Local Stack Tests](https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/local-stack-tests.yaml?label=local-stack)](https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/local-stack-tests.yaml)
-[![All Contributors][contributors-shield]](#contributors-)
+  <a href="https://app.terraform.io/app/openclimatefix/workspaces" alt="Terraform Cloud">
+        <img src="https://img.shields.io/badge/console-terraform.io-blue"/></a>
+  <a href="https://github.com/openclimatefix/ocf-infrastructure/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc" alt="Issues">
+        <img src="https://img.shields.io/github/issues/openclimatefix/ocf-infrastructure"/></a>
+  <a href="https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/terraform-validate.yaml" alt="Validate">
+        <img src="https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/terraform-validate.yaml?label=validate"/></a>
+  <a href="https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/local-stack-tests.yaml" alt="Local Stack Tests">
+        <img src="https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/local-stack-tests.yaml?label=local-stack"/></a>
+  <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
+        <img src="https://img.shields.io/github/contributors/openclimatefix/ocf-infrastructure"/></a>
+</p>
 
 Terraform infrastructure-as-code for cloud environments and services in use by OCF.
 
