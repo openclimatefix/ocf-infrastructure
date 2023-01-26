@@ -8,6 +8,7 @@ services:
       DB_URL: $DB_URL
       DB_URL_PV: $DB_URL_PV
       ORIGINS: $ORIGINS
+      FAKE: $FAKE
     container_name: nowcasting_api
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
     ports:
