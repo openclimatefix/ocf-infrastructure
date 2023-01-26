@@ -77,7 +77,7 @@ resource "aws_iam_role" "app-role" {
   assume_role_policy = data.aws_iam_policy_document.ec2-instance-assume-role-policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "attach-write-s3-nwp" {
+resource "aws_iam_role_policy_attachment" "attach-read-s3-nwp" {
   role       = aws_iam_role.app-role.name
   policy_arn = var.s3_nwp_bucket.bucket_read_policy_arn
 }
