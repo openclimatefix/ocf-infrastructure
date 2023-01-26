@@ -90,7 +90,7 @@ resource "aws_iam_role_policy_attachment" "attach-logs-service" {
   policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
-resource "aws_iam_role_policy_attachment" "attach-logs" {
+resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-service" {
   role       = aws_iam_role.instance-role.name
   policy_arn = var.database_secret_read_policy_arn
 }
@@ -132,7 +132,7 @@ resource "aws_iam_instance_profile" "ec2" {
   role = join("", aws_iam_role.instance-role.*.name)
 }
 
-resource "aws_iam_role_policy_attachment" "attach-logs" {
+resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-instance" {
   role       = aws_iam_role.instance-role.name
   policy_arn = var.database_secret_read_policy_arn
 }
