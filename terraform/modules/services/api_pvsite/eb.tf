@@ -52,7 +52,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "FAKE"
-    value     = '0'
+    value     = "0"
   }
 
   setting {
