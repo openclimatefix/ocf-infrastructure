@@ -25,3 +25,15 @@ variable "docker_version" {
 variable "domain" {
   description = "The domain/name of the api"
 }
+
+
+variable "database_secret_arn" {
+  type = string
+  description = "ARN of the secret containing connection info for the database"
+}
+
+variable "database_secret_read_policy_arn" {
+  type = string
+  description = "ARN of the iam policy allowing reading of the connection secret"
+    }
+

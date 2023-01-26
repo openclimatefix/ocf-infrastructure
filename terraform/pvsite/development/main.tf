@@ -31,12 +31,14 @@ module "pvsite_database" {
 module "pvsite_api" {
   source = "../../modules/services/api_pvsite"
 
-  region         = var.region
-  environment    = var.environment
-  vpc_id         = var.vpc_id
-  subnets        = var.public_subnets
-  docker_version = var.pvsite_api_version
-  domain         = local.domain
+  region                           = var.region
+  environment                     = var.environment
+  vpc_id                          = var.vpc_id
+  subnets                         = var.public_subnets
+  docker_version                  = var.pvsite_api_version
+  domain                          = local.domain
+  database_secret_arn             = module.pvsite_database.secret.arn
+  database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
 }
 
 module "pvsite_ml_bucket" {
