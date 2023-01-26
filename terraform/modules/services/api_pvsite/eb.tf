@@ -30,11 +30,11 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   # https://is.gd/vfB51g
   # This should be the minimally required set for Docker.
 
-#  setting {
-#    namespace = "aws:elasticbeanstalk:application:environment"
-#    name      = "DB_URL"
-#    value     = var.database_forecast_secret_url
-#  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "DB_URL"
+    value     = "${var.database_secret_arn}:url::"
+  }
 
 
   setting {

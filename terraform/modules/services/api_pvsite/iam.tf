@@ -90,15 +90,10 @@ resource "aws_iam_role_policy_attachment" "attach-logs-service" {
   policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
-#resource "aws_iam_role_policy_attachment" "attach-db-forecast-secret-service" {
-#  role       = aws_iam_role.api-service-role.name
-#  policy_arn = var.iam-policy-rds-forecast-read-secret.arn
-#}
-#
-#resource "aws_iam_role_policy_attachment" "attach-db-pv-secret-service" {
-#  role       = aws_iam_role.api-service-role.name
-#  policy_arn = var.iam-policy-rds-pv-read-secret.arn
-#}
+resource "aws_iam_role_policy_attachment" "attach-logs" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = var.database_secret_read_policy_arn
+}
 
 
 ##################
@@ -135,4 +130,9 @@ resource "aws_iam_instance_profile" "ec2" {
 
   name = "${var.domain}-${var.environment}-api-site-instance-eb"
   role = join("", aws_iam_role.instance-role.*.name)
+}
+
+resource "aws_iam_role_policy_attachment" "attach-logs" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = var.database_secret_read_policy_arn
 }
