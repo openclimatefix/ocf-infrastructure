@@ -33,7 +33,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
-    value     = "${var.database_secret_arn}:url::"
+    value     = var.database_secret_url
   }
 
 

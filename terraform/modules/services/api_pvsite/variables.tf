@@ -27,9 +27,9 @@ variable "domain" {
 }
 
 
-variable "database_secret_arn" {
+variable "database_secret_url" {
   type = string
-  description = "ARN of the secret containing connection info for the database"
+  description = "URL of the database connection"
 }
 
 variable "database_secret_read_policy_arn" {
