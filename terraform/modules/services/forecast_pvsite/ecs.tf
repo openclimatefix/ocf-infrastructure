@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 1024
-  memory = 7168
+  memory = 2048
 
   task_role_arn      = aws_iam_role.app-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
       environment : [
         {"name": "LOGLEVEL", "value" : "DEBUG"},
         {"name": "NWP_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/data/latest.netcdf"},
-        {"name": "BATCH_SAVE_DIR", "value": "s3://${var.s3_ml_bucket.bucket_id}/"},
+        {"name": "ML_MODEL_PATH", "value": "s3://${var.s3_ml_bucket.bucket_id}/"},
         {"name": "ENVIRONMENT", "value": var.environment},
       ]
 
