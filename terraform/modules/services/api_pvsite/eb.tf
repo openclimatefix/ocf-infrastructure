@@ -49,6 +49,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = var.docker_version
   }
 
+    setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "FAKE"
+    value     = '0'
+  }
+
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
