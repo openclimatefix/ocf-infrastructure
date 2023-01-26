@@ -37,7 +37,7 @@ module "pvsite_api" {
   subnets                         = var.public_subnets
   docker_version                  = var.pvsite_api_version
   domain                          = local.domain
-  database_secret_arn             = module.pvsite_database.secret.arn
+  database_secret_url             = module.pvsite_database.secret-url
   database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
 }
 
