@@ -38,6 +38,7 @@ module "ecs" {
 
   region      = var.region
   environment = var.environment
+  domain = local.domain
 }
 
 module "api" {

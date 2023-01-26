@@ -53,3 +53,21 @@ variable "public_subnets" {
   type = list(string)
   description = "The name of the desired public subnet"
 }
+
+variable "pvsite_forecast_version" {
+  type = string
+  description = "The version of the PVSite forecaster to use"
+}
+
+variable "nwp_bucket_config" {
+  type = object({
+    bucket_id              = string
+    bucket_read_policy_arn = string
+  })
+  description = <<EOT
+    nwp_bucket_config = {
+      bucket_id : "ID of the nwp S3 bucket"
+      bucket_read_policy_arn : "ARN of the read policy on the nwp S3 bucket"
+    }
+  EOT
+}

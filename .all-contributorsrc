@@ -49,12 +49,31 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "keenanjohnson",
+      "name": "Keenan Johnson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2559382?v=4",
+      "profile": "https://bio.link/klj",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "devsjc",
+      "name": "devsjc",
+      "avatar_url": "https://avatars.githubusercontent.com/u/47188100?v=4",
+      "profile": "https://github.com/devsjc",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "projectName": "nowcasting_infrastructure",
+  "projectName": "ocf-infrastructure",
   "projectOwner": "openclimatefix",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }
