@@ -17,3 +17,4 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDI+OlLX8ootVyczFwYZzxLgdmvcq77Dr88lj
 echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGDFkJUQ8eEmTFMycqliOjuCN5Bf8GhLDiy4qJs8MBAw rachelmtipton@gmail.com" >> /home/ec2-user/.ssh/authorized_keys
 echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzH1fa9hQL8Vjl6xkPWj1/ibfpn60s8EecGDElTW1FC sol@openclimatefix.org" >> /home/ec2-user/.ssh/authorized_keys
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKlNye3XO0IhDC1DoEsdOej9VS/G//iG3M+PT2tG1qIoIag8zl/QIPOc0Q5tytBPa056x/PjH/8wuITj+LfJ1lBSddYGurEoykz919q+W0glc+xGBiHSLhuTVIKiHrSZWpYTgw2lPzzg7JNjrZYepUB4POmusRwRCQU18LucgDXKhGtaxj9zEd8OyZGhJAZ3kQd/jM/3PbTHhQEEzbA2j3AEtklsNIOnk5PWfOVZM28ELoaz0te45WjgZXmHZmIoLhr0Qpw/cnUlu2FKde545XCTkSr7l5Inblp4iW2LXm/+iGlMAVILhMoYapg4DIyBu170SKUBHcx58liIQRGkyD simon@asus" >> /home/ec2-user/.ssh/authorized_keys
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICCkfqevQVH7nn5xUDrSvEeM1cjmZb/UL04ik/oBJPwQ thomasarmstrong98@gmail.com" >> /home/ec2-user/.ssh/authorized_keys
