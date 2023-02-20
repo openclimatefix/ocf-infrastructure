@@ -196,7 +196,7 @@ module "national_forecast" {
   }
   rds_config = {
     database_secret_arn             = module.database.forecast-database-secret.arn
-    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read
+    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
   }
   scheduler_config = {
     subnet_ids      = [module.networking.public_subnets[0].id]
@@ -208,7 +208,7 @@ module "national_forecast" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-ml-read.arn
   }
   s3_nwp_bucket = {
-    bucket_id              = module.s3.s3-nwp-bucket.id
+    bucket_id = module.s3.s3-nwp-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
   }
 }
