@@ -34,7 +34,7 @@ module "pvsite_api" {
   region                           = var.region
   environment                     = var.environment
   vpc_id                          = var.vpc_id
-  subnets                         = var.public_subnets
+  subnets                         = module.pvsite_subnetworking.public_subnets
   docker_version                  = var.pvsite_api_version
   domain                          = local.domain
   database_secret_url             = module.pvsite_database.secret-url
