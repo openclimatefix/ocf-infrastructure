@@ -3,7 +3,9 @@ Variables used across all modules
 ======*/
 locals {
   production_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  domain = "nowcasting"
 }
+
 
 module "networking" {
   source = "../../modules/networking"
@@ -16,11 +18,20 @@ module "networking" {
   availability_zones   = local.production_availability_zones
 }
 
+module "ec2-bastion" {
+  source = "../../modules/networking/ec2_bastion"
+
+  region               = var.region
+  vpc_id               = module.networking.vpc_id
+  public_subnets_id    = module.networking.public_subnets[0].id
+}
+
 module "s3" {
-  source = "../../modules/storage/s3-private"
+  source = "../../modules/storage/s3-trio"
 
   region      = var.region
   environment = var.environment
+
 }
 
 module "ecs" {
@@ -28,6 +39,7 @@ module "ecs" {
 
   region      = var.region
   environment = var.environment
+  domain = local.domain
 }
 
 module "api" {
@@ -44,6 +56,7 @@ module "api" {
   iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
   auth_domain = var.auth_domain
   auth_api_audience = var.auth_api_audience
+  n_history_days = "2"
 }
 
 module "data_visualization" {
@@ -70,14 +83,6 @@ module "database" {
   environment     = var.environment
   db_subnet_group = module.networking.private_subnet_group
   vpc_id          = module.networking.vpc_id
-}
-
-module "ec2-bastion" {
-  source = "../../modules/networking/ec2_bastion"
-
-  region               = var.region
-  vpc_id               = module.networking.vpc_id
-  public_subnets_id    = module.networking.public_subnets[0].id
 }
 
 module "nwp" {
@@ -119,7 +124,7 @@ module "pv" {
   database_secret         = module.database.pv-database-secret
   database_secret_forecast = module.database.forecast-database-secret
   docker_version          = var.pv_version
-    docker_version_ss          = var.pv_ss_version
+  docker_version_ss          = var.pv_ss_version
   iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
 }
