@@ -1,5 +1,5 @@
 output "public_subnet" {
-  value = aws_subnet.public_subnet
+  value = aws_subnet.public_subnet[0]
 }
 
 output "private_subnet_group" {
