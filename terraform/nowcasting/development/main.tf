@@ -182,3 +182,33 @@ module "forecast" {
   s3-sat-bucket                 = module.s3.s3-sat-bucket
   s3-ml-bucket                  = module.s3.s3-ml-bucket
 }
+
+
+module "national_forecast" {
+  source = "../../modules/services/forecast_pvsite"
+
+  region      = var.region
+  environment = var.environment
+  app-name    = "forecast_national"
+  ecs_config  = {
+    docker_image   = "openclimatefix/gradboost_pv"
+    docker_version = var.national_forecast_version
+  }
+  rds_config = {
+    database_secret_arn             = module.database.forecast-database-secret.arn
+    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read
+  }
+  scheduler_config = {
+    subnet_ids      = [module.networking.public_subnets[0].id]
+    ecs_cluster_arn = module.ecs.ecs_cluster.arn
+    cron_expression = "cron(15,45 * * * ? *)" # Every 10 minutes
+  }
+  s3_ml_bucket = {
+    bucket_id              = module.s3.s3-ml-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-ml-read.arn
+  }
+  s3_nwp_bucket = {
+    bucket_id              = module.s3.s3-nwp-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
+  }
+}
