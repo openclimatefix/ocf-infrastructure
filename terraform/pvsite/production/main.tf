@@ -31,10 +31,10 @@ module "pvsite_database" {
 module "pvsite_api" {
   source = "../../modules/services/api_pvsite"
 
-  region                           = var.region
+  region                          = var.region
   environment                     = var.environment
   vpc_id                          = var.vpc_id
-  subnets                         = module.pvsite_subnetworking.public_subnets
+  subnets                         = [module.pvsite_subnetworking.public_subnet.id]
   docker_version                  = var.pvsite_api_version
   domain                          = local.domain
   database_secret_url             = module.pvsite_database.secret-url
@@ -74,7 +74,7 @@ module "pvsite_forecast" {
     database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
   }
   scheduler_config = {
-    subnet_ids      = [module.pvsite_subnetworking.public_subnets[0].id]
+    subnet_ids      = [module.pvsite_subnetworking.public_subnet.id]
     ecs_cluster_arn = module.pvsite_ecs.ecs_cluster.arn
     cron_expression = "cron(*/10 * * * ? *)" # Every 10 minutes
   }
