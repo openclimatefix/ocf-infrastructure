@@ -4,9 +4,9 @@ resource "aws_s3_bucket" "eb" {
   bucket = "nowcasting-eb-applicationversion-${var.environment}"
 }
 
-resource "aws_s3_bucket_object" "eb-object" {
+resource "aws_s3_object" "eb_object" {
   bucket = aws_s3_bucket.eb.id
-  key    = "beanstalk/docker-compose-${var.docker_version}.yml"
+  key = "beanstalk/docker-compose-${var.docker_version}.yml"
   source = "${path.module}/docker-compose.yml"
 }
 

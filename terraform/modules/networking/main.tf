@@ -1,10 +1,10 @@
-# Creats lots of network things
+# Creates lots of network things
 # 1. VPC
 # 2. Elastic IP address
 # 3. NAT gateway - so things inside the VPC can reach the internet
 # 4. Subnets in the VPC. Both private and public
 # 5. Routing tables
-# 5. Security groups
+# 6. Security groups
 
 
 /*==== The VPC ======*/
@@ -82,6 +82,7 @@ resource "aws_route_table" "private" {
     Environment = "${var.environment}"
   }
 }
+
 /* Routing table for public subnet */
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.vpc.id
@@ -90,27 +91,32 @@ resource "aws_route_table" "public" {
     Environment = "${var.environment}"
   }
 }
+
 resource "aws_route" "public_internet_gateway" {
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.ig.id
 }
+
 resource "aws_route" "private_nat_gateway" {
   route_table_id         = aws_route_table.private.id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.nat.id
 }
+
 /* Route table associations */
 resource "aws_route_table_association" "public" {
   count          = length(var.public_subnets_cidr)
   subnet_id      = element(aws_subnet.public_subnet.*.id, count.index)
   route_table_id = aws_route_table.public.id
 }
+
 resource "aws_route_table_association" "private" {
   count          = length(var.private_subnets_cidr)
   subnet_id      = element(aws_subnet.private_subnet.*.id, count.index)
   route_table_id = aws_route_table.private.id
 }
+
 /*==== VPC's Default Security Group ======*/
 resource "aws_security_group" "default" {
   name        = "nowcasting-${var.environment}-default-sg"

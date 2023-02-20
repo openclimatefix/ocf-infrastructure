@@ -17,15 +17,15 @@ jobs:
       with:
         python-version: 3.9
 
-    - name: Run
+    - name: Test Nowcasting
       run: |
-        cd local-stack/
+        cd local-stack/nowcasting
         pip install -r tests/requirements.txt
 
         # start up the stack
         docker-compose up -d
 
-        # wait 2 minutes
+        # wait 10 minutes
         echo "Sleeping for 10 minutes, to let the local stackrun"
         sleep 600
 
