@@ -1,12 +1,12 @@
 # RDS postgres database
 
 resource "aws_db_instance" "db-forecast" {
-  allocated_storage            = 10
-  max_allocated_storage        = 100
+  allocated_storage            = 100
+  max_allocated_storage        = 115
   engine                       = "postgres"
   engine_version               = "14.4"
   instance_class               = "db.t3.small"
-  db_name                         = "forecast${var.environment}"
+  name                         = "forecast${var.environment}"
   identifier                   = "forecast-${var.environment}"
   username                     = "main"
   password                     = random_password.db-forecast-password.result
@@ -33,7 +33,7 @@ resource "aws_db_instance" "db-pv" {
   engine                       = "postgres"
   engine_version               = "14.4"
   instance_class               = "db.t3.micro"
-  db_name                         = "pv${var.environment}"
+  name                         = "pv${var.environment}"
   identifier                   = "pv-${var.environment}"
   username                     = "main"
   password                     = random_password.db-pv-password.result
@@ -45,7 +45,7 @@ resource "aws_db_instance" "db-pv" {
   db_subnet_group_name         = var.db_subnet_group.name # update name with private/public
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
-  allow_major_version_upgrade = true
+  allow_major_version_upgrade  = true
 
   tags = {
     Name        = "${var.environment}-rds"
