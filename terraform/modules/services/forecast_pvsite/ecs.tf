@@ -33,6 +33,10 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
           "name" : "OCF_PV_DB_URL",
           "valueFrom" : "${var.rds_config.database_secret_arn}:url::",
         },
+        {
+          "name": "DB_URL",
+          "valueFrom": "${var.rds_config.database_secret_arn}:url::",
+        },
       ]
 
       logConfiguration : {
