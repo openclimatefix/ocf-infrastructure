@@ -204,8 +204,8 @@ module "national_forecast" {
     cron_expression = "cron(15,45 * * * ? *)" # Every 10 minutes
   }
   s3_ml_bucket = {
-    bucket_id              = module.s3.s3-ml-bucket.id
-    bucket_read_policy_arn = module.s3.iam-policy-s3-ml-read.arn
+    bucket_id              = module.forecasting_models_bucket.bucket.id
+    bucket_read_policy_arn = module.forecasting_models_bucket.read-policy.arn
   }
   s3_nwp_bucket = {
     bucket_id = module.s3.s3-nwp-bucket.id
