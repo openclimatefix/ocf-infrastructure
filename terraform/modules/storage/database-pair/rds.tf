@@ -32,7 +32,7 @@ resource "aws_db_instance" "db-pv" {
   max_allocated_storage        = 100
   engine                       = "postgres"
   engine_version               = "14.4"
-  instance_class               = "db.t3.small"
+  instance_class               = "db.t3.micro"
   name                         = "pv${var.environment}"
   identifier                   = "pv-${var.environment}"
   username                     = "main"
