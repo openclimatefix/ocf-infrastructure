@@ -69,7 +69,7 @@ variable "nwp_bucket_config" {
   EOT
 }
 
-variable "sentry_dns" {
+variable "sentry_dsn" {
   type = string
   description = "DNS for Sentry monitoring"
 }
