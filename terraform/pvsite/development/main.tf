@@ -61,7 +61,7 @@ module "pvsite_ecs" {
 }
 
 module "pvsite_forecast" {
-  source = "../../modules/services/forecast_pvsite"
+  source = "../../modules/services/forecast_generic"
 
   region      = var.region
   environment = var.environment
