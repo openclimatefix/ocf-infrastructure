@@ -109,7 +109,7 @@ module "nwp" {
   consumer-name = "nwp"
 }
 
-module "nwp" {
+module "nwp-regional" {
   source = "../../modules/services/nwp"
 
   region                  = var.region
