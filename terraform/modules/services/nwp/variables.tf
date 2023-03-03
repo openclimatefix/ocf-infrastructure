@@ -1,21 +1,17 @@
+locals {
+  log_group_name = "/aws/ecs/consumer/${var.consumer-name}/"
+}
 
 variable "environment" {
   description = "The Deployment environment"
 }
 
-
 variable "region" {
   description = "The AWS region"
 }
 
-
 variable "iam-policy-s3-nwp-write" {
   description = "IAM policy to write to s3 bucket for NWP data"
-}
-
-variable "log-group-name" {
-  description = "The log group name where log streams are saved"
-  default     = "/aws/ecs/consumer/nwp/"
 }
 
 variable "ecs-cluster" {

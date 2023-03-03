@@ -45,7 +45,7 @@ resource "aws_iam_policy" "nwp-secret-read" {
 }
 
 resource "aws_iam_policy" "cloudwatch-nwp" {
-  name        = "cloudwatch-read-and-write"
+  name        = "${var.consumer-name}-cloudwatch-read-and-write"
   path        = "/consumer/${var.consumer-name}/"
   description = "Policy to allow read and write to cloudwatch logs"
 
@@ -65,7 +65,7 @@ resource "aws_iam_policy" "cloudwatch-nwp" {
           "logs:PutRetentionPolicy"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:logs:*:*:log-group:${var.log-group-name}*"
+        Resource = "arn:aws:logs:*:*:log-group:${local.log_group_name}*"
       },
     ]
   })

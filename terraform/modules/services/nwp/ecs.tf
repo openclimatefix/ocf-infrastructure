@@ -49,7 +49,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       logConfiguration : {
         "logDriver" : "awslogs",
         "options" : {
-          "awslogs-group" : var.log-group-name,
+          "awslogs-group" : local.log_group_name,
           "awslogs-region" : var.region,
           "awslogs-stream-prefix" : "streaming"
         }
