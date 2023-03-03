@@ -22,8 +22,8 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       essential = true
 
       environment : [
-        { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
-        { "name" : "RAW_DIR", "value" : "s3://${var.s3-bucket.id}/raw" },
+        { "name" : "SAVE_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_data}" },
+        { "name" : "RAW_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_raw}" },
         { "name" : "LOG_LEVEL", "value" : "DEBUG"},
       ]
 

@@ -18,11 +18,6 @@ variable "log-group-name" {
   default     = "/aws/ecs/consumer/nwp/"
 }
 
-
-variable "s3-bucket" {
-  description = "s3 Bucket for NWP data to be saved to"
-}
-
 variable "ecs-cluster" {
   description = "The ECS cluster"
 }
@@ -47,4 +42,19 @@ variable "iam-policy-rds-read-secret" {
 
 variable "consumer-name" {
   description = "Name of the consumer"
+}
+
+variable "s3_config" {
+  type = object({
+    bucket_id = string
+    savedir_raw = string
+    savedir_data = string
+  })
+  description = <<EOT
+    s3_config = {
+      bucket_id : "ID of the nwp S3 bucket"
+      savedir_raw : "Folder name for raw data save location"
+      savedir_data : "Folder name for data data save location"
+    }
+  EOT
 }
