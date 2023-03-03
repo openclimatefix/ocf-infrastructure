@@ -27,7 +27,6 @@ variable "docker_version" {
   description = "The version of the docker that should be used"
 }
 
-
 variable "database_secret" {
   description = "AWS secret that gives connection details to the database"
 }
