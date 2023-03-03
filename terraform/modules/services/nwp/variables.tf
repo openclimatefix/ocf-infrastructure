@@ -44,3 +44,7 @@ variable "database_secret" {
 variable "iam-policy-rds-read-secret" {
   description = "IAM policy to be able to read the RDS secret"
 }
+
+variable "consumer-name" {
+  description = "Name of the consumer"
+}
