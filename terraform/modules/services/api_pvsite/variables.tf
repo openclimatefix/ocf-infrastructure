@@ -36,4 +36,3 @@ variable "database_secret_read_policy_arn" {
   type = string
   description = "ARN of the iam policy allowing reading of the connection secret"
     }
-
