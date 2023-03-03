@@ -36,7 +36,7 @@ variable "database_secret_read_policy_arn" {
   description = "ARN of the iam policy allowing reading of the connection secret"
 }
 
-variable "sentry_dns" {
+variable "sentry_dsn" {
   type = string
   description = "DNS for Sentry monitoring"
 }

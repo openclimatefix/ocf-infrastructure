@@ -57,8 +57,8 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "SENTRY_DNS"
-    value     = var.sentry_dns
+    name      = "SENTRY_DSN"
+    value     = var.sentry_dsn
   }
 
   setting {

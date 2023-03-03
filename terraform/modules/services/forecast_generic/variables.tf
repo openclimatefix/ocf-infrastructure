@@ -60,11 +60,13 @@ variable "s3_nwp_bucket" {
   type = object({
     bucket_id              = string
     bucket_read_policy_arn = string
+    datadir = string
   })
   description = <<EOT
     s3_nwp_bucket_info = {
       bucket_id : "ID of the nwp S3 bucket"
       bucket_read_policy_arn : "ARN of the read policy on the nwp S3 bucket"
+      datadir : "Name of the top-level folder in which the NWP data is saved"
     }
   EOT
 }
