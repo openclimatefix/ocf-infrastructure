@@ -3,7 +3,7 @@
 # Instance role is used to run the task
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "nwp-execution-role"
+  name = "${var.consumer-name}-execution-role"
 
   assume_role_policy = <<EOF
 {
@@ -23,7 +23,7 @@ EOF
 }
 
 resource "aws_iam_policy" "nwp-secret-read" {
-  name        = "nwp-secret-read"
+  name        = "${var.consumer-name}-secret-read"
   path        = "/consumer/nwp/"
   description = "Policy to allow read access to NWP API secret."
 
@@ -46,7 +46,7 @@ resource "aws_iam_policy" "nwp-secret-read" {
 
 resource "aws_iam_policy" "cloudwatch-nwp" {
   name        = "cloudwatch-read-and-write"
-  path        = "/consumer/nwp/"
+  path        = "/consumer/${var.consumer-name}/"
   description = "Policy to allow read and write to cloudwatch logs"
 
   # Terraform's "jsonencode" function converts a
@@ -94,7 +94,7 @@ data "aws_iam_policy_document" "ec2-instance-assume-role-policy" {
 }
 
 resource "aws_iam_role" "consumer-nwp-iam-role" {
-  name               = "consumer-nwp-iam-role"
+  name               = "consumer-${var.consumer-name}-iam-role"
   path               = "/consumer/"
   assume_role_policy = data.aws_iam_policy_document.ec2-instance-assume-role-policy.json
 }

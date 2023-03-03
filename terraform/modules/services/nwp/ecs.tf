@@ -2,28 +2,28 @@
 # needs access to the internet
 
 resource "aws_ecs_task_definition" "nwp-task-definition" {
-  family                   = "nwp"
+  family                   = "${var.consumer-name}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-  cpu    = 2048
-  memory = 9216
+  cpu    = 1024
+  memory = 5120
 
   task_role_arn      = aws_iam_role.consumer-nwp-iam-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "nwp-consumer"
+      name  = "${var.consumer-name}-consumer"
       image = "openclimatefix/metoffice_weather_datahub:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true
 
       environment : [
-        { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
-        { "name" : "RAW_DIR", "value" : "s3://${var.s3-bucket.id}/raw" },
+        { "name" : "SAVE_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_data}" },
+        { "name" : "RAW_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_raw}" },
         { "name" : "LOG_LEVEL", "value" : "DEBUG"},
       ]
 

@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "cloudwatch" {
 }
 
 resource "aws_iam_role" "cloudwatch_role" {
-  name               = "nwp-schedule-cloudwatch-execution"
+  name               = "${var.consumer-name}-schedule-cloudwatch-execution"
   assume_role_policy = data.aws_iam_policy_document.cloudwatch_assume_role.json
 
 }
@@ -49,6 +49,6 @@ resource "aws_iam_role_policy_attachment" "cloudwatch-secret" {
 }
 
 resource "aws_iam_policy" "cloudwatch" {
-  name   = "nwp-schedule-cloudwatch-execution"
+  name   = "${var.consumer-name}-schedule-cloudwatch-execution"
   policy = data.aws_iam_policy_document.cloudwatch.json
 }

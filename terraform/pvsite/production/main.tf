@@ -39,6 +39,7 @@ module "pvsite_api" {
   domain                          = local.domain
   database_secret_url             = module.pvsite_database.secret-url
   database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
+  sentry_dns = var.sentry_dns
 }
 
 module "pvsite_ml_bucket" {
