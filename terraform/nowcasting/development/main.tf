@@ -217,7 +217,7 @@ module "national_forecast" {
   ecs_config  = {
     docker_image   = "openclimatefix/gradboost_pv"
     docker_version = var.national_forecast_version
-    memory_mb = 6144
+    memory_mb = 7168
   }
   rds_config = {
     database_secret_arn             = module.database.forecast-database-secret.arn
