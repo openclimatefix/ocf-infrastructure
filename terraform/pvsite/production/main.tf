@@ -78,7 +78,8 @@ module "pvsite_forecast" {
   scheduler_config = {
     subnet_ids      = [module.pvsite_subnetworking.public_subnet.id]
     ecs_cluster_arn = module.pvsite_ecs.ecs_cluster.arn
-    cron_expression = "cron(*/10 * * * ? *)" # Every 10 minutes
+    # TODO Run more frequently!
+    cron_expression = "cron(0 */2 * * ? *)" # Every 2 hours
   }
   s3_ml_bucket = {
     bucket_id              = module.pvsite_ml_bucket.bucket.id
