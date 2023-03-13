@@ -19,6 +19,7 @@ resource "aws_db_instance" "db-forecast" {
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
   iops                         = 3000
+  storage_type                 = "gp3"
 
   tags = {
     Name        = "${var.environment}-rds"
@@ -48,6 +49,7 @@ resource "aws_db_instance" "db-pv" {
   performance_insights_enabled = true
   allow_major_version_upgrade  = true
   iops                         = 3000
+  storage_type                 = "gp3"
 
   tags = {
     Name        = "${var.environment}-rds"
