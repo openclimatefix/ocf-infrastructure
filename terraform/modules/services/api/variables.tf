@@ -55,6 +55,6 @@ variable n_history_days {
 }
 
 variable adjust_limit {
-  description = "The maximum amount eh API can adjust the forecast results by"
+  description = "The maximum amount the API can adjust the forecast results by"
   default = 0.0
 }
