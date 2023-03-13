@@ -2,7 +2,7 @@
 
 resource "aws_db_instance" "postgres-db" {
   allocated_storage            = 25
-  max_allocated_storage        = 111
+  max_allocated_storage        = 100
   engine                       = "postgres"
   engine_version               = "15.2"
   instance_class               = var.rds_instance_class

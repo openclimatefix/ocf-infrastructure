@@ -30,7 +30,7 @@ resource "aws_db_instance" "db-forecast" {
 
 
 resource "aws_db_instance" "db-pv" {
-  allocated_storage            = 10
+  allocated_storage            = 25
   max_allocated_storage        = 100
   engine                       = "postgres"
   engine_version               = "15.2"
