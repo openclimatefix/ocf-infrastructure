@@ -1,12 +1,12 @@
 # RDS postgres database
 
 resource "aws_db_instance" "postgres-db" {
-  allocated_storage            = 10
-  max_allocated_storage        = 100
+  allocated_storage            = 25
+  max_allocated_storage        = 111
   engine                       = "postgres"
   engine_version               = "15.2"
   instance_class               = var.rds_instance_class
-  db_name                         = "${var.db_name}${var.environment}"
+  db_name                      = "${var.db_name}${var.environment}"
   identifier                   = "${var.db_name}-${var.environment}"
   username                     = "main"
   password                     = random_password.db-password.result
