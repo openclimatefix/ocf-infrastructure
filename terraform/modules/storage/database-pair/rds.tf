@@ -18,7 +18,7 @@ resource "aws_db_instance" "db-forecast" {
   db_subnet_group_name         = var.db_subnet_group.name # update name with private/public
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
-  iops                         = 3000
+  iops                         = null # https://github.com/hashicorp/terraform-provider-aws/issues/28271
   storage_type                 = "gp3"
 
   tags = {
@@ -48,7 +48,7 @@ resource "aws_db_instance" "db-pv" {
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
   allow_major_version_upgrade  = true
-  iops                         = 3000
+  iops                         = null # https://github.com/hashicorp/terraform-provider-aws/issues/28271
   storage_type                 = "gp3"
 
   tags = {

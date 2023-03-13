@@ -20,6 +20,7 @@ resource "aws_db_instance" "postgres-db" {
   performance_insights_enabled = true
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   storage_type                 = "gp3"
+  iops                         = null # https://github.com/hashicorp/terraform-provider-aws/issues/28271
 
   tags = {
     Name        = "${var.environment}-rds"
