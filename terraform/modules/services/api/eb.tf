@@ -66,6 +66,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = var.n_history_days
   }
 
+    setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "ADJUST_MW_LIMIT"
+    value     = var.adjust_limit
+  }
+
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "API_VERSION"
