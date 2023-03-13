@@ -31,7 +31,7 @@ resource "aws_db_instance" "postgres-db" {
 
 resource "aws_db_parameter_group" "parameter-group" {
   name   = "forecast${var.environment}-parameter-group"
-  family = "postgres15.2"
+  family = "postgres15"
 
   parameter {
     name  = "random_page_cost"
