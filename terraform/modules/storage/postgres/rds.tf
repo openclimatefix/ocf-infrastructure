@@ -21,6 +21,7 @@ resource "aws_db_instance" "postgres-db" {
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   storage_type                 = "gp3"
   iops                         = null # https://github.com/hashicorp/terraform-provider-aws/issues/28271
+  parameter_group_name         = aws_db_parameter_group.parameter-group.name
 
   tags = {
     Name        = "${var.environment}-rds"
@@ -28,3 +29,15 @@ resource "aws_db_instance" "postgres-db" {
   }
 
 }
+
+resource "aws_db_parameter_group" "parameter-group" {
+  name   = "forecast${var.environment}-parameter-group"
+  family = "postgres15"
+
+  parameter {
+    name  = "random_page_cost"
+    value = "1.1"
+  }
+
+}
+
