@@ -20,7 +20,7 @@ resource "aws_db_instance" "db-forecast" {
   performance_insights_enabled = true
   iops                         = 3000
   storage_type                 = "gp3"
-  parameter_group_name         = aws_db_parameter_group.forecast-parameter-group
+  parameter_group_name         = aws_db_parameter_group.forecast-parameter-group.name
 
   tags = {
     Name        = "${var.environment}-rds"
@@ -51,7 +51,7 @@ resource "aws_db_instance" "db-pv" {
   allow_major_version_upgrade  = true
   iops                         = 3000
   storage_type                 = "gp3"
-  parameter_group_name         = aws_db_parameter_group.pv-parameter-group
+  parameter_group_name         = aws_db_parameter_group.pv-parameter-group.name
 
   tags = {
     Name        = "${var.environment}-rds"
