@@ -26,6 +26,7 @@ module "pvsite_database" {
   vpc_id             = var.vpc_id
   db_name            = "pvsite"
   rds_instance_class = "db.t3.small"
+  allow_major_version_upgrade = true
 }
 
 module "pvsite_api" {
