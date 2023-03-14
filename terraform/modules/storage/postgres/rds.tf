@@ -20,7 +20,6 @@ resource "aws_db_instance" "postgres-db" {
   performance_insights_enabled = true
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   storage_type                 = "gp3"
-  iops                         = 3000 # null https://github.com/hashicorp/terraform-provider-aws/issues/28271
   parameter_group_name         = aws_db_parameter_group.parameter-group.name
 
   tags = {
@@ -40,4 +39,3 @@ resource "aws_db_parameter_group" "parameter-group" {
   }
 
 }
-
