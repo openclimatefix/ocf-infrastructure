@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 1024
-  memory = 4096
+  memory = var.ecs_config.memory_mb
 
   task_role_arn      = aws_iam_role.app-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
 
       environment : [
         {"name": "LOGLEVEL", "value" : "DEBUG"},
-        {"name": "NWP_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/data/latest.netcdf"},
+        {"name": "NWP_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/${var.s3_nwp_bucket.datadir}/latest.zarr"},
         {"name": "ML_MODEL_PATH", "value": "s3://${var.s3_ml_bucket.bucket_id}/"},
         {"name": "ENVIRONMENT", "value": var.environment},
       ]
@@ -32,6 +32,10 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
         {
           "name" : "OCF_PV_DB_URL",
           "valueFrom" : "${var.rds_config.database_secret_arn}:url::",
+        },
+        {
+          "name": "DB_URL",
+          "valueFrom": "${var.rds_config.database_secret_arn}:url::",
         },
       ]
 

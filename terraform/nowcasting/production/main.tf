@@ -91,12 +91,17 @@ module "nwp" {
   region                  = var.region
   environment             = var.environment
   iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
-  s3-bucket               = module.s3.s3-nwp-bucket
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = [module.networking.public_subnets[0].id]
   docker_version          = var.nwp_version
   database_secret         = module.database.forecast-database-secret
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  consumer-name = "nwp"
+  s3_config = {
+    bucket_id = module.s3.s3-nwp-bucket.id
+    savedir_data = "data"
+    savedir_raw = "raw"
+  }
 }
 
 module "sat" {

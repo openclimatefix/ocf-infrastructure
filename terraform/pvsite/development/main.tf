@@ -39,6 +39,7 @@ module "pvsite_api" {
   domain                          = local.domain
   database_secret_url             = module.pvsite_database.secret-url
   database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
+  sentry_dsn = var.sentry_dsn
 }
 
 module "pvsite_ml_bucket" {
@@ -60,7 +61,7 @@ module "pvsite_ecs" {
 }
 
 module "pvsite_forecast" {
-  source = "../../modules/services/forecast_pvsite"
+  source = "../../modules/services/forecast_generic"
 
   region      = var.region
   environment = var.environment
@@ -68,6 +69,7 @@ module "pvsite_forecast" {
   ecs_config  = {
     docker_image   = "openclimatefix/pvsite_forecast"
     docker_version = var.pvsite_forecast_version
+    memory_mb = 4096
   }
   rds_config = {
     database_secret_arn             = module.pvsite_database.secret.arn
@@ -76,7 +78,7 @@ module "pvsite_forecast" {
   scheduler_config = {
     subnet_ids      = [module.pvsite_subnetworking.public_subnet.id]
     ecs_cluster_arn = module.pvsite_ecs.ecs_cluster.arn
-    cron_expression = "cron(*/10 * * * ? *)" # Every 10 minutes
+    cron_expression = "cron(*/15 * * * ? *)" # Every 15 minutes
   }
   s3_ml_bucket = {
     bucket_id              = module.pvsite_ml_bucket.bucket.id

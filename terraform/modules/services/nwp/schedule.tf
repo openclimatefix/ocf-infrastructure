@@ -3,7 +3,7 @@
 # We want to move to Dagster but for the moment its useful to have this setup
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
-  name                = "nwp-schedule-${var.environment}"
+  name                = "${var.consumer-name}-schedule-${var.environment}"
   schedule_expression = "cron(30 * * * ? *)"
   # runs every day on every 30 mins, will have to update this for production
 }
@@ -11,7 +11,7 @@ resource "aws_cloudwatch_event_rule" "event_rule" {
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
 
   rule      = aws_cloudwatch_event_rule.event_rule.name
-  target_id = "nwp-schedule-${var.environment}"
+  target_id = "${var.consumer-name}-schedule-${var.environment}"
   arn       = var.ecs-cluster.arn
   role_arn  = aws_iam_role.cloudwatch_role.arn
 

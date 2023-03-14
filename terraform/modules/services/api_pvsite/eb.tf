@@ -49,10 +49,16 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = var.docker_version
   }
 
-    setting {
+  setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "FAKE"
     value     = "0"
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "SENTRY_DSN"
+    value     = var.sentry_dsn
   }
 
   setting {

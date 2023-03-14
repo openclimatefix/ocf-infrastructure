@@ -53,3 +53,8 @@ variable n_history_days {
   description = "The number of days to load. 'yesterday' loads up to yesterday morning"
   default = "yesterday"
 }
+
+variable adjust_limit {
+  description = "The maximum amount the API can adjust the forecast results by"
+  default = 0.0
+}
