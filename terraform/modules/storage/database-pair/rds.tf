@@ -60,7 +60,7 @@ resource "aws_db_instance" "db-pv" {
 }
 
 resource "aws_db_parameter_group" "parameter-group" {
-  name   = "forecast-${var.environment}-parameter-group"
+  name   = "forecast${var.environment}-parameter-group"
   family = "postgres15"
 
   lifecycle {
