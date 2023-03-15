@@ -30,7 +30,7 @@ resource "aws_db_instance" "postgres-db" {
 }
 
 resource "aws_db_parameter_group" "parameter-group" {
-  name   = "pvsite-${var.environment}-parameter-group"
+  name   = "${var.db_name}-${var.environment}-parameter-group"
   family = "postgres15"
 
   lifecycle {
