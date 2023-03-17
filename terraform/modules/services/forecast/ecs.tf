@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
         {"name": "MODEL_NAME", "value":"cnn"},
         {"name": "BATCH_SAVE_DIR", "value": "s3://${var.s3-ml-bucket.id}/"},
         {"name": "ENVIRONMENT", "value": var.environment},
-        {"name": "NWP_ZARR_PATH", "value": "s3://${var.s3-nwp-bucket.id}/data/latest.netcdf"},
+        {"name": "NWP_ZARR_PATH", "value": "s3://${var.s3-nwp-bucket.id}/data/latest.zarr"},
         {"name": "SATELLITE_ZARR_PATH", "value": "s3://${var.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
         {"name": "HRV_SATELLITE_ZARR_PATH", "value": "s3://${var.s3-sat-bucket.id}/data/latest/hrv_latest.zarr.zip"},
       ]

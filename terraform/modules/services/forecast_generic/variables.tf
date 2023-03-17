@@ -30,11 +30,13 @@ variable "ecs_config" {
   type = object({
     docker_image   = string
     docker_version = string
+    memory_mb = number
   })
   description = <<EOT
     ecs_config_info = {
       docker_image : "Name of the docker image to use"
       docker_image_version : "Tag of the docker image to use"
+      memory_mb : "The amount of RAM in MB to assign to the container"
     }
   EOT
 }
@@ -58,11 +60,13 @@ variable "s3_nwp_bucket" {
   type = object({
     bucket_id              = string
     bucket_read_policy_arn = string
+    datadir = string
   })
   description = <<EOT
     s3_nwp_bucket_info = {
       bucket_id : "ID of the nwp S3 bucket"
       bucket_read_policy_arn : "ARN of the read policy on the nwp S3 bucket"
+      datadir : "Name of the top-level folder in which the NWP data is saved"
     }
   EOT
 }

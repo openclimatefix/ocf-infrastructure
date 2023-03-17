@@ -11,6 +11,7 @@ services:
       AUTH0_API_AUDIENCE: $AUTH0_API_AUDIENCE
       ORIGINS: $ORIGINS
       N_HISTORY_DAYS: $N_HISTORY_DAYS
+      ADJUST_MW_LIMIT: $ADJUST_MW_LIMIT
     container_name: nowcasting_api
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
     ports:

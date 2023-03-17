@@ -1,7 +1,7 @@
 # set up cloudwatch log group
 
 resource "aws_cloudwatch_log_group" "nwp" {
-  name = var.log-group-name
+  name = local.log_group_name
 
   retention_in_days = 7
 

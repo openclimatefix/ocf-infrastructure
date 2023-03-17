@@ -2,7 +2,7 @@
 # needs access to the internet
 
 resource "aws_ecs_task_definition" "nwp-task-definition" {
-  family                   = "nwp"
+  family                   = "${var.consumer-name}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
@@ -15,15 +15,15 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "nwp-consumer"
+      name  = "${var.consumer-name}-consumer"
       image = "openclimatefix/metoffice_weather_datahub:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true
 
       environment : [
-        { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
-        { "name" : "RAW_DIR", "value" : "s3://${var.s3-bucket.id}/raw" },
+        { "name" : "SAVE_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_data}" },
+        { "name" : "RAW_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_raw}" },
         { "name" : "LOG_LEVEL", "value" : "DEBUG"},
       ]
 
@@ -49,7 +49,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       logConfiguration : {
         "logDriver" : "awslogs",
         "options" : {
-          "awslogs-group" : var.log-group-name,
+          "awslogs-group" : local.log_group_name,
           "awslogs-region" : var.region,
           "awslogs-stream-prefix" : "streaming"
         }
