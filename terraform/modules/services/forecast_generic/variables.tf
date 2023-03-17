@@ -31,12 +31,14 @@ variable "ecs_config" {
     docker_image   = string
     docker_version = string
     memory_mb = number
+    cpu = number
   })
   description = <<EOT
     ecs_config_info = {
       docker_image : "Name of the docker image to use"
       docker_image_version : "Tag of the docker image to use"
       memory_mb : "The amount of RAM in MB to assign to the container"
+      cpu : "The amount of CPU assign to the container"
     }
   EOT
 }
