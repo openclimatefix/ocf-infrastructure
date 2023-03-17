@@ -71,6 +71,7 @@ module "pvsite_forecast" {
     docker_image   = "openclimatefix/pvsite_forecast"
     docker_version = var.pvsite_forecast_version
     memory_mb = 4096
+    cpu=1024
   }
   rds_config = {
     database_secret_arn             = module.pvsite_database.secret.arn
