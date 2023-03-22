@@ -4,7 +4,7 @@
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "gsp-schedule-${var.environment}"
-  schedule_expression = "cron(9,12,14,20,39,42,44,50 * * * ? *)"
+  schedule_expression = "cron(6,9,12,14,20,39,42,44,50 * * * ? *)"
   # runs every 30 minutes at 9 and 39 past
 }
 

@@ -71,6 +71,7 @@ module "pvsite_forecast" {
     docker_image   = "openclimatefix/pvsite_forecast"
     docker_version = var.pvsite_forecast_version
     memory_mb = 4096
+    cpu=1024
   }
   rds_config = {
     database_secret_arn             = module.pvsite_database.secret.arn
@@ -79,8 +80,8 @@ module "pvsite_forecast" {
   scheduler_config = {
     subnet_ids      = [module.pvsite_subnetworking.public_subnet.id]
     ecs_cluster_arn = module.pvsite_ecs.ecs_cluster.arn
-    # TODO Run more frequently!
-    cron_expression = "cron(0 */2 * * ? *)" # Every 2 hours
+    cron_expression = "cron(*/15 * * * ? *)" # Every 15 minutes
+
   }
   s3_ml_bucket = {
     bucket_id              = module.pvsite_ml_bucket.bucket.id
