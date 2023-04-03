@@ -97,8 +97,8 @@ module "database_clean_up" {
   ecs_config  = {
     docker_image   = "openclimatefix/pvsite_database_cleanup"
     docker_version = var.database_cleanup_version
-    memory_mb = 1024
-    cpu=1024
+    memory_mb = 512
+    cpu=256
   }
   rds_config = {
     database_secret_arn             = module.pvsite_database.secret.arn
