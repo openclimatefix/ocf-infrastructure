@@ -42,6 +42,16 @@ module "ecs" {
   domain = local.domain
 }
 
+module "forecasting_models_bucket" {
+  source = "../../modules/storage/s3-private"
+
+  region              = var.region
+  environment         = var.environment
+  service_name        = "national-forecaster-models"
+  domain              = local.domain
+  lifecycled_prefixes = []
+}
+
 module "api" {
   source = "../../modules/services/api"
 
@@ -102,6 +112,25 @@ module "nwp" {
     bucket_id = module.s3.s3-nwp-bucket.id
     savedir_data = "data"
     savedir_raw = "raw"
+  }
+}
+
+module "nwp-national" {
+  source = "../../modules/services/nwp"
+
+  region                  = var.region
+  environment             = var.environment
+  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
+  ecs-cluster             = module.ecs.ecs_cluster
+  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  docker_version          = var.nwp_version
+  database_secret         = module.database.forecast-database-secret
+  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  consumer-name = "nwp-national"
+  s3_config = {
+    bucket_id = module.s3.s3-nwp-bucket.id
+    savedir_data = "data-national"
+    savedir_raw = "raw-national"
   }
 }
 
@@ -178,4 +207,37 @@ module "forecast" {
   s3-nwp-bucket                 = module.s3.s3-nwp-bucket
   s3-sat-bucket                 = module.s3.s3-sat-bucket
   s3-ml-bucket                  = module.s3.s3-ml-bucket
+}
+
+
+module "national_forecast" {
+  source = "../../modules/services/forecast_generic"
+
+  region      = var.region
+  environment = var.environment
+  app-name    = "forecast_national"
+  ecs_config  = {
+    docker_image   = "openclimatefix/gradboost_pv"
+    docker_version = var.national_forecast_version
+    memory_mb = 8192
+    cpu = 2048
+  }
+  rds_config = {
+    database_secret_arn             = module.database.forecast-database-secret.arn
+    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
+  }
+  scheduler_config = {
+    subnet_ids      = [module.networking.public_subnets[0].id]
+    ecs_cluster_arn = module.ecs.ecs_cluster.arn
+    cron_expression = "cron(15,45 * * * ? *)" # Every 10 minutes
+  }
+  s3_ml_bucket = {
+    bucket_id              = module.forecasting_models_bucket.bucket.id
+    bucket_read_policy_arn = module.forecasting_models_bucket.read-policy.arn
+  }
+  s3_nwp_bucket = {
+    bucket_id = module.s3.s3-nwp-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
+    datadir = "data-national"
+  }
 }
