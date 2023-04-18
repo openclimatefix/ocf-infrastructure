@@ -42,6 +42,16 @@ module "ecs" {
   domain = local.domain
 }
 
+module "forecasting_models_bucket" {
+  source = "../../modules/storage/s3-private"
+
+  region              = var.region
+  environment         = var.environment
+  service_name        = "national-forecaster-models"
+  domain              = local.domain
+  lifecycled_prefixes = []
+}
+
 module "api" {
   source = "../../modules/services/api"
 

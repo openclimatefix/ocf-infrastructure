@@ -75,3 +75,8 @@ variable "auth_api_audience" {
   description = "The Auth API Audience that should be used"
   default = "not-set"
 }
+
+variable "national_forecast_version" {
+  description = "The National Forecast version"
+}
+
