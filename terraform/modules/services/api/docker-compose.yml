@@ -12,6 +12,7 @@ services:
       ORIGINS: $ORIGINS
       N_HISTORY_DAYS: $N_HISTORY_DAYS
       ADJUST_MW_LIMIT: $ADJUST_MW_LIMIT
+      SENTRY_DSN: $SENTRY_DSN
     container_name: nowcasting_api
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
     ports:

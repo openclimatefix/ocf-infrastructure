@@ -58,3 +58,8 @@ variable adjust_limit {
   description = "The maximum amount the API can adjust the forecast results by"
   default = 0.0
 }
+
+variable "sentry_dsn" {
+  type = string
+  description = "DNS for Sentry monitoring"
+}
