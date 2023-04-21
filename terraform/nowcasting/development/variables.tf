@@ -77,3 +77,8 @@ variable "auth_api_audience" {
 variable "national_forecast_version" {
   description = "The National Forecast version"
 }
+
+variable "sentry_dsn" {
+  type = string
+  description = "DNS for Sentry monitoring"
+}
