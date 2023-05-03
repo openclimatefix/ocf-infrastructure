@@ -241,7 +241,7 @@ module "internal_ui" {
         subnets = module.networking.public_subnets
     }
     database_config = {
-        url = module.database.forecast-database-secret
+        url = "${module.database.forecast-database-secret.arn}:url::"
         read_policy_arn = module.database.iam-policy-forecast-db-read.arn
     }
 }
