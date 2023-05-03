@@ -72,4 +72,5 @@ variable "nwp_bucket_config" {
 variable "sentry_dsn" {
   type = string
   description = "DNS for Sentry monitoring"
+  default = "not-set"
 }
