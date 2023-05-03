@@ -19,12 +19,12 @@ variable "eb_app_name" {
 variable "networking_config" {
   type = object({
     vpc_id = string
-    subnets = list(any)
+    subnets = list(string)
   })
   description = <<EOT
     networking_config = {
       vpc_id : "The id of the vpc where this application will run"
-      subnets : "List of subnets where this application will run"
+      subnets : "List of subnets IDs where this application will run"
     }
   EOT
 }

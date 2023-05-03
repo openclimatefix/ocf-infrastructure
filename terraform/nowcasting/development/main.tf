@@ -238,7 +238,7 @@ module "internal_ui" {
     }
     networking_config = {
         vpc_id = module.networking.vpc_id
-        subnets = module.networking.public_subnets
+        subnets = [module.networking.public_subnets[0].id]
     }
     database_config = {
         url = "${module.database.forecast-database-secret.arn}:url::"
