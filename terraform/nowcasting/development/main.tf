@@ -231,13 +231,14 @@ module "internal_ui" {
     region      = var.region
     environment = var.environment
     eb_app_name = "internal-ui"
+    domain = locals.domain
     docker_config = {
         image = "ghcr.io/openclimatefix/internal_ui"
         version = var.internal_ui_version
     }
     networking_config = {
-        vpc_id = module.networking.vpc.id
-        subnets = module.networking.private_subnets
+        vpc_id = module.networking.vpc_id
+        subnets = module.networking.public_subnets
     }
     database_config = {
         url = module.database.forecast-database-secret.secret.value

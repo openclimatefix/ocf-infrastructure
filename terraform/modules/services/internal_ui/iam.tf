@@ -101,7 +101,7 @@ resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-service" 
 ##################
 
 resource "aws_iam_role" "instance-role" {
-  name = "${var.domain}-${var.environment}-${eb_app_name}-role"
+  name = "${var.domain}-${var.environment}-${var.eb_app_name}-role"
   path = "/"
 
   assume_role_policy = join("", data.aws_iam_policy_document.instance.*.json)

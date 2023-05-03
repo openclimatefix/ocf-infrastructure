@@ -6,6 +6,11 @@ variable "region" {
   description = "The AWS region"
 }
 
+variable "domain" {
+    type = string
+    description = "The domain of the application"
+}
+
 variable "eb_app_name" {
     type = string
     description = "Name of the Elastic Beanstalk application"
