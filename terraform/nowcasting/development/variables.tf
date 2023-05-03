@@ -54,6 +54,10 @@ variable "gsp_version" {
   default = "0.0.2"
 }
 
+variable "internal_ui_version" {
+   description = "The Internal UI version"
+   default = "main"
+}
 
 variable "cloudflare_zone_id" {
   description = "The ZoneID of the nowcasting domain"

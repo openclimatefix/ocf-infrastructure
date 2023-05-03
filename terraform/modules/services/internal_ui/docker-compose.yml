@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  api:
+    image: ${DOCKER_IMAGE}:${DOCKER_IMAGE_VERSION}
+    environment:
+      DB_URL: $DB_URL
+      DB_URL_PV: $DB_URL_PV
+      ORIGINS: $ORIGINS
+      ENVIRONMENT: $ENVIRONMENT
+    container_name: ${EB_APP_NAME}
+    ports:
+      - 80:8501
