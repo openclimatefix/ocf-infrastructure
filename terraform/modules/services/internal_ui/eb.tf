@@ -16,7 +16,7 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
   name        = "${var.domain}-${var.environment}-${var.eb_app_name}"
   application = aws_elastic_beanstalk_application.eb-app.name
   cname_prefix = "${var.domain}-${var.environment}-${var.eb_app_name}"
-  version_label = "${var.domain}-${var.environment}-${var.eb_app_name}-${var.docker_version}"
+  version_label = "${var.domain}-${var.environment}-${var.eb_app_name}-${var.docker_config.version}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -37,7 +37,7 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
-    value     = var.database_secret_url
+    value     = var.database_config.url
   }
 
   setting {
