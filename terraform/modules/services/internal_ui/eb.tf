@@ -60,9 +60,17 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "EB_APP_NAME"
+    value     = var.eb_app_name
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ENVIRONMENT"
     value     = var.environment
   }
+
+  # =========== EB Settings =========== #
 
   setting {
     namespace = "aws:ec2:vpc"
@@ -101,10 +109,18 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     name      = "MinSize"
     value     = "1"
   }
+
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = "1"
+  }
+
+  # Following https://discuss.streamlit.io/t/howto-streamlit-on-aws-with-elastic-beanstalk-and-docker/10353
+  setting {
+    namespace = "aws:elb:listener"
+    name      = "InstanceProtocol"
+    value     = "TCP"
   }
 
   # ============ Logging ============ #
