@@ -231,7 +231,7 @@ module "internal_ui" {
     region      = var.region
     environment = var.environment
     eb_app_name = "internal-ui"
-    domain = locals.domain
+    domain = local.domain
     docker_config = {
         image = "ghcr.io/openclimatefix/internal_ui"
         version = var.internal_ui_version
