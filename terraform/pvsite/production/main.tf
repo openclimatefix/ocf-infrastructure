@@ -41,6 +41,8 @@ module "pvsite_api" {
   database_secret_url             = module.pvsite_database.secret-url
   database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
   sentry_dsn = var.sentry_dsn
+  auth_api_audience               = var.auth_api_audience
+  auth_domain                     = var.auth_domain
 }
 
 module "pvsite_ml_bucket" {
