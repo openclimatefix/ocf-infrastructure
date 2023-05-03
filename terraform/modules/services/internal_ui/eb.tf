@@ -119,7 +119,7 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
   # Following https://discuss.streamlit.io/t/howto-streamlit-on-aws-with-elastic-beanstalk-and-docker/10353
   setting {
     namespace = "aws:elb:listener"
-    name      = "InstanceProtocol"
+    name      = "ListenerProtocol"
     value     = "TCP"
   }
 
