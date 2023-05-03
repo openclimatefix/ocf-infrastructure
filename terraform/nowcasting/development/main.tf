@@ -224,3 +224,23 @@ module "national_forecast" {
     datadir = "data-national"
   }
 }
+
+module "internal_ui" {
+    source = "../../modules/services/internal_ui"
+
+    region      = var.region
+    environment = var.environment
+    eb_app_name = "internal-ui"
+    docker_config = {
+        image = "ghcr.io/openclimatefix/internal_ui"
+        version = var.internal_ui_version
+    }
+    networking_config = {
+        vpc_id = module.networking.vpc.id
+        subnets = module.networking.private_subnets
+    }
+    database_config = {
+        url = module.database.forecast-database-secret.secret.value
+        read_policy_arn = module.database.iam-policy-forecast-db-read.arn
+    }
+}
