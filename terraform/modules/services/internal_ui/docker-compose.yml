@@ -10,4 +10,4 @@ services:
       ENVIRONMENT: $ENVIRONMENT
     container_name: ${EB_APP_NAME}
     ports:
-      - 80:8051
+      - 80:8501
