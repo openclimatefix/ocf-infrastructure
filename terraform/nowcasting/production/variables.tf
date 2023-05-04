@@ -76,6 +76,11 @@ variable "auth_api_audience" {
   default = "not-set"
 }
 
+variable "internal_ui_version" {
+   description = "The Internal UI version"
+   default = "main"
+}
+
 variable "national_forecast_version" {
   description = "The National Forecast version"
 }
