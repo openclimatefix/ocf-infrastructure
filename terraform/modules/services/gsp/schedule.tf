@@ -64,9 +64,9 @@ resource "aws_cloudwatch_event_target" "ecs_scheduled_task_day_after" {
 
 resource "aws_cloudwatch_event_rule" "event_rule_national_day_after" {
   name                = "national-day-after-schedule-${var.environment}"
-  schedule_expression = "cron(45 10 * * ? *)"
+  schedule_expression = "cron(0 11 * * ? *)"
   # Calculation is made at 10.30 utc time by sheffield solar.
-  # Therefore we run this every morning at 10.45 UTC.
+  # Therefore we run this every morning at 11.00 UTC.
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task_national_day_after" {
