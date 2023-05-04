@@ -40,3 +40,13 @@ variable "sentry_dsn" {
   type = string
   description = "DNS for Sentry monitoring"
 }
+
+variable "auth_domain" {
+  type = string
+  description = "Authorization domain"
+}
+
+variable "auth_api_audience" {
+  type = string
+  description = "Authorization API audience"
+}
