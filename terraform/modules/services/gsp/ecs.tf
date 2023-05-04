@@ -72,7 +72,6 @@ resource "aws_ecs_task_definition" "gsp-day-after-task-definition" {
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
         { "name" :"REGIME", "value" : "day-after"},
         { "name" :"N_GSPS", "value" : "317"},
-        { "name" :"UK_LONDON_HOUR", "value" : "11"}
       ]
 
       secrets : [
@@ -121,7 +120,6 @@ resource "aws_ecs_task_definition" "national-day-after-task-definition" {
         { "name" :"REGIME", "value" : "day-after"},
         { "name" :"N_GSPS", "value" : "0"},
         { "name" :"INCLUDE_NATIONAL", "value" : "True"},
-        { "name" :"UK_LONDON_HOUR", "value" : "10"}
       ]
 
       secrets : [
