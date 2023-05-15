@@ -37,3 +37,4 @@ terraform.rc
 *.env
 .idea
 .vscode
+.fleet
