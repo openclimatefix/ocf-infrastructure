@@ -3,6 +3,11 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 4.47.0"
+      default_tags = {
+        tags = {
+          environment = var.environment
+        }
+      }
     }
 
     cloudflare = {
