@@ -8,6 +8,11 @@
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
   name        = "nowcasting-${var.environment}"
   description = "Nowcasting API"
+
+  tags = {
+    name = "nowcasting-api"
+    type = "eb"
+  }
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {

@@ -9,6 +9,11 @@
 resource "aws_elastic_beanstalk_application" "eb-app" {
   name        = "${var.domain}-${var.environment}-${var.eb_app_name}"
   description = "Beanstalk API"
+
+  tags = {
+    name = "internal-ui"
+    type = "eb"
+  }
 }
 
 # Create the EB Environment

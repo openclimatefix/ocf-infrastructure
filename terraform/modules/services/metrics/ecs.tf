@@ -6,6 +6,11 @@ resource "aws_ecs_task_definition" "metrics-task-definition" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
+  tags = {
+    name = "metrics-consumer"
+    type = "ecs"
+  }
+
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 256

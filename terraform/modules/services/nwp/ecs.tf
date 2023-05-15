@@ -11,6 +11,11 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   cpu    = 1024
   memory = 5120
 
+  tags = {
+    name = "${var.consumer-name}-consumer"
+    type = "ecs"
+  }
+
   task_role_arn      = aws_iam_role.consumer-nwp-iam-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
