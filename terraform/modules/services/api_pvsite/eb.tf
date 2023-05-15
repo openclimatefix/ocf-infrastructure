@@ -8,6 +8,11 @@
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
   name        = "${var.domain}-${var.environment}-api-sites"
   description = "Beanstalk API"
+
+  tags = {
+    name = "site-api"
+    type = "eb"
+  }
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {

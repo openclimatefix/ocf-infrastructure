@@ -11,6 +11,11 @@ resource "aws_ecs_task_definition" "pv-task-definition" {
   cpu    = 256
   memory = 512
 
+  tags = {
+    name = "pv-consumer"
+    type = "ecs"
+  }
+
   task_role_arn      = aws_iam_role.consumer-pv-iam-role.arn
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
