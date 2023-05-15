@@ -3,11 +3,6 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 4.47.0"
-      default_tags = {
-        tags = {
-          environment = var.environment
-        }
-      }
     }
   }
 
@@ -16,4 +11,9 @@ terraform {
 
 provider "aws" {
   region = var.region
+  default_tags = {
+        tags = {
+          environment = var.environment
+        }
+      }
 }
