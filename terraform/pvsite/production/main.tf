@@ -5,7 +5,7 @@ locals {
 }
 
 module "pvsite_subnetworking" {
-  source = "../../modules/subnetworking"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/subnetworking?ref=5b7005f"
 
   region                     = var.region
   environment                = var.environment
@@ -18,7 +18,7 @@ module "pvsite_subnetworking" {
 }
 
 module "pvsite_database" {
-  source = "../../modules/storage/postgres"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=5b7005f"
 
   region             = var.region
   environment        = var.environment
@@ -30,7 +30,7 @@ module "pvsite_database" {
 }
 
 module "pvsite_api" {
-  source = "../../modules/services/api_pvsite"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api_pvsite?ref=5b7005f"
 
   region                          = var.region
   environment                     = var.environment
@@ -46,7 +46,7 @@ module "pvsite_api" {
 }
 
 module "pvsite_ml_bucket" {
-  source = "../../modules/storage/s3-private"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=5b7005f"
 
   region              = var.region
   environment         = var.environment
@@ -56,7 +56,7 @@ module "pvsite_ml_bucket" {
 }
 
 module "pvsite_ecs" {
-  source = "../../modules/ecs"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs?ref=5b7005f"
 
   region      = var.region
   environment = var.environment
@@ -64,7 +64,7 @@ module "pvsite_ecs" {
 }
 
 module "pvsite_forecast" {
-  source = "../../modules/services/forecast_generic"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=5b7005f"
 
   region      = var.region
   environment = var.environment
