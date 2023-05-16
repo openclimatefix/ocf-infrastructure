@@ -161,7 +161,7 @@ module "gsp" {
 }
 
 module "metrics" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/metrics?ref=5b7005f"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/metrics?ref=b43bf6d"
 
   region                  = var.region
   environment             = var.environment
