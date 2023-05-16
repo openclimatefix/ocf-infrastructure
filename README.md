@@ -1,4 +1,10 @@
-<h1 align="center">ocf-infrastructure</h1>
+<h2 align="center">
+OCF Infrastructure
+<br>
+<br>
+Terraform infrastructure-as-code for cloud environments.
+</h2>
+
 <p align="center">
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
@@ -15,7 +21,11 @@
         <img src="https://img.shields.io/github/contributors/openclimatefix/ocf-infrastructure"/></a>
 </p>
 
-Terraform infrastructure-as-code for cloud environments and services in use by OCF.
+<br>
+
+A repository for managing the cloud infrastructure for the Open Climate Fix organisation. Contains terraform code for
+defining services and describing environments. Each contextual domain and each deployment environment are specified in
+folders within the `terraform` directory, along with reusable modules and unittests.
 
 
 ## Repository Structure
