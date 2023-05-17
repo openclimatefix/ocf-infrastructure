@@ -14,6 +14,7 @@ services:
       ADJUST_MW_LIMIT: $ADJUST_MW_LIMIT
       SENTRY_DSN: $SENTRY_DSN
       ENVIRONMENT: $ENVIRONMENT
+      AUTH0_RULE_NAMESPACE: $AUTH0_RULE_NAMESPACE
     container_name: nowcasting_api
     command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
     ports:
