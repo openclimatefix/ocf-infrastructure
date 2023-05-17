@@ -65,7 +65,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = "https://openclimatefix.org"
   }
 
-    setting {
+  setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ORIGINS"
     value     = "*" #TODO change
