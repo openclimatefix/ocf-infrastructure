@@ -12,13 +12,13 @@ Terraform infrastructure-as-code for cloud environments.
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
   <a href="https://app.terraform.io/app/openclimatefix/workspaces" alt="Terraform Cloud">
-        <img src="https://img.shields.io/badge/console-terraform.io-blue"/></a>
+        <img src="https://img.shields.io/badge/console-terraform.io-blue?style=for-the-badge"/></a>
   <a href="https://github.com/openclimatefix/ocf-infrastructure/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc" alt="Issues">
-        <img src="https://img.shields.io/github/issues/openclimatefix/ocf-infrastructure"/></a>
+        <img src="https://img.shields.io/github/issues/openclimatefix/ocf-infrastructure?style=for-the-badge"/></a>
   <a href="https://github.com/openclimatefix/ocf-infrastructure/actions/workflows/terraform-validate.yaml" alt="Validate">
-        <img src="https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/terraform-validate.yaml?label=validate"/></a>
+        <img src="https://img.shields.io/github/actions/workflow/status/openclimatefix/ocf-infrastructure/terraform-validate.yaml?label=validate&style=for-the-badge"/></a>
   <a href="https://github.com/openclimatefix/ocf-infrastructure/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/openclimatefix/ocf-infrastructure"/></a>
+        <img src="https://img.shields.io/github/contributors/openclimatefix/ocf-infrastructure?style=for-the-badge"/></a>
 </p>
 
 <br>
@@ -44,11 +44,12 @@ ocf-infrastructure:
 See the README's in the domain folders for more information on their architecture:
 - [Nowcasting Domain](terraform/nowcasting/README.md)
 - [PVSite Domain](terraform/pvsite/README.md)
+- [Modules](terraform/modules/README.md)
 
 
 ## Terraform Overview
 
-[Terraform](https://learn.hashicorp.com/terraform) is a declariative language which is used to specify and build cloud environments. To install the CLI locally, ensure [Homebrew](https://brew.sh/) is installed, then run
+[Terraform](https://learn.hashicorp.com/terraform) is a declarative language which is used to specify and build cloud environments. To install the CLI locally, ensure [Homebrew](https://brew.sh/) is installed, then run
 
 ```bash
 $ brew install terraform
