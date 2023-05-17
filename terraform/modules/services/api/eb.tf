@@ -61,6 +61,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AUTH0_RULE_NAMESPACE"
+    value     = "https://openclimatefix.org"
+  }
+
+    setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ORIGINS"
     value     = "*" #TODO change
   }
