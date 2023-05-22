@@ -4,7 +4,7 @@
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "metrics-schedule-${var.environment}"
-  schedule_expression = "cron(0 0 * * ? *)" # runs every day at midnight
+  schedule_expression = "cron(22 0 * * ? *)" # runs every day at 22:00 UTC
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
