@@ -244,7 +244,7 @@ module "forecast_pvnet" {
   scheduler_config = {
     subnet_ids      = [module.networking.public_subnets[0].id]
     ecs_cluster_arn = module.ecs.ecs_cluster.arn
-    cron_expression = "cron(15,45 * * * ? *)" # Every 10 minutes
+    cron_expression = "cron(15,45 * * * ? *)" # Runs at 15 and 45 past the hour
   }
   s3_ml_bucket = {
     bucket_id              = module.forecasting_models_bucket.bucket.id
