@@ -29,6 +29,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
       environment : [
         {"name": "LOGLEVEL", "value" : "DEBUG"},
         {"name": "NWP_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/${var.s3_nwp_bucket.datadir}/latest.zarr"},
+        {"name": "SATELLITE_ZARR_PATH", "value":"s3://${var.s3_satellite_bucket.bucket_id}/${var.s3_satellite_bucket.datadir}/latest.zarr.zip"},
         {"name": "ML_MODEL_PATH", "value": "s3://${var.s3_ml_bucket.bucket_id}/"},
         {"name": "ENVIRONMENT", "value": var.environment},
         {"name": "OCF_ENVIRONMENT", "value": var.environment},
