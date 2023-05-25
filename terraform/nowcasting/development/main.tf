@@ -234,7 +234,7 @@ module "forecast_pvnet" {
   ecs_config  = {
     docker_image   = "openclimatefix/pvnet"
     docker_version = var.forecast_pvnet_version
-    memory_mb = 10240
+    memory_mb = 8192
     cpu = 2048
   }
   rds_config = {
