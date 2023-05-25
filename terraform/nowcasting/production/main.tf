@@ -203,7 +203,7 @@ module "national_forecast" {
   ecs_config  = {
     docker_image   = "openclimatefix/gradboost_pv"
     docker_version = var.national_forecast_version
-    memory_mb = 8192
+    memory_mb = 10240
     cpu = 2048
   }
   rds_config = {
