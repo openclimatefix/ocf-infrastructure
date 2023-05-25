@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 1024
-  memory = 5120
+  memory = 7168
 
   tags = {
     name = "${var.consumer-name}-consumer"
