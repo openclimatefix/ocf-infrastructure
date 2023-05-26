@@ -226,7 +226,7 @@ module "national_forecast" {
   }
 }
 
-module "internal_ui" {
+module "analysis_dashboard" {
     source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=eac7811"
 
     region      = var.region
@@ -234,7 +234,7 @@ module "internal_ui" {
     eb_app_name = "internal-ui"
     domain = local.domain
     docker_config = {
-        image = "ghcr.io/openclimatefix/internal_ui"
+        image = "ghcr.io/openclimatefix/uk-analysis-dashboard"
         version = var.internal_ui_version
     }
     networking_config = {
