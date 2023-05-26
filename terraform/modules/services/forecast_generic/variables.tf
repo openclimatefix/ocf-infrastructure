@@ -73,6 +73,27 @@ variable "s3_nwp_bucket" {
   EOT
 }
 
+variable "s3_satellite_bucket" {
+  type = object({
+    bucket_id              = string
+    bucket_read_policy_arn = string
+    datadir = string
+  })
+  default = {
+    bucket_id              = "not-set"
+    bucket_read_policy_arn = "not-set"
+    datadir                = "not-set"
+  }
+  description = <<EOT
+    s3_nwp_bucket_info = {
+      bucket_id : "ID of the satellite S3 bucket"
+      bucket_read_policy_arn : "ARN of the read policy on the satellite S3 bucket"
+      datadir : "Name of the top-level folder in which the satellite data is saved"
+    }
+  EOT
+}
+
+
 variable "s3_ml_bucket" {
   type = object({
     bucket_id              = string

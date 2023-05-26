@@ -202,7 +202,7 @@ module "national_forecast" {
   ecs_config  = {
     docker_image   = "openclimatefix/gradboost_pv"
     docker_version = var.national_forecast_version
-    memory_mb = 8192
+    memory_mb = 10240
     cpu = 2048
   }
   rds_config = {
@@ -223,6 +223,44 @@ module "national_forecast" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
     datadir = "data-national"
   }
+}
+
+module "forecast_pvnet" {
+  source = "../../modules/services/forecast_generic"
+
+  region      = var.region
+  environment = var.environment
+  app-name    = "forecast_pvnet"
+  ecs_config  = {
+    docker_image   = "openclimatefix/pvnet"
+    docker_version = var.forecast_pvnet_version
+    memory_mb = 8192
+    cpu = 2048
+  }
+  rds_config = {
+    database_secret_arn             = module.database.forecast-database-secret.arn
+    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
+  }
+  scheduler_config = {
+    subnet_ids      = [module.networking.public_subnets[0].id]
+    ecs_cluster_arn = module.ecs.ecs_cluster.arn
+    cron_expression = "cron(15,45 * * * ? *)" # Runs at 15 and 45 past the hour
+  }
+  s3_ml_bucket = {
+    bucket_id              = module.forecasting_models_bucket.bucket.id
+    bucket_read_policy_arn = module.forecasting_models_bucket.read-policy.arn
+  }
+  s3_nwp_bucket = {
+    bucket_id = module.s3.s3-nwp-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
+    datadir = "data-national"
+  }
+  s3_satellite_bucket = {
+    bucket_id = module.s3.s3-sat-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn
+    datadir = "data/latest"
+  }
+
 }
 
 module "internal_ui" {
