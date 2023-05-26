@@ -65,7 +65,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/47188100?v=4",
       "profile": "https://github.com/devsjc",
       "contributions": [
-        "code"
+        "code",
+        "design"
       ]
     }
   ],
@@ -75,5 +76,6 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true,
-  "commitConvention": "angular"
+  "commitConvention": "angular",
+  "commitType": "docs"
 }
