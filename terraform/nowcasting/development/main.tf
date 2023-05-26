@@ -263,7 +263,7 @@ module "forecast_pvnet" {
 
 }
 
-module "internal_ui" {
+module "analysis_dashboard" {
     source = "../../modules/services/internal_ui"
 
     region      = var.region
@@ -271,7 +271,7 @@ module "internal_ui" {
     eb_app_name = "internal-ui"
     domain = local.domain
     docker_config = {
-        image = "ghcr.io/openclimatefix/internal_ui"
+        image = "ghcr.io/openclimatefix/uk-analysis-dashboard"
         version = var.internal_ui_version
     }
     networking_config = {
