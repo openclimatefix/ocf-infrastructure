@@ -1,8 +1,8 @@
 # RDS postgres database
 
 resource "aws_db_instance" "db-forecast" {
-  allocated_storage            = 100
-  max_allocated_storage        = 115
+  allocated_storage            = 150
+  max_allocated_storage        = 200
   engine                       = "postgres"
   engine_version               = "15.2"
   instance_class               = "db.t3.medium"
