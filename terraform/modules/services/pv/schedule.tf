@@ -4,8 +4,8 @@
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "pv-schedule-${var.environment}"
-  schedule_expression = "cron(*/5 * * * ? *)"
-  # runs every 5 minutes
+  schedule_expression = "cron(4,9,14,19,24,29,34,39,44,49,54,59 * * * ? *)"
+  # runs every 5 minutes, with 1 minute buffer to start the ECS task
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
