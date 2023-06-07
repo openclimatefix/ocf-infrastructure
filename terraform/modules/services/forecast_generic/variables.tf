@@ -110,3 +110,9 @@ variable "s3_ml_bucket" {
 locals {
   log-group-name = "/aws/ecs/${var.app-name}/"
 }
+
+variable "loglevel" = {
+  type        = string
+  description = "The log level"
+  default     = "DEBUG"
+}
