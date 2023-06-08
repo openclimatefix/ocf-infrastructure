@@ -260,7 +260,7 @@ module "forecast_pvnet" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn
     datadir = "data/latest"
   }
-  loglebel= "INFO"
+  loglevel= "INFO"
 
 }
 
