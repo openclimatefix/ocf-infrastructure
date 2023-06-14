@@ -4,8 +4,8 @@
 
 resource "aws_cloudwatch_event_rule" "event_rule" {
   name                = "${var.consumer-name}-schedule-${var.environment}"
-  schedule_expression = "cron(30 * * * ? *)"
-  # runs every day on every 30 mins, will have to update this for production
+  schedule_expression = "cron(0,15,30,45 * * * ? *)"
+  # runs every day on every 15 mins, will have to update this for production
 }
 
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
