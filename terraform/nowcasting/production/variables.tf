@@ -89,3 +89,8 @@ variable "sentry_dsn" {
   type = string
   description = "DNS for Sentry monitoring"
 }
+
+variable "forecast_pvnet_version" {
+  description = "The Forecast PVnet 2.0 docker version"
+}
+
