@@ -250,7 +250,7 @@ module "analysis_dashboard" {
 
 
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=46f112f"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=46f112f"
 
   region      = var.region
   environment = var.environment
