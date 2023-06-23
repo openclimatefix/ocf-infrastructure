@@ -33,6 +33,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
         {"name": "ML_MODEL_PATH", "value": "s3://${var.s3_ml_bucket.bucket_id}/"},
         {"name": "ENVIRONMENT", "value": var.environment},
         {"name": "OCF_ENVIRONMENT", "value": var.environment},
+        {"name": "USE_ADJUSTER", "value": var.use_adjuster},
       ]
 
       secrets : [
