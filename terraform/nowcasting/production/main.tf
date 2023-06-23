@@ -250,7 +250,7 @@ module "analysis_dashboard" {
 
 
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=46f112f"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=0531df0"
 
   region      = var.region
   environment = var.environment
@@ -285,5 +285,5 @@ module "forecast_pvnet" {
     datadir = "data/latest"
   }
   loglevel= "INFO"
-
+  use_adjuster="false"
 }
