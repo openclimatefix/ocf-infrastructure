@@ -116,3 +116,9 @@ variable "loglevel" {
   description = "The log level"
   default     = "DEBUG"
 }
+
+variable "use_adjuster" {
+  type        = string
+  description = "Whether to use the adjuster"
+  default     = "true"
+}
