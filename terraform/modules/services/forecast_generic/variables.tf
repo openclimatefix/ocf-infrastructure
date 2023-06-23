@@ -118,7 +118,7 @@ variable "loglevel" {
 }
 
 variable "use_adjuster" {
-  type        = bool
+  type        = string
   description = "Whether to use the adjuster"
-  default     = true
+  default     = "true"
 }
