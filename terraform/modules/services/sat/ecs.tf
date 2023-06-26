@@ -31,6 +31,7 @@ resource "aws_ecs_task_definition" "sat-task-definition" {
         { "name" : "SAVE_DIR", "value" : "s3://${var.s3-bucket.id}/data" },
         { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${var.s3-bucket.id}/raw" },
         { "name" : "LOG_LEVEL", "value" : "DEBUG"},
+        { "name" : "HISTORY", "value" : "120 minutes"},
       ]
 
       secrets : [
