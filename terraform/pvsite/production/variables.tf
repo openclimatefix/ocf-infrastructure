@@ -74,3 +74,10 @@ variable "sentry_dsn" {
   description = "DNS for Sentry monitoring"
   default = "not-set"
 }
+
+
+variable "database_cleanup_version" {
+  type = string
+  description = "The version of the database clean up to use"
+}
+

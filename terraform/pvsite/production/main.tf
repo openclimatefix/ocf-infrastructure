@@ -91,3 +91,26 @@ module "pvsite_forecast" {
   }
   s3_nwp_bucket = var.nwp_bucket_config
 }
+
+module "database_clean_up" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/database_clean_up?ref=748d822"
+    region      = var.region
+  environment = var.environment
+  app-name    = "database_clean_up"
+  ecs_config  = {
+    docker_image   = "openclimatefix/pvsite_database_cleanup"
+    docker_version = var.database_cleanup_version
+    memory_mb = 512
+    cpu=256
+  }
+  rds_config = {
+    database_secret_arn             = module.pvsite_database.secret.arn
+    database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
+  }
+  scheduler_config = {
+    subnet_ids      = [module.pvsite_subnetworking.public_subnet.id]
+    ecs_cluster_arn = module.pvsite_ecs.ecs_cluster.arn
+    cron_expression = "cron(0 0 * * ? *)" # Once a day at midnight
+  }
+
+}
