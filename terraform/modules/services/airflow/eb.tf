@@ -181,11 +181,8 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
 }
 
-
-resource "time_static" "example" {}
-
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "ocf-airflow-${time_static.example.rfc3339}"
+  name        = "ocf-airflow-${var.environment}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   description = "application version created by terraform"
   bucket      = aws_s3_bucket.airflow-s3.id
