@@ -1,6 +1,7 @@
 # IAM role for EB Service role and instance role
 # Service role is what monitors the application
 # Instance role is the role used when running the app
+# Instance role needs to be able to kick off ECS tasks
 
 data "aws_iam_policy_document" "service" {
   # Policy document for Service role

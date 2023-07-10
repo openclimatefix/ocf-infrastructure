@@ -27,6 +27,8 @@ with DAG(
     concurrency=10,
     max_active_tasks=10,
 ) as dag1:
+    dag1.doc_md = "Get National PVLive updated values"
+
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     national_day_after = EcsRunTaskOperator(
@@ -55,6 +57,9 @@ with DAG(
     concurrency=10,
     max_active_tasks=10,
 ) as dag2:
+
+    dag2.doc_md = "Get GSP PVLive updated values, and then triggers metrics DAG"
+
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     gsp_day_after = EcsRunTaskOperator(

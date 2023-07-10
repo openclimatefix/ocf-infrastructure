@@ -1,4 +1,4 @@
-# create s3 bucket for application verions
+# create s3 bucket for application verions and copy DAGs to it
 
 resource "aws_s3_bucket" "airflow-s3" {
   bucket = "ocf-airflow-${var.environment}-bucket"
