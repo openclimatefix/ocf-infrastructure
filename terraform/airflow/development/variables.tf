@@ -24,11 +24,6 @@ variable "private_subnets_cidr" {
   description = "The CIDR block for the private subnet"
 }
 
-variable "pvsite_api_version" {
-  type = string
-  description = "This gives the version of the PV Site API"
-}
-
 variable "vpc_id" {
   type = string
   description = "The ID of the VPC to build the subnets upon"
