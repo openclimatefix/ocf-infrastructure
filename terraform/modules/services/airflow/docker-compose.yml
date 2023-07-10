@@ -125,6 +125,7 @@ services:
       - data:/airflow
     environment:
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
     restart: always
     depends_on:
       - "postgres"
