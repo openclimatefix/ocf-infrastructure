@@ -1,5 +1,9 @@
 version: "3"
 
+
+volumes:
+  data:
+
 services:
   # TODO remove and use postgres
   postgres:
@@ -13,18 +17,19 @@ services:
       - "5434:5432"
 
   source-init:
-    image: apache/airflow:2.6.2
+    image: python:3.10-slim
     container_name: source-init
     entrypoint: >
       bash -c "echo 'Making folders'
-      && mkdir -p sources
-      && mkdir -p sources/logs
-      && mkdir -p sources/dags
-      && mkdir -p sources/plugins
+      && mkdir -p /airflow
+      && mkdir -p /airflow/logs
+      && mkdir -p /airflow/dags
+      && mkdir -p /airflow/plugins
       && echo 'Making read and write for all'
-      && chmod -R 777 /sources"
+      && chmod -vR 777 /airflow/logs
+      && chmod -vR 777 /airflow/dags"
     volumes:
-      - .:/sources
+      - data:/airflow
 
 #
   scheduler:
@@ -38,24 +43,21 @@ services:
     ports:
       - "8793:8793"
     environment:
-      AIRFLOW__CORE__FERNET_KEY: "" # TODO envvar
-      SECRET_KEY: "" # TODO envvar
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True" # TODO remove
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://airflow:airflow@postgres/airflow"
-      AIRFLOW_UID: "5000"
+      AIRFLOW_UID: "50000"
       AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
-      AIRFLOW__LOGGING__LOGGING_LEVEL: "INFO" # TODO envvar
-      # AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-      # AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
-      - ./dags:/airflow/dags
-      - ./logs:/airflow/logs
-      - ./plugins:/airflow/plugins
+      - data:/airflow
+
 
   webserver:
     image: apache/airflow:2.6.2
@@ -68,8 +70,9 @@ services:
       - 80:8080
     restart: always
     environment:
-      AIRFLOW__CORE__FERNET_KEY: "" # TODO envvar
-      SECRET_KEY: "" # TODO envvar
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True" # TODO remove
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
@@ -77,45 +80,50 @@ services:
       FORWARDED_ALLOW_IPS: "*"
       AIRFLOW__WEBSERVER__WORKER_CLASS: "gevent"
       _AIRFLOW_PATCH_GEVENT: "1"
-      AIRFLOW_UID: "5000"
+      AIRFLOW_UID: "50000"
       AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
-      # AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-      # AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
-      - ./dags:/airflow/dags
-      - ./logs:/airflow/logs
-      - ./plugins:/airflow/plugins
+      - data:/airflow
 
   airflowinit:
     image: apache/airflow:2.6.2
     container_name: airflow-init
     depends_on: ["postgres"]
     environment:
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://airflow:airflow@postgres/airflow"
       _AIRFLOW_DB_UPGRADE: 'True'
       _AIRFLOW_WWW_USER_CREATE: 'True'
       _AIRFLOW_WWW_USER_USERNAME: 'airflow'
-      _AIRFLOW_WWW_USER_PASSWORD: 'airflow'# TODO envvar
-      AIRFLOW_UID: "5000"
-    user: "0:0"
+      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+      AIRFLOW_UID: "50000"
+    user: "${AIRFLOW_UID:-50000}:0"
     command: >
       bash -c "pip install apache-airflow[amazon]
+      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
+      && chmod -vR 777 /airflow/{logs,dags}
       && airflow db init"
+    volumes:
+      - data:/airflow
+
 
   sync-s3:
     image: amazon/aws-cli
     container_name: sync-s3
     entrypoint: >
-      bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://ocf-airflow-testing-bucket/dags' '/sources/dags';
-      do sleep 2; done;"
+      bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://ocf-airflow-testing-bucket/dags' '/airflow/dags';
+      mkdir -p /airflow/{logs,dags}; 
+      chmod -vR 777 /airflow/{logs,dags}; do sleep 2; done;"
     volumes:
-      - .:/sources
+      - data:/airflow
     environment:
-      # AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-      # AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
     restart: always
     depends_on:

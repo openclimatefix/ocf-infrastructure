@@ -53,6 +53,30 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = var.region
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "SECRET_KEY"
+    value     = random_password.secret-password.result
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "FERNET_KEY"
+    value     = "VFCFMh8gFtPkYNFJXQLjAloeILFyGvgqebnQNtnEbNQ="
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "PASSWORD"
+    value     = random_password.airflow-password.result
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "LOGLEVEL"
+    value     = "INFO"
+  }
+
 
   setting {
     namespace = "aws:ec2:vpc"

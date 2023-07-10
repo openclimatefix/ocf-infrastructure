@@ -82,9 +82,11 @@ resource "aws_iam_policy" "ecs-run" {
       {
         Action = [
           "ecs:RunTask",
+          "ecs:DescribeTasks",
+          "iam:PassRole"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:task-definition:*"
+        Resource = "*"
       },
     ]
   })
@@ -161,7 +163,7 @@ resource "aws_iam_role_policy_attachment" "attach-logs" {
 
 resource "aws_iam_instance_profile" "ec2" {
 
-  name = "ocf-airflow-instance-eb-${var.environment}"
+  name = "ocf-airflow-instance-eb-${var.environment}-2"
   role = join("", aws_iam_role.instance-role.*.name)
 }
 
@@ -178,5 +180,5 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
 
 resource "aws_iam_role_policy_attachment" "attach-ecs-run" {
   role       = aws_iam_role.instance-role.name
-  policy_arn = aws_iam_policy.cloudwatch.arn
+  policy_arn = aws_iam_policy.ecs-run.arn
 }
