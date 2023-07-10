@@ -14,12 +14,27 @@ variable "environment" {
 }
 
 //Networking
-variable "subnets" {
+variable "public_subnets_cidr" {
   type        = list(string)
   description = "The CIDR block for the public subnet"
+}
+
+variable "private_subnets_cidr" {
+  type        = list(string)
+  description = "The CIDR block for the private subnet"
+}
+
+variable "pvsite_api_version" {
+  type = string
+  description = "This gives the version of the PV Site API"
 }
 
 variable "vpc_id" {
   type = string
   description = "The ID of the VPC to build the subnets upon"
+}
+
+variable "public_internet_gateway_id" {
+  type = string
+  description = "The ID of the public internet gateway to use"
 }
