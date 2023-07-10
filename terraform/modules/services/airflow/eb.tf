@@ -176,18 +176,10 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 }
 
 
-data "external" "git" {
-  program = [
-    "git",
-    "log",
-    "--pretty=format:{ \"sha\": \"%H\" }",
-    "-1",
-    "HEAD"
-  ]
-}
+resource "time_static" "example" {}
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "ocf-airflow-${data.external.git.result.sha}"
+  name        = "ocf-airflow-${time_static.example.rfc3339}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   description = "application version created by terraform"
   bucket      = aws_s3_bucket.airflow-s3.id
