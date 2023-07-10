@@ -45,10 +45,10 @@ resource "aws_iam_policy" "read-policy" {
 
 
 resource "aws_s3_object" "dags" {
-  for_each = fileset("./dags/", "*")
+  for_each = fileset("${path.module}/dags/", "*")
 
   bucket = aws_s3_bucket.airflow-s3.id
   key    = "./dags/${each.value}"
-  source = "./dags/${each.value}"
+  source = "${path.module}/dags/${each.value}"
   etag   = filemd5("./dags/${each.value}")
 }
