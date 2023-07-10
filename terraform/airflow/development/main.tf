@@ -9,8 +9,8 @@ locals {
 
 module "airflow" {
   source = "../../modules/services/airflow"
-
-  region                              = var.region
-  environment                         = var.environment
-  vpc_id                              = var.vpc_id
+  
+  environment   = var.environment
+  vpc_id        = var.vpc_id
+  subnets       = var.subnets
 }
