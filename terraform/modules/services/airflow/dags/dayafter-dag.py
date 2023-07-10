@@ -21,7 +21,7 @@ cluster = "Nowcasting-development"
 # Tasks can still be defined in terraform, or defined here
 
 with DAG(
-    "national_day_after",
+    "national-day-after",
     schedule_interval="0 11 * * *",
     default_args=default_args,
     concurrency=10,
@@ -51,7 +51,7 @@ with DAG(
     latest_only >> national_day_after
 
 with DAG(
-    "gsp_day_after",
+    "gsp-day-after",
     schedule_interval="30 11 * * *",
     default_args=default_args,
     concurrency=10,
