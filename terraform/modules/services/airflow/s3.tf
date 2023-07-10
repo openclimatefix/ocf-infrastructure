@@ -50,5 +50,5 @@ resource "aws_s3_object" "dags" {
   bucket = aws_s3_bucket.airflow-s3.id
   key    = "./dags/${each.value}"
   source = "${path.module}/dags/${each.value}"
-  etag   = filemd5("./dags/${each.value}")
+  etag   = filemd5("${path.module}/dags/${each.value}")
 }
