@@ -34,8 +34,7 @@ variable "public_internet_gateway_id" {
   description = "The ID of the public internet gateway to use"
 }
 
-variable "db_url"
-{
+variable "db_url" {
   description = "The database url"
   type = string
 }
