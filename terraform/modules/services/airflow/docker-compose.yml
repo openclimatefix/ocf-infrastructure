@@ -24,7 +24,6 @@ services:
 #
   scheduler:
     depends_on:
-      - "postgres"
       - "airflowinit"
     image: apache/airflow:2.6.2
     container_name: airflow-scheduler
@@ -36,7 +35,6 @@ services:
       AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
       SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
-      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True" # TODO remove
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
       AIRFLOW_UID: "50000"
@@ -54,7 +52,6 @@ services:
     container_name: airflow-webserver
     command: webserver -w 2
     depends_on:
-      - "postgres"
       - "airflowinit"
     ports:
       - 80:8080
@@ -64,7 +61,6 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
-      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True" # TODO remove
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
       FORWARDED_ALLOW_IPS: "*"
@@ -81,7 +77,6 @@ services:
   airflowinit:
     image: apache/airflow:2.6.2
     container_name: airflow-init
-    depends_on: ["postgres"]
     environment:
       AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
       SECRET_KEY: ${SECRET_KEY}
@@ -118,5 +113,4 @@ services:
       ENVIRONMENT: $ENVIRONMENT
     restart: always
     depends_on:
-      - "postgres"
       - "airflowinit"
