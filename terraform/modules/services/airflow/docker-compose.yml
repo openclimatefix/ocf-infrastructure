@@ -50,7 +50,7 @@ services:
   webserver:
     image: apache/airflow:2.6.2
     container_name: airflow-webserver
-    command: webserver -w 2
+    command: webserver -w 4
     depends_on:
       - "airflowinit"
     ports:
