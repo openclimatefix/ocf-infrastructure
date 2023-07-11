@@ -19,3 +19,6 @@ This module makes
 - IAM role for running application (ec2)
 - s3 bucket to storage application versions and dags
 - Security group for application
+
+# Database
+We've used postgres database already set up. This could be done RDS
