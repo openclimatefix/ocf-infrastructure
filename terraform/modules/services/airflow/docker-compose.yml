@@ -93,7 +93,7 @@ services:
     command: >
       bash -c "pip install apache-airflow[amazon]
       && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
-      && chmod -vR 777 /airflow/{logs,dags}
+      && chmod -v 777 /airflow/{logs,dags}
       && airflow db init"
     volumes:
       - data:/airflow
@@ -105,7 +105,7 @@ services:
     entrypoint: >
       bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://ocf-airflow-${ENVIRONMENT}-bucket/dags' '/airflow/dags';
       mkdir -p /airflow/{logs,dags}; 
-      chmod -vR 777 /airflow/{logs,dags}; do sleep 2; done;"
+      chmod -R 777 /airflow/{logs,dags}; do sleep 2; done;"
     volumes:
       - data:/airflow
     environment:
