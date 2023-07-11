@@ -11,7 +11,7 @@ resource "aws_cloudwatch_event_rule" "event_rule" {
 resource "aws_cloudwatch_event_target" "ecs_scheduled_task" {
 
   rule      = aws_cloudwatch_event_rule.event_rule.name
-  target_id = "satellite-schedule-${var.environment}"
+  target_id = "sat-schedule-${var.environment}"
   arn       = var.ecs-cluster.arn
   role_arn  = aws_iam_role.cloudwatch_role.arn
 
