@@ -21,8 +21,7 @@ variable "subnets" {
 }
 # the type is any, as the subnets are terraform resources
 
-variable "db_url"
-{
+variable "db_url" {
   description = "The database url"
   type = string
 }
