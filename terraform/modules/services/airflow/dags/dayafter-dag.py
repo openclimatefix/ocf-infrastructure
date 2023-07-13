@@ -5,10 +5,11 @@ from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
+# note that the start_date needs to be slightly more than how often it gets run
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime.utcnow()  - timedelta(hours=1),
+    "start_date": datetime.now() - timedelta(hours=25),
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "max_active_runs": 10,
