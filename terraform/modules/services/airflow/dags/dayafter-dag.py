@@ -30,8 +30,6 @@ with DAG(
 ) as dag1:
     dag1.doc_md = "Get National PVLive updated values"
 
-    latest_only = LatestOnlyOperator(task_id="latest_only")
-
     national_day_after = EcsRunTaskOperator(
         task_id="national-day-after",
         task_definition="national-day-after",
@@ -49,8 +47,6 @@ with DAG(
         task_concurrency=10,
     )
 
-    latest_only >> national_day_after
-
 with DAG(
     "gsp-day-after",
     schedule_interval="30 11 * * *",
@@ -60,8 +56,6 @@ with DAG(
 ) as dag2:
 
     dag2.doc_md = "Get GSP PVLive updated values, and then triggers metrics DAG"
-
-    latest_only = LatestOnlyOperator(task_id="latest_only")
 
     gsp_day_after = EcsRunTaskOperator(
         task_id="gsp-day-after",
@@ -96,5 +90,4 @@ with DAG(
         task_concurrency=10,
     )
 
-    latest_only >> gsp_day_after
     gsp_day_after >> metrics
