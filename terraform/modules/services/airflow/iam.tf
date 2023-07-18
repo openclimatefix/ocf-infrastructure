@@ -83,6 +83,7 @@ resource "aws_iam_policy" "ecs-run" {
         Action = [
           "ecs:RunTask",
           "ecs:DescribeTasks",
+          "ecs:StopTask",
           "iam:PassRole"
         ]
         Effect   = "Allow"
