@@ -1,0 +1,117 @@
+version: "3"
+
+
+volumes:
+  data:
+
+services:
+
+  source-init:
+    image: python:3.10-slim
+    container_name: source-init
+    entrypoint: >
+      bash -c "echo 'Making folders'
+      && mkdir -p /airflow
+      && mkdir -p /airflow/logs
+      && mkdir -p /airflow/dags
+      && mkdir -p /airflow/plugins
+      && echo 'Making read and write for all'
+      && chmod -vR 777 /airflow/logs
+      && chmod -vR 777 /airflow/dags"
+    volumes:
+      - data:/airflow
+
+#
+  scheduler:
+    depends_on:
+      - "airflowinit"
+    image: apache/airflow:2.6.2
+    container_name: airflow-scheduler
+    command: scheduler
+    restart: on-failure
+    ports:
+      - "8793:8793"
+    environment:
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      AIRFLOW_UID: "50000"
+      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+      AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+    user: "${AIRFLOW_UID:-50000}:0"
+    volumes:
+      - data:/airflow
+
+
+  webserver:
+    image: apache/airflow:2.6.2
+    container_name: airflow-webserver
+    command: webserver -w 4
+    depends_on:
+      - "airflowinit"
+    ports:
+      - 80:8080
+    restart: always
+    environment:
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
+      AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      FORWARDED_ALLOW_IPS: "*"
+      AIRFLOW__WEBSERVER__WORKER_CLASS: "gevent"
+      _AIRFLOW_PATCH_GEVENT: "1"
+      AIRFLOW_UID: "50000"
+      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+    user: "${AIRFLOW_UID:-50000}:0"
+    volumes:
+      - data:/airflow
+
+# only need to run this once
+#  airflowinit:
+#    image: apache/airflow:2.6.2
+#    container_name: airflow-init
+#    environment:
+#      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+#      SECRET_KEY: ${SECRET_KEY}
+#      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
+#      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+#      _AIRFLOW_DB_UPGRADE: 'True'
+#      _AIRFLOW_WWW_USER_CREATE: 'True'
+#      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
+#      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+#      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+#      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+#      AIRFLOW_UID: "50000"
+#    user: "${AIRFLOW_UID:-50000}:0"
+#    command: >
+#      bash -c "pip install apache-airflow[amazon]
+#      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
+#      && chmod -v 777 /airflow/{logs,dags}
+#      && airflow db init"
+#    volumes:
+#      - data:/airflow
+
+
+  sync-s3:
+    image: amazon/aws-cli
+    container_name: sync-s3
+    entrypoint: >
+      bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://ocf-airflow-${ENVIRONMENT}-bucket/dags' '/airflow/dags';
+      mkdir -p /airflow/{logs,dags}; 
+      chmod -R 777 /airflow/{logs,dags}; do sleep 2; done;"
+    volumes:
+      - data:/airflow
+    environment:
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
+    restart: always
+    depends_on:
+      - "airflowinit"
