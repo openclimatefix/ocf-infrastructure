@@ -285,5 +285,5 @@ module "forecast_pvnet" {
     datadir = "data/latest"
   }
   loglevel= "INFO"
-  use_adjuster="false"
+  use_adjuster="true"
 }
