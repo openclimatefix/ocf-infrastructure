@@ -22,8 +22,8 @@ services:
       - data:/airflow
 
   scheduler:
-    depends_on:
-      - "airflowinit"
+#    depends_on:
+#      - "airflowinit"
     image: apache/airflow:2.6.2
     container_name: airflow-scheduler
     command: scheduler
@@ -50,8 +50,8 @@ services:
     image: apache/airflow:2.6.2
     container_name: airflow-webserver
     command: webserver -w 4
-    depends_on:
-      - "airflowinit"
+#    depends_on:
+#      - "airflowinit"
     ports:
       - 80:8080
     restart: always
@@ -74,29 +74,29 @@ services:
       - data:/airflow
 
   # only need to run this once
-  airflowinit:
-    image: apache/airflow:2.6.2
-    container_name: airflow-init
-    environment:
-      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
-      SECRET_KEY: ${SECRET_KEY}
-      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
-      _AIRFLOW_DB_UPGRADE: 'True'
-      _AIRFLOW_WWW_USER_CREATE: 'True'
-      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
-      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
-      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
-      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
-      AIRFLOW_UID: "50000"
-    user: "${AIRFLOW_UID:-50000}:0"
-    command: >
-      bash -c "pip install apache-airflow[amazon]
-      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
-      && chmod -v 777 /airflow/{logs,dags}
-      && airflow db init"
-    volumes:
-      - data:/airflow
+#  airflowinit:
+#    image: apache/airflow:2.6.2
+#    container_name: airflow-init
+#    environment:
+#      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+#      SECRET_KEY: ${SECRET_KEY}
+#      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
+#      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+#      _AIRFLOW_DB_UPGRADE: 'True'
+#      _AIRFLOW_WWW_USER_CREATE: 'True'
+#      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
+#      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+#      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+#      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+#      AIRFLOW_UID: "50000"
+#    user: "${AIRFLOW_UID:-50000}:0"
+#    command: >
+#      bash -c "pip install apache-airflow[amazon]
+#      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
+#      && chmod -v 777 /airflow/{logs,dags}
+#      && airflow db init"
+#    volumes:
+#      - data:/airflow
 
 
   sync-s3:
@@ -112,5 +112,5 @@ services:
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
       ENVIRONMENT: $ENVIRONMENT
     restart: always
-    depends_on:
-      - "airflowinit"
+#    depends_on:
+#      - "airflowinit"
