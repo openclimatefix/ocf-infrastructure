@@ -30,4 +30,5 @@ module "airflow" {
   subnets       = [module.airflow_subnetworking.public_subnet.id]
   db_url        = var.db_url
   docker-compose-version       = "0.0.3"
+
 }

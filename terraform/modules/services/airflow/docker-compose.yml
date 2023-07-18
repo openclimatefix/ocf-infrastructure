@@ -73,7 +73,8 @@ services:
     volumes:
       - data:/airflow
 
-  # only need to run this once
+
+# only need to run this once
 #  airflowinit:
 #    image: apache/airflow:2.6.2
 #    container_name: airflow-init
