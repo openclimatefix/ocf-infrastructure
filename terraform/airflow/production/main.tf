@@ -10,7 +10,7 @@ locals {
 
 
 module "airflow_subnetworking" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/subnetworking?ref=6716597"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/subnetworking?ref=5b7005f"
 
 
   region                     = var.region
