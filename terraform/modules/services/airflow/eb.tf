@@ -19,7 +19,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   name        = "ocf-airflow-${var.environment}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   cname_prefix = "ocf-airflow-${var.environment}"
-  version_label = "ocf-airflow"
+  version_label = "ocf-airflow-${var.version}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -188,7 +188,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "ocf-airflow"
+  name        = "ocf-airflow-${var.version}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   description = "application version created by terraform"
   bucket      = aws_s3_bucket.airflow-s3.id

@@ -26,5 +26,10 @@ variable "db_url" {
   type = string
 }
 
+variable "version" {
+  description = "The version of this for ocf"
+  type = string
+}
+
 
 
