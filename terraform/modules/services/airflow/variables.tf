@@ -26,5 +26,11 @@ variable "db_url" {
   type = string
 }
 
+variable "docker-compose-version" {
+  description = "The version of this for ocf. This helps bump the docker compose file"
+  type = string
+}
+
+
 
 
