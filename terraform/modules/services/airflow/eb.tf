@@ -24,7 +24,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "t4g.medium"
+    value     = "t4g.large"
   }
 
   # the next line IS NOT RANDOM,
