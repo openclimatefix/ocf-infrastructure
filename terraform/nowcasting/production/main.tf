@@ -19,7 +19,7 @@ module "networking" {
 }
 
 module "ec2-bastion" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=eac7811"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=ab28140"
 
   region               = var.region
   vpc_id               = module.networking.vpc_id
