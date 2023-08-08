@@ -18,6 +18,8 @@ default_args = {
 }
 
 env = os.getenv("ENVIRONMENT","development")
+subnet = os.getenv("ECS_SUBNET")
+security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
@@ -36,8 +38,8 @@ with DAG('gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 *
         launch_type = "FARGATE",
         network_configuration={
             "awsvpcConfiguration": {
-                "subnets": ["subnet-0c3a5f26667adb0c1"],
-                "securityGroups": ["sg-05ef23a462a0932d9"],
+                "subnets": [subnet],
+                "securityGroups": [security_group],
                 "assignPublicIp": "ENABLED",
             },
         },

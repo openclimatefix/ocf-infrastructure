@@ -29,7 +29,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   # the next line IS NOT RANDOM,
 #  see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
-  solution_stack_name = "64bit Amazon Linux 2 v3.4.16 running Docker"
+  solution_stack_name = "64bit Amazon Linux 2 v3.6.0 running Docker"
 
   # There are a LOT of settings, see here for the basic list:
   # https://is.gd/vfB51g
@@ -79,6 +79,18 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "ECS_SUBNET"
+    value     = var.ecs_subnet
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "ECS_SECURITY_GROUP"
+    value     = var.ecs_security_group
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "LOGLEVEL"
     value     = "INFO"
   }
@@ -88,7 +100,6 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     name      = "DB_URL"
     value     = var.db_url
   }
-
 
   setting {
     namespace = "aws:ec2:vpc"
