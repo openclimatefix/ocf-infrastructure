@@ -19,7 +19,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   name        = "ocf-airflow-${var.environment}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   cname_prefix = "ocf-airflow-${var.environment}"
-  version_label = "ocf-airflow-${var.docker-compose-version}"
+  version_label = "ocf-airflow-${var.docker-compose-version}-v1"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
