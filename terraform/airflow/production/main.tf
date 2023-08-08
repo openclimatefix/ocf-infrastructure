@@ -24,7 +24,7 @@ module "airflow_subnetworking" {
 }
 
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=62cb87b"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=7c2ae8b"
 
   environment   = var.environment
   vpc_id        = var.vpc_id
