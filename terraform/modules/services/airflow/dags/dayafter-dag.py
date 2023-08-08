@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
+import os
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -17,7 +18,8 @@ default_args = {
     "max_active_tasks": 10,
 }
 
-cluster = "Nowcasting-development"
+env = os.getenv("ENVIRONMENT","development")
+cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 

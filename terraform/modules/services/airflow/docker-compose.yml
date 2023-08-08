@@ -41,6 +41,7 @@ services:
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
       AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
@@ -69,6 +70,7 @@ services:
       AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
