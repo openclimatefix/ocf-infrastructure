@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "airflow-s3" {
 
 resource "aws_s3_object" "eb_object" {
   bucket = aws_s3_bucket.airflow-s3.id
-  key = "beanstalk/docker-compose-${var.docker-compose-version}.yml"
+  key = "beanstalk/docker-compose-${var.docker-compose-version}-v1.yml"
   source = "${path.module}/docker-compose.yml"
 }
 
