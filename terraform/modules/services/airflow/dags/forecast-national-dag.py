@@ -46,5 +46,21 @@ with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=de
      task_concurrency = 10,
     )
 
-    latest_only >> national_forecast
+    forecast_blend = EcsRunTaskOperator(
+        task_id='forecast-blend',
+        task_definition="forecast_blend",
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+    )
+
+    latest_only >> national_forecast >> forecast_blend
 

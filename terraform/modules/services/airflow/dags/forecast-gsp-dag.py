@@ -46,7 +46,23 @@ with DAG('gsp-forecast-pvnet-1', schedule_interval="*/5 * * * *", default_args=d
      task_concurrency = 10,
     )
 
-    latest_only >> forecast
+    forecast_blend = EcsRunTaskOperator(
+        task_id='forecast-blend',
+        task_definition="forecast_blend",
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+    )
+
+    latest_only >> forecast >> forecast_blend
 
 
 with DAG('gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
@@ -70,5 +86,21 @@ with DAG('gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", default_args
      task_concurrency = 10,
     )
 
-    latest_only >> forecast
+    forecast_blend = EcsRunTaskOperator(
+        task_id='forecast-blend',
+        task_definition="forecast_blend",
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+    )
+
+    latest_only >> forecast >> forecast_blend
 
