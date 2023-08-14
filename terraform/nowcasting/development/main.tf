@@ -284,3 +284,23 @@ module "analysis_dashboard" {
         read_policy_arn = module.database.iam-policy-forecast-db-read.arn
     }
 }
+
+module "forecast_pvnet" {
+  source = "../../modules/services/forecast_blend"
+
+  region      = var.region
+  environment = var.environment
+  app-name    = "forecast_blend"
+  ecs_config  = {
+    docker_image   = "openclimatefix/forecast_blend"
+    docker_version = var.forecast_pvnet_version
+    memory_mb = 1024
+    cpu = 512
+  }
+  rds_config = {
+    database_secret_arn             = module.database.forecast-database-secret.arn
+    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
+  }
+  loglevel= "INFO"
+
+}

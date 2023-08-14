@@ -90,3 +90,8 @@ variable "sentry_dsn" {
 variable "forecast_pvnet_version" {
   description = "The Forecast PVnet 2.0 docker version"
 }
+
+
+variable "forecast_blend_version" {
+  description = "The Forecast Blend docker version"
+}
