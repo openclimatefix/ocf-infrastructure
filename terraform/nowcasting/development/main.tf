@@ -285,7 +285,7 @@ module "analysis_dashboard" {
     }
 }
 
-module "forecast_pvnet" {
+module "forecast_blend" {
   source = "../../modules/services/forecast_blend"
 
   region      = var.region
