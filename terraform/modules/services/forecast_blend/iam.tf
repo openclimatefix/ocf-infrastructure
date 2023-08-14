@@ -22,7 +22,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 EOF
 }
 
-resource "aws_iam_policy" "cloudwatch_role" {
+resource "aws_iam_policy" "cloudwatch-policy" {
   name        = "cloudwatch-read-and-write-${var.app-name}"
   path        = "/${var.app-name}/"
   description = "Policy to allow read and write to cloudwatch logs"
