@@ -54,12 +54,6 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "attach-logs-execution" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.cloudwatch-policy.arn
-}
-
-
 data "aws_iam_policy_document" "ec2-instance-assume-role-policy" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -75,11 +69,6 @@ resource "aws_iam_role" "app-role" {
   name               = "${var.app-name}-iam-role"
   path               = "/${var.app-name}/"
   assume_role_policy = data.aws_iam_policy_document.ec2-instance-assume-role-policy.json
-}
-
-resource "aws_iam_role_policy_attachment" "attach-logs" {
-  role       = aws_iam_role.app-role.name
-  policy_arn = aws_iam_policy.cloudwatch-policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "read-secret-execution" {
