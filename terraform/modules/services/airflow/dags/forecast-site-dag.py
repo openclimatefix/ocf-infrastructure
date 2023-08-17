@@ -9,7 +9,7 @@ from airflow.operators.latest_only import LatestOnlyOperator
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime.utcnow() - timedelta(hours=0.5),
+    'start_date': datetime.utcnow() - timedelta(hours=25),
     'retries': 1,
     'retry_delay': timedelta(minutes=1),
     'max_active_runs':10,
