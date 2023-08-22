@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 1024
-  memory = 7168
+  memory = 4096
 
   tags = {
     name = "${var.consumer-name}-consumer"
@@ -21,24 +21,33 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   container_definitions = jsonencode([
     {
       name  = "${var.consumer-name}-consumer"
-      image = "openclimatefix/metoffice_weather_datahub:${var.docker_version}"
+      image = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true
 
       environment : [
-        { "name" : "SAVE_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_data}" },
-        { "name" : "RAW_DIR", "value" : "s3://${var.s3_config.bucket_id}/${var.s3_config.savedir_raw}" },
-        { "name" : "LOG_LEVEL", "value" : "DEBUG"},
+        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "RAW_DIR", "value" : var.s3_config.bucket_id },
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
       ]
+
+      command: [
+                "download",
+                "--source=metoffice",
+                "--sink=s3",
+                "--rdir=raw",
+                "--zdir=data",
+                "--create-latest"
+            ]
 
       secrets : [
         {
-          "name" : "API_KEY",
+          "name" : "METOFFICE_CLIENT_ID",
           "valueFrom" : "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:API_KEY::",
         },
         {
-          "name" : "API_SECRET",
+          "name" : "METOFFICE_CLIENT_SECRET",
           "valueFrom" : "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:API_SECRET::",
         },
         {
@@ -46,7 +55,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
           "valueFrom" : "${var.database_secret.arn}:url::",
         },
         {
-          "name": "ORDER_IDS",
+          "name": "METOFFICE_ORDER_ID",
           "valueFrom": "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:ORDER_IDS::",
         }
       ]
