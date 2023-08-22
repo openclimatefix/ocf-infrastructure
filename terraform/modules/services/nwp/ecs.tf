@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       essential = true
 
       environment : [
-        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "AWS_S3_BUCKET", "value" : "eu-west-1" },
         { "name" : "RAW_DIR", "value" : var.s3_config.bucket_id },
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
       ]
