@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   # specific values are needed -
   # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = 1024
-  memory = 4096
+  memory = 5120
 
   tags = {
     name = "${var.consumer-name}-consumer"
@@ -32,14 +32,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
       ]
 
-      command: [
-                "download",
-                "--source=metoffice",
-                "--sink=s3",
-                "--rdir=raw",
-                "--zdir=data",
-                "--create-latest"
-            ]
+      command: var.command
 
       secrets : [
         {
