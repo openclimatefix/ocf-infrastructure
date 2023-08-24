@@ -93,9 +93,15 @@ module "nwp" {
   consumer-name = "nwp"
   s3_config = {
     bucket_id = module.s3.s3-nwp-bucket.id
-    savedir_data = "data"
-    savedir_raw = "raw"
   }
+  command = [
+      "download",
+      "--source=metoffice",
+      "--sink=s3",
+      "--rdir=raw",
+      "--zdir=data",
+      "--create-latest"
+  ]
 }
 
 module "nwp-national" {
@@ -112,9 +118,15 @@ module "nwp-national" {
   consumer-name = "nwp-national"
   s3_config = {
     bucket_id = module.s3.s3-nwp-bucket.id
-    savedir_data = "data-national"
-    savedir_raw = "raw-national"
   }
+  command = [
+      "download",
+      "--source=metoffice",
+      "--sink=s3",
+      "--rdir=raw-national",
+      "--zdir=data-national",
+      "--create-latest"
+  ]
 }
 
 module "sat" {
