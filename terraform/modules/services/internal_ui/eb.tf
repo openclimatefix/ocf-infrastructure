@@ -48,7 +48,7 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SITES_DB_URL"
-    value     = "${data.aws_secretsmanager_secret_version.database-sites-version.arn}:url::"
+    value = jsondecode(aws_secretsmanager_secret_version.database-sites-version.arn)["url"]
   }
 
   setting {
