@@ -6,6 +6,7 @@ services:
     environment:
       DB_URL: $DB_URL
       DB_URL_PV: $DB_URL_PV
+      SITES_DB_URL: $SITES_DB_URL
       ORIGINS: $ORIGINS
       ENVIRONMENT: $ENVIRONMENT
     container_name: ${EB_APP_NAME}

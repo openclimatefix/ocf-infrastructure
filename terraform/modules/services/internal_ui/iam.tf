@@ -61,6 +61,29 @@ resource "aws_iam_policy" "cloudwatch" {
   })
 }
 
+resource "aws_iam_policy" "database-sites-secret-read" {
+  name        = "database-sites-secret-read"
+  path        = "/consumer/secrets/"
+  description = "Policy to allow read access to Database sites secret."
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "secretsmanager:ListSecretVersionIds",
+          "secretsmanager:GetSecretValue",
+        ]
+        Effect   = "Allow"
+        Resource = data.aws_secretsmanager_secret_version.database-sites-version.arn
+      },
+    ]
+  })
+}
+
+
 ##################
 # Service role
 ##################
@@ -93,6 +116,11 @@ resource "aws_iam_role_policy_attachment" "attach-logs-service" {
 resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-service" {
   role       = aws_iam_role.instance-role.name
   policy_arn = var.database_config.read_policy_arn
+}
+
+resource "aws_iam_role_policy_attachment" "attach-logs-database-sites-secret-service" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = aws_iam_policy.database-sites-secret-read.arn
 }
 
 
@@ -132,4 +160,9 @@ resource "aws_iam_instance_profile" "ec2" {
 resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-instance" {
   role       = aws_iam_role.instance-role.name
   policy_arn = var.database_config.read_policy_arn
+}
+
+resource "aws_iam_role_policy_attachment" "attach-logs-database-sites-secret-instance" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = aws_iam_policy.database-sites-secret-read.arn
 }
