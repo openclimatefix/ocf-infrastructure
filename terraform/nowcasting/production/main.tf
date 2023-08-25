@@ -52,7 +52,7 @@ module "forecasting_models_bucket" {
 }
 
 module "api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=b6ac5d2"
 
   region                              = var.region
   environment                         = var.environment
