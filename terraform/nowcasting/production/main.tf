@@ -81,7 +81,7 @@ module "database" {
 }
 
 module "nwp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=e23dda0"
 
   region                  = var.region
   environment             = var.environment
@@ -100,7 +100,7 @@ module "nwp" {
 }
 
 module "nwp-national" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=e23dda0"
 
   region                  = var.region
   environment             = var.environment
