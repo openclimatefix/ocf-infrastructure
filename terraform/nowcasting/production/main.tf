@@ -81,7 +81,7 @@ module "database" {
 }
 
 module "nwp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=e23dda0"
 
   region                  = var.region
   environment             = var.environment
@@ -97,10 +97,18 @@ module "nwp" {
     savedir_data = "data"
     savedir_raw = "raw"
   }
+    command = [
+      "download",
+      "--source=metoffice",
+      "--sink=s3",
+      "--rdir=raw",
+      "--zdir=data",
+      "--create-latest"
+  ]
 }
 
 module "nwp-national" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp?ref=e23dda0"
 
   region                  = var.region
   environment             = var.environment
@@ -116,6 +124,14 @@ module "nwp-national" {
     savedir_data = "data-national"
     savedir_raw = "raw-national"
   }
+    command = [
+      "download",
+      "--source=metoffice",
+      "--sink=s3",
+      "--rdir=raw-national",
+      "--zdir=data-national",
+      "--create-latest"
+  ]
 }
 
 module "sat" {
