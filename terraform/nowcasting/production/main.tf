@@ -97,6 +97,14 @@ module "nwp" {
     savedir_data = "data"
     savedir_raw = "raw"
   }
+    command = [
+      "download",
+      "--source=metoffice",
+      "--sink=s3",
+      "--rdir=raw",
+      "--zdir=data",
+      "--create-latest"
+  ]
 }
 
 module "nwp-national" {
@@ -116,6 +124,14 @@ module "nwp-national" {
     savedir_data = "data-national"
     savedir_raw = "raw-national"
   }
+    command = [
+      "download",
+      "--source=metoffice",
+      "--sink=s3",
+      "--rdir=raw-national",
+      "--zdir=data-national",
+      "--create-latest"
+  ]
 }
 
 module "sat" {
