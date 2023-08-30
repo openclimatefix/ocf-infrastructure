@@ -243,7 +243,7 @@ module "national_forecast" {
 }
 
 module "analysis_dashboard" {
-    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=85d7572"
+    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=15d5810"
 
     region      = var.region
     environment = var.environment
