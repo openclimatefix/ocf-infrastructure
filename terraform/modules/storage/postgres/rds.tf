@@ -14,8 +14,9 @@ resource "aws_db_instance" "postgres-db" {
   publicly_accessible          = false
   vpc_security_group_ids       = [aws_security_group.rds-postgres-sg.id]
   ca_cert_identifier           = "rds-ca-2019"
-  backup_window                = "00:00-00:30"
   db_subnet_group_name         = var.db_subnet_group.name # update name with private/public
+  backup_window                = "00:00-00:30"
+  backup_retention_period      = 7
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
   allow_major_version_upgrade  = var.allow_major_version_upgrade
