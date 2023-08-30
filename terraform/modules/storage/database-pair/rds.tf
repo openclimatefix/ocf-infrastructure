@@ -15,6 +15,7 @@ resource "aws_db_instance" "db-forecast" {
   vpc_security_group_ids       = [aws_security_group.rds-postgres-sg.id]
   ca_cert_identifier           = "rds-ca-2019"
   backup_window                = "00:00-00:30"
+  backup_retention_period      = 7
   db_subnet_group_name         = var.db_subnet_group.name # update name with private/public
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
@@ -45,6 +46,7 @@ resource "aws_db_instance" "db-pv" {
   vpc_security_group_ids       = [aws_security_group.rds-postgres-sg.id]
   ca_cert_identifier           = "rds-ca-2019"
   backup_window                = "00:00-00:30"
+  backup_retention_period      = 7
   db_subnet_group_name         = var.db_subnet_group.name # update name with private/public
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
