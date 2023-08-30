@@ -84,7 +84,7 @@ resource "aws_s3_bucket" "s3-sat-bucket" {
   }
 
   lifecycle_rule {
-    id      = "remove_old_files"
+    id      = "remove_old_raw_files"
     enabled = true
 
     prefix = "raw/"
