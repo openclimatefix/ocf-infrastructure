@@ -83,6 +83,17 @@ resource "aws_s3_bucket" "s3-sat-bucket" {
     }
   }
 
+  lifecycle_rule {
+    id      = "remove_old_files"
+    enabled = true
+
+    prefix = "raw/"
+
+    expiration {
+      days = 7
+    }
+  }
+
   tags = {
     Name        = "${var.environment}-s3"
     Environment = "${var.environment}"
