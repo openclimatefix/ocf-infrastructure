@@ -272,7 +272,7 @@ module "forecast_pvnet" {
   environment = var.environment
   app-name    = "forecast_pvnet"
   ecs_config  = {
-    docker_image   = "openclimatefix/pvnet"
+    docker_image   = "openclimatefix/pvnet_app"
     docker_version = var.forecast_pvnet_version
     memory_mb = 8192
     cpu = 2048
