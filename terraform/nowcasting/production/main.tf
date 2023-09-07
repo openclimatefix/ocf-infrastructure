@@ -66,7 +66,7 @@ module "api" {
   auth_domain = var.auth_domain
   auth_api_audience = var.auth_api_audience
   n_history_days = "2"
-  adjust_limit = 1000.0
+  adjust_limit = 2000.0
   sentry_dsn = var.sentry_dsn
 }
 
