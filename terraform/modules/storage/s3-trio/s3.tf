@@ -67,12 +67,6 @@ resource "aws_s3_bucket" "s3-nwp-bucket" {
   }
 }
 
-  tags = {
-    Name        = "${var.environment}-s3"
-    Environment = "${var.environment}"
-  }
-}
-
 
 # get s3 bucket
 # This means this bucket is not destroyed, we are just referencing it
