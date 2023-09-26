@@ -39,6 +39,34 @@ resource "aws_s3_bucket" "s3-nwp-bucket" {
     }
   }
 
+    lifecycle_rule {
+    id      = "remove_old_files_national"
+    enabled = true
+
+    prefix = "data-national/"
+
+    expiration {
+      days = 7
+    }
+  }
+
+  lifecycle_rule {
+    id      = "remove_old_raw_files_national"
+    enabled = true
+
+    prefix = "raw-national/"
+
+    expiration {
+      days = 7
+    }
+  }
+
+  tags = {
+    Name        = "${var.environment}-s3"
+    Environment = "${var.environment}"
+  }
+}
+
   tags = {
     Name        = "${var.environment}-s3"
     Environment = "${var.environment}"
