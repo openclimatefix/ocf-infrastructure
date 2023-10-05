@@ -39,6 +39,11 @@ variable "db_url" {
   type = string
 }
 
+variable "db_url_airflow" {
+  description = "The database url for airflow"
+  type = string
+}
+
 variable "ecs_security_group" {
   description = "The security group for airflow ecs tasks"
   type = string
