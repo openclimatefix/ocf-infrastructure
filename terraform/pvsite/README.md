@@ -75,8 +75,11 @@ Client may want to send live PV data in order to make their forecasts better. He
 
 ![Scenario 1](S1.png)
 ![Scenario 2](S2.png)
+![Scenario 3](S3.png)
 
-In Scenario 1, the client sends the live PV data via our API. In Scenario 2, the client builds a API and OCF pulls the data from their
+In Scenario 1, the client sends the live PV data via our API. 
+In Scenario 2, the client builds a API and OCF pulls the data from their.
+Scenario 3, is a mixture of of Scenario 1 and 2. 
 
 [Private link to images](https://docs.google.com/presentation/d/1mm5JAaNpulQoekZuynDZUmk4pf1osQPp-LdXsuPpghU/edit#slide=id.p)
 
