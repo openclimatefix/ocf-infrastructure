@@ -60,7 +60,7 @@ variable "database_config" {
 variable "auth_config" {
   type = object({
     auth0_domain     = string
-    auth0_client = string
+    auth0_client_id = string
   })
   description = <<EOT
     docker_config_info = {
