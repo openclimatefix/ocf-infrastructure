@@ -296,7 +296,7 @@ module "analysis_dashboard" {
         read_policy_arn = module.database.iam-policy-forecast-db-read.arn
     }
     auth_config = {
-        auth0_domain = var.auth0_domain
+        auth0_domain = var.auth_domain
         auth0_client_id = var.auth_dashboard_client_id
     }
 }
