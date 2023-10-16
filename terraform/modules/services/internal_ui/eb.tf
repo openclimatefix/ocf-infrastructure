@@ -81,6 +81,18 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     value     = var.environment
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AUTH0_CLIENT_ID"
+    value     = var.auth_config.auth0_client_id
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AUTH0_DOMAIN"
+    value     = var.auth_config.auth0_domain
+  }
+
   # =========== EB Settings =========== #
 
   setting {
