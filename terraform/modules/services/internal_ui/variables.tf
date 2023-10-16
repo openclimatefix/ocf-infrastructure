@@ -42,6 +42,7 @@ variable "docker_config" {
   EOT
 }
 
+
 variable "database_config" {
   type = object({
     secret     = any
@@ -51,6 +52,20 @@ variable "database_config" {
     docker_config_info = {
       secret : "Secret containing the database connection information"
       read_policy_arn : "ARN of the iam policy allowing reading of the connection secret"
+    }
+  EOT
+}
+
+
+variable "auth_config" {
+  type = object({
+    auth0_domain     = string
+    auth0_client = string
+  })
+  description = <<EOT
+    docker_config_info = {
+      auth0_domain : "Auth0 Domain"
+      auth0_client_id : "Auth0 Client id"
     }
   EOT
 }
