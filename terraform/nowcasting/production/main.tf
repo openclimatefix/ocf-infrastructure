@@ -243,7 +243,7 @@ module "national_forecast" {
 }
 
 module "analysis_dashboard" {
-    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=15d5810"
+    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=5d2a494"
 
     region      = var.region
     environment = var.environment
@@ -260,6 +260,10 @@ module "analysis_dashboard" {
     database_config = {
         secret = module.database.forecast-database-secret-url
         read_policy_arn = module.database.iam-policy-forecast-db-read.arn
+    }
+       auth_config = {
+        auth0_domain = var.auth_domain
+        auth0_client_id = var.auth_dashboard_client_id
     }
 }
 
@@ -324,3 +328,4 @@ module "forecast_blend" {
   loglevel= "INFO"
 
 }
+
