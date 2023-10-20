@@ -11,6 +11,7 @@ services:
       ENVIRONMENT: $ENVIRONMENT
       AUTH0_DOMAIN: $AUTH0_DOMAIN
       AUTH0_CLIENT_ID: $AUTH0_CLIENT_ID
+      SHOW_PVNET_GSP_SUM: ${SHOW_PVNET_GSP_SUM}
     container_name: ${EB_APP_NAME}
     ports:
       - 80:8501

@@ -122,3 +122,9 @@ variable "use_adjuster" {
   description = "Whether to use the adjuster"
   default     = "true"
 }
+
+variable "pvnet_gsp_sum" {
+  type        = string
+  description = "Whether to make the pvnet_gsp_sum"
+  default     = "false"
+}

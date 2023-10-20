@@ -69,3 +69,8 @@ variable "auth_config" {
     }
   EOT
 }
+
+variable "show_pvnet_gsp_sum" {
+  description = "If to use the pvnet gsp sum"
+  default = "false"
+}

@@ -93,6 +93,12 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     value     = var.auth_config.auth0_domain
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "SHOW_PVNET_GSP_SUM"
+    value     = var.show_pvnet_gsp_sum
+  }
+
   # =========== EB Settings =========== #
 
   setting {

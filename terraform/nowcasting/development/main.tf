@@ -181,6 +181,7 @@ module "metrics" {
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.metrics_version
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  use_pvnet_gsp_sum = "true"
 }
 
 
@@ -273,7 +274,7 @@ module "forecast_pvnet" {
     datadir = "data/latest"
   }
   loglevel= "INFO"
-
+  pvnet_gsp_sum = "true"
 }
 
 module "analysis_dashboard" {
@@ -299,6 +300,7 @@ module "analysis_dashboard" {
         auth0_domain = var.auth_domain
         auth0_client_id = var.auth_dashboard_client_id
     }
+    show_pvnet_gsp_sum = "true"
 }
 
 module "forecast_blend" {

@@ -34,6 +34,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
         {"name": "ENVIRONMENT", "value": var.environment},
         {"name": "OCF_ENVIRONMENT", "value": var.environment},
         {"name": "USE_ADJUSTER", "value": var.use_adjuster},
+        {"name": "SAVE_GSP_SUM", "value": var.pvnet_gsp_sum},
       ]
 
       secrets : [
