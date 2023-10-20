@@ -36,3 +36,9 @@ variable "docker_version" {
   description = "The version of the docker that should be used"
   default = "0.0.2"
 }
+
+
+variable "use_pvnet_gsp_sum" {
+  description = "If to use the pvnet gsp sum"
+  default = "false"
+}
