@@ -28,6 +28,7 @@ resource "aws_ecs_task_definition" "metrics-task-definition" {
 
       environment : [
         { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" : "USE_PVNET_GSP_SUM", "value" : var.use_pvnet_gsp_sum},
       ]
 
       secrets : [
