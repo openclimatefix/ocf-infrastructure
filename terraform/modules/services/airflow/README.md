@@ -21,4 +21,4 @@ This module makes
 - Security group for application
 
 # Database
-We've used postgres database already set up. This could be done RDS
+We've used postgres database already set up. This could be done on RDS.
