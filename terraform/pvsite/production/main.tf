@@ -5,7 +5,7 @@ locals {
 }
 
 module "pvsite_subnetworking" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/subnetworking?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/subnetworking?ref=d19f660"
 
   region                     = var.region
   environment                = var.environment
@@ -18,7 +18,7 @@ module "pvsite_subnetworking" {
 }
 
 module "pvsite_database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=d19f660"
 
   region             = var.region
   environment        = var.environment
@@ -30,7 +30,7 @@ module "pvsite_database" {
 }
 
 module "pvsite_api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api_pvsite?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api_pvsite?ref=d19f660"
 
   region                          = var.region
   environment                     = var.environment
@@ -46,7 +46,7 @@ module "pvsite_api" {
 }
 
 module "pvsite_ml_bucket" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=d19f660"
 
   region              = var.region
   environment         = var.environment
@@ -56,7 +56,7 @@ module "pvsite_ml_bucket" {
 }
 
 module "pvsite_ecs" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs?ref=d19f660"
 
   region      = var.region
   environment = var.environment
@@ -64,7 +64,7 @@ module "pvsite_ecs" {
 }
 
 module "pvsite_forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=d19f660"
 
   region      = var.region
   environment = var.environment
@@ -93,7 +93,7 @@ module "pvsite_forecast" {
 }
 
 module "database_clean_up" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/database_clean_up?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/database_clean_up?ref=d19f660"
     region      = var.region
   environment = var.environment
   app-name    = "database_clean_up"
