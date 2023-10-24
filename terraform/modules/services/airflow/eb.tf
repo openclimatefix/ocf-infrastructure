@@ -27,8 +27,20 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = "t4g.large"
   }
 
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name = "RootVolumeType"
+    value = "gp3"
+  }
+
+  settings {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name = "RootVolumeSize"
+    value = "16"
+  }
+
   # the next line IS NOT RANDOM,
-#  see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
+  # see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
   solution_stack_name = "64bit Amazon Linux 2 v3.6.0 running Docker"
 
   # There are a LOT of settings, see here for the basic list:
