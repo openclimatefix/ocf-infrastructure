@@ -61,7 +61,7 @@ module "pvsite_subnetworking" {
   private_subnets_cidr       = var.private_subnets_cidr
   availability_zones         = local.production_availability_zones
   domain                     = "pvsite"
-  public_internet_gateway_id = networking.public_internet_gateway.id
+  public_internet_gateway_id = module.networking.public_internet_gateway.id
 }
 
 
