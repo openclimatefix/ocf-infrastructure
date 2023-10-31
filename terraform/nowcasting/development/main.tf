@@ -89,6 +89,7 @@ module "ecs" {
   region      = var.region
   environment = var.environment
   domain = "nowcasting"
+}
 
 # 0.5
 module "pvsite_ecs" {
