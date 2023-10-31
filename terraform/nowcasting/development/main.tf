@@ -8,9 +8,14 @@ The componentes ares:
 0.2 - EC2 bastion
 0.3 - S3 buckets
 0.4 - ECS cluster
-0.5 - S3 bucket for forecasters
+0.5 - PV ECS cluster
+0.6 - S3 bucket for forecasters
+0.7 - S3 bucket for PVsite ML models
 1.1 - API
+1.2 - sites API
 2.1 - Database
+2.2 - PVSite Database
+2.3 - PVsite Database clean up
 3.1 - NWP Consumer
 3.2 - NWP National Consumer
 3.3 - Satellite Consumer
@@ -21,6 +26,7 @@ The componentes ares:
 4.3 - Forecast National XG
 4.4 - Forecast PVnet 2
 4.5 - Forecast Blend
+4.6 - Forecast Site
 5.1 - OCF Dashboard
 5.2 - Airflow instance
 
@@ -32,7 +38,7 @@ locals {
 }
 
 
-# 0.1
+# 0.1.1
 module "networking" {
   source = "../../modules/networking"
 
@@ -43,6 +49,21 @@ module "networking" {
   private_subnets_cidr = var.private_subnets_cidr
   availability_zones   = local.production_availability_zones
 }
+
+# 0.1.2
+module "pvsite_subnetworking" {
+  source = "../../modules/subnetworking"
+
+  region                     = var.region
+  environment                = var.environment
+  vpc_id                     = var.vpc_id
+  public_subnets_cidr        = var.public_subnets_cidr
+  private_subnets_cidr       = var.private_subnets_cidr
+  availability_zones         = local.production_availability_zones
+  domain                     = "pvsite"
+  public_internet_gateway_id = var.public_internet_gateway_id
+}
+
 
 # 0.2
 module "ec2-bastion" {
@@ -67,19 +88,39 @@ module "ecs" {
 
   region      = var.region
   environment = var.environment
-  domain = local.domain
-}
+  domain = "nowcasting"
 
 # 0.5
+module "pvsite_ecs" {
+  source = "../../modules/ecs"
+
+  region      = var.region
+  environment = var.environment
+  domain      = "pvsite"
+}
+
+# 0.6
 module "forecasting_models_bucket" {
   source = "../../modules/storage/s3-private"
 
   region              = var.region
   environment         = var.environment
   service_name        = "national-forecaster-models"
-  domain              = local.domain
+  domain              = "nowcasting"
   lifecycled_prefixes = []
 }
+
+# 0.7
+module "pvsite_ml_bucket" {
+  source = "../../modules/storage/s3-private"
+
+  region              = var.region
+  environment         = var.environment
+  service_name        = "ml-models"
+  domain              = "pvsite"
+  lifecycled_prefixes = []
+}
+
 
 # 1.1
 module "api" {
@@ -101,6 +142,23 @@ module "api" {
   sentry_dsn = var.sentry_dsn
 }
 
+# 1.2
+module "pvsite_api" {
+  source = "../../modules/services/api_pvsite"
+
+  region                          = var.region
+  environment                     = var.environment
+  vpc_id                          = var.vpc_id
+  subnets                         = [module.pvsite_subnetworking.public_subnet.id]
+  docker_version                  = var.pvsite_api_version
+  domain                          = "pvsite"
+  database_secret_url             = module.pvsite_database.secret-url
+  database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
+  sentry_dsn                      = var.sentry_dsn
+  auth_api_audience               = var.auth_api_audience
+  auth_domain                     = var.auth_domain
+}
+
 # 2.1
 module "database" {
   source = "../../modules/storage/database-pair"
@@ -109,6 +167,44 @@ module "database" {
   environment     = var.environment
   db_subnet_group = module.networking.private_subnet_group
   vpc_id          = module.networking.vpc_id
+}
+
+# 2.2
+module "pvsite_database" {
+  source = "../../modules/storage/postgres"
+
+  region             = var.region
+  environment        = var.environment
+  db_subnet_group    = module.pvsite_subnetworking.private_subnet_group
+  vpc_id             = var.vpc_id
+  db_name            = "pvsite"
+  rds_instance_class = "db.t3.small"
+  allow_major_version_upgrade = true
+}
+
+
+# 2.3
+module "database_clean_up" {
+  source = "../../modules/services/database_clean_up"
+    region      = var.region
+  environment = var.environment
+  app-name    = "database_clean_up"
+  ecs_config  = {
+    docker_image   = "openclimatefix/pvsite_database_cleanup"
+    docker_version = var.database_cleanup_version
+    memory_mb = 512
+    cpu=256
+  }
+  rds_config = {
+    database_secret_arn             = module.pvsite_database.secret.arn
+    database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
+  }
+  scheduler_config = {
+    subnet_ids      = [module.pvsite_subnetworking.public_subnet.id]
+    ecs_cluster_arn = module.pvsite_ecs.ecs_cluster.arn
+    cron_expression = "cron(0 0 * * ? *)" # Once a day at midnight
+  }
+
 }
 
 # 3.1
@@ -322,7 +418,7 @@ module "analysis_dashboard" {
     region      = var.region
     environment = var.environment
     eb_app_name = "internal-ui"
-    domain = local.domain
+    domain = "nowcasting"
     docker_config = {
         image = "ghcr.io/openclimatefix/uk-analysis-dashboard"
         version = var.internal_ui_version
@@ -374,4 +470,34 @@ module "airflow" {
   docker-compose-version       = "0.0.3"
   ecs_subnet=module.networking.public_subnets[0].id
   ecs_security_group=var.ecs_security_group # TODO should be able to update this to use the module
+}
+
+
+# 4.6
+module "pvsite_forecast" {
+  source = "../../modules/services/forecast_generic"
+
+  region      = var.region
+  environment = var.environment
+  app-name    = "pvsite_forecast"
+  ecs_config  = {
+    docker_image   = "openclimatefix/pvsite_forecast"
+    docker_version = var.pvsite_forecast_version
+    memory_mb = 4096
+    cpu=1024
+  }
+  rds_config = {
+    database_secret_arn             = module.pvsite_database.secret.arn
+    database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
+  }
+  scheduler_config = {
+    subnet_ids      = [module.pvsite_subnetworking.public_subnet.id]
+    ecs_cluster_arn = module.pvsite_ecs.ecs_cluster.arn
+    cron_expression = "cron(*/15 * * * ? *)" # Every 15 minutes
+  }
+  s3_ml_bucket = {
+    bucket_id              = module.pvsite_ml_bucket.bucket.id
+    bucket_read_policy_arn = module.pvsite_ml_bucket.read-policy.arn
+  }
+  s3_nwp_bucket = var.nwp_bucket_config
 }
