@@ -1,4 +1,29 @@
 /*====
+
+This is the main main terraform code for the UK platform. It is used to deploy the platform to AWS.
+It currently just has the GSP and National services
+
+The componentes ares:
+0.1 - Networking
+0.2 - EC2 bastion
+0.3 - S3 buckets
+0.4 - ECS cluster
+0.5 - S3 bucket for forecasters
+1.1 - API
+2.1 - Database
+3.1 - NWP Consumer
+3.2 - NWP National Consumer
+3.3 - Satellite Consumer
+3.4 - PV Consumer
+3.5 - GSP Consumer (from PVLive)
+4.1 - Metrics
+4.2 - Forecast PVnet 1
+4.3 - Forecast National XG
+4.4 - Forecast PVnet 2
+4.5 - Forecast Blend
+5.1 - OCF Dashboard
+5.2 - Airflow instance
+
 Variables used across all modules
 ======*/
 locals {
@@ -7,6 +32,7 @@ locals {
 }
 
 
+# 0.1
 module "networking" {
   source = "../../modules/networking"
 
@@ -18,6 +44,7 @@ module "networking" {
   availability_zones   = local.production_availability_zones
 }
 
+# 0.2
 module "ec2-bastion" {
   source = "../../modules/networking/ec2_bastion"
 
@@ -26,6 +53,7 @@ module "ec2-bastion" {
   public_subnets_id    = module.networking.public_subnets[0].id
 }
 
+# 0.3
 module "s3" {
   source = "../../modules/storage/s3-trio"
 
@@ -33,6 +61,7 @@ module "s3" {
   environment = var.environment
 }
 
+# 0.4
 module "ecs" {
   source = "../../modules/ecs"
 
@@ -41,6 +70,7 @@ module "ecs" {
   domain = local.domain
 }
 
+# 0.5
 module "forecasting_models_bucket" {
   source = "../../modules/storage/s3-private"
 
@@ -51,6 +81,7 @@ module "forecasting_models_bucket" {
   lifecycled_prefixes = []
 }
 
+# 1.1
 module "api" {
   source = "../../modules/services/api"
 
@@ -70,6 +101,7 @@ module "api" {
   sentry_dsn = var.sentry_dsn
 }
 
+# 2.1
 module "database" {
   source = "../../modules/storage/database-pair"
 
@@ -79,6 +111,7 @@ module "database" {
   vpc_id          = module.networking.vpc_id
 }
 
+# 3.1
 module "nwp" {
   source = "../../modules/services/nwp"
 
@@ -104,6 +137,7 @@ module "nwp" {
   ]
 }
 
+# 3.2
 module "nwp-national" {
   source = "../../modules/services/nwp"
 
@@ -129,6 +163,7 @@ module "nwp-national" {
   ]
 }
 
+# 3.3 Sat Consumer
 module "sat" {
   source = "../../modules/services/sat"
 
@@ -143,7 +178,7 @@ module "sat" {
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
-
+# 3.4
 module "pv" {
   source = "../../modules/services/pv"
 
@@ -159,6 +194,7 @@ module "pv" {
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
 }
 
+# 3.4
 module "gsp" {
   source = "../../modules/services/gsp"
 
@@ -171,6 +207,7 @@ module "gsp" {
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
 }
 
+# 4.1
 module "metrics" {
   source = "../../modules/services/metrics"
 
@@ -184,7 +221,7 @@ module "metrics" {
   use_pvnet_gsp_sum = "true"
 }
 
-
+# 4.2
 module "forecast" {
   source = "../../modules/services/forecast"
 
@@ -205,7 +242,7 @@ module "forecast" {
   s3-ml-bucket                  = module.s3.s3-ml-bucket
 }
 
-
+# 4.3
 module "national_forecast" {
   source = "../../modules/services/forecast_generic"
 
@@ -238,6 +275,7 @@ module "national_forecast" {
   }
 }
 
+# 4.4
 module "forecast_pvnet" {
   source = "../../modules/services/forecast_generic"
 
@@ -277,6 +315,7 @@ module "forecast_pvnet" {
   pvnet_gsp_sum = "true"
 }
 
+# 5.1
 module "analysis_dashboard" {
     source = "../../modules/services/internal_ui"
 
@@ -303,6 +342,7 @@ module "analysis_dashboard" {
     show_pvnet_gsp_sum = "true"
 }
 
+# 4.5
 module "forecast_blend" {
   source = "../../modules/services/forecast_blend"
 
@@ -321,4 +361,17 @@ module "forecast_blend" {
   }
   loglevel= "INFO"
 
+}
+
+# 5.2
+module "airflow" {
+  source = "../../modules/services/airflow"
+
+  environment   = var.environment
+  vpc_id        = module.networking.vpc_id
+  subnets       = [module.networking.public_subnets[0].id]
+  db_url        = module.database.forecast-database-secret-url
+  docker-compose-version       = "0.0.3"
+  ecs_subnet=module.networking.public_subnets[0].id
+  ecs_security_group=var.ecs_security_group # TODO should be able to update this to use the module
 }
