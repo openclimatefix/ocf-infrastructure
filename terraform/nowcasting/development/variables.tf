@@ -105,3 +105,34 @@ variable "ecs_security_group" {
   description = "The security group for airflow ecs tasks. TODO remove this"
   type = string
 }
+
+
+variable "pvsite_api_version" {
+  type = string
+  description = "This gives the version of the PV Site API"
+}
+
+variable "pvsite_forecast_version" {
+  type = string
+  description = "The version of the PVSite forecaster to use"
+}
+
+variable "nwp_bucket_config" {
+  type = object({
+    bucket_id              = string
+    bucket_read_policy_arn = string
+    datadir = string
+  })
+  description = <<EOT
+    nwp_bucket_config = {
+      bucket_id : "ID of the nwp S3 bucket"
+      bucket_read_policy_arn : "ARN of the read policy on the nwp S3 bucket"
+      datadir : "Name of the top-level folder in which the NWP data is saved"
+    }
+  EOT
+}
+
+variable "database_cleanup_version" {
+  type = string
+  description = "The version of the database clean up to use"
+}
