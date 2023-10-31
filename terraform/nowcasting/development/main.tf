@@ -56,12 +56,12 @@ module "pvsite_subnetworking" {
 
   region                     = var.region
   environment                = var.environment
-  vpc_id                     = var.vpc_id
+  vpc_id                     = module.networking.vpc_id
   public_subnets_cidr        = var.public_subnets_cidr
   private_subnets_cidr       = var.private_subnets_cidr
   availability_zones         = local.production_availability_zones
   domain                     = "pvsite"
-  public_internet_gateway_id = var.public_internet_gateway_id
+  public_internet_gateway_id = networking.public_internet_gateway.id
 }
 
 
@@ -149,7 +149,7 @@ module "pvsite_api" {
 
   region                          = var.region
   environment                     = var.environment
-  vpc_id                          = var.vpc_id
+  vpc_id                          = module.networking.vpc_id
   subnets                         = [module.pvsite_subnetworking.public_subnet.id]
   docker_version                  = var.pvsite_api_version
   domain                          = "pvsite"
@@ -177,7 +177,7 @@ module "pvsite_database" {
   region             = var.region
   environment        = var.environment
   db_subnet_group    = module.pvsite_subnetworking.private_subnet_group
-  vpc_id             = var.vpc_id
+  vpc_id             = module.networking.vpc_id
   db_name            = "pvsite"
   rds_instance_class = "db.t3.small"
   allow_major_version_upgrade = true

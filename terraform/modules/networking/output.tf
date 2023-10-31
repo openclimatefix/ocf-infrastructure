@@ -9,3 +9,7 @@ output "public_subnets" {
 output "private_subnet_group" {
   value = aws_db_subnet_group.private_subnet_group
 }
+
+output "public_internet_gateway" {
+    value = aws_internet_gateway.public_internet_gateway
+}
