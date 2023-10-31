@@ -11,5 +11,5 @@ output "private_subnet_group" {
 }
 
 output "public_internet_gateway" {
-    value = aws_internet_gateway.public_internet_gateway
+    value = aws_route.public_internet_gateway
 }
