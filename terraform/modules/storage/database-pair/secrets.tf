@@ -45,6 +45,7 @@ resource "aws_secretsmanager_secret_version" "forecast-version" {
       address : aws_db_instance.db-forecast.address,
       port : "5432",
       url : "postgresql://main:${random_password.db-forecast-password.result}@${aws_db_instance.db-forecast.address}:5432/${aws_db_instance.db-forecast.db_name}"
+      airflow_url : "postgresql://main:${random_password.db-forecast-password.result}@${aws_db_instance.db-forecast.address}:5432/airflow"
   })
 }
 
