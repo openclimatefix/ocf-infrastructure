@@ -22,14 +22,3 @@ module "airflow_subnetworking" {
   public_internet_gateway_id = var.public_internet_gateway_id
 }
 
-module "airflow" {
-  source = "../../modules/services/airflow"
-
-  environment   = var.environment
-  vpc_id        = var.vpc_id
-  subnets       = [module.airflow_subnetworking.public_subnet.id]
-  db_url        = var.db_url
-  docker-compose-version       = "0.0.3"
-  ecs_subnet=module.airflow_subnetworking.public_subnet.id
-  ecs_security_group=var.ecs_security_group
-}

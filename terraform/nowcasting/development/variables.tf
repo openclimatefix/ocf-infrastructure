@@ -100,3 +100,8 @@ variable "forecast_pvnet_version" {
 variable "forecast_blend_version" {
   description = "The Forecast Blend docker version"
 }
+
+variable "ecs_security_group" {
+  description = "The security group for airflow ecs tasks. TODO remove this"
+  type = string
+}
