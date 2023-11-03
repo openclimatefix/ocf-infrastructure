@@ -44,6 +44,7 @@ services:
       ENVIRONMENT: $ENVIRONMENT
       ECS_SUBNET: $ECS_SUBNET
       ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
@@ -75,6 +76,7 @@ services:
       ENVIRONMENT: $ENVIRONMENT
       ECS_SUBNET: $ECS_SUBNET
       ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow

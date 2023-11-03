@@ -10,6 +10,10 @@ output "forecast-database-secret-url" {
   value = jsondecode(aws_secretsmanager_secret_version.forecast-version.secret_string)["url"]
 }
 
+output "forecast-database-secret-airflow-url" {
+  value = jsondecode(aws_secretsmanager_secret_version.forecast-version.secret_string)["airflow_url"]
+}
+
 output "iam-policy-pv-db-read" {
   value = aws_iam_policy.rds-pv-secret-policy
 }
