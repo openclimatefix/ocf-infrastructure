@@ -103,3 +103,8 @@ variable "auth_dashboard_client_id" {
   description = "The Auth client id for the dashboard that should be used"
   default = "not-set"
 }
+
+variable "ecs_security_group" {
+  description = "The security group for airflow ecs tasks. TODO remove this"
+  type = string
+}
