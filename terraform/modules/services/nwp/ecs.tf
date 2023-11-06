@@ -34,22 +34,10 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
 
       command: var.command
 
-      secrets : [
-        {
-          "name" : "METOFFICE_CLIENT_ID",
-          "valueFrom" : "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:API_KEY::",
-        },
-        {
-          "name" : "METOFFICE_CLIENT_SECRET",
-          "valueFrom" : "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:API_SECRET::",
-        },
-        {
-          "name" : "DB_URL",
-          "valueFrom" : "${var.database_secret.arn}:url::",
-        },
-        {
-          "name": "METOFFICE_ORDER_ID",
-          "valueFrom": "${data.aws_secretsmanager_secret_version.nwp-api-version.arn}:ORDER_IDS::",
+      secrets: [
+        for var in var.secret-env-keys : {
+          name: var
+          valueFrom: "${data.aws_secretsmanager_secret.nwp-consumer-secret.id.arn}:${var}::"
         }
       ]
 

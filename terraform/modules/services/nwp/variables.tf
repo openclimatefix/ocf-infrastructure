@@ -39,6 +39,11 @@ variable "consumer-name" {
   description = "Name of the consumer"
 }
 
+variable "secret-env-keys" {
+  type = list(string)
+  description = "List of environment variables that should be read from the secret"
+}
+
 variable "s3_config" {
   type = object({
     bucket_id = string

@@ -128,6 +128,11 @@ module "nwp" {
   s3_config = {
     bucket_id = module.s3.s3-nwp-bucket.id
   }
+  secret-env-keys = [
+    "METOFFICE_ORDER_ID",
+    "METOFFICE_CLIENT_SECRET",
+    "METOFFICE_CLIENT_ID",
+  ]
   command = [
       "download",
       "--source=metoffice",
@@ -154,6 +159,11 @@ module "nwp-national" {
   s3_config = {
     bucket_id = module.s3.s3-nwp-bucket.id
   }
+  secret-env-keys = [
+    "METOFFICE_ORDER_ID",
+    "METOFFICE_CLIENT_SECRET",
+    "METOFFICE_CLIENT_ID",
+  ]
   command = [
       "download",
       "--source=metoffice",
@@ -224,6 +234,11 @@ module "nwp-ecmwf" {
   s3_config = {
     bucket_id = module.s3.s3-nwp-bucket.id
   }
+  secret-env-keys = [
+    "ECMWF_API_KEY",
+    "ECMWF_API_EMAIL",
+    "ECMWF_API_URL",
+  ]
   command = [
       "download",
       "--source=ecmwf-mars",
