@@ -61,6 +61,20 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
           "awslogs-stream-prefix" : "streaming"
         }
       }
+
+      mountPoints: [
+        {
+          "containerPath" : "/tmp/nwpc",
+          "sourceVolume" : "tmp"
+        }
+      ]
+
+      volumes: [
+        {
+          "name": "tmp",
+        }
+      ]
+
     }
   ])
 
