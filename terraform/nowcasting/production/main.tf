@@ -72,7 +72,7 @@ module "api" {
 
 
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=85d7572"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=47dc829"
 
   region          = var.region
   environment     = var.environment
@@ -329,3 +329,15 @@ module "forecast_blend" {
 
 }
 
+# 5.2
+module "airflow" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=47dc829"
+
+  environment   = var.environment
+  vpc_id        = module.networking.vpc_id
+  subnets       = [module.networking.public_subnets[0].id]
+  db_url        = module.database.forecast-database-secret-airflow-url
+  docker-compose-version       = "0.0.3"
+  ecs_subnet=module.networking.public_subnets[0].id
+  ecs_security_group=var.ecs_security_group # TODO should be able to update this to use the module
+}
