@@ -38,7 +38,7 @@ resource "aws_iam_policy" "nwp-secret-read" {
           "secretsmanager:GetSecretValue",
         ]
         Effect   = "Allow"
-        Resource = data.aws_secretsmanager_secret_version.nwp-api-version.arn
+        Resource = data.aws_secretsmanager_secret.nwp-consumer-secret.arn
       },
     ]
   })

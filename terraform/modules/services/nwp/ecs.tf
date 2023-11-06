@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       secrets: [
         for var in var.secret-env-keys : {
           name: var
-          valueFrom: "${data.aws_secretsmanager_secret.nwp-consumer-secret.id.arn}:${var}::"
+          valueFrom: "${data.aws_secretsmanager_secret.nwp-consumer-secret.arn}:${var}::"
         }
       ]
 
