@@ -124,8 +124,8 @@ module "nwp" {
 
   s3-buckets = [
     {
-      bucket_id: module.s3.s3-nwp-bucket.id
-      bucket_access_policy_arn: module.s3.iam-policy-s3-nwp-write.arn
+      id: module.s3.s3-nwp-bucket.id
+      access_policy_arn: module.s3.iam-policy-s3-nwp-write.arn
     }
   ]
 
@@ -161,8 +161,8 @@ module "nwp-national" {
 
   s3-buckets = [
     {
-      bucket_id: module.s3.s3-nwp-bucket.id
-      bucket_access_policy_arn: module.s3.iam-policy-s3-nwp-write.arn
+      id: module.s3.s3-nwp-bucket.id
+      access_policy_arn: module.s3.iam-policy-s3-nwp-write.arn
     }
   ]
 
@@ -199,8 +199,8 @@ module "nwp-ecmwf" {
 
   s3-buckets = [
     {
-      bucket_id: module.s3.s3-nwp-bucket.id
-      bucket_access_policy_arn: module.s3.iam-policy-s3-nwp-write.arn
+      id: module.s3.s3-nwp-bucket.id
+      access_policy_arn: module.s3.iam-policy-s3-nwp-write.arn
     }
   ]
 
