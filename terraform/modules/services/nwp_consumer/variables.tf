@@ -111,19 +111,19 @@ variable ecs-task_size {
     error_message = "Variable ecs-task_size must have exactly two keys: cpu and memory."
   }
   validation {
-    condition = contains(["256", "512", "1024", "2048", "4096", "8192"], var.ecs-task_size.cpu)
+    condition = contains([256, 512, 1024, 2048, 4096, 8192], var.ecs-task_size.cpu)
     error_message = "CPU must be one of 256, 512, 1024, 2048, 4096, or 8192."
   }
   validation {
     // See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#data
     // for valid CPU and memory values.
     condition = (
-      var.ecs-task_size.cpu == "256" ? contains(["512", "1024", "2048"], var.ecs-task_size.memory) :
-      var.ecs-task_size.cpu == "512" ? contains(range(1024, 4096, 1024), var.ecs-task_size.memory) :
-      var.ecs-task_size.cpu == "1024" ? contains(range(2048, 8192, 1024), var.ecs-task_size.memory) :
-      var.ecs-task_size.cpu == "2048" ? contains(range(4096, 16384, 1024), var.ecs-task_size.memory) :
-      var.ecs-task_size.cpu == "4096" ? contains(range(8192, 30720, 1024), var.ecs-task_size.memory) :
-      var.ecs-task_size.cpu == "8192" ? contains(range(16384, 61440, 4096), var.ecs-task_size.memory) :
+      var.ecs-task_size.cpu == 256 ? contains([512, 1024, 2048], var.ecs-task_size.memory) :
+      var.ecs-task_size.cpu == 512 ? contains(range(1024, 4096, 1024), var.ecs-task_size.memory) :
+      var.ecs-task_size.cpu == 1024 ? contains(range(2048, 8192, 1024), var.ecs-task_size.memory) :
+      var.ecs-task_size.cpu == 2048 ? contains(range(4096, 16384, 1024), var.ecs-task_size.memory) :
+      var.ecs-task_size.cpu == 4096 ? contains(range(8192, 30720, 1024), var.ecs-task_size.memory) :
+      var.ecs-task_size.cpu == 8192 ? contains(range(16384, 61440, 4096), var.ecs-task_size.memory) :
       true
     )
     error_message = "Invalid combination of CPU and memory."
