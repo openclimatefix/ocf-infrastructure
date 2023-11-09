@@ -22,13 +22,13 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   container_definitions = jsonencode([
     {
       name  = "${var.app_name}-consumer"
-      image = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_config.version}"
+      image = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_config.container_tag}"
       #      cpu       = 128
       #      memory    = 128
       essential = true
 
       environment : [
-        for key, value in var.docker_config.env_vars : {
+        for key, value in var.docker_config.environment_vars : {
           "name" : key,
           "value" : value
         }

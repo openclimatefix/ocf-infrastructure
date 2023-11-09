@@ -242,7 +242,7 @@ module "nwp-ecmwf" {
     bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
   }
   docker_config = {
-    environment_variables = [
+    environment_vars = [
         { "key" : "AWS_REGION", "value" : "eu-west-1" },
         { "key" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
         { "key" : "LOGLEVEL", "value" : "DEBUG"},
