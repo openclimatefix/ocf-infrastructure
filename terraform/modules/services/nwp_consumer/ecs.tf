@@ -2,7 +2,7 @@
 # needs access to the internet
 
 resource "aws_ecs_task_definition" "nwp-task-definition" {
-  family                   = "${var.consumer-name}"
+  family                   = "${var.app_name}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   memory = 5120
 
   tags = {
-    name = "${var.consumer-name}-consumer"
+    name = "${var.app_name}-consumer"
     type = "ecs"
   }
 
@@ -20,24 +20,25 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "${var.consumer-name}-consumer"
-      image = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_version}"
+      name  = "${var.app_name}-consumer"
+      image = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_config.version}"
       #      cpu       = 128
       #      memory    = 128
       essential = true
 
       environment : [
-        { "name" : "AWS_REGION", "value" : "eu-west-1" },
-        { "name" : "AWS_S3_BUCKET", "value" : var.s3_config.bucket_id },
-        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        for key, value in var.docker_config.env_vars : {
+          "name" : key,
+          "value" : value
+        }
       ]
 
-      command: var.command
+      command: var.docker_config.command
 
       secrets: [
-        for var in var.secret-env-keys : {
-          name: var
-          valueFrom: "${data.aws_secretsmanager_secret.nwp-consumer-secret.arn}:${var}::"
+        for key in var.docker_config.secret_vars : {
+          name: key
+          valueFrom: "${data.aws_secretsmanager_secret_version.arn}:${key}::"
         }
       ]
 
@@ -45,7 +46,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
         "logDriver" : "awslogs",
         "options" : {
           "awslogs-group" : local.log_group_name,
-          "awslogs-region" : var.region,
+          "awslogs-region" : var.aws_config.region,
           "awslogs-stream-prefix" : "streaming"
         }
       }

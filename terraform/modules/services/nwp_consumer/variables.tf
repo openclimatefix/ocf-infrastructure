@@ -1,61 +1,66 @@
 locals {
-  log_group_name = "/aws/ecs/consumer/${var.consumer-name}/"
+  log_group_name = "/aws/ecs/consumer/${var.app_name}/"
 }
 
-variable "environment" {
-  description = "The Deployment environment"
-}
-
-variable "region" {
-  description = "The AWS region"
-}
-
-variable "iam-policy-s3-nwp-write" {
-  description = "IAM policy to write to s3 bucket for NWP data"
-}
-
-variable "ecs-cluster" {
-  description = "The ECS cluster"
-}
-
-variable "public_subnet_ids" {
-  type        = list(string)
-  description = "Public subnet ids"
-}
-
-variable "docker_version" {
-  description = "The version of the docker that should be used"
-}
-
-variable "database_secret" {
-  description = "AWS secret that gives connection details to the database"
-}
-
-variable "iam-policy-rds-read-secret" {
-  description = "IAM policy to be able to read the RDS secret"
-}
-
-variable "consumer-name" {
-  description = "Name of the consumer"
-}
-
-variable "secret-env-keys" {
-  type = list(string)
-  description = "List of environment variables that should be read from the secret"
+variable "aws_config" {
+  type = object({
+    region = string
+    environment = string
+    ecs_cluster = string
+    public_subnet_ids = list(string)
+    secretsmanaget_secret_name = string
+  })
+  description = <<EOT
+    aws_config = {
+      region : "AWS region"
+      environment : "Deployment environment"
+      ecs_cluster : "The ECS cluster name"
+      public_subnet_ids : "List of public subnet ids"
+      secretsmanaget_secret_name : "Name of secret in secrets manager to access"
+    }
+  EOT
 }
 
 variable "s3_config" {
   type = object({
     bucket_id = string
+    bucket_write_policy = string
   })
   description = <<EOT
     s3_config = {
       bucket_id : "ID of the nwp S3 bucket"
+      bucket_write_policy_arn : "IAM policy to write to the nwp S3 bucket"
     }
   EOT
 }
 
-variable "command" {
-  type = list(string)
-  description = "Command to run in the container"
+variable "docker_config" {
+  type = object({
+    container_tag = string
+    command = list(string)
+    secret_name = string
+    secret_vars = list(string)
+    environment_vars = list(object({
+      key = string
+      value = string
+    }))
+  })
+  description = <<EOT
+    docker_config = {
+      container_tag : "Docker image tag"
+      command : "Command to run in the container"
+      secret_name : "Name of the secret in secrets manager to access"
+      secret_vars : "List of keys to be mounted from consumer secret in the container env"
+      environment_vars : "List of environment variables to be set in the container"
+      environment_vars = {
+        key : "Name of the environment variable"
+        value : "Value of the environment variable"
+      }
+    }
+  EOT
 }
+
+variable app_name {
+  description = "Name of the application"
+}
+

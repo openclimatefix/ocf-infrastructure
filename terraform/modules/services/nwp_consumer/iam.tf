@@ -3,7 +3,7 @@
 # Instance role is used to run the task
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "${var.consumer-name}-execution-role"
+  name = "${var.app_name}-execution-role"
 
   assume_role_policy = <<EOF
 {
@@ -22,31 +22,10 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 EOF
 }
 
-resource "aws_iam_policy" "nwp-secret-read" {
-  name        = "${var.consumer-name}-secret-read"
-  path        = "/consumer/nwp/"
-  description = "Policy to allow read access to NWP API secret."
-
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "secretsmanager:ListSecretVersionIds",
-          "secretsmanager:GetSecretValue",
-        ]
-        Effect   = "Allow"
-        Resource = data.aws_secretsmanager_secret.nwp-consumer-secret.arn
-      },
-    ]
-  })
-}
 
 resource "aws_iam_policy" "cloudwatch-nwp" {
-  name        = "${var.consumer-name}-cloudwatch-read-and-write"
-  path        = "/consumer/${var.consumer-name}/"
+  name        = "${var.app_name}-cloudwatch-read-and-write"
+  path        = "/consumer/${var.app_name}/"
   description = "Policy to allow read and write to cloudwatch logs"
 
   # Terraform's "jsonencode" function converts a
@@ -94,14 +73,14 @@ data "aws_iam_policy_document" "ec2-instance-assume-role-policy" {
 }
 
 resource "aws_iam_role" "consumer-nwp-iam-role" {
-  name               = "consumer-${var.consumer-name}-iam-role"
+  name               = "consumer-${var.app_name}-iam-role"
   path               = "/consumer/"
   assume_role_policy = data.aws_iam_policy_document.ec2-instance-assume-role-policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "attach-write-s3" {
   role       = aws_iam_role.consumer-nwp-iam-role.name
-  policy_arn = var.iam-policy-s3-nwp-write.arn
+  policy_arn = var.s3_config.bucket_write_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "attach-logs" {
@@ -122,10 +101,10 @@ resource "aws_iam_role_policy_attachment" "read-secret" {
 
 resource "aws_iam_role_policy_attachment" "read-db-secret-execution" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = var.iam-policy-rds-read-secret.arn
+  policy_arn = var.database_config.secret_read_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "read-db-secret" {
   role       = aws_iam_role.consumer-nwp-iam-role.name
-  policy_arn = var.iam-policy-rds-read-secret.arn
+  policy_arn = var.database_config.secret_read_policy_arn
 }
