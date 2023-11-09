@@ -45,8 +45,11 @@ resource "aws_iam_role" "run_task_role" {
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
 }
 
+# For every bucket in the list of buckets, attach its access policy to the run task role
 resource "aws_iam_role_policy_attachment" "access_s3_policy" {
-  for_each   = var.s3-buckets
+  for_each   = {
+    for index, bucket_info in var.s3-buckets: bucket_info.id => bucket_info
+  }
   role       = aws_iam_role.run_task_role.name
   policy_arn = each.value.access_policy_arn
 }
