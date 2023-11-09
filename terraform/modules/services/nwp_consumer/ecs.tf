@@ -1,6 +1,7 @@
-# define aws ecs task definition
-# needs access to the internet
+# Creates:
+# 1. ECS Task to run the Consumer
 
+# Create the ECS Task Definition
 resource "aws_ecs_task_definition" "nwp-task-definition" {
   family                   = "${var.app_name}"
   requires_compatibilities = ["FARGATE"]
@@ -66,6 +67,4 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
 
     }
   ])
-
-  # add volume? So we dont have to keep downloading same docker image
 }

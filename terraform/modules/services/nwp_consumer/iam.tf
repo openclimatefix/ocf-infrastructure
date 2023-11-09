@@ -22,8 +22,6 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 EOF
 }
 
-
-
 resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attachment" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -33,7 +31,6 @@ resource "aws_iam_role_policy_attachment" "attach-logs-execution" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.cloudwatch-nwp.arn
 }
-
 
 data "aws_iam_policy_document" "ec2-instance-assume-role-policy" {
   statement {
