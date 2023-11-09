@@ -1,7 +1,6 @@
 /*====
 
-This is the main main terraform code for the UK platform. It is used to deploy the platform to AWS.
-It currently just has the GSP and National services
+This is the main terraform code for the UK platform. It is used to deploy the platform to AWS.
 
 The componentes ares:
 0.1 - Networking
@@ -11,11 +10,12 @@ The componentes ares:
 0.5 - S3 bucket for forecasters
 1.1 - API
 2.1 - Database
-3.1 - NWP Consumer
-3.2 - NWP National Consumer
+3.1 - NWP Consumer (MetOffice GSP)
+3.2 - NWP Consumer (MetOffice National)
 3.3 - Satellite Consumer
 3.4 - PV Consumer
 3.5 - GSP Consumer (from PVLive)
+3.6 - NWP Consumer (ECMWF UK)
 4.1 - Metrics
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
@@ -113,54 +113,70 @@ module "database" {
 
 # 3.1
 module "nwp" {
-  source = "../../modules/services/nwp"
-
-  region                  = var.region
-  environment             = var.environment
-  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
-  ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids       = [module.networking.public_subnets[0].id]
-  docker_version          = var.nwp_version
-  database_secret         = module.database.forecast-database-secret
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
-  consumer-name = "nwp"
+  source = "../../modules/services/nwp_consumer"
+  app_name = "nwp"
+  aws_config = {
+    region = var.region
+    environment = var.environment
+    public_subnet_ids = [module.networking.public_subnets[0].id]
+    secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
+  }
   s3_config = {
     bucket_id = module.s3.s3-nwp-bucket.id
+    bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
   }
-  command = [
-      "download",
-      "--source=metoffice",
-      "--sink=s3",
-      "--rdir=raw",
-      "--zdir=data",
-      "--create-latest"
-  ]
+  docker_config = {
+    environment_vars = [
+        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" : "METOFFICE_ORDER_ID", "value" : "uk-11params-12steps" },
+    ]
+    secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
+    container_tag = var.nwp_version
+    command = [
+        "download",
+        "--source=metoffice",
+        "--sink=s3",
+        "--rdir=raw",
+        "--zdir=data",
+        "--create-latest"
+    ]
+  }
 }
 
 # 3.2
 module "nwp-national" {
-  source = "../../modules/services/nwp"
-
-  region                  = var.region
-  environment             = var.environment
-  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
-  ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids       = [module.networking.public_subnets[0].id]
-  docker_version          = var.nwp_version
-  database_secret         = module.database.forecast-database-secret
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
-  consumer-name = "nwp-national"
+  source = "../../modules/services/nwp_consumer"
+  app_name = "nwp-national"
+  aws_config = {
+    region = var.region
+    environment = var.environment
+    public_subnet_ids = [module.networking.public_subnets[0].id]
+    secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
+  }
   s3_config = {
     bucket_id = module.s3.s3-nwp-bucket.id
+    bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
   }
-  command = [
-      "download",
-      "--source=metoffice",
-      "--sink=s3",
-      "--rdir=raw-national",
-      "--zdir=data-national",
-      "--create-latest"
-  ]
+  docker_config = {
+    environment_vars = [
+        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" : "METOFFICE_ORDER_ID", "value" : "uk-5params-42steps" },
+    ]
+    secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
+    container_tag = var.nwp_version
+    command = [
+        "download",
+        "--source=metoffice",
+        "--sink=s3",
+        "--rdir=raw-national",
+        "--zdir=data-national",
+        "--create-latest"
+    ]
+  }
 }
 
 # 3.3 Sat Consumer
@@ -194,7 +210,7 @@ module "pv" {
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
 }
 
-# 3.4
+# 3.5
 module "gsp" {
   source = "../../modules/services/gsp"
 
@@ -205,6 +221,39 @@ module "gsp" {
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.gsp_version
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+}
+
+# 3.6
+module "nwp-ecmwf" {
+  source = "../../modules/services/nwp_consumer"
+  app_name = "nwp-ecmwf"
+  aws_config = {
+    region = var.region
+    environment = var.environment
+    public_subnet_ids = [module.networking.public_subnets[0].id]
+    secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
+  }
+  s3_config = {
+    bucket_id = module.s3.s3-nwp-bucket.id
+    bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
+  }
+  docker_config = {
+    environment_vars = [
+        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+    ]
+    secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
+    container_tag = var.nwp_version
+    command = [
+        "download",
+        "--source=ecmwf-mars",
+        "--sink=s3",
+        "--rdir=ecmwf/raw",
+        "--zdir=ecmwf/data",
+        "--create-latest"
+    ]
+  }
 }
 
 # 4.1
