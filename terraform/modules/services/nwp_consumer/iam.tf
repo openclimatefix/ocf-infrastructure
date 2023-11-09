@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "ecs_assume_role_policy" {
 // Create Task Role ------------------------------------------------------
 
 resource "aws_iam_role" "create_task_role" {
-  name = "${var.ecs-task_name}-execution-role"
+  name = "${var.ecs-task_type}-${var.ecs-task_name}-execution-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
 }
 
@@ -40,7 +40,7 @@ resource "aws_iam_role_policy_attachment" "create_secret_policy" {
 // Run Task Role ---------------------------------------------------------
 
 resource "aws_iam_role" "run_task_role" {
-  name               = "${var.ecs-task_type}-${var.ecs-task_name}-iam-role"
+  name               = "${var.ecs-task_type}-${var.ecs-task_name}-instance-role"
   path               = "/${var.ecs-task_type}/"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
 }

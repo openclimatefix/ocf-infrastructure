@@ -3,7 +3,7 @@
 # 2. IAM policy to allow read and write to cloudwatch logs
 
 locals {
-  log_group_name = "/aws/ecs/${var.ecs-task_type}/${var.ecs-task_name}/"
+  log_group_name = "/aws/ecs/${var.ecs-task_type}/${var.ecs-task_name}"
 }
 
 # 1.
