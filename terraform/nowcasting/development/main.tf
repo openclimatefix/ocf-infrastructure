@@ -230,7 +230,7 @@ module "gsp" {
 
 # 3.6
 module "nwp-ecmwf" {
-  source = "../../modules/services/nwp"
+  source = "../../modules/services/nwp_consumer"
   app_name = "nwp-ecmwf"
   aws_config = {
     region = var.region
