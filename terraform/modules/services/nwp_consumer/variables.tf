@@ -1,9 +1,7 @@
-
 variable "aws_config" {
   type = object({
     region = string
     environment = string
-    ecs_cluster = string
     public_subnet_ids = list(string)
     secretsmanager_secret_name = string
   })
@@ -11,7 +9,6 @@ variable "aws_config" {
     aws_config = {
       region : "AWS region"
       environment : "Deployment environment"
-      ecs_cluster : "The ECS cluster name"
       public_subnet_ids : "List of public subnet ids"
       secretsmanaget_secret_name : "Name of secret in secrets manager to access"
     }

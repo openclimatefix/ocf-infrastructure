@@ -119,7 +119,6 @@ module "nwp" {
   aws_config = {
     region = var.region
     environment             = var.environment
-    ecs_cluster             = module.ecs.ecs_cluster
     public_subnet_ids       = [module.networking.public_subnets[0].id]
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
@@ -154,7 +153,6 @@ module "nwp-national" {
   aws_config = {
     region = var.region
     environment             = var.environment
-    ecs_cluster             = module.ecs.ecs_cluster
     public_subnet_ids       = [module.networking.public_subnets[0].id]
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
@@ -233,7 +231,6 @@ module "nwp-ecmwf" {
   aws_config = {
     region = var.region
     environment             = var.environment
-    ecs_cluster             = module.ecs.ecs_cluster
     public_subnet_ids       = [module.networking.public_subnets[0].id]
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
