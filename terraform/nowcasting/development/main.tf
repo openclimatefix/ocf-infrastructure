@@ -124,13 +124,13 @@ module "nwp" {
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
   s3_config = {
-    bucket_id = module.s3.s3-nwp-bucket-id
+    bucket_id = module.s3.s3-nwp-bucket.id
     bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
   }
   docker_config = {
     environment_variables = [
         { "key" : "AWS_REGION", "value" : "eu-west-1" },
-        { "key" : "AWS_S3_BUCKET", "value" : var.s3_config.bucket_id },
+        { "key" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
         { "key" : "LOGLEVEL", "value" : "DEBUG"},
         { "key" : "METOFFICE_ORDER_ID", "value" : "uk-11params-12steps" },
     ]
@@ -159,13 +159,13 @@ module "nwp-national" {
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
   s3_config = {
-    bucket_id = module.s3.s3-nwp-bucket-id
+    bucket_id = module.s3.s3-nwp-bucket.id
     bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
   }
   docker_config = {
     environment_variables = [
         { "key" : "AWS_REGION", "value" : "eu-west-1" },
-        { "key" : "AWS_S3_BUCKET", "value" : var.s3_config.bucket_id },
+        { "key" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
         { "key" : "LOGLEVEL", "value" : "DEBUG"},
         { "key" : "METOFFICE_ORDER_ID", "value" : "uk-5params-42steps" },
     ]
@@ -238,13 +238,13 @@ module "nwp-ecmwf" {
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
   s3_config = {
-    bucket_id = module.s3.s3-nwp-bucket-id
+    bucket_id = module.s3.s3-nwp-bucket.id
     bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
   }
   docker_config = {
     environment_variables = [
         { "key" : "AWS_REGION", "value" : "eu-west-1" },
-        { "key" : "AWS_S3_BUCKET", "value" : var.s3_config.bucket_id },
+        { "key" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket-id },
         { "key" : "LOGLEVEL", "value" : "DEBUG"},
     ]
     secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
