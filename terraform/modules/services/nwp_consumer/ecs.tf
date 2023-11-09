@@ -23,17 +23,9 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
     {
       name  = "${var.app_name}-consumer"
       image = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_config.container_tag}"
-      #      cpu       = 128
-      #      memory    = 128
       essential = true
 
-      environment : [
-        for key, value in var.docker_config.environment_vars : {
-          name: key,
-          value: value
-        }
-      ]
-
+      environment : var.docker_config.environment_vars
       command: var.docker_config.command
 
       secrets: [

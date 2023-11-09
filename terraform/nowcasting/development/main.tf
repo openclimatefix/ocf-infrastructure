@@ -127,10 +127,10 @@ module "nwp" {
   }
   docker_config = {
     environment_vars = [
-        { "key" : "AWS_REGION", "value" : "eu-west-1" },
-        { "key" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-        { "key" : "LOGLEVEL", "value" : "DEBUG"},
-        { "key" : "METOFFICE_ORDER_ID", "value" : "uk-11params-12steps" },
+        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" : "METOFFICE_ORDER_ID", "value" : "uk-11params-12steps" },
     ]
     secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
     container_tag = var.nwp_version
@@ -161,10 +161,10 @@ module "nwp-national" {
   }
   docker_config = {
     environment_vars = [
-        { "key" : "AWS_REGION", "value" : "eu-west-1" },
-        { "key" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-        { "key" : "LOGLEVEL", "value" : "DEBUG"},
-        { "key" : "METOFFICE_ORDER_ID", "value" : "uk-5params-42steps" },
+        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" : "METOFFICE_ORDER_ID", "value" : "uk-5params-42steps" },
     ]
     secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
     container_tag = var.nwp_version
@@ -239,9 +239,9 @@ module "nwp-ecmwf" {
   }
   docker_config = {
     environment_vars = [
-        { "key" : "AWS_REGION", "value" : "eu-west-1" },
-        { "key" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-        { "key" : "LOGLEVEL", "value" : "DEBUG"},
+        { "name" : "AWS_REGION", "value" : "eu-west-1" },
+        { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+        { "name" : "LOGLEVEL", "value" : "DEBUG"},
     ]
     secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
     container_tag = var.nwp_version

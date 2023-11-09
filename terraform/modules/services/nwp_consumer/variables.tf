@@ -34,7 +34,7 @@ variable "docker_config" {
     command = list(string)
     secret_vars = list(string)
     environment_vars = list(object({
-      key = string
+      name = string
       value = string
     }))
   })
@@ -46,7 +46,7 @@ variable "docker_config" {
       secret_vars : "List of keys to be mounted from consumer secret in the container env"
       environment_vars : "List of environment variables to be set in the container"
       environment_vars = {
-        key : "Name of the environment variable"
+        name : "Name of the environment variable"
         value : "Value of the environment variable"
       }
     }
