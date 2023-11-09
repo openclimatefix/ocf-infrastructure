@@ -1,7 +1,6 @@
 /*====
 
-This is the main main terraform code for the UK platform. It is used to deploy the platform to AWS.
-It currently just has the GSP and National services
+This is the main terraform code for the UK platform. It is used to deploy the platform to AWS.
 
 The componentes ares:
 0.1 - Networking
@@ -118,8 +117,8 @@ module "nwp" {
   app_name = "nwp"
   aws_config = {
     region = var.region
-    environment             = var.environment
-    public_subnet_ids       = [module.networking.public_subnets[0].id]
+    environment = var.environment
+    public_subnet_ids = [module.networking.public_subnets[0].id]
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
   s3_config = {
@@ -152,8 +151,8 @@ module "nwp-national" {
   app_name = "nwp-national"
   aws_config = {
     region = var.region
-    environment             = var.environment
-    public_subnet_ids       = [module.networking.public_subnets[0].id]
+    environment = var.environment
+    public_subnet_ids = [module.networking.public_subnets[0].id]
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
   s3_config = {
@@ -230,8 +229,8 @@ module "nwp-ecmwf" {
   app_name = "nwp-ecmwf"
   aws_config = {
     region = var.region
-    environment             = var.environment
-    public_subnet_ids       = [module.networking.public_subnets[0].id]
+    environment = var.environment
+    public_subnet_ids = [module.networking.public_subnets[0].id]
     secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
   }
   s3_config = {

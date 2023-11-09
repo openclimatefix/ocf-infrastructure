@@ -29,8 +29,8 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
 
       environment : [
         for key, value in var.docker_config.environment_vars : {
-          "name" : key,
-          "value" : value
+          name: key,
+          value: value
         }
       ]
 
