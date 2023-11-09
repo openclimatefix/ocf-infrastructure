@@ -24,7 +24,7 @@ module "s3" {
 }
 
 module "ecs" {
-  source = "../modules/ecs"
+  source = "../modules/ecs_cluster"
 
   region      = var.region
   environment = var.environment

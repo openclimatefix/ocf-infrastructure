@@ -56,7 +56,7 @@ module "pvsite_ml_bucket" {
 }
 
 module "pvsite_ecs" {
-  source = "../../modules/ecs"
+  source = "../../modules/ecs_cluster"
 
   region      = var.region
   environment = var.environment
