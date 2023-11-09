@@ -17,11 +17,9 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
     type = "ecs"
   }
 
-  volumes = [
-    {
-      "name" : "tmp",
-    }
-  ]
+  volume = {
+    "name" : "tmp",
+  }
 
   task_role_arn         = aws_iam_role.consumer-nwp-iam-role.arn
   execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
