@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
       secrets: [
         for key in var.docker_config.secret_vars : {
           name: key
-          valueFrom: "${data.aws_secretsmanager_secret_version.arn}:${key}::"
+          valueFrom: "${data.aws_secretsmanager_secret_version.current.arn}:${key}::"
         }
       ]
 
