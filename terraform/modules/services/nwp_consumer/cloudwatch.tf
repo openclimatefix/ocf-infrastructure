@@ -17,6 +17,11 @@ resource "aws_cloudwatch_log_group" "log_group" {
   }
 }
 
+moved {
+  from = aws_cloudwatch_log_group.nwp
+  to   = aws_cloudwatch_log_group.log_group
+}
+
 # Describe actions of IAM policy allowing cloudwatch read and write
 data "aws_iam_policy_document" "log_policy" {
   statement {

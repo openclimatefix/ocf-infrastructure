@@ -23,7 +23,7 @@ resource "aws_iam_role" "create_task_role" {
 }
 
 moved {
-  from = "consumer-${var.app_name}-iam-role"
+  from = aws_iam_role.ecs_task_execution_role 
   to = aws_iam_role.create_task_role
 }
 
@@ -48,6 +48,11 @@ resource "aws_iam_role" "run_task_role" {
   name               = "${var.ecs-task_type}-${var.ecs-task_name}-iam-role"
   path               = "/${var.ecs-task_type}/"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
+}
+
+moved {
+  from = aws_iam_role.consumer-nwp-iam-role
+  to = aws_iam_role.run_task_role
 }
 
 # For every bucket in the list of buckets, attach its access policy to the run task role
