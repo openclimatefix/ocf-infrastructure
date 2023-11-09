@@ -22,6 +22,11 @@ resource "aws_iam_role" "create_task_role" {
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy.json
 }
 
+moved {
+  from = "consumer-${var.app_name}-iam-role"
+  to = aws_iam_role.create_task_role
+}
+
 resource "aws_iam_role_policy_attachment" "create_task_policy" {
   role       = aws_iam_role.create_task_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
