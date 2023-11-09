@@ -1,59 +1,100 @@
-variable "aws_config" {
-  type = object({
-    region = string
-    environment = string
-    public_subnet_ids = list(string)
-    secretsmanager_secret_name = string
-  })
+// AWS configuration ------------------------------------------------------
+
+variable aws-region {
+  type = string
+  description = "AWS region"
+}
+
+variable aws-environment {
+  type = string
+  description = "Deployment environment"
+}
+
+variable aws-secretsmanager_secret_name {
+  type = string
+  description = "Name of secret in secrets manager to access"
+}
+
+// S3 configuration -------------------------------------------------------
+
+variable s3-buckets {
+  type = list(object({
+    id = string
+    access_policy_arn = string
+  }))
   description = <<EOT
-    aws_config = {
-      region : "AWS region"
-      environment : "Deployment environment"
-      public_subnet_ids : "List of public subnet ids"
-      secretsmanager_secret_name : "Name of secret in secrets manager to access"
-    }
+      s3-buckets = {
+      id : "Name of the bucket"
+      access_policy_arn : "ARN of the read/write policy to apply to the bucket"
+  }
   EOT
 }
 
-variable "s3_config" {
-  type = object({
-    bucket_id = string
-    bucket_write_policy_arn = string
-  })
-  description = <<EOT
-    s3_config = {
-      bucket_id : "ID of the nwp S3 bucket"
-      bucket_write_policy_arn : "IAM policy to write to the nwp S3 bucket"
-    }
-  EOT
+// Container configuration ---------------------------------------------------
+
+variable container-registry {
+  type = string
+  description = "Container registry where container resides"
+  default = "ghcr.io"
 }
 
-variable "docker_config" {
-  type = object({
-    container_tag = string
-    command = list(string)
-    secret_vars = list(string)
-    environment_vars = list(object({
+variable container-name {
+  type = string
+  description = "Container name"
+}
+
+variable container-tag {
+  type = string
+  description = "Container image tag"
+  default = "latest"
+}
+
+variable container-env_vars {
+  type = list(object({
       name = string
       value = string
-    }))
-  })
+  }))
   description = <<EOT
-    docker_config = {
-      container_tag : "Docker image tag"
-      command : "Command to run in the container"
-      secret_name : "Name of the secret in secrets manager to access"
-      secret_vars : "List of keys to be mounted from consumer secret in the container env"
-      environment_vars : "List of environment variables to be set in the container"
-      environment_vars = {
-        name : "Name of the environment variable"
-        value : "Value of the environment variable"
-      }
+    container-env_vars = {
+      name : "Name of the environment variable"
+      value : "Value of the environment variable"
     }
+    container-env_vars : "Environment variables to be set in the container"
   EOT
 }
 
-variable app_name {
-  description = "Name of the application"
+variable container-secret_vars {
+  type = list(string)
+  description = "List of keys to be mounted in the container env from secretsmanager secret"
+}
+
+variable container-command {
+  type = list(string)
+  description = "Command to run in the container"
+}
+
+// ECS configuration --------------------------------------------------------
+
+variable ecs-task_name {
+  type = string
+  description = "Name of the ECS task"
+}
+
+variable ecs-task_type {
+  type = string
+  description = "Type of the ECS task"
+  default = "task"
+}
+
+variable ecs-task_cpu {
+  type = number
+  description = "CPU units for the ECS task"
+  default = 1024
+}
+
+variable ecs-task_memory {
+  type = number
+  description = "Memory units (MB) for the ECS task"
+  default = 5012
 }
 

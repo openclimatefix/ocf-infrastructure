@@ -1,8 +1,8 @@
-# Modules/Services/NWP
+# Modules/Services/nwp_consumer
 
 This module makes
-- AWS task definition
-- IAM role to setup application
-- IAM role for running task
-- get secrets for NWP API
-- temp: scheduled aws task, and iam roles
+- AWS ECS Task Definition, with:
+  - S3 and SecretsManager access
+  - AWS CloudWatch Logs group
+- IAM role to create the ECS Task
+- IAM role to run the ECS Task

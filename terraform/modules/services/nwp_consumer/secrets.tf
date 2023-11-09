@@ -1,32 +1,38 @@
-# Read in required secrets for consumer
-# Get the secret resource from AWS for each entry in the list
+# Access a secret in secrets manager
+# 1. Gets the id of current version of the secret
+# 2. Creates a policy to allow read access to the secret
+
+# Read in required secret for task
 data "aws_secretsmanager_secret" "secret" {
-  name = var.aws_config.secretsmanager_secret_name
+  name = var.aws-secretsmanager_secret_name
 }
 
-# Get the current secret value from AWS for the secret
+# 1. Get the current secret value from AWS for the secret
 data "aws_secretsmanager_secret_version" "current" {
   secret_id = data.aws_secretsmanager_secret.secret.id
 }
 
-# Get an IAM role to access the secret 
-resource "aws_iam_policy" "secret_read_policy" {
-  name        = "${var.app_name}-secret-read-policy"
-  path        = "/consumer/nwp/"
-  description = "Policy to allow read access to secret."
+# Create a policy enabling read access to secrets
+data "aws_iam_policy_document" "secret_read_policy" {
+  statement {
+    effect = "Allow"
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "secretsmanager:ListSecretVersionIds",
-          "secretsmanager:GetSecretValue",
-        ]
-        Effect   = "Allow"
-        Resource = data.aws_secretsmanager_secret_version.current.arn
-      },
+    actions = [
+      "secretsmanager:ListSecretVersionIds",
+      "secretsmanager:GetSecretValue",
     ]
-  })
+
+    resources = [
+      data.aws_secretsmanager_secret_version.current.arn,
+    ]
+  }
 }
 
+# 2. Create an IAM policy to access the current version of the secret
+resource "aws_iam_policy" "secret_read_policy" {
+  name        = "${var.ecs-task_name}-secret-read-policy"
+  path        = "/${var.ecs-task_type}/${var.ecs-task_name}/"
+  description = "Policy to allow read access to secret."
+
+  policy = data.aws_iam_policy_document.secret_read_policy.json
+}
