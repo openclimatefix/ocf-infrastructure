@@ -15,12 +15,13 @@ data "aws_secretsmanager_secret_version" "current" {
 # Create a policy enabling read access to secrets
 data "aws_iam_policy_document" "secret_read_policy" {
   statement {
-    version = "2012-10-17"
+    effect = "Allow"
+
     actions = [
       "secretsmanager:ListSecretVersionIds",
       "secretsmanager:GetSecretValue",
     ]
-    effect = "Allow"
+
     resources = [
       data.aws_secretsmanager_secret_version.current.arn,
     ]
