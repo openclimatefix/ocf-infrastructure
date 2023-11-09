@@ -35,6 +35,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
         {"name": "OCF_ENVIRONMENT", "value": var.environment},
         {"name": "USE_ADJUSTER", "value": var.use_adjuster},
         {"name": "SAVE_GSP_SUM", "value": var.pvnet_gsp_sum},
+        {"name": "ESMFMKFILE",  "value": "/opt/conda/lib/esmf.mk"}
       ]
 
       secrets : [
