@@ -1,6 +1,3 @@
-locals {
-  log_group_name = "/aws/ecs/consumer/${var.app_name}/"
-}
 
 variable "aws_config" {
   type = object({
@@ -38,7 +35,6 @@ variable "docker_config" {
   type = object({
     container_tag = string
     command = list(string)
-    secret_name = string
     secret_vars = list(string)
     environment_vars = list(object({
       key = string

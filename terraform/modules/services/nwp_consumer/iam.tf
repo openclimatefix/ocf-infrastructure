@@ -23,32 +23,6 @@ EOF
 }
 
 
-resource "aws_iam_policy" "cloudwatch-nwp" {
-  name        = "${var.app_name}-cloudwatch-read-and-write"
-  path        = "/consumer/${var.app_name}/"
-  description = "Policy to allow read and write to cloudwatch logs"
-
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "logs:PutLogEvents",
-          "logs:CreateLogStream",
-          "logs:CreateLogGroup",
-          "logs:DescribeLogStreams",
-          "logs:DescribeLogGroups",
-          "logs:DeleteLogGroup",
-          "logs:PutRetentionPolicy"
-        ]
-        Effect   = "Allow"
-        Resource = "arn:aws:logs:*:*:log-group:${local.log_group_name}*"
-      },
-    ]
-  })
-}
 
 resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attachment" {
   role       = aws_iam_role.ecs_task_execution_role.name
@@ -90,21 +64,11 @@ resource "aws_iam_role_policy_attachment" "attach-logs" {
 
 resource "aws_iam_role_policy_attachment" "read-secret-execution" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.nwp-secret-read.arn
+  policy_arn = aws_iam_policy.secret_read_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "read-secret" {
   role       = aws_iam_role.consumer-nwp-iam-role.name
-  policy_arn = aws_iam_policy.nwp-secret-read.arn
+  policy_arn = aws_iam_policy.secret_read_policy.arn
 }
 
-
-resource "aws_iam_role_policy_attachment" "read-db-secret-execution" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = var.database_config.secret_read_policy_arn
-}
-
-resource "aws_iam_role_policy_attachment" "read-db-secret" {
-  role       = aws_iam_role.consumer-nwp-iam-role.name
-  policy_arn = var.database_config.secret_read_policy_arn
-}

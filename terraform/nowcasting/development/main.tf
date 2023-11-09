@@ -134,7 +134,6 @@ module "nwp" {
         { "key" : "LOGLEVEL", "value" : "DEBUG"},
         { "key" : "METOFFICE_ORDER_ID", "value" : "uk-11params-12steps" },
     ]
-    secret_name = "${var.environment}/data/nwp-consumer"
     secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
     container_tag = var.nwp_version
     command = [
@@ -170,7 +169,6 @@ module "nwp-national" {
         { "key" : "LOGLEVEL", "value" : "DEBUG"},
         { "key" : "METOFFICE_ORDER_ID", "value" : "uk-5params-42steps" },
     ]
-    secret_name = "${var.environment}/data/nwp-consumer"
     secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
     container_tag = var.nwp_version
     command = [
@@ -249,7 +247,6 @@ module "nwp-ecmwf" {
         { "key" : "AWS_S3_BUCKET", "value" : var.s3_config.bucket_id },
         { "key" : "LOGLEVEL", "value" : "DEBUG"},
     ]
-    secret_name = "${var.environment}/data/nwp-consumer"
     secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
     container_tag = var.nwp_version
     command = [
