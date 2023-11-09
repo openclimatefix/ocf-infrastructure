@@ -10,7 +10,7 @@ variable "aws_config" {
       region : "AWS region"
       environment : "Deployment environment"
       public_subnet_ids : "List of public subnet ids"
-      secretsmanaget_secret_name : "Name of secret in secrets manager to access"
+      secretsmanager_secret_name : "Name of secret in secrets manager to access"
     }
   EOT
 }

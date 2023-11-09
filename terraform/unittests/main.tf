@@ -54,12 +54,16 @@ module "postgres" {
 }
 
 module "nwp" {
-  source = "../modules/services/nwp"
+  source = "../modules/services/nwp_consumer"
 
-  region                  = var.region
-  environment             = var.environment
-  iam-policy-s3-nwp-write = module.s3.iam-policy-s3-nwp-write
-  s3-bucket               = module.s3.s3-nwp-bucket
-  ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids              = [module.networking.public_subnets[0].id]
+  aws_config = {
+    region = var.region
+    environment = var.environment
+    public_subnet_ids = [module.networking.public_subnets[0].id]
+  }
+
+  s3_config = {
+    bucket_id = module.s3.s3-nwp-bucket.id
+    bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
+  }
 }
