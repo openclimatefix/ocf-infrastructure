@@ -65,11 +65,7 @@ variable container-env_vars {
 
 variable container-secret_vars {
   type = list(string)
-  description = "List of keys to be mounted from secret in the container env."
-  validation {
-    condition = length(var.aws-secretsmanager_secret_name) > 0
-    error_message = "aws-secretsmanager_secret_name must be set if container-secret_vars is set"
-  }
+  description = "List of keys to be mounted in the container env from secretsmanager secret"
 }
 
 variable container-command {

@@ -33,7 +33,7 @@ resource "aws_iam_role_policy_attachment" "create_logs_policy" {
   policy_arn = aws_iam_policy.log_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "access_secret_policy" {
+resource "aws_iam_role_policy_attachment" "create_secret_policy" {
   role       = aws_iam_role.create_task_role.name
   policy_arn = aws_iam_policy.secret_read_policy.arn
 }
