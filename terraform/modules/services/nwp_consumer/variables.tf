@@ -5,7 +5,7 @@ variable "aws_config" {
     environment = string
     ecs_cluster = string
     public_subnet_ids = list(string)
-    secretsmanaget_secret_name = string
+    secretsmanager_secret_name = string
   })
   description = <<EOT
     aws_config = {
