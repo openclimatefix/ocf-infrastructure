@@ -21,7 +21,7 @@ variable "aws_config" {
 variable "s3_config" {
   type = object({
     bucket_id = string
-    bucket_write_policy = string
+    bucket_write_policy_arn = string
   })
   description = <<EOT
     s3_config = {
