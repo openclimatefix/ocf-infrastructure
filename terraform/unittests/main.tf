@@ -66,4 +66,8 @@ module "nwp" {
     bucket_id = module.s3.s3-nwp-bucket.id
     bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
   }
+
+  docker_config = {}
+
+  app_name = ""
 }

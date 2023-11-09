@@ -17,21 +17,27 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
     type = "ecs"
   }
 
-  task_role_arn      = aws_iam_role.consumer-nwp-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  volumes : [
+    {
+      "name" : "tmp",
+    }
+  ]
+
+  task_role_arn         = aws_iam_role.consumer-nwp-iam-role.arn
+  execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = "${var.app_name}-consumer"
-      image = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_config.container_tag}"
+      name      = "${var.app_name}-consumer"
+      image     = "ghcr.io/openclimatefix/nwp-consumer:${var.docker_config.container_tag}"
       essential = true
 
       environment : var.docker_config.environment_vars
-      command: var.docker_config.command
+      command : var.docker_config.command
 
-      secrets: [
+      secrets : [
         for key in var.docker_config.secret_vars : {
-          name: key
-          valueFrom: "${data.aws_secretsmanager_secret_version.current.arn}:${key}::"
+          name : key
+          valueFrom : "${data.aws_secretsmanager_secret_version.current.arn}:${key}::"
         }
       ]
 
@@ -44,19 +50,12 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
         }
       }
 
-      mountPoints: [
+      mountPoints : [
         {
           "containerPath" : "/tmp/nwpc",
           "sourceVolume" : "tmp"
         }
       ]
-
-      volumes: [
-        {
-          "name": "tmp",
-        }
-      ]
-
     }
   ])
 }
