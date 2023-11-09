@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "nwp-task-definition" {
     type = "ecs"
   }
 
-  volumes : [
+  volumes = [
     {
       "name" : "tmp",
     }
