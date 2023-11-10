@@ -92,7 +92,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ECS_SUBNET"
-    value     = var.ecs_subnet
+    value     = var.ecs_subnet_id
   }
 
   setting {
@@ -121,9 +121,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
-    #    value     = "${join(",", var.subnets)}"
-    #    value     = var.subnets
-    value    = var.subnets[0]
+    value    = var.subnet_id
     resource = ""
   }
   setting {

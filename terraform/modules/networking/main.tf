@@ -8,42 +8,43 @@
 
 
 /*==== The VPC ======*/
+
 resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = {
     Name        = "${var.environment}-vpc"
-    Environment = "${var.environment}"
   }
 }
 
-/* Internet gateway for the public subnet */
+/* Internet gateway for the VPC */
 resource "aws_internet_gateway" "ig" {
   vpc_id = aws_vpc.vpc.id
   tags = {
     Name        = "${var.environment}-igw"
-    Environment = "${var.environment}"
   }
 }
+
 /* Elastic IP for NAT */
 resource "aws_eip" "nat_eip" {
-  vpc        = true
   depends_on = [aws_internet_gateway.ig]
 }
+
 /* NAT */
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = element(aws_subnet.public_subnet.*.id, 0)
   depends_on    = [aws_internet_gateway.ig]
   tags = {
-    Name        = "nat"
-    Environment = "${var.environment}"
+    name = "nat"
   }
 }
 
 /*==== Subnets ======*/
+
 /* Public subnet */
+
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.vpc.id
   count                   = length(var.public_subnets_cidr)
@@ -51,11 +52,12 @@ resource "aws_subnet" "public_subnet" {
   availability_zone       = element(var.availability_zones, count.index)
   map_public_ip_on_launch = true
   tags = {
-    Name        = "${var.environment}-${element(var.availability_zones, count.index)}-      public-subnet"
-    Environment = "${var.environment}"
+    name        = "${var.environment}-${element(var.availability_zones, count.index)}-public-subnet"
   }
 }
+
 /* Private subnet */
+
 resource "aws_subnet" "private_subnet" {
   vpc_id                  = aws_vpc.vpc.id
   count                   = length(var.private_subnets_cidr)
@@ -63,23 +65,23 @@ resource "aws_subnet" "private_subnet" {
   availability_zone       = element(var.availability_zones, count.index)
   map_public_ip_on_launch = false
   tags = {
-    Name        = "${var.environment}-${element(var.availability_zones, count.index)}-private-subnet"
-    Environment = "${var.environment}"
+    name = "${var.environment}-${element(var.availability_zones, count.index)}-private-subnet"
   }
 }
 
 resource "aws_db_subnet_group" "private_subnet_group" {
   name        = "private-subnet-group-${var.environment}"
   description = "Terraform private subnet group"
-  subnet_ids  = ["${aws_subnet.private_subnet[0].id}", "${aws_subnet.private_subnet[1].id}"]
+  subnet_ids = [
+    for subnet in aws_subnet.private_subnet : subnet.id
+  ]
 }
 
 /* Routing table for private subnet */
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name        = "${var.environment}-private-route-table"
-    Environment = "${var.environment}"
+    name = "${var.environment}-private-route-table"
   }
 }
 
@@ -87,8 +89,7 @@ resource "aws_route_table" "private" {
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name        = "${var.environment}-public-route-table"
-    Environment = "${var.environment}"
+    name = "${var.environment}-public-route-table"
   }
 }
 
@@ -106,18 +107,19 @@ resource "aws_route" "private_nat_gateway" {
 
 /* Route table associations */
 resource "aws_route_table_association" "public" {
-  count          = length(var.public_subnets_cidr)
-  subnet_id      = element(aws_subnet.public_subnet.*.id, count.index)
+  for_each = aws_subnet.public_subnet
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private" {
-  count          = length(var.private_subnets_cidr)
-  subnet_id      = element(aws_subnet.private_subnet.*.id, count.index)
+  for_each = aws_subnet.private_subnet
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
 
 /*==== VPC's Default Security Group ======*/
+
 resource "aws_security_group" "default" {
   name        = "nowcasting-${var.environment}-default-sg"
   description = "Default security group to allow inbound/outbound from the VPC"
@@ -136,7 +138,5 @@ resource "aws_security_group" "default" {
     protocol  = "-1"
     self      = "true"
   }
-  tags = {
-    Environment = "${var.environment}"
-  }
 }
+

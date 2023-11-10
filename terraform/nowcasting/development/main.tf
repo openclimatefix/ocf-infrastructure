@@ -31,7 +31,6 @@ locals {
   domain = "nowcasting"
 }
 
-
 # 0.1
 module "networking" {
   source = "../../modules/networking"
@@ -50,7 +49,7 @@ module "ec2-bastion" {
 
   region               = var.region
   vpc_id               = module.networking.vpc_id
-  public_subnets_id    = module.networking.public_subnets[0].id
+  public_subnets_id    = module.networking.public_subnet_ids[0]
 }
 
 # 0.3
@@ -88,7 +87,7 @@ module "api" {
   region                              = var.region
   environment                         = var.environment
   vpc_id                              = module.networking.vpc_id
-  subnets                             = module.networking.public_subnets
+  subnet_ids                          = module.networking.public_subnet_ids[0]
   docker_version                      = var.api_version
   database_forecast_secret_url        = module.database.forecast-database-secret-url
   database_pv_secret_url              = module.database.pv-database-secret-url
@@ -107,7 +106,7 @@ module "database" {
 
   region          = var.region
   environment     = var.environment
-  db_subnet_group = module.networking.private_subnet_group
+  db_subnet_group_name = module.networking.private_subnet_group_name
   vpc_id          = module.networking.vpc_id
 }
 
@@ -231,7 +230,7 @@ module "sat" {
   iam-policy-s3-sat-write = module.s3.iam-policy-s3-sat-write
   s3-bucket               = module.s3.s3-sat-bucket
   ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  public_subnet_ids       = module.networking.public_subnet_ids
   docker_version          = var.sat_version
   database_secret         = module.database.forecast-database-secret
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
@@ -244,7 +243,7 @@ module "pv" {
   region                  = var.region
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.pv-database-secret
   database_secret_forecast = module.database.forecast-database-secret
   docker_version          = var.pv_version
@@ -260,7 +259,7 @@ module "gsp" {
   region                  = var.region
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.gsp_version
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
@@ -273,7 +272,7 @@ module "metrics" {
   region                  = var.region
   environment             = var.environment
   ecs-cluster             = module.ecs.ecs_cluster
-  public_subnet_ids       = [module.networking.public_subnets[0].id]
+  public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.metrics_version
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
@@ -287,7 +286,7 @@ module "forecast" {
   region                        = var.region
   environment                   = var.environment
   ecs-cluster                   = module.ecs.ecs_cluster
-  subnet_ids                    = [module.networking.public_subnets[0].id]
+  subnet_ids                    = module.networking.public_subnet_ids
   iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-s3-nwp-read        = module.s3.iam-policy-s3-nwp-read
@@ -319,7 +318,7 @@ module "national_forecast" {
     database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
   }
   scheduler_config = {
-    subnet_ids      = [module.networking.public_subnets[0].id]
+    subnet_ids      = module.networking.public_subnet_ids
     ecs_cluster_arn = module.ecs.ecs_cluster.arn
     cron_expression = "cron(15 0 * * ? *)" # Runs at 00.15, airflow does the rest
   }
@@ -352,7 +351,7 @@ module "forecast_pvnet" {
     database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
   }
   scheduler_config = {
-    subnet_ids      = [module.networking.public_subnets[0].id]
+    subnet_ids      = module.networking.public_subnet_ids
     ecs_cluster_arn = module.ecs.ecs_cluster.arn
     cron_expression = "cron(15 0 * * ? *)" # Runs at 00.15, airflow does the rest
   }
@@ -388,7 +387,7 @@ module "analysis_dashboard" {
     }
     networking_config = {
         vpc_id = module.networking.vpc_id
-        subnets = [module.networking.public_subnets[0].id]
+        subnets = module.networking.public_subnet_ids
     }
     database_config = {
         secret = module.database.forecast-database-secret-url
@@ -428,9 +427,9 @@ module "airflow" {
 
   environment   = var.environment
   vpc_id        = module.networking.vpc_id
-  subnets       = [module.networking.public_subnets[0].id]
+  subnet_id       = module.networking.public_subnet_ids[0]
   db_url        = module.database.forecast-database-secret-airflow-url
   docker-compose-version       = "0.0.3"
-  ecs_subnet=module.networking.public_subnets[0].id
+  ecs_subnet_id = module.networking.public_subnet_ids[0]
   ecs_security_group=var.ecs_security_group # TODO should be able to update this to use the module
 }
