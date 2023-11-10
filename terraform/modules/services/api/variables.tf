@@ -13,9 +13,9 @@ variable "vpc_id" {
 }
 
 
-variable "subnet_ids" {
-  description = "List of subnet ids where this application will run"
-  type        = list(any)
+variable "subnet_id" {
+  description = "Subnet id where this application will run"
+  type        = string
 }
 # the type is any, as the subnets are terraform resources
 

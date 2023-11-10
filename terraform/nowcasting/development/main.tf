@@ -27,20 +27,13 @@ The componentes ares:
 Variables used across all modules
 ======*/
 locals {
-  production_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
-  domain = "nowcasting"
+  environment = "development"
+  domain = "uk"
 }
 
 # 0.1
 module "networking" {
   source = "../../modules/networking"
-
-  region               = var.region
-  environment          = var.environment
-  vpc_cidr             = var.vpc_cidr
-  public_subnets_cidr  = var.public_subnets_cidr
-  private_subnets_cidr = var.private_subnets_cidr
-  availability_zones   = local.production_availability_zones
 }
 
 # 0.2
@@ -57,7 +50,7 @@ module "s3" {
   source = "../../modules/storage/s3-trio"
 
   region      = var.region
-  environment = var.environment
+  environment = local.environment
 }
 
 # 0.4
@@ -65,7 +58,7 @@ module "ecs" {
   source = "../../modules/ecs_cluster"
 
   region      = var.region
-  environment = var.environment
+  environment = local.environment
   domain = local.domain
 }
 
@@ -74,7 +67,7 @@ module "forecasting_models_bucket" {
   source = "../../modules/storage/s3-private"
 
   region              = var.region
-  environment         = var.environment
+  environment         = local.environment
   service_name        = "national-forecaster-models"
   domain              = local.domain
   lifecycled_prefixes = []
@@ -85,9 +78,9 @@ module "api" {
   source = "../../modules/services/api"
 
   region                              = var.region
-  environment                         = var.environment
+  environment                         = local.environment
   vpc_id                              = module.networking.vpc_id
-  subnet_ids                          = module.networking.public_subnet_ids[0]
+  subnet_id                           = module.networking.public_subnet_ids[0]
   docker_version                      = var.api_version
   database_forecast_secret_url        = module.database.forecast-database-secret-url
   database_pv_secret_url              = module.database.pv-database-secret-url
@@ -105,7 +98,7 @@ module "database" {
   source = "../../modules/storage/database-pair"
 
   region          = var.region
-  environment     = var.environment
+  environment     = local.environment
   db_subnet_group_name = module.networking.private_subnet_group_name
   vpc_id          = module.networking.vpc_id
 }
@@ -118,8 +111,8 @@ module "nwp" {
   ecs-task_type = "consumer"
 
   aws-region = var.region
-  aws-environment = var.environment
-  aws-secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
+  aws-environment = local.environment
+  aws-secretsmanager_secret_name = "${local.environment}/data/nwp-consumer"
 
   s3-buckets = [
     {
@@ -155,8 +148,8 @@ module "nwp-national" {
   ecs-task_type = "consumer"
 
   aws-region = var.region
-  aws-environment = var.environment
-  aws-secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
+  aws-environment = local.environment
+  aws-secretsmanager_secret_name = "${local.environment}/data/nwp-consumer"
 
   s3-buckets = [
     {
@@ -193,8 +186,8 @@ module "nwp-ecmwf" {
   ecs-task_type = "consumer"
 
   aws-region = var.region
-  aws-environment = var.environment
-  aws-secretsmanager_secret_name = "${var.environment}/data/nwp-consumer"
+  aws-environment = local.environment
+  aws-secretsmanager_secret_name = "${local.environment}/data/nwp-consumer"
 
   s3-buckets = [
     {
@@ -226,7 +219,7 @@ module "sat" {
   source = "../../modules/services/sat"
 
   region                  = var.region
-  environment             = var.environment
+  environment             = local.environment
   iam-policy-s3-sat-write = module.s3.iam-policy-s3-sat-write
   s3-bucket               = module.s3.s3-sat-bucket
   ecs-cluster             = module.ecs.ecs_cluster
@@ -241,7 +234,7 @@ module "pv" {
   source = "../../modules/services/pv"
 
   region                  = var.region
-  environment             = var.environment
+  environment             = local.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.pv-database-secret
@@ -257,7 +250,7 @@ module "gsp" {
   source = "../../modules/services/gsp"
 
   region                  = var.region
-  environment             = var.environment
+  environment             = local.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.forecast-database-secret
@@ -270,7 +263,7 @@ module "metrics" {
   source = "../../modules/services/metrics"
 
   region                  = var.region
-  environment             = var.environment
+  environment             = local.environment
   ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.forecast-database-secret
@@ -284,7 +277,7 @@ module "forecast" {
   source = "../../modules/services/forecast"
 
   region                        = var.region
-  environment                   = var.environment
+  environment                   = local.environment
   ecs-cluster                   = module.ecs.ecs_cluster
   subnet_ids                    = module.networking.public_subnet_ids
   iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
@@ -305,7 +298,7 @@ module "national_forecast" {
   source = "../../modules/services/forecast_generic"
 
   region      = var.region
-  environment = var.environment
+  environment = local.environment
   app-name    = "forecast_national"
   ecs_config  = {
     docker_image   = "openclimatefix/gradboost_pv"
@@ -338,7 +331,7 @@ module "forecast_pvnet" {
   source = "../../modules/services/forecast_generic"
 
   region      = var.region
-  environment = var.environment
+  environment = local.environment
   app-name    = "forecast_pvnet"
   ecs_config  = {
     docker_image   = "openclimatefix/pvnet_app"
@@ -378,7 +371,7 @@ module "analysis_dashboard" {
     source = "../../modules/services/internal_ui"
 
     region      = var.region
-    environment = var.environment
+    environment = local.environment
     eb_app_name = "internal-ui"
     domain = local.domain
     docker_config = {
@@ -405,7 +398,7 @@ module "forecast_blend" {
   source = "../../modules/services/forecast_blend"
 
   region      = var.region
-  environment = var.environment
+  environment = local.environment
   app-name    = "forecast_blend"
   ecs_config  = {
     docker_image   = "openclimatefix/uk_pv_forecast_blend"
@@ -425,7 +418,7 @@ module "forecast_blend" {
 module "airflow" {
   source = "../../modules/services/airflow"
 
-  environment   = var.environment
+  environment   = local.environment
   vpc_id        = module.networking.vpc_id
   subnet_id       = module.networking.public_subnet_ids[0]
   db_url        = module.database.forecast-database-secret-airflow-url
