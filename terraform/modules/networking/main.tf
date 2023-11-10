@@ -2,7 +2,7 @@ locals {
   prefix = "${var.domain}-${var.environment}"
 
   // Access the A.B part of the CIDR
-  ab = regex("^(\\d+.\\d+).", var.vpc_cidr)
+  ab = regex("^(\\d+.\\d+).", var.vpc_cidr)[0]
 }
 
 // VPC
