@@ -424,5 +424,5 @@ module "airflow" {
   db_url        = module.database.forecast-database-secret-airflow-url
   docker-compose-version       = "0.0.3"
   ecs_subnet_id = module.networking.public_subnet_ids[0]
-  ecs_security_group=var.ecs_security_group # TODO should be able to update this to use the module
+  ecs_security_group=module.networking.default_security_group_id
 }
