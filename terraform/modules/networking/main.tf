@@ -14,7 +14,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = {
-    Name        = "${var.environment}-vpc"
+    name        = "${var.environment}-vpc"
   }
 }
 
@@ -22,7 +22,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_internet_gateway" "ig" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name        = "${var.environment}-igw"
+    name        = "${var.environment}-igw"
   }
 }
 
@@ -113,7 +113,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route_table_association" "private" {
-  for_each = aws_subnet.private_subnet
+  for_each = toset(aws_subnet.private_subnet)
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }

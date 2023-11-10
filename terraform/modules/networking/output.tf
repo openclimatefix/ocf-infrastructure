@@ -11,3 +11,7 @@ output "public_subnet_ids" {
 output "private_subnet_group_name" {
   value = aws_db_subnet_group.private_subnet_group.name
 }
+
+output "vpc_region" {
+  value = var.region
+}
