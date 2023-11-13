@@ -8,8 +8,8 @@ variable "region" {
   default     = "eu-west-1"
 }
 
-variable "db_subnet_group" {
-  description = "The subnet group where the RDS database will be launched"
+variable "db_subnet_group_name" {
+  description = "The subnet group name where the RDS database will be launched"
 }
 
 variable "vpc_id" {

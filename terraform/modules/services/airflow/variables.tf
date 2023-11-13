@@ -15,11 +15,10 @@ variable "vpc_id" {
 }
 
 
-variable "subnets" {
-  description = "List of subnets where this application will run"
-  type        = list(any)
+variable "subnet_id" {
+  description = "Subnet id where this application will run"
+  type        = string
 }
-# the type is any, as the subnets are terraform resources
 
 variable "db_url" {
   description = "The database url"
@@ -36,8 +35,8 @@ variable "ecs_security_group" {
   type = string
 }
 
-variable "ecs_subnet" {
-  description = "The security group for airflow ecs tasks"
+variable "ecs_subnet_id" {
+  description = "The subnet on which to run airflow ecs tasks"
   type = string
 }
 

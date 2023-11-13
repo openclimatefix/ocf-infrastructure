@@ -1,24 +1,13 @@
 variable "region" {
   description = "The AWS region to use"
-}
-
-variable "environment" {
-  description = "The Deployment environment"
+  default = "eu-west-1"
 }
 
 //Networking
 variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
-}
-
-variable "public_subnets_cidr" {
-  type        = list(string)
-  description = "The CIDR block for the public subnet"
-}
-
-variable "private_subnets_cidr" {
-  type        = list(string)
-  description = "The CIDR block for the private subnet"
+  type = string
+  default = "10.0.0.0/16"
 }
 
 variable "api_version" {
@@ -99,9 +88,4 @@ variable "forecast_pvnet_version" {
 
 variable "forecast_blend_version" {
   description = "The Forecast Blend docker version"
-}
-
-variable "ecs_security_group" {
-  description = "The security group for airflow ecs tasks. TODO remove this"
-  type = string
 }

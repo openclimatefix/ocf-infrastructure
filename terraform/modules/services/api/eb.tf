@@ -111,7 +111,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     name      = "Subnets"
     #    value     = "${join(",", var.subnets)}"
     #    value     = var.subnets
-    value    = var.subnets[0].id
+    value    = var.subnet_id
     resource = ""
   }
   setting {

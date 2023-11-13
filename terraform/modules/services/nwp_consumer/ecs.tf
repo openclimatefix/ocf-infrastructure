@@ -7,8 +7,6 @@ resource "aws_ecs_task_definition" "task_def" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
-  # specific values are needed -
-  # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
   cpu    = var.ecs-task_cpu
   memory = var.ecs-task_memory
 
