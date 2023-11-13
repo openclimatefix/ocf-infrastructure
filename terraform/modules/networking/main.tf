@@ -117,12 +117,12 @@ resource "aws_route" "private_nat_gateway" {
 
 // Add the routes to the route tables
 resource "aws_route_table_association" "public" {
-  count = length(aws_subnet.public_subnets)
+  count = var.num_public_subnets
   subnet_id      = element(aws_subnet.public_subnets.*.id, count.index)
   route_table_id = aws_route_table.public.id
 }
 resource "aws_route_table_association" "private" {
-  count = length(aws_subnet.private_subnets)
+  count = var.num_private_subnets
   subnet_id      = element(aws_subnet.private_subnets.*.id, count.index)
   route_table_id = aws_route_table.private.id
 }

@@ -11,6 +11,11 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
+import {
+  to = aws_s3_bucket.bucket
+  id = "${var.domain}-${var.service_name}-${var.environment}"
+}
+
 # Block all public access
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block
 resource "aws_s3_bucket_public_access_block" "access_block" {
