@@ -57,10 +57,6 @@ module "s3" {
 module "ecs" {
   source = "../../modules/ecs_cluster"
   name = "Nowcasting-${local.environment}"
-
-  region      = var.region
-  environment = local.environment
-  domain = local.domain
 }
 
 # 0.5
