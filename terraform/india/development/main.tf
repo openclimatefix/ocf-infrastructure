@@ -12,7 +12,5 @@ module "network" {
 
 module "ecs_cluster" {
   source = "../../modules/ecs_cluster"
-  environment = local.environment
-  region = module.network.vpc_region
-  domain = local.domain
+  name = "${local.domain}-${local.environment}"
 }
