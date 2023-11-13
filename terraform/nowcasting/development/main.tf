@@ -73,6 +73,11 @@ module "forecasting_models_bucket" {
   lifecycled_prefixes = []
 }
 
+import {
+  to =  module.forecasting_models_bucket.aws_s3_bucket.bucket
+  id = "uk-national-forecaster-models-development"
+}
+
 # 1.1
 module "api" {
   source = "../../modules/services/api"
