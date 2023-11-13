@@ -78,7 +78,7 @@ moved {
 
 // Create a subnet group from the private subnets
 resource "aws_db_subnet_group" "private_subnet_group" {
-  name        = "${local.prefix}-private-subnet-group"
+  name        = "private-subnet-group-${var.environment}"
   description = "Terraform private subnet group"
   subnet_ids = [
     for subnet in aws_subnet.private_subnets : subnet.id
