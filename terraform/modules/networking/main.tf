@@ -11,7 +11,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = {
-    name        = "${local.prefix}-vpc"
+    Name        = "${local.prefix}-vpc"
   }
 }
 
@@ -19,7 +19,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_internet_gateway" "ig" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    name        = "${local.prefix}-igw"
+    Name        = "${local.prefix}-igw"
   }
 }
 
@@ -46,7 +46,7 @@ resource "aws_subnet" "public_subnets" {
   availability_zone       = element(var.availability_zones, count.index)
   map_public_ip_on_launch = true
   tags = {
-    name = "${local.prefix}-${element(var.availability_zones, count.index)}-public-subnet"
+    Name = "${local.prefix}-${element(var.availability_zones, count.index)}-public-subnet"
   }
 }
 
@@ -63,7 +63,7 @@ resource "aws_subnet" "private_subnets" {
   availability_zone       = element(var.availability_zones, count.index)
   map_public_ip_on_launch = false
   tags = {
-    name = "${local.prefix}-${element(var.availability_zones, count.index)}-private-subnet"
+    Name = "${local.prefix}-${element(var.availability_zones, count.index)}-private-subnet"
   }
 }
 
@@ -85,11 +85,11 @@ resource "aws_db_subnet_group" "private_subnet_group" {
   ]
 }
 
-// Rounting table for the private subnets
+// Rouning table for the private subnets
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    name = "${local.prefix}-private-route-table"
+    Name = "${local.prefix}-private-route-table"
   }
 }
 
@@ -97,7 +97,7 @@ resource "aws_route_table" "private" {
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    name = "${local.prefix}-public-route-table"
+    Name = "${local.prefix}-public-route-table"
   }
 }
 

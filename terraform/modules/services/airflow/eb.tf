@@ -151,7 +151,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = "1"
   }
 
-  ###=========================== Logging ========================== ###
+  ### =========================== Logging ========================== ###
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"

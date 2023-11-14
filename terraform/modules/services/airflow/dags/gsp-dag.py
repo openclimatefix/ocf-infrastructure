@@ -12,19 +12,17 @@ default_args = {
     'start_date': datetime.utcnow() - timedelta(hours=0.5),
     'retries': 1,
     'retry_delay': timedelta(minutes=1),
-    'max_active_runs':10,
-    'concurrency':10,
-    'max_active_tasks':10,
+    'max_active_runs': 10,
+    'concurrency': 10,
+    'max_active_tasks': 10,
 }
 
-env = os.getenv("ENVIRONMENT","development")
+env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
-
-
 with DAG('gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get PV data"
 
@@ -35,7 +33,7 @@ with DAG('gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 *
         task_definition="gsp",
         cluster=cluster,
         overrides={},
-        launch_type = "FARGATE",
+        launch_type="FARGATE",
         network_configuration={
             "awsvpcConfiguration": {
                 "subnets": [subnet],
@@ -43,7 +41,7 @@ with DAG('gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 *
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency = 10,
+     task_concurrency=10,
     )
 
     latest_only >> gsp_consumer
