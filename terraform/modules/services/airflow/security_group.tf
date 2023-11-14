@@ -1,4 +1,4 @@
-# Add secruity group for API
+# Add security group for API
 
 resource "aws_security_group" "api-sg" {
   name        = "ocf-airflow-${var.environment}-sg"
@@ -26,9 +26,5 @@ resource "aws_security_group" "api-sg" {
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
-  }
-
-  tags = {
-    Environment = "${var.environment}"
   }
 }

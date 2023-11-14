@@ -122,7 +122,6 @@ resource "aws_iam_policy" "read-secrets" {
 resource "aws_iam_role" "api-service-role" {
   name = "ocf-airflow-${var.environment}-service-role"
   path = "/"
-
   assume_role_policy = join("", data.aws_iam_policy_document.service.*.json)
 
 }
