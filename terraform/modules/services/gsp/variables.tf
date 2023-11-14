@@ -32,6 +32,11 @@ variable "iam-policy-rds-read-secret" {
   description = "IAM policy to be able to read the RDS secret"
 }
 
+variable "ecs_task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}
+
 variable "docker_version" {
   description = "The version of the docker that should be used"
   default = "0.0.2"

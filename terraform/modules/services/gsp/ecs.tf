@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "gsp-task-definition" {
   memory = 512
 
   task_role_arn      = aws_iam_role.consumer-gsp-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn = var.ecs_task_execution_role_arn
   container_definitions = jsonencode([
     {
       name  = "gsp-consumer"
@@ -64,7 +64,7 @@ resource "aws_ecs_task_definition" "gsp-day-after-task-definition" {
   memory = 512
 
   task_role_arn      = aws_iam_role.consumer-gsp-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn = var.ecs_task_execution_role_arn
   container_definitions = jsonencode([
     {
       name  = "gsp-consumer-day-after"
@@ -111,7 +111,7 @@ resource "aws_ecs_task_definition" "national-day-after-task-definition" {
   memory = 512
 
   task_role_arn      = aws_iam_role.consumer-gsp-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn = var.ecs_task_execution_role_arn
   container_definitions = jsonencode([
     {
       name  = "national-day-after"
