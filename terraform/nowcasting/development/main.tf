@@ -258,6 +258,7 @@ module "gsp" {
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.gsp_version
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  ecs_task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 4.1
