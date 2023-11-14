@@ -33,20 +33,20 @@ data "aws_iam_policy_document" "secrets_policy_document" {
       "secretsmanager:DescribeSecret",
       "secretsmanager:ListSecretVersionIds",
     ]
-    resources = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:*"
+    resources = ["arn:aws:secretsmanager:eu-west-1:008129123253:secret:*"]
   }
   statement {
     effect = "Allow"
     actions = [
       "secretsmanager:ListSecrets",
     ]
-    resources = "*"
+    resources = ["*"]
   }
 }
 # Associated policy
 resource "aws_iam_policy" "read_regional_secrets_policy" {
     name        = "ecs-cluster-${var.name}-read-regional-secrets-policy"
-    path        = "/ecs-cluster/${var.name}/secrets"
+    path        = "/ecs-cluster/${var.name}/secrets/"
     description = "Policy to read secrets from SSM"
 
     policy = data.aws_iam_policy_document.secrets_policy_document.json
@@ -54,7 +54,7 @@ resource "aws_iam_policy" "read_regional_secrets_policy" {
 
 # Policy documents for cloudwatch logging
 data "aws_iam_policy_document" "cloudwatch_policy_document" {
-    Version = "2012-10-17"
+    version = "2012-10-17"
     statement {
         actions = [
           "logs:PutLogEvents",
@@ -72,7 +72,7 @@ data "aws_iam_policy_document" "cloudwatch_policy_document" {
 # Associated policy
 resource "aws_iam_policy" "write_cloudwatch_policy" {
     name        = "ecs-cluster-${var.name}-write-cloudwatch-policy"
-    path        = "/ecs-cluster/${var.name}/cloudwatch"
+    path        = "/ecs-cluster/${var.name}/cloudwatch/"
     description = "Policy to write to cloudwatch logs"
 
     policy = data.aws_iam_policy_document.cloudwatch_policy_document.json
