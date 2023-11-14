@@ -85,7 +85,7 @@ resource "aws_db_subnet_group" "private_subnet_group" {
   ]
 }
 
-// Rounting table for the private subnets
+// Rouning table for the private subnets
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.vpc.id
   tags = {
