@@ -19,7 +19,7 @@ output "private_subnet_group_name" {
 }
 
 output "default_security_group_id" {
-  value = aws_security_group.default.id
+  value = aws_vpc.vpc.default_security_group_id
 }
 
 output "vpc_region" {
