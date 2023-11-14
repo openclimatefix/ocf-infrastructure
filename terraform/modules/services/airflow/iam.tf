@@ -39,10 +39,6 @@ data "aws_iam_policy_document" "instance" {
   }
 }
 
-
-
-
-
 resource "aws_iam_policy" "cloudwatch" {
   name        = "ocf-airflow-cloudwatch-read-and-write"
   path        = "/"
@@ -66,8 +62,6 @@ resource "aws_iam_policy" "cloudwatch" {
     ]
   })
 }
-
-
 
 resource "aws_iam_policy" "ecs-run" {
   name        = "ocf-airflow-ecs-run"
@@ -93,6 +87,33 @@ resource "aws_iam_policy" "ecs-run" {
   })
 }
 
+# Allow reading of secrets in region
+resource "aws_iam_policy" "read-secrets" {
+    name        = "ocf-airflow-read-secrets"
+    path        = "/"
+    description = "Policy to read secrets from SSM"
+
+    policy = jsonencode({
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "secretsmanager:GetResourcePolicy",
+                    "secretsmanager:GetSecretValue",
+                    "secretsmanager:DescribeSecret",
+                    "secretsmanager:ListSecretVersionIds"
+                ],
+                "Resource": "arn:aws:secretsmanager:eu-west-1:008129123253:secret:*"
+            },
+            {
+                "Effect": "Allow",
+                "Action": "secretsmanager:ListSecrets",
+                "Resource": "*"
+            }
+        ]
+    })
+}
 
 ##################
 # Service role
@@ -107,13 +128,11 @@ resource "aws_iam_role" "api-service-role" {
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
-
   role       = join("", aws_iam_role.api-service-role.*.name)
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
-
   role       = join("", aws_iam_role.api-service-role.*.name)
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
 }
@@ -128,10 +147,6 @@ resource "aws_iam_role_policy_attachment" "attach-read-s3" {
   policy_arn = aws_iam_policy.read-policy.arn
 }
 
-
-
-
-
 ##################
 # Instance role
 ##################
@@ -144,26 +159,21 @@ resource "aws_iam_role" "instance-role" {
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
-
   role       = join("", aws_iam_role.instance-role.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
-
   role       = join("", aws_iam_role.instance-role.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
-
 
 resource "aws_iam_role_policy_attachment" "attach-logs" {
   role       = aws_iam_role.instance-role.name
   policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
-
 resource "aws_iam_instance_profile" "ec2" {
-
   name = "airflow-instance-eb-${var.environment}"
   role = join("", aws_iam_role.instance-role.*.name)
 }
@@ -182,4 +192,9 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
 resource "aws_iam_role_policy_attachment" "attach-ecs-run" {
   role       = aws_iam_role.instance-role.name
   policy_arn = aws_iam_policy.ecs-run.arn
+}
+
+resource "aws_iam_role_policy_attachment" "attach-read-secrets" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = aws_iam_policy.read-secrets.arn
 }
