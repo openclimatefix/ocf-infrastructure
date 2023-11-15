@@ -14,11 +14,6 @@ variable "log-group-name" {
   default     = "/aws/ecs/consumer/pv/"
 }
 
-
-variable "ecs-cluster" {
-  description = "The ECS cluster"
-}
-
 variable "public_subnet_ids" {
   type        = list(string)
   description = "Public subnet ids"

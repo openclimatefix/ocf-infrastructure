@@ -89,3 +89,18 @@ variable "forecast_pvnet_version" {
 variable "forecast_blend_version" {
   description = "The Forecast Blend docker version"
 }
+
+variable "pvsite_api_version" {
+  type = string
+  description = "This gives the version of the PV Site API"
+}
+
+variable "pvsite_forecast_version" {
+  type = string
+  description = "The version of the PVSite forecaster to use"
+}
+
+variable "database_cleanup_version" {
+  type = string
+  description = "The version of the database clean up to use"
+}
