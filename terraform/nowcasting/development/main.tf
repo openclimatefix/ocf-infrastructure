@@ -319,8 +319,8 @@ module "national_forecast" {
     cron_expression = "cron(15 0 * * ? *)" # Runs at 00.15, airflow does the rest
   }
   s3_ml_bucket = {
-    bucket_id              = module.forecasting_models_bucket.bucket.id
-    bucket_read_policy_arn = module.forecasting_models_bucket.read-policy.arn
+    bucket_id              = module.forecasting_models_bucket.bucket_id
+    bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn
   }
   s3_nwp_bucket = {
     bucket_id = module.s3.s3-nwp-bucket.id
@@ -352,8 +352,8 @@ module "forecast_pvnet" {
     cron_expression = "cron(15 0 * * ? *)" # Runs at 00.15, airflow does the rest
   }
   s3_ml_bucket = {
-    bucket_id              = module.forecasting_models_bucket.bucket.id
-    bucket_read_policy_arn = module.forecasting_models_bucket.read-policy.arn
+    bucket_id              = module.forecasting_models_bucket.bucket_id
+    bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn
   }
   s3_nwp_bucket = {
     bucket_id = module.s3.s3-nwp-bucket.id

@@ -17,7 +17,7 @@ default_args = {
     'max_active_tasks':10,
 }
 
-env = os.getenv("ENVIRONMENT","development")
+env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
@@ -35,7 +35,7 @@ with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=de
         task_definition="forecast_national",
         cluster=cluster,
         overrides={},
-        launch_type = "FARGATE",
+        launch_type="FARGATE",
         network_configuration={
             "awsvpcConfiguration": {
                 "subnets": [subnet],
@@ -43,7 +43,7 @@ with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=de
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency = 10,
+     task_concurrency=10,
     )
 
     forecast_blend = EcsRunTaskOperator(

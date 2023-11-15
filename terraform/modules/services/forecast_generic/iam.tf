@@ -82,7 +82,7 @@ resource "aws_iam_role_policy_attachment" "attach-read-s3-satellite" {
   policy_arn = var.s3_satellite_bucket.bucket_read_policy_arn
 }
 
-resource "aws_iam_role_policy_attachment" "attach-write-s3-ml" {
+resource "aws_iam_role_policy_attachment" "attach-read-s3-ml" {
   role       = aws_iam_role.app-role.name
   policy_arn = var.s3_ml_bucket.bucket_read_policy_arn
 }

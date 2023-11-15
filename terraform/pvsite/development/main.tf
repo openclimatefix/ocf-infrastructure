@@ -82,8 +82,8 @@ module "pvsite_forecast" {
     cron_expression = "cron(*/15 * * * ? *)" # Every 15 minutes
   }
   s3_ml_bucket = {
-    bucket_id              = module.pvsite_ml_bucket.bucket.id
-    bucket_read_policy_arn = module.pvsite_ml_bucket.read-policy.arn
+    bucket_id              = module.pvsite_ml_bucket.bucket_id
+    bucket_read_policy_arn = module.pvsite_ml_bucket.read_policy_arn
   }
   s3_nwp_bucket = var.nwp_bucket_config
 }
