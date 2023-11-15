@@ -6,20 +6,20 @@
 
 
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
-  name        = "${var.domain}-${var.environment}-api-sites"
-  description = "Beanstalk API"
+  name        = "${var.domain}-${var.environment}-${var.app_name}"
+  description = "${var.app_name} elastic beanstalk app"
 
   tags = {
-    name = "site-api"
-    type = "eb"
+    Name = var.app_name
+    Type = "eb"
   }
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {
-  name        = "${var.domain}-${var.environment}-api-sites"
+  name        = "${var.domain}-${var.environment}-${var.app_name}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
-  cname_prefix = "${var.domain}-${var.environment}-api-sites"
-  version_label = "${var.domain}-${var.environment}-api-sites-${var.docker_version}"
+  cname_prefix = "${var.domain}-${var.environment}-${var.app_name}}"
+  version_label = "${var.domain}-${var.environment}-${var.app_name}-${var.docker_version}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -99,15 +99,13 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
-    #    value     = "${join(",", var.subnets)}"
-    #    value     = var.subnets
-    value    = var.subnets[0]
+    value    = var.subnet_id
     resource = ""
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = aws_security_group.api-sg.id
+    value     = aws_security_group.sg.id
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -188,7 +186,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "${var.domain}-${var.environment}-api-sites-${var.docker_version}"
+  name        = "${var.domain}-${var.environment}-${var.app_name}-${var.docker_version}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
   description = "application version created by terraform (${var.docker_version})"
   bucket      = aws_s3_bucket.eb.id

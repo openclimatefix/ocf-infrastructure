@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "instance" {
 
 
 resource "aws_iam_policy" "cloudwatch" {
-  name        = "${var.domain}-${var.environment}-cloudwatch-read-and-write-api-site"
+  name        = "${var.domain}-${var.environment}-cloudwatch-read-and-write-${var.app_name}"
   path        = "/"
   description = "Policy to allow read and write to cloudwatch logs"
 
@@ -66,7 +66,7 @@ resource "aws_iam_policy" "cloudwatch" {
 ##################
 
 resource "aws_iam_role" "api-service-role" {
-  name = "${var.domain}-${var.environment}-api-site-service-role"
+  name = "${var.domain}-${var.environment}-${var.app_name}-service-role"
   path = "/"
 
   assume_role_policy = join("", data.aws_iam_policy_document.service.*.json)
@@ -101,7 +101,7 @@ resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-service" 
 ##################
 
 resource "aws_iam_role" "instance-role" {
-  name = "${var.domain}-${var.environment}-api-site-role"
+  name = "${var.domain}-${var.environment}-${var.app_name}-role"
   path = "/"
 
   assume_role_policy = join("", data.aws_iam_policy_document.instance.*.json)
@@ -128,7 +128,7 @@ resource "aws_iam_role_policy_attachment" "attach-logs" {
 
 resource "aws_iam_instance_profile" "ec2" {
 
-  name = "${var.domain}-${var.environment}-api-site-instance-eb"
+  name = "${var.domain}-${var.environment}-${var.app_name}-instance-eb"
   role = join("", aws_iam_role.instance-role.*.name)
 }
 

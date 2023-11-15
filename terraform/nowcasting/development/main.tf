@@ -79,6 +79,7 @@ import {
 }
 
 # 1.1
+# TODO: Make sites api and nowcasting api use same module
 module "api" {
   source = "../../modules/services/api"
 
@@ -448,18 +449,20 @@ module "pvsite_database" {
 }
 
 import {
-  to = module.pvsite_database.aws_db_instance.postgres_db
+  to = module.pvsite_database.aws_db_instance.postgres-db
   id = "pvsite-development"
 }
 
 # 6.2
+# TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
   source = "../../modules/services/api_pvsite"
 
   region                          = var.region
+  app_name                        = "sites-api"
   environment                     = local.environment
   vpc_id                          = module.networking.vpc_id
-  subnets                         = module.networking.public_subnet_ids[0]
+  subnet_id                       = module.networking.public_subnet_ids[0]
   docker_version                  = var.pvsite_api_version
   domain                          = local.domain
   database_secret_url             = module.pvsite_database.secret-url
