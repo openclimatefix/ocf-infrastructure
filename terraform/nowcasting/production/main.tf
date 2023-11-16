@@ -67,14 +67,9 @@ module "forecasting_models_bucket" {
 
   region              = var.region
   environment         = local.environment
-  service_name        = "national-forecaster-models"
+  service_name        = "national-forecast-models"
   domain              = local.domain
   lifecycled_prefixes = []
-}
-
-import {
-  to =  module.forecasting_models_bucket.aws_s3_bucket.bucket
-  id = "uk-national-forecaster-models-production"
 }
 
 # 1.1
