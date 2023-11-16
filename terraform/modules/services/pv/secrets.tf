@@ -19,7 +19,7 @@ data "aws_secretsmanager_secret_version" "pv-ss-version" {
 
 # This gets the URL for the pv sites database
 data "aws_secretsmanager_secret" "pv-sites-database" {
-  name = "${var.environment}/rds/pvsite/"
+  name = "${var.environment}/rds/pvsite"
 }
 
 data "aws_secretsmanager_secret_version" "pv-sites-database-version" {
