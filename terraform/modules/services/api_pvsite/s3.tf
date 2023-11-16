@@ -1,7 +1,7 @@
 # create s3 bucket for application verions
 
 resource "aws_s3_bucket" "eb" {
-  bucket = "${var.domain}-${var.environment}-eb-api-sites"
+  bucket = "${var.domain}-${var.environment}-eb-${var.app_name}"
 }
 
 resource "aws_s3_object" "eb-object" {

@@ -1,5 +1,5 @@
-output "ecs_cluster" {
-  value = aws_ecs_cluster.main
+output "ecs_cluster_arn" {
+  value = aws_ecs_cluster.main.arn
 }
 
 output "ecs_task_execution_role_arn" {

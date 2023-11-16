@@ -23,10 +23,6 @@ variable "s3-bucket" {
   description = "s3 Bucket for Satellite data to be saved to"
 }
 
-variable "ecs-cluster" {
-  description = "The ECS cluster"
-}
-
 variable "public_subnet_ids" {
   type        = list(string)
   description = "Public subnet ids"

@@ -1,22 +1,14 @@
-
 variable "environment" {
   description = "The Deployment environment"
 }
-
 
 variable "region" {
   description = "The AWS region"
 }
 
-
 variable "log-group-name" {
   description = "The log group name where log streams are saved"
   default     = "/aws/ecs/metrics/"
-}
-
-
-variable "ecs-cluster" {
-  description = "The ECS cluster"
 }
 
 variable "public_subnet_ids" {

@@ -1,13 +1,10 @@
-
 variable "environment" {
   description = "The Deployment environment"
 }
 
-
 variable "region" {
   description = "The AWS region"
 }
-
 
 variable "iam-policy-s3-nwp-read" {
   description = "IAM policy to read to s3 bucket for NWP data"
@@ -24,11 +21,6 @@ variable "iam-policy-s3-ml-read" {
 variable "log-group-name" {
   description = "The log group name where log streams are saved"
   default     = "/aws/ecs/forecast/"
-}
-
-
-variable "ecs-cluster" {
-  description = "The ECS cluster"
 }
 
 variable "subnet_ids" {

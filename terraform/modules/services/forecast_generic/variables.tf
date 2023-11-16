@@ -43,21 +43,6 @@ variable "ecs_config" {
   EOT
 }
 
-variable "scheduler_config" {
-  type = object({
-    subnet_ids      = list(string)
-    ecs_cluster_arn = string
-    cron_expression = string
-  })
-  description = <<EOT
-    scheduler_config_info = {
-      subnet_ids : "List of strings specifying the public subnets to use"
-      ecs_cluster_arn : "ARN of the ECS cluster to use"
-      cron_expression : "CRON string defining the schedule of the task"
-    }
-  EOT
-}
-
 variable "s3_nwp_bucket" {
   type = object({
     bucket_id              = string

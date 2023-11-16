@@ -46,7 +46,7 @@ module "postgres" {
 
   region          = var.region
   environment     = var.environment
-  db_subnet_group = module.networking.private_subnet_group
+  db_subnet_group_name = module.networking.private_subnet_group
   vpc_id          = module.networking.vpc_id
   db_name            = "testdb"
   rds_instance_class = "db.t3.micro"
