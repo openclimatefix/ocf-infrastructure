@@ -39,7 +39,7 @@ module "networking" {
 
 # 0.2
 module "ec2-bastion" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=dc35fac"
 
   region               = var.region
   vpc_id               = module.networking.vpc_id
@@ -48,7 +48,7 @@ module "ec2-bastion" {
 
 # 0.3
 module "s3" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=dc35fac"
 
   region      = var.region
   environment = local.environment
@@ -56,13 +56,14 @@ module "s3" {
 
 # 0.4
 module "ecs" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=dc35fac"
   name = "Nowcasting-${local.environment}"
+  secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
 }
 
 # 0.5
 module "forecasting_models_bucket" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=dc35fac"
 
   region              = var.region
   environment         = local.environment
@@ -78,7 +79,7 @@ import {
 
 # 1.1
 module "api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=dc35fac"
 
   region                              = var.region
   environment                         = local.environment
@@ -98,7 +99,7 @@ module "api" {
 
 # 2.1
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=dc35fac"
 
   region          = var.region
   environment     = local.environment
@@ -108,7 +109,7 @@ module "database" {
 
 # 3.1
 module "nwp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=dc35fac"
 
   ecs-task_name = "nwp"
   ecs-task_type = "consumer"
@@ -145,7 +146,7 @@ module "nwp" {
 
 # 3.2
 module "nwp-national" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=dc35fac"
 
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
@@ -183,7 +184,7 @@ module "nwp-national" {
 
 # 3.3
 module "nwp-ecmwf" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=dc35fac"
 
   ecs-task_name = "nwp-ecmwf"
   ecs-task_type = "consumer"
@@ -219,7 +220,7 @@ module "nwp-ecmwf" {
 
 # 3.4 Sat Consumer
 module "sat" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/sat?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/sat?ref=dc35fac"
 
   region                  = var.region
   environment             = local.environment
@@ -234,7 +235,7 @@ module "sat" {
 
 # 3.5
 module "pv" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=dc35fac"
 
   region                  = var.region
   environment             = local.environment
@@ -250,7 +251,7 @@ module "pv" {
 
 # 3.6
 module "gsp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/gsp?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/gsp?ref=dc35fac"
 
   region                  = var.region
   environment             = local.environment
@@ -264,7 +265,7 @@ module "gsp" {
 
 # 4.1
 module "metrics" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/metrics?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/metrics?ref=dc35fac"
 
   region                  = var.region
   environment             = local.environment
@@ -299,7 +300,7 @@ module "forecast" {
 
 # 4.3
 module "national_forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=dc35fac"
 
   region      = var.region
   environment = local.environment
@@ -332,7 +333,7 @@ module "national_forecast" {
 
 # 4.4
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=dc35fac"
 
   region      = var.region
   environment = local.environment
@@ -372,7 +373,7 @@ module "forecast_pvnet" {
 
 # 5.1
 module "analysis_dashboard" {
-    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=3afba6a"
+    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=dc35fac"
 
     region      = var.region
     environment = local.environment
@@ -399,7 +400,7 @@ module "analysis_dashboard" {
 
 # 4.5
 module "forecast_blend" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=dc35fac"
 
   region      = var.region
   environment = local.environment
@@ -420,7 +421,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=3afba6a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=dc35fac"
 
   environment   = local.environment
   vpc_id        = module.networking.vpc_id
@@ -429,4 +430,5 @@ module "airflow" {
   docker-compose-version     = "0.0.3"
   ecs_subnet_id = module.networking.public_subnet_ids[0]
   ecs_security_group=module.networking.default_security_group_id
+  secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
 }
