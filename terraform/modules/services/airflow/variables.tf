@@ -40,6 +40,11 @@ variable "ecs_subnet_id" {
   type = string
 }
 
+variable "secretsmanager_arn" {
+  description = "The arn of the secrets manager instance, up to :secret: not inclusive"
+  type = string
+}
+
 
 
 

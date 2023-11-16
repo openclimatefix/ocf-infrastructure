@@ -58,6 +58,7 @@ module "pvsite_ml_bucket" {
 module "pvsite_ecs" {
   source = "../../modules/ecs_cluster"
   name = "Pvsite-development"
+  secretsmanager_arn = regex("^(.+):secret:", module.pvsite_database.secret.arn)[0]
 }
 
 module "pvsite_forecast" {
