@@ -18,7 +18,7 @@ resource "aws_elastic_beanstalk_application" "eb-api-application" {
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   name        = "${var.domain}-${var.environment}-${var.app_name}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
-  cname_prefix = "${var.domain}-${var.environment}-${var.app_name}}"
+  cname_prefix = "${var.domain}-${var.environment}-${var.app_name}"
   version_label = "${var.domain}-${var.environment}-${var.app_name}-${var.docker_version}"
 
   setting {
