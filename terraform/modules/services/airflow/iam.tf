@@ -104,7 +104,7 @@ resource "aws_iam_policy" "read-secrets" {
                     "secretsmanager:DescribeSecret",
                     "secretsmanager:ListSecretVersionIds"
                 ],
-                "Resource": "arn:aws:secretsmanager:eu-west-1:008129123253:secret:*"
+                "Resource": "${var.secretsmanager_arn}:secret:*"
             },
             {
                 "Effect": "Allow",

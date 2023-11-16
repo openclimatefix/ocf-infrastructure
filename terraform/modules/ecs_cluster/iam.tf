@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "secrets_policy_document" {
       "secretsmanager:DescribeSecret",
       "secretsmanager:ListSecretVersionIds",
     ]
-    resources = ["arn:aws:secretsmanager:eu-west-1:008129123253:secret:*"]
+    resources = ["${var.secretsmanager_arn}:secret:*"]
   }
   statement {
     effect = "Allow"
