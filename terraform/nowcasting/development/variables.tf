@@ -89,7 +89,3 @@ variable "forecast_pvnet_version" {
 variable "forecast_blend_version" {
   description = "The Forecast Blend docker version"
 }
-
-variable "secretsmanager_arn" {
-  description = "The common arn for all secrets in the secretsmanager instance, e.g. `arn:aws:secretsmanager:REGION:NUMBER`"
-}

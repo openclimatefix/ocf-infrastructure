@@ -57,6 +57,7 @@ module "s3" {
 module "ecs" {
   source = "../../modules/ecs_cluster"
   name = "Nowcasting-${local.environment}"
+  secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
 }
 
 # 0.5
@@ -428,4 +429,5 @@ module "airflow" {
   docker-compose-version       = "0.0.3"
   ecs_subnet_id = module.networking.public_subnet_ids[0]
   ecs_security_group=module.networking.default_security_group_id
+  secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
 }
