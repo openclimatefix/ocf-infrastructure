@@ -27,7 +27,7 @@ The componentes ares:
 Variables used across all modules
 ======*/
 locals {
-  environment = "development"
+  environment = "production"
   domain = "uk"
 }
 
