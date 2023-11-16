@@ -34,6 +34,7 @@ locals {
 # 0.1
 module "networking" {
   source = "../../modules/networking"
+  environment = "production"
 }
 
 # 0.2
