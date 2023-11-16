@@ -10,7 +10,7 @@ resource "random_password" "db-password" {
 
 # Now create secret and secret versions for database main account
 resource "aws_secretsmanager_secret" "db-secret" {
-  name = "${var.environment}/rds/${var.db_name}/"
+  name = "${var.environment}/rds/${var.db_name}"
   # Once the secret is deleted, we cant get it back.
   # If we don't do this, then a new secret can be made with the same name until the recovery window is over
   recovery_window_in_days = 0
