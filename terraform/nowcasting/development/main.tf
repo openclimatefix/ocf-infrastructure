@@ -73,11 +73,6 @@ module "forecasting_models_bucket" {
   lifecycled_prefixes = []
 }
 
-import {
-  to = module.forecasting_models_bucket.aws_s3_bucket.bucket
-  id = "uk-national-forecaster-models-development"
-}
-
 # 1.1
 # TODO: Make sites api and nowcasting api use same module
 module "api" {
@@ -228,7 +223,6 @@ module "sat" {
   environment             = local.environment
   iam-policy-s3-sat-write = module.s3.iam-policy-s3-sat-write
   s3-bucket               = module.s3.s3-sat-bucket
-  ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = module.networking.public_subnet_ids
   docker_version          = var.sat_version
   database_secret         = module.database.forecast-database-secret
@@ -241,7 +235,6 @@ module "pv" {
 
   region                  = var.region
   environment             = local.environment
-  ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.pv-database-secret
   database_secret_forecast = module.database.forecast-database-secret
@@ -257,7 +250,6 @@ module "gsp" {
 
   region                  = var.region
   environment             = local.environment
-  ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.gsp_version
@@ -271,7 +263,6 @@ module "metrics" {
 
   region                  = var.region
   environment             = local.environment
-  ecs-cluster             = module.ecs.ecs_cluster
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.metrics_version
@@ -285,7 +276,6 @@ module "forecast" {
 
   region                        = var.region
   environment                   = local.environment
-  ecs-cluster                   = module.ecs.ecs_cluster
   subnet_ids                    = module.networking.public_subnet_ids
   iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
@@ -317,11 +307,6 @@ module "national_forecast" {
     database_secret_arn             = module.database.forecast-database-secret.arn
     database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
   }
-  scheduler_config = {
-    subnet_ids      = module.networking.public_subnet_ids
-    ecs_cluster_arn = module.ecs.ecs_cluster.arn
-    cron_expression = "cron(15 0 * * ? *)" # Runs at 00.15, airflow does the rest
-  }
   s3_ml_bucket = {
     bucket_id              = module.forecasting_models_bucket.bucket_id
     bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn
@@ -349,11 +334,6 @@ module "forecast_pvnet" {
   rds_config = {
     database_secret_arn             = module.database.forecast-database-secret.arn
     database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
-  }
-  scheduler_config = {
-    subnet_ids      = module.networking.public_subnet_ids
-    ecs_cluster_arn = module.ecs.ecs_cluster.arn
-    cron_expression = "cron(15 0 * * ? *)" # Runs at 00.15, airflow does the rest
   }
   s3_ml_bucket = {
     bucket_id              = module.forecasting_models_bucket.bucket_id
@@ -448,11 +428,6 @@ module "pvsite_database" {
   allow_major_version_upgrade = true
 }
 
-import {
-  to = module.pvsite_database.aws_db_instance.postgres-db
-  id = "pvsite-development"
-}
-
 # 6.2
 # TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
@@ -506,8 +481,8 @@ module "pvsite_forecast" {
     database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
   }
   s3_ml_bucket = {
-    bucket_id              = module.pvsite_ml_bucket.bucket.id
-    bucket_read_policy_arn = module.pvsite_ml_bucket.read-policy.arn
+    bucket_id              = module.pvsite_ml_bucket.bucket_id
+    bucket_read_policy_arn = module.pvsite_ml_bucket.read_policy_arn
   }
   s3_nwp_bucket = {
     bucket_id              = module.s3.s3-nwp-bucket.id
@@ -533,6 +508,3 @@ module "pvsite_database_clean_up" {
     database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
   }
 }
-
-
-
