@@ -423,9 +423,14 @@ module "pvsite_database" {
   environment                 = local.environment
   db_subnet_group_name        = module.networking.private_subnet_group_name
   vpc_id                      = module.networking.vpc_id
-  db_name                     = "pvsite"
+  db_name                     = "pv-sites"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
+}
+
+import {
+  to = module.pvsite_database.aws_db_instance.postgres-db
+  id = "pv-sites-development"
 }
 
 import {
