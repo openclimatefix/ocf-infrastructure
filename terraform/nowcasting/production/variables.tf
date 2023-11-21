@@ -2,23 +2,8 @@ variable "region" {
   description = "The AWS region to use"
 }
 
-variable "environment" {
-  description = "The Production environment"
-}
-
-//Networking
 variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
-}
-
-variable "public_subnets_cidr" {
-  type        = list(string)
-  description = "The CIDR block for the public subnet"
-}
-
-variable "private_subnets_cidr" {
-  type        = list(string)
-  description = "The CIDR block for the private subnet"
 }
 
 variable "api_version" {
@@ -49,17 +34,14 @@ variable "pv_ss_version" {
   description = "The PV Consumer version for solar sheffield"
 }
 
-
 variable "gsp_version" {
   description = "The GSP Consumer version"
   default = "0.0.2"
 }
 
-
 variable "cloudflare_zone_id" {
   description = "The ZoneID of the nowcasting domain"
 }
-
 
 variable "metrics_version" {
   description = "The Metrics version"
@@ -104,7 +86,17 @@ variable "auth_dashboard_client_id" {
   default = "not-set"
 }
 
-variable "ecs_security_group" {
-  description = "The security group for airflow ecs tasks. TODO remove this"
+variable "pvsite_api_version" {
   type = string
+  description = "This gives the version of the PV Site API"
+}
+
+variable "pvsite_forecast_version" {
+  type = string
+  description = "The version of the PVSite forecaster to use"
+}
+
+variable "database_cleanup_version" {
+  type = string
+  description = "The version of the database clean up to use"
 }
