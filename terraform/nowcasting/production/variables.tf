@@ -6,16 +6,6 @@ variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
 }
 
-variable "public_subnets_cidr" {
-  type        = list(string)
-  description = "The CIDR block for the public subnet"
-}
-
-variable "private_subnets_cidr" {
-  type        = list(string)
-  description = "The CIDR block for the private subnet"
-}
-
 variable "api_version" {
   description = "The API version"
 }
@@ -44,17 +34,14 @@ variable "pv_ss_version" {
   description = "The PV Consumer version for solar sheffield"
 }
 
-
 variable "gsp_version" {
   description = "The GSP Consumer version"
   default = "0.0.2"
 }
 
-
 variable "cloudflare_zone_id" {
   description = "The ZoneID of the nowcasting domain"
 }
-
 
 variable "metrics_version" {
   description = "The Metrics version"
