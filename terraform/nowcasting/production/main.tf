@@ -499,11 +499,6 @@ module "pvsite_forecast" {
   }
 }
 
-import {
-  to = module.pvsite_forecast.aws_iam_policy.cloudwatch_role
-  id = "arn:aws:iam::752135663966:policy/pvsite_forecast/cloudwatch-read-and-write-pvsite_forecast"
-}
-
 # 6.5
 module "pvsite_database_clean_up" {
   source      = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/database_clean_up?ref=8523563"
