@@ -428,6 +428,11 @@ module "pvsite_database" {
   allow_major_version_upgrade = true
 }
 
+import {
+  to = module.pvsite_database.aws_secretsmanager_secret.db-secret
+  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/rds/pvsite-pyZtZ8"
+}
+
 # 6.2
 # TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
