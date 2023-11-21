@@ -39,6 +39,7 @@ locals {
 # 0.1
 module "networking" {
   source = "../../modules/networking"
+  environment = local.environment
 }
 
 # 0.2
@@ -497,11 +498,6 @@ module "pvsite_forecast" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
     datadir                = "data"
   }
-}
-
-import {
-  to = module.pvsite_forecast.aws_iam_policy.cloudwatch_role
-  id = "arn:aws:iam::752135663966:policy/pvsite_forecast/cloudwatch-read-and-write-pvsite_forecast"
 }
 
 # 6.5
