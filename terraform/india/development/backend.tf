@@ -5,7 +5,7 @@ terraform {
     organization = "openclimatefix"
 
     workspaces {
-      name = "india_infrastructure_development-eu-west-1"
+      name = "india_infrastructure_development-ap-south-1"
     }
   }
 
@@ -28,9 +28,9 @@ terraform {
 provider "aws" {
   region = var.region
   default_tags {
-        tags = {
-          environment = local.environment
-          domain = local.domain
-        }
-      }
+    tags = {
+      environment = local.environment
+      domain = local.domain
+    }
+  }
 }
