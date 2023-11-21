@@ -5,7 +5,7 @@ terraform {
     organization = "openclimatefix"
 
     workspaces {
-      name = "india_infrastructure_development-eu-west-1"
+      name = "india_infrastructure_development-ap-south-1"
     }
   }
 
