@@ -39,6 +39,7 @@ locals {
 # 0.1
 module "networking" {
   source = "../../modules/networking"
+  environment = local.environment
 }
 
 # 0.2
