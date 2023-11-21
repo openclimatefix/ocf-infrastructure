@@ -39,3 +39,4 @@ terraform.rc
 .idea
 .vscode
 .fleet
+.DS_Store
