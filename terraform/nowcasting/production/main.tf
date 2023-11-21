@@ -25,6 +25,9 @@ The componentes ares:
 5.2 - Airflow instance
 6.1 - PVSite database
 6.2 - PVSite API
+6.3 - PVSite ML bucket
+6.4 - PVSite Forecast
+6.5 - PVSite Database Clean Up
 
 Variables used across all modules
 ======*/
