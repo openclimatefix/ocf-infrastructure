@@ -509,11 +509,6 @@ module "pvsite_forecast" {
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
-import {
-  to = module.pvsite_forecast.aws_iam_policy.cloudwatch_role
-  id = "arn:aws:iam::008129123253:policy/pvsite_forecast/cloudwatch-read-and-write-pvsite_forecast"
-}
-
 # 6.5
 module "pvsite_database_clean_up" {
   source      = "../../modules/services/database_clean_up"
