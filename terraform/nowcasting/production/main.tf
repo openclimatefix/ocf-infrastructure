@@ -185,10 +185,11 @@ module "nwp-national" {
 
 # 3.3
 module "nwp-ecmwf" {
-  source = "../../modules/services/nwp_consumer"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=2ca229b"
 
   ecs-task_name = "nwp-ecmwf"
   ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
   aws-region                     = var.region
   aws-environment                = local.environment
