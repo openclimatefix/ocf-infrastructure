@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 import os
-from .utils import on_failure_callback
+from utils.slack import on_failure_callback
 
 from airflow.operators.latest_only import LatestOnlyOperator
 

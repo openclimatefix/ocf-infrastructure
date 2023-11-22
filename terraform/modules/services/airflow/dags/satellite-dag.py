@@ -5,7 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from .utils import on_failure_callback
+from utils.slack import on_failure_callback
 
 default_args = {
     "owner": "airflow",
