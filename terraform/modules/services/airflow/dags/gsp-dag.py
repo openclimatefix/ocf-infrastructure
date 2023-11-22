@@ -2,9 +2,9 @@ import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
+from .utils import on_failure_callback
 
 default_args = {
     'owner': 'airflow',
@@ -41,7 +41,8 @@ with DAG('gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 *
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency=10,
+        task_concurrency=10,
+        on_failure_callback=on_failure_callback
     )
 
     latest_only >> gsp_consumer

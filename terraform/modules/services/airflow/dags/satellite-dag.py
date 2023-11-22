@@ -5,6 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
+from .utils import on_failure_callback
 
 default_args = {
     "owner": "airflow",
@@ -51,6 +52,7 @@ with DAG(
             },
         },
         task_concurrency=10,
+        on_failure_callback=on_failure_callback
     )
 
     latest_only >> sat_consumer
@@ -82,6 +84,7 @@ with DAG(
             },
         },
         task_concurrency=10,
+        on_failure_callback=on_failure_callback
     )
 
     latest_only >> sat_consumer

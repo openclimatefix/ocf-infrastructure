@@ -45,6 +45,10 @@ variable "secretsmanager_arn" {
   type = string
 }
 
-
+variable "airflow_conn_slack_api_default" {
+  type = string
+  description = "The slack connection string for airflow"
+  default = "not-set"
+}
 
 
