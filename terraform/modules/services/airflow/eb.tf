@@ -132,7 +132,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = aws_iam_instance_profile.ec2.arn
+    value     = aws_iam_instance_profile.ec2.name
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"

@@ -18,15 +18,16 @@ resource "aws_elastic_beanstalk_application" "eb-app" {
 
 # Create the EB Environment
 resource "aws_elastic_beanstalk_environment" "eb-env" {
-  name        = "${var.domain}-${var.environment}-${var.eb_app_name}"
-  application = aws_elastic_beanstalk_application.eb-app.name
-  cname_prefix = "${var.domain}-${var.environment}-${var.eb_app_name}"
+  name          = "${var.domain}-${var.environment}-${var.eb_app_name}"
+  application   = aws_elastic_beanstalk_application.eb-app.name
+  cname_prefix  = "${var.domain}-${var.environment}-${var.eb_app_name}"
   version_label = "${var.domain}-${var.environment}-${var.eb_app_name}-${var.docker_config.version}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
     value     = "t3.small"
+    resource  = ""
   }
 
   # the next line IS NOT RANDOM,
@@ -43,60 +44,70 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
     value     = var.database_config.secret
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SITES_DB_URL"
     value     = jsondecode(data.aws_secretsmanager_secret_version.database-sites-version.secret_string)["url"]
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ORIGINS"
     value     = "*" #TODO change
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DOCKER_IMAGE"
     value     = var.docker_config.image
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DOCKER_IMAGE_VERSION"
     value     = var.docker_config.version
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "EB_APP_NAME"
     value     = var.eb_app_name
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ENVIRONMENT"
     value     = var.environment
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AUTH0_CLIENT_ID"
     value     = var.auth_config.auth0_client_id
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AUTH0_DOMAIN"
     value     = var.auth_config.auth0_domain
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SHOW_PVNET_GSP_SUM"
     value     = var.show_pvnet_gsp_sum
+    resource  = ""
   }
 
   # =========== EB Settings =========== #
@@ -105,44 +116,52 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.networking_config.vpc_id
+    resource  = ""
   }
 
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
+    # When joining multiple subnets, ensure there are no spaces between
+    # them and the values are sorted alphabetically
     #    value     = "${join(",", var.subnets)}"
     #    value     = var.subnets
-    value    = var.networking_config.subnets[0]
-    resource = ""
+    value     = var.networking_config.subnets[0]
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = aws_security_group.api-sg.id
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = aws_iam_instance_profile.ec2.arn
+    value     = aws_iam_instance_profile.ec2.name
+    resource  = ""
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = aws_iam_role.api-service-role.arn
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
     value     = "1"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = "1"
+    resource  = ""
   }
 
   # Following https://discuss.streamlit.io/t/howto-streamlit-on-aws-with-elastic-beanstalk-and-docker/10353
@@ -150,6 +169,7 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:elb:listener"
     name      = "ListenerProtocol"
     value     = "TCP"
+    resource  = ""
   }
 
   # ============ Logging ============ #
@@ -198,7 +218,8 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
 
   # make sure that when the application is made, the latest version is deployed to it
   provisioner "local-exec" {
-    command = join("", ["aws elasticbeanstalk update-environment ",
+    command = join("", [
+      "aws elasticbeanstalk update-environment ",
       "--region ${var.region} ",
       "--application-name ${aws_elastic_beanstalk_application.eb-app.name} ",
       "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
