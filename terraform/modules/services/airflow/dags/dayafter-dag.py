@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from airflow.decorators import dag
 import os
+from .utils import on_failure_callback
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -18,7 +18,7 @@ default_args = {
     "max_active_tasks": 10,
 }
 
-env = os.getenv("ENVIRONMENT","development")
+env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
@@ -48,6 +48,7 @@ with DAG(
                 "assignPublicIp": "ENABLED",
             },
         },
+        on_failure_callback=on_failure_callback,
         task_concurrency=10,
     )
 
@@ -75,6 +76,7 @@ with DAG(
                 "assignPublicIp": "ENABLED",
             },
         },
+        on_failure_callback=on_failure_callback,
         task_concurrency=10,
     )
 
@@ -91,6 +93,7 @@ with DAG(
                 "assignPublicIp": "ENABLED",
             },
         },
+        on_failure_callback=on_failure_callback,
         task_concurrency=10,
     )
 

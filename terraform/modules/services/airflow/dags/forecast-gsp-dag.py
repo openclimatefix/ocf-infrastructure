@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from airflow.decorators import dag
+from .utils import on_failure_callback
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -21,6 +21,7 @@ env = os.getenv("ENVIRONMENT","development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
+
 
 # Tasks can still be defined in terraform, or defined here
 
@@ -42,7 +43,8 @@ with DAG('gsp-forecast-pvnet-1', schedule_interval="15 * * * *", default_args=de
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency = 10,
+        on_failure_callback=on_failure_callback,
+        task_concurrency = 10,
     )
 
     forecast_blend = EcsRunTaskOperator(
@@ -59,6 +61,7 @@ with DAG('gsp-forecast-pvnet-1', schedule_interval="15 * * * *", default_args=de
             },
         },
         task_concurrency=10,
+        on_failure_callback=on_failure_callback,
     )
 
     latest_only >> forecast >> forecast_blend
@@ -82,7 +85,8 @@ with DAG('gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", default_args
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency = 10,
+        task_concurrency = 10,
+        on_failure_callback=on_failure_callback,
     )
 
     forecast_blend = EcsRunTaskOperator(
@@ -99,6 +103,7 @@ with DAG('gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", default_args
             },
         },
         task_concurrency=10,
+        on_failure_callback=on_failure_callback,
     )
 
     latest_only >> forecast >> forecast_blend

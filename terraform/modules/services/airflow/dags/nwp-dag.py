@@ -2,9 +2,9 @@ import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
+from .utils import on_failure_callback
 
 default_args = {
     'owner': 'airflow',
@@ -43,7 +43,8 @@ with DAG('nwp-consumer', schedule_interval="10,25,40,55 * * * *", default_args=d
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency = 10,
+        task_concurrency = 10,
+        on_failure_callback=on_failure_callback
     )
 
     nwp_national_consumer = EcsRunTaskOperator(
@@ -60,6 +61,7 @@ with DAG('nwp-consumer', schedule_interval="10,25,40,55 * * * *", default_args=d
             },
         },
         task_concurrency=10,
+        on_failure_callback=on_failure_callback
     )
 
     # nwp_ecmwf_consumer = EcsRunTaskOperator(

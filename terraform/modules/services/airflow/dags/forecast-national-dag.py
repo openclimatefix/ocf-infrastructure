@@ -2,9 +2,9 @@ import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
+from .utils import on_failure_callback
 
 default_args = {
     'owner': 'airflow',
@@ -43,7 +43,8 @@ with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=de
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency=10,
+        task_concurrency=10,
+        on_failure_callback=on_failure_callback
     )
 
     forecast_blend = EcsRunTaskOperator(
@@ -60,6 +61,7 @@ with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=de
             },
         },
         task_concurrency=10,
+        on_failure_callback=on_failure_callback
     )
 
     latest_only >> national_forecast >> forecast_blend

@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from airflow.decorators import dag
+from .utils import on_failure_callback
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -43,6 +43,7 @@ with DAG('site-forecast', schedule_interval="*/15 * * * *", default_args=default
                 "assignPublicIp": "ENABLED",
             },
         },
+        on_failure_callback=on_failure_callback,
      task_concurrency = 10,
     )
 
@@ -64,7 +65,8 @@ with DAG('site-forecast-db-clean', schedule_interval="0 0 * * *", default_args=d
                 "assignPublicIp": "ENABLED",
             },
         },
-     task_concurrency = 10,
+        task_concurrency = 10,
+        on_failure_callback=on_failure_callback
     )
 
 
