@@ -41,7 +41,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
 
   rule {
     id      = "remove_old_files"
-    enabled = true
     filter {
       prefix = "data/"
     }
@@ -53,7 +52,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
 
   rule {
     id      = "remove_old_raw_files"
-    enabled = true
     filter {
       prefix = "raw/"
     }
@@ -65,7 +63,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
 
   rule {
     id      = "remove_old_files_national"
-    enabled = true
     filter {
       prefix = "data-national/"
     }
@@ -77,7 +74,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
 
   rule {
     id      = "remove_old_raw_files_national"
-    enabled = true
     filter {
       prefix = "raw-national/"
     }
@@ -138,7 +134,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
 
   rule {
     id      = "remove_old_files"
-    enabled = true
     filter {
       prefix = "data/"
     }
@@ -150,7 +145,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
 
   rule {
     id      = "remove_old_raw_files"
-    enabled = true
     filter {
       prefix = "raw/"
     }
