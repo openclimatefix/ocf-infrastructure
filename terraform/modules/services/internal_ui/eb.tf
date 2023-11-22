@@ -131,18 +131,21 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = aws_iam_role.api-service-role.arn
+    resource = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
     value     = "1"
+    resource = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = "1"
+    resource = ""
   }
 
   # Following https://discuss.streamlit.io/t/howto-streamlit-on-aws-with-elastic-beanstalk-and-docker/10353
@@ -150,6 +153,7 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:elb:listener"
     name      = "ListenerProtocol"
     value     = "TCP"
+    resource = ""
   }
 
   # ============ Logging ============ #
