@@ -43,60 +43,70 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
     value     = var.database_config.secret
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SITES_DB_URL"
     value     = jsondecode(data.aws_secretsmanager_secret_version.database-sites-version.secret_string)["url"]
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ORIGINS"
     value     = "*" #TODO change
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DOCKER_IMAGE"
     value     = var.docker_config.image
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DOCKER_IMAGE_VERSION"
     value     = var.docker_config.version
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "EB_APP_NAME"
     value     = var.eb_app_name
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ENVIRONMENT"
     value     = var.environment
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AUTH0_CLIENT_ID"
     value     = var.auth_config.auth0_client_id
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AUTH0_DOMAIN"
     value     = var.auth_config.auth0_domain
+    resource = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SHOW_PVNET_GSP_SUM"
     value     = var.show_pvnet_gsp_sum
+    resource = ""
   }
 
   # =========== EB Settings =========== #
@@ -105,6 +115,7 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.networking_config.vpc_id
+    resource = ""
   }
 
   setting {
@@ -120,12 +131,14 @@ resource "aws_elastic_beanstalk_environment" "eb-env" {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = aws_security_group.api-sg.id
+    resource = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = aws_iam_instance_profile.ec2.name
+    resource = ""
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
