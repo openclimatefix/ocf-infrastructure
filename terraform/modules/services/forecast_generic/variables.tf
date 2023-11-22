@@ -113,3 +113,8 @@ variable "pvnet_gsp_sum" {
   description = "Whether to make the pvnet_gsp_sum"
   default     = "false"
 }
+
+variable "ecs-task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}

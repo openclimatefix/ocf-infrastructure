@@ -52,3 +52,8 @@ variable "loglevel" {
   description = "The log level"
   default     = "DEBUG"
 }
+
+variable "ecs-task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}

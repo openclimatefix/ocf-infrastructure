@@ -39,3 +39,8 @@ variable "database_secret" {
 variable "iam-policy-rds-read-secret" {
   description = "IAM policy to be able to read the RDS secret"
 }
+
+variable "ecs-task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}

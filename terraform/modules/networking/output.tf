@@ -25,3 +25,7 @@ output "default_security_group_id" {
 output "vpc_region" {
   value = var.region
 }
+
+output "owner_id" {
+  value = aws_vpc.vpc.owner_id
+}

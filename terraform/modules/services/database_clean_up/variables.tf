@@ -43,6 +43,11 @@ variable "ecs_config" {
   EOT
 }
 
+variable "ecs-task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}
+
 locals {
   log-group-name = "/aws/ecs/${var.app-name}/"
 }

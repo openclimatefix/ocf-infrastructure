@@ -18,7 +18,7 @@ resource "aws_ecs_task_definition" "sat-task-definition" {
 
 
   task_role_arn      = aws_iam_role.consumer-sat-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn = var.ecs-task_execution_role_arn
   container_definitions = jsonencode([
     {
       name  = "sat-consumer"
@@ -59,8 +59,6 @@ resource "aws_ecs_task_definition" "sat-task-definition" {
       }
     }
   ])
-
-  # add volume? So we dont have to keep downloading same docker image
 }
 
 
@@ -76,7 +74,7 @@ resource "aws_ecs_task_definition" "sat-clean-up-task-definition" {
 
 
   task_role_arn      = aws_iam_role.consumer-sat-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn = var.ecs-task_execution_role_arn
   container_definitions = jsonencode([
     {
       name  = "sat-clean-up-consumer"
@@ -116,6 +114,4 @@ resource "aws_ecs_task_definition" "sat-clean-up-task-definition" {
       }
     }
   ])
-
-  # add volume? So we dont have to keep downloading same docker image
 }

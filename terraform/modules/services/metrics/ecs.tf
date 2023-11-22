@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "metrics-task-definition" {
   memory = 512
 
   task_role_arn      = aws_iam_role.metrics-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn = var.ecs-task_execution_role_arn
   container_definitions = jsonencode([
     {
       name  = "metrics"
@@ -48,6 +48,4 @@ resource "aws_ecs_task_definition" "metrics-task-definition" {
       }
     }
   ])
-
-  # add volume? So we dont have to keep downloading same docker image
 }

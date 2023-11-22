@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "task_def" {
   }
 
   task_role_arn         = aws_iam_role.run_task_role.arn
-  execution_role_arn    = aws_iam_role.create_task_role.arn
+  execution_role_arn    = var.ecs-task_execution_role_arn
   container_definitions = jsonencode([
     {
       name      = "${var.ecs-task_name}-${var.ecs-task_type}"
