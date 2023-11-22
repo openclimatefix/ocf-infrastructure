@@ -114,6 +114,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   }
 
   setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AIRFLOW_CONN_SLACK_API_DEFAULT"
+    value     = var.airflow_conn_slack_api_default
+  }
+
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.vpc_id

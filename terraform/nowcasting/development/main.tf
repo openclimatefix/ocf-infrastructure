@@ -421,7 +421,7 @@ module "airflow" {
   vpc_id        = module.networking.vpc_id
   subnet_id       = module.networking.public_subnet_ids[0]
   db_url        = module.database.forecast-database-secret-airflow-url
-  docker-compose-version       = "0.0.3"
+  docker-compose-version       = "0.0.4"
   ecs_subnet_id = module.networking.public_subnet_ids[0]
   ecs_security_group=module.networking.default_security_group_id
   secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
