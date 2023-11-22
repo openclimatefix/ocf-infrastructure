@@ -3,15 +3,15 @@ output "vpc_id" {
 }
 
 output "public_subnet_ids" {
-  value = [
+  value = sort([
     for subnet in aws_subnet.public_subnets : subnet.id
-  ]
+  ])
 }
 
 output "private_subnet_ids" {
-  value = [
+  value = sort([
     for subnet in aws_subnet.private_subnets : subnet.id
-  ]
+  ])
 }
 
 output "private_subnet_group_name" {
