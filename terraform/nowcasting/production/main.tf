@@ -38,13 +38,13 @@ locals {
 
 # 0.1
 module "networking" {
-  source = "../../modules/networking"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking?ref=5a6b161"
   environment = local.environment
 }
 
 # 0.2
 module "ec2-bastion" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=5a6b161"
 
   region            = var.region
   vpc_id            = module.networking.vpc_id
@@ -53,7 +53,7 @@ module "ec2-bastion" {
 
 # 0.3
 module "s3" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=5a6b161"
 
   region      = var.region
   environment = local.environment
@@ -61,14 +61,14 @@ module "s3" {
 
 # 0.4
 module "ecs" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=5a6b161"
   name = "Nowcasting-${local.environment}"
   secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
 }
 
 # 0.5
 module "forecasting_models_bucket" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=5a6b161"
 
   region              = var.region
   environment         = local.environment
@@ -80,7 +80,7 @@ module "forecasting_models_bucket" {
 # 1.1
 # TODO: Make sites api and nowcasting api use same module
 module "api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=5a6b161"
 
   region                              = var.region
   environment                         = local.environment
@@ -100,7 +100,7 @@ module "api" {
 
 # 2.1
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=5a6b161"
 
   region               = var.region
   environment          = local.environment
@@ -110,10 +110,11 @@ module "database" {
 
 # 3.1
 module "nwp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=5a6b161"
 
   ecs-task_name = "nwp"
   ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
   aws-region                     = var.region
   aws-environment                = local.environment
@@ -147,10 +148,11 @@ module "nwp" {
 
 # 3.2
 module "nwp-national" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=dc35fac"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=5a6b161"
 
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
   aws-region                     = var.region
   aws-environment                = local.environment
@@ -185,7 +187,7 @@ module "nwp-national" {
 
 # 3.3
 module "nwp-ecmwf" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=2ca229b"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=5a6b161"
 
   ecs-task_name = "nwp-ecmwf"
   ecs-task_type = "consumer"
@@ -222,7 +224,7 @@ module "nwp-ecmwf" {
 
 # 3.4 Sat Consumer
 module "sat" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/sat?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/sat?ref=5a6b161"
 
   region                  = var.region
   environment             = local.environment
@@ -232,11 +234,12 @@ module "sat" {
   docker_version          = var.sat_version
   database_secret         = module.database.forecast-database-secret
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 3.5
 module "pv" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=5a6b161"
 
   region                  = var.region
   environment             = local.environment
@@ -247,11 +250,12 @@ module "pv" {
   docker_version_ss          = var.pv_ss_version
   iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 3.6
 module "gsp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/gsp?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/gsp?ref=5a6b161"
 
   region                  = var.region
   environment             = local.environment
@@ -264,7 +268,7 @@ module "gsp" {
 
 # 4.1
 module "metrics" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/metrics?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/metrics?ref=5a6b161"
 
   region                  = var.region
   environment             = local.environment
@@ -272,12 +276,13 @@ module "metrics" {
   database_secret         = module.database.forecast-database-secret
   docker_version          = var.metrics_version
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   use_pvnet_gsp_sum = "true"
 }
 
 # 4.2
 module "forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast?ref=5a6b161"
 
   region                        = var.region
   environment                   = local.environment
@@ -293,11 +298,12 @@ module "forecast" {
   s3-nwp-bucket                 = module.s3.s3-nwp-bucket
   s3-sat-bucket                 = module.s3.s3-sat-bucket
   s3-ml-bucket                  = module.s3.s3-ml-bucket
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 4.3
 module "national_forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=5a6b161"
 
   region      = var.region
   environment = local.environment
@@ -321,11 +327,12 @@ module "national_forecast" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
     datadir                = "data-national"
   }
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 4.4
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=5a6b161"
 
   region      = var.region
   environment = local.environment
@@ -356,11 +363,12 @@ module "forecast_pvnet" {
   }
   loglevel      = "INFO"
   pvnet_gsp_sum = "true"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 5.1
 module "analysis_dashboard" {
-    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=8523563"
+    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/internal_ui?ref=5a6b161"
 
   region        = var.region
   environment   = local.environment
@@ -387,7 +395,7 @@ module "analysis_dashboard" {
 
 # 4.5
 module "forecast_blend" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=5a6b161"
 
   region      = var.region
   environment = local.environment
@@ -403,12 +411,12 @@ module "forecast_blend" {
     database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
   }
   loglevel = "INFO"
-
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=5a6b161"
 
   environment   = local.environment
   vpc_id        = module.networking.vpc_id
@@ -422,7 +430,7 @@ module "airflow" {
 
 # 6.1
 module "pvsite_database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=5a6b161"
 
   region                      = var.region
   environment                 = local.environment
@@ -441,7 +449,7 @@ import {
 # 6.2
 # TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api_pvsite?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api_pvsite?ref=5a6b161"
 
   region                          = var.region
   app_name                        = "sites-api"
@@ -459,7 +467,7 @@ module "pvsite_api" {
 
 # 6.3
 module "pvsite_ml_bucket" {
-  source = "../../modules/storage/s3-private"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=5a6b161"
 
   region              = var.region
   environment         = local.environment
@@ -475,7 +483,7 @@ import {
 
 # 6.4
 module "pvsite_forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=8523563"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=5a6b161"
 
   region      = var.region
   environment = local.environment
@@ -499,11 +507,12 @@ module "pvsite_forecast" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
     datadir                = "data"
   }
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 6.5
 module "pvsite_database_clean_up" {
-  source      = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/database_clean_up?ref=8523563"
+  source      = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/database_clean_up?ref=5a6b161"
   region      = var.region
   environment = local.environment
   app-name    = "database_clean_up"
@@ -517,4 +526,5 @@ module "pvsite_database_clean_up" {
     database_secret_arn             = module.pvsite_database.secret.arn
     database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
   }
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
