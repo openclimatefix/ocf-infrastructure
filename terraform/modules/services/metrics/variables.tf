@@ -34,3 +34,8 @@ variable "use_pvnet_gsp_sum" {
   description = "If to use the pvnet gsp sum"
   default = "false"
 }
+
+variable "ecs-task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}

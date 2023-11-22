@@ -113,6 +113,7 @@ module "nwp" {
 
   ecs-task_name = "nwp"
   ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
   aws-region                     = var.region
   aws-environment                = local.environment
@@ -150,6 +151,7 @@ module "nwp-national" {
 
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
   aws-region                     = var.region
   aws-environment                = local.environment
@@ -188,6 +190,7 @@ module "nwp-ecmwf" {
 
   ecs-task_name = "nwp-ecmwf"
   ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
   aws-region                     = var.region
   aws-environment                = local.environment
@@ -230,6 +233,7 @@ module "sat" {
   docker_version          = var.sat_version
   database_secret         = module.database.forecast-database-secret
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 3.5
@@ -245,6 +249,7 @@ module "pv" {
   docker_version_ss          = var.pv_ss_version
   iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 3.6
@@ -271,6 +276,7 @@ module "metrics" {
   docker_version          = var.metrics_version
   iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
   use_pvnet_gsp_sum = "true"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 4.2
@@ -291,6 +297,7 @@ module "forecast" {
   s3-nwp-bucket                 = module.s3.s3-nwp-bucket
   s3-sat-bucket                 = module.s3.s3-sat-bucket
   s3-ml-bucket                  = module.s3.s3-ml-bucket
+  ecs-task_execution_role_arn   = module.ecs.ecs_task_execution_role_arn
 }
 
 # 4.3
@@ -300,6 +307,7 @@ module "national_forecast" {
   region      = var.region
   environment = local.environment
   app-name    = "forecast_national"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs_config  = {
     docker_image   = "openclimatefix/gradboost_pv"
     docker_version = var.national_forecast_version
@@ -354,6 +362,7 @@ module "forecast_pvnet" {
   }
   loglevel      = "INFO"
   pvnet_gsp_sum = "true"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 5.1
@@ -401,7 +410,7 @@ module "forecast_blend" {
     database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
   }
   loglevel = "INFO"
-
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 # 5.2
@@ -497,6 +506,7 @@ module "pvsite_forecast" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
     datadir                = "data"
   }
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
 import {
@@ -520,4 +530,5 @@ module "pvsite_database_clean_up" {
     database_secret_arn             = module.pvsite_database.secret.arn
     database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
   }
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }

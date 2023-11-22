@@ -59,3 +59,8 @@ variable "s3-nwp-bucket" {
 variable "s3-ml-bucket" {
   description = "s3 ml bucket"
 }
+
+variable "ecs-task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}

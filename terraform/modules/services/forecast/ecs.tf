@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "forecast-task-definition" {
   memory = 7168
 
   task_role_arn      = aws_iam_role.forecast-iam-role.arn
-  execution_role_arn = aws_iam_role.ecs_task_execution_role-forecast.arn
+  execution_role_arn = var.ecs-task_execution_role_arn
   container_definitions = jsonencode([
     {
       name  = "forecast"

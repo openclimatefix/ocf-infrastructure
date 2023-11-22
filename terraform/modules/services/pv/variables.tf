@@ -48,3 +48,8 @@ variable "pv_provider" {
   description = "The provider that this service uses. Can be pvoutput.org or solar_sheffield_passiv"
   default = "pvoutput.org"
 }
+
+variable "ecs-task_execution_role_arn" {
+  description = "The arn of the ECS cluster task execution role"
+  type = string
+}
