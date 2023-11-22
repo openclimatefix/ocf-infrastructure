@@ -50,11 +50,6 @@ resource "aws_subnet" "public_subnets" {
   }
 }
 
-moved {
-  from = aws_subnet.public_subnet[0]
-  to = aws_subnet.public_subnets[0]
-}
-
 // Create the desired number of private subnets
 resource "aws_subnet" "private_subnets" {
   vpc_id                  = aws_vpc.vpc.id
@@ -65,15 +60,6 @@ resource "aws_subnet" "private_subnets" {
   tags = {
     Name = "${local.prefix}-${element(var.availability_zones, count.index)}-private-subnet"
   }
-}
-
-moved {
-  from = aws_subnet.private_subnet[0]
-  to = aws_subnet.private_subnets[0]
-}
-moved {
-  from = aws_subnet.private_subnet[1]
-  to = aws_subnet.private_subnets[1]
 }
 
 // Create a subnet group from the private subnets

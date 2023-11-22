@@ -440,11 +440,6 @@ module "pvsite_database" {
   allow_major_version_upgrade = true
 }
 
-import {
-  to = module.pvsite_database.aws_secretsmanager_secret.db-secret
-  id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:development/rds/pvsite-UvID2e"
-}
-
 # 6.2
 # TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
@@ -473,11 +468,6 @@ module "pvsite_ml_bucket" {
   service_name        = "site-forecaster-models"
   domain              = local.domain
   lifecycled_prefixes = []
-}
-
-import {
-  to = module.pvsite_ml_bucket.aws_s3_bucket.bucket
-  id = "uk-site-forecaster-models-development"
 }
 
 # 6.4
