@@ -416,7 +416,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=ae1ebf9"
 
   environment   = local.environment
   vpc_id        = module.networking.vpc_id
@@ -426,6 +426,7 @@ module "airflow" {
   ecs_subnet_id = module.networking.public_subnet_ids[0]
   ecs_security_group=module.networking.default_security_group_id
   secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
+  airflow_conn_slack_api_default=var.airflow_conn_slack_api_default
 }
 
 # 6.1
