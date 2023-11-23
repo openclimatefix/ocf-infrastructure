@@ -100,3 +100,9 @@ variable "database_cleanup_version" {
   type = string
   description = "The version of the database clean up to use"
 }
+
+variable "airflow_conn_slack_api_default" {
+  type = string
+  description = "The slack connection string for airflow"
+  default = "not-set"
+}
