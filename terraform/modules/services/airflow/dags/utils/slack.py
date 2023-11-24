@@ -8,7 +8,7 @@ env = os.getenv("ENVIRONMENT", "development")
 on_failure_callback = [
         send_slack_notification(
             text="The task {{ ti.task_id }} failed",
-            channel=f"airflow-alerts-{env}",
+            channel=f"tech-ops-airflow-{env}",
             username="Airflow",
         )
     ]
