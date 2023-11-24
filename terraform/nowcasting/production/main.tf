@@ -416,7 +416,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=ae1ebf9"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=01854a6"
 
   environment   = local.environment
   vpc_id        = module.networking.vpc_id
