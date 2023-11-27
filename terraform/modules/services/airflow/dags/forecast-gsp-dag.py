@@ -25,7 +25,7 @@ cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
-with DAG('gsp-forecast-pvnet-1', schedule_interval="15 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+with DAG('gsp-forecast-pvnet-1', schedule_interval="15 */4 * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get PV data"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
