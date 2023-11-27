@@ -48,7 +48,7 @@ with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=de
     )
 
     forecast_blend = EcsRunTaskOperator(
-        task_id='forecast-blend',
+        task_id='forecast-blend-national-xg',
         task_definition="forecast_blend",
         cluster=cluster,
         overrides={},
