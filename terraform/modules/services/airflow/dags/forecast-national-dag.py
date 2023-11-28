@@ -10,7 +10,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime.utcnow() - timedelta(hours=0.5),
-    'retries': 1,
+    'retries': 2,
     'retry_delay': timedelta(minutes=1),
     'max_active_runs':10,
     'concurrency':10,
