@@ -94,6 +94,7 @@ module "airflow" {
   ecs_security_group             = module.network.default_security_group_id
   owner_id                       = module.network.owner_id
   airflow_conn_slack_api_default = var.airflow_conn_slack_api_default
+  dags_folder                    = "india"
 }
 
 
