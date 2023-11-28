@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "task_def" {
       secrets : [
         for key in var.container-secret_vars : {
           name : key
-          valueFrom : "${data.aws_secretsmanager_secret_version.current.arn}:${key}::"
+          valueFrom : "${var.aws-secretsmanager_secret_arn}:${key}::"
         }
       ]
 

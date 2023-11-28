@@ -51,9 +51,9 @@ module "npw_consumer_ecmwf_ecs" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
-  aws-region                     = var.region
-  aws-environment                = local.environment
-  aws-secretsmanager_secret_name = aws_secretsmanager_secret.nwp_consumer_secret.name
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
