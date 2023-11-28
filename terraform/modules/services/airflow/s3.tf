@@ -45,7 +45,7 @@ resource "aws_iam_policy" "read-policy" {
 
 
 resource "aws_s3_object" "dags" {
-  for_each = fileset("${path.module}/dags/", "*")
+  for_each = fileset("${path.module}/dags/${var.dags_folder}/", "*")
 
   bucket = aws_s3_bucket.airflow-s3.id
   key    = "./dags/${each.value}"

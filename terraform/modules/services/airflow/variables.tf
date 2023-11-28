@@ -40,8 +40,8 @@ variable "ecs_subnet_id" {
   type = string
 }
 
-variable "secretsmanager_arn" {
-  description = "The arn of the secrets manager instance, up to :secret: not inclusive"
+variable "owner_id" {
+  description = "The owner id of AWS account the airflow instnace is created under"
   type = string
 }
 
@@ -49,6 +49,12 @@ variable "airflow_conn_slack_api_default" {
   type = string
   description = "The slack connection string for airflow"
   default = "not-set"
+}
+
+variable "dags_folder" {
+    type = string
+    description = "The folder containing the desired dags"
+    default = "uk"
 }
 
 

@@ -4,6 +4,10 @@
 # - Write to cloudwatch logs
 # - Execute ECS tasks
 
+locals {
+  secretsmanager_arn = "arn:aws:secretsmanager:${var.region}:${var.owner_id}"
+}
+
 # -- Policies -- #
 
 # Policy document for ECS task execution
@@ -33,7 +37,7 @@ data "aws_iam_policy_document" "secrets_policy_document" {
       "secretsmanager:DescribeSecret",
       "secretsmanager:ListSecretVersionIds",
     ]
-    resources = ["${var.secretsmanager_arn}:secret:*"]
+    resources = ["${local.secretsmanager_arn}:secret:*"]
   }
   statement {
     effect = "Allow"

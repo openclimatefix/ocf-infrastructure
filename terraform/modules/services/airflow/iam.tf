@@ -3,6 +3,10 @@
 # Instance role is the role used when running the app
 # Instance role needs to be able to kick off ECS tasks
 
+locals {
+  secretsmanager_arn = "arn:aws:secretsmanager:${var.region}:${var.owner_id}"
+}
+
 data "aws_iam_policy_document" "service" {
   # Policy document for Service role
 
@@ -104,7 +108,7 @@ resource "aws_iam_policy" "read-secrets" {
                     "secretsmanager:DescribeSecret",
                     "secretsmanager:ListSecretVersionIds"
                 ],
-                "Resource": "${var.secretsmanager_arn}:secret:*"
+                "Resource": "${local.secretsmanager_arn}:secret:*"
             },
             {
                 "Effect": "Allow",
