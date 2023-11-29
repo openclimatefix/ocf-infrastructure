@@ -55,12 +55,10 @@ module "npw_consumer_ecmwf_ecs" {
   aws-environment               = local.environment
   aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
-  s3-buckets = [
-    {
-      id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
-    }
-  ]
+  s3-buckets = [{ 
+    id: module.s3-nwp-bucket.bucket_id,
+    access_policy_arn: module.s3-nwp-bucket.write_policy_arn
+  }]
 
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
