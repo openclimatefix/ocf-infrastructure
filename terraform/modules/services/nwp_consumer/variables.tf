@@ -10,9 +10,9 @@ variable aws-environment {
   description = "Deployment environment"
 }
 
-variable aws-secretsmanager_secret_name {
+variable aws-secretsmanager_secret_arn {
   type = string
-  description = "Name of secret in secrets manager to access"
+  description = "ARN of the secretsmanager secret to pull environment variables from"
 }
 
 // S3 configuration -------------------------------------------------------

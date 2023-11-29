@@ -10,6 +10,7 @@ The componentes ares:
 0.5 - S3 bucket for forecasters
 1.1 - API
 2.1 - Database
+3.- - NWP Consumer Secret
 3.1 - NWP Consumer (MetOffice GSP)
 3.2 - NWP Consumer (MetOffice National)
 3.3 - NWP Consumer (ECMWF UK)
@@ -108,6 +109,16 @@ module "database" {
   vpc_id               = module.networking.vpc_id
 }
 
+# 3.0
+resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
+  name = "${local.environment}/data/nwp-consumer"
+}
+
+import {
+  to = aws_secretsmanager_secret.nwp_consumer_secret
+  id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:development/data/nwp-consumer-UZrR8M"
+}
+
 # 3.1
 module "nwp" {
   source = "../../modules/services/nwp_consumer"
@@ -118,7 +129,7 @@ module "nwp" {
 
   aws-region                     = var.region
   aws-environment                = local.environment
-  aws-secretsmanager_secret_name = "${local.environment}/data/nwp-consumer"
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -156,7 +167,7 @@ module "nwp-national" {
 
   aws-region                     = var.region
   aws-environment                = local.environment
-  aws-secretsmanager_secret_name = "${local.environment}/data/nwp-consumer"
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -195,7 +206,7 @@ module "nwp-ecmwf" {
 
   aws-region                     = var.region
   aws-environment                = local.environment
-  aws-secretsmanager_secret_name = "${local.environment}/data/nwp-consumer"
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {

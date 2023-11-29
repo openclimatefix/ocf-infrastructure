@@ -1,4 +1,7 @@
 # Define the IAM task Instance role used to run the task
+# This is used when running the task so requires access to the S3 buckets
+# It doesn't need access to secrets as those are passed in as env vars
+# via the task definition using the cluster-wide task execution role
 
 data "aws_iam_policy_document" "ecs_assume_role_policy" {
   statement {
@@ -21,20 +24,12 @@ resource "aws_iam_role" "run_task_role" {
 
 # For every bucket in the list of buckets, attach its access policy to the run task role
 resource "aws_iam_role_policy_attachment" "access_s3_policy" {
-  for_each   = {
-    for index, bucket_info in var.s3-buckets: bucket_info.id => bucket_info
-  }
+  count     = length(var.s3-buckets)
   role       = aws_iam_role.run_task_role.name
-  policy_arn = each.value.access_policy_arn
+  policy_arn = element(var.s3-buckets, count.index).access_policy_arn
 }
 
 resource "aws_iam_role_policy_attachment" "access_logs_policy" {
   role       = aws_iam_role.run_task_role.name
   policy_arn = aws_iam_policy.log_policy.arn
 }
-
-resource "aws_iam_role_policy_attachment" "access_secret_policy" {
-  role       = aws_iam_role.run_task_role.name
-  policy_arn = aws_iam_policy.secret_read_policy.arn
-}
-
