@@ -24,9 +24,9 @@ resource "aws_iam_role" "run_task_role" {
 
 # For every bucket in the list of buckets, attach its access policy to the run task role
 resource "aws_iam_role_policy_attachment" "access_s3_policy" {
-  for_each   = {for info_obj in var.s3-buckets: info_obj.id => bucket_info}
+  for_each   = {for info_obj in var.s3-buckets: info_obj.arn => bucket_access_arn}
   role       = aws_iam_role.run_task_role.name
-  policy_arn = each.value.access_policy_arn
+  policy_arn = each.value
 }
 
 resource "aws_iam_role_policy_attachment" "access_logs_policy" {
