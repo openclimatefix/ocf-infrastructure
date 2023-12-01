@@ -67,9 +67,14 @@ variable "national_forecast_version" {
   description = "The National Forecast version"
 }
 
-variable "sentry_dsn" {
+variable "sentry_monitor_dsn_api" {
   type = string
-  description = "DNS for Sentry monitoring"
+  description = "DSN for Sentry monitoring for the api"
+}
+
+variable "sentry_monitor_dsn_siteapi" {
+  type = string
+  description = "DSN for Sentry monitoring for the site api"
 }
 
 variable "forecast_pvnet_version" {

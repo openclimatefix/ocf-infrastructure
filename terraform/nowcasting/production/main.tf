@@ -95,7 +95,7 @@ module "api" {
   auth_api_audience                   = var.auth_api_audience
   n_history_days                      = "2"
   adjust_limit                        = 2000.0
-  sentry_dsn                          = var.sentry_dsn
+  sentry_dsn                          = var.sentry_monitor_dsn_api
 }
 
 # 2.1
@@ -456,7 +456,7 @@ module "pvsite_api" {
   domain                          = local.domain
   database_secret_url             = module.pvsite_database.secret-url
   database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
-  sentry_dsn                      = var.sentry_dsn
+  sentry_dsn                      = var.sentry_monitor_dsn_siteapi
   auth_api_audience               = var.auth_api_audience
   auth_domain                     = var.auth_domain
 }
