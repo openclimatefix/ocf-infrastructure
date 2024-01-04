@@ -95,11 +95,6 @@ resource "aws_iam_role_policy_attachment" "attach-db-forecast-secret-service" {
   policy_arn = var.iam-policy-rds-forecast-read-secret.arn
 }
 
-resource "aws_iam_role_policy_attachment" "attach-db-pv-secret-service" {
-  role       = aws_iam_role.api-service-role.name
-  policy_arn = var.iam-policy-rds-pv-read-secret.arn
-}
-
 
 ##################
 # Instance role

@@ -43,12 +43,6 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_URL_PV"
-    value     = var.database_pv_secret_url
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AUTH0_DOMAIN"
     value     = var.auth_domain
   }

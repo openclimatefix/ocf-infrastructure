@@ -19,16 +19,8 @@ variable "public_subnet_ids" {
   description = "Public subnet ids"
 }
 
-variable "database_secret" {
-  description = "AWS secret that gives connection details to the database"
-}
-
 variable "database_secret_forecast" {
   description = "AWS secret that gives connection details to the forecast database"
-}
-
-variable "iam-policy-rds-read-secret" {
-  description = "IAM policy to be able to read the RDS secret"
 }
 
 variable "iam-policy-rds-read-secret_forecast" {
