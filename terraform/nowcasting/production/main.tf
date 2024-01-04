@@ -63,7 +63,8 @@ module "s3" {
 module "ecs" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=057f808"
   name = "Nowcasting-${local.environment}"
-  secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
+  region = var.region
+  owner_id = module.networking.owner_id
 }
 
 # 0.5
