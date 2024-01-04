@@ -239,7 +239,7 @@ module "sat" {
 
 # 3.5
 module "pv" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=099dd58"
 
   region                  = var.region
   environment             = local.environment
