@@ -11,4 +11,4 @@ This demonstrates an inefficient way of designing modules, however moving over t
 the more generic `postgres` was not feasible as it would require tearing down the nowcasting database.
 It's use it not advised, instead use the `postgres` module.
 
-2024-01-04: We have removed teh PV database, so this module just makes on database
+2024-01-04: We have removed the PV database, so this module just makes one database
