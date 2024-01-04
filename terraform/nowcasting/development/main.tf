@@ -89,7 +89,6 @@ module "api" {
   subnet_id                           = module.networking.public_subnet_ids[0]
   docker_version                      = var.api_version
   database_forecast_secret_url        = module.database.forecast-database-secret-url
-  database_pv_secret_url              = module.database.pv-database-secret-url
   iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
   iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
   auth_domain                         = var.auth_domain
@@ -255,11 +254,9 @@ module "pv" {
   region                  = var.region
   environment             = local.environment
   public_subnet_ids       = module.networking.public_subnet_ids
-  database_secret         = module.database.pv-database-secret
   database_secret_forecast = module.database.forecast-database-secret
   docker_version          = var.pv_version
   docker_version_ss          = var.pv_ss_version
-  iam-policy-rds-read-secret = module.database.iam-policy-pv-db-read
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
@@ -291,26 +288,7 @@ module "metrics" {
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
-# 4.2
-module "forecast" {
-  source = "../../modules/services/forecast"
-
-  region                        = var.region
-  environment                   = local.environment
-  subnet_ids                    = module.networking.public_subnet_ids
-  iam-policy-rds-read-secret    = module.database.iam-policy-forecast-db-read
-  iam-policy-rds-pv-read-secret = module.database.iam-policy-pv-db-read
-  iam-policy-s3-nwp-read        = module.s3.iam-policy-s3-nwp-read
-  iam-policy-s3-sat-read        = module.s3.iam-policy-s3-sat-read
-  iam-policy-s3-ml-read         = module.s3.iam-policy-s3-ml-write #TODO update name
-  database_secret               = module.database.forecast-database-secret
-  pv_database_secret            = module.database.pv-database-secret
-  docker_version                = var.forecast_version
-  s3-nwp-bucket                 = module.s3.s3-nwp-bucket
-  s3-sat-bucket                 = module.s3.s3-sat-bucket
-  s3-ml-bucket                  = module.s3.s3-ml-bucket
-  ecs-task_execution_role_arn   = module.ecs.ecs_task_execution_role_arn
-}
+# 4.2 - We have removed PVnet 1
 
 # 4.3
 module "national_forecast" {

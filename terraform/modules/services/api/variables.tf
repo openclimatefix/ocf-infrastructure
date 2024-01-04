@@ -31,10 +31,6 @@ variable "iam-policy-rds-pv-read-secret" {
   description = "IAM policy to be able to read the RDS PV secret"
 }
 
-variable "database_pv_secret_url" {
-  description = "Secret url that gives connection details to the PV database"
-}
-
 variable "docker_version" {
   description = "The version of the docker that should be used"
 }
