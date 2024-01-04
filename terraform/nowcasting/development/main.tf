@@ -90,7 +90,6 @@ module "api" {
   docker_version                      = var.api_version
   database_forecast_secret_url        = module.database.forecast-database-secret-url
   iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
-  iam-policy-rds-pv-read-secret       = module.database.iam-policy-pv-db-read
   auth_domain                         = var.auth_domain
   auth_api_audience                   = var.auth_api_audience
   n_history_days                      = "2"
