@@ -38,13 +38,13 @@ locals {
 
 # 0.1
 module "networking" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking?ref=057f808"
   environment = local.environment
 }
 
 # 0.2
 module "ec2-bastion" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=057f808"
 
   region            = var.region
   vpc_id            = module.networking.vpc_id
@@ -53,7 +53,7 @@ module "ec2-bastion" {
 
 # 0.3
 module "s3" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=057f808"
 
   region      = var.region
   environment = local.environment
@@ -61,14 +61,14 @@ module "s3" {
 
 # 0.4
 module "ecs" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=057f808"
   name = "Nowcasting-${local.environment}"
   secretsmanager_arn = regex("^(.+):secret:", module.database.forecast-database-secret.arn)[0]
 }
 
 # 0.5
 module "forecasting_models_bucket" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=057f808"
 
   region              = var.region
   environment         = local.environment
@@ -80,7 +80,7 @@ module "forecasting_models_bucket" {
 # 1.1
 # TODO: Make sites api and nowcasting api use same module
 module "api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=bd819f8"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=057f808"
 
   region                              = var.region
   environment                         = local.environment
