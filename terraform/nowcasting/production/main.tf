@@ -107,6 +107,16 @@ module "database" {
   vpc_id               = module.networking.vpc_id
 }
 
+# 3.0
+resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
+  name = "${local.environment}/data/nwp-consumer"
+}
+
+import {
+  to = aws_secretsmanager_secret.nwp_consumer_secret
+  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/data/nwp-consumer-OwpzFS"
+}
+
 # 3.1
 module "nwp" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=057f808"
