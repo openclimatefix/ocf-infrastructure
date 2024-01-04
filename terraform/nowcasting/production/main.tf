@@ -154,7 +154,7 @@ module "nwp-national" {
 
   aws-region                     = var.region
   aws-environment                = local.environment
-  aws-secretsmanager_secret_name = "${local.environment}/data/nwp-consumer"
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
