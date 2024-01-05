@@ -138,6 +138,6 @@ resource "aws_elastic_beanstalk_application_version" "latest" {
   name        = "${var.aws-environment}-${var.eb-app_name}-${var.eb-app_type}-${var.container-tag}"
   application = aws_elastic_beanstalk_application.eb-application.name
   description = "Application version created by terraform (${var.container-tag})"
-  bucket      = aws_s3_bucket.compose-bucket.id
+  bucket      = aws_s3_bucket.eb-app-docker-bucket.id
   key         = aws_s3_object.eb-object.id
 }
