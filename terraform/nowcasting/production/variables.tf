@@ -85,7 +85,6 @@ variable "forecast_blend_version" {
   description = "The Forecast Blend docker version"
 }
 
-
 variable "auth_dashboard_client_id" {
   description = "The Auth client id for the dashboard that should be used"
   default = "not-set"
