@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "instance" {
 
 
 resource "aws_iam_policy" "cloudwatch" {
-  name        = "${var.domain}-${var.environment}-cloudwatch-read-and-write-${var.app_name}"
+  name        = "${var.aws-environment}-cloudwatch-read-and-write-${var.eb-app_name}"
   path        = "/"
   description = "Policy to allow read and write to cloudwatch logs"
 
@@ -66,7 +66,7 @@ resource "aws_iam_policy" "cloudwatch" {
 ##################
 
 resource "aws_iam_role" "api-service-role" {
-  name = "${var.domain}-${var.environment}-${var.app_name}-service-role"
+  name = "${var.aws-environment}-${var.eb-app_name}-service-role"
   path = "/"
 
   assume_role_policy = join("", data.aws_iam_policy_document.service.*.json)
@@ -90,18 +90,12 @@ resource "aws_iam_role_policy_attachment" "attach-logs-service" {
   policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
-resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-service" {
-  role       = aws_iam_role.instance-role.name
-  policy_arn = var.database_secret_read_policy_arn
-}
-
-
 ##################
 # Instance role
 ##################
 
 resource "aws_iam_role" "instance-role" {
-  name = "${var.domain}-${var.environment}-${var.app_name}-role"
+  name = "${var.aws-environment}-${var.eb-app_name}-role"
   path = "/"
 
   assume_role_policy = join("", data.aws_iam_policy_document.instance.*.json)
@@ -119,20 +113,13 @@ resource "aws_iam_role_policy_attachment" "worker_tier" {
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
-
 resource "aws_iam_role_policy_attachment" "attach-logs" {
   role       = aws_iam_role.instance-role.name
   policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
-
 resource "aws_iam_instance_profile" "ec2" {
 
-  name = "${var.domain}-${var.environment}-${var.app_name}-instance-eb"
+  name = "${var.aws-environment}-${var.eb-app_name}-instance-eb"
   role = join("", aws_iam_role.instance-role.*.name)
-}
-
-resource "aws_iam_role_policy_attachment" "attach-logs-database-secret-instance" {
-  role       = aws_iam_role.instance-role.name
-  policy_arn = var.database_secret_read_policy_arn
 }
