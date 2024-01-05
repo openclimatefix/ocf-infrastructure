@@ -1,7 +1,7 @@
 # Add secruity group for API
 
 resource "aws_security_group" "sg" {
-  name        = "${var.aws-environment}-${var.eb-app_name}-${var.eb-app_type}-sg"
+  name        = "${var.domain}-${var.aws-environment}-${var.eb-app_name}-sg"
   description = "API security group to allow inbound/outbound traffic"
   vpc_id      = var.aws-subnet_id
 

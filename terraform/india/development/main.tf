@@ -18,6 +18,7 @@ module "network" {
   environment = local.environment
   vpc_cidr    = "10.1.0.0/16"
   region      = "ap-south-1"
+  domain      = local.domain
 }
 
 /*
@@ -100,6 +101,7 @@ module "airflow" {
 # 5.0
 module "india-api" {
   source = "../../modules/services/eb_app"
+  domain = local.domain
   aws-region = var.region
   aws-environment = local.environment
   aws-subnet_id = module.network.public_subnet_ids[0]
@@ -112,7 +114,6 @@ module "india-api" {
     }
   ]
   container-name = "india-api"
-  eb-app_name = "india"
-  eb-app_type = "api"
+  eb-app_name = "rews-api"
 }
 
