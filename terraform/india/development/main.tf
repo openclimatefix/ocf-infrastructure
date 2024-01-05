@@ -20,6 +20,7 @@ module "network" {
   region      = "ap-south-1"
 }
 
+/*
 # 1.1
 module "ecs-cluster" {
   source   = "../../modules/ecs_cluster"
@@ -77,7 +78,6 @@ module "npw_consumer_ecmwf_ecs" {
     "--zdir=ecmwf/data",
     "--create-latest"
   ]
-
 }
 
 # 4.0
@@ -95,4 +95,24 @@ module "airflow" {
   dags_folder                    = "india"
 }
 
+*/
+
+# 5.0
+module "india-api" {
+  source = "../../modules/services/eb_app"
+  aws-region = var.region
+  aws-environment = local.environment
+  aws-subnet_id = module.network.public_subnet_ids[0]
+  aws-vpc_id = module.network.vpc_id
+  container-command = []
+  container-env_vars = [
+    {
+      "name": "SOURCE",
+      "value": "dummydb"
+    }
+  ]
+  container-name = "india-api"
+  eb-app_name = "india"
+  eb-app_type = "api"
+}
 

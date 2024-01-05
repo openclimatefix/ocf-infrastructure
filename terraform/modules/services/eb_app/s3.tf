@@ -1,0 +1,33 @@
+# Create an S3 bucket containing the docker-compose.yml file
+# for the Elastic Beanstalk app
+
+resource "aws_s3_bucket" "compose-bucket" {
+  bucket = "${var.aws-environment}-eb-${var.eb-app_name}-${var.eb-app_type}"
+}
+
+resource "aws_s3_object" "eb-object" {
+  bucket = aws_s3_bucket.compose-bucket.id
+  key    = "beanstalk/docker-compose-${var.container-tag}.yml"
+  content = yamlencode({
+    version: "3",
+    services: {
+      eb-app : {
+        image : "${var.container-registry}/openclimatefix/${var.container-name}:${var.container-tag}",
+        environment : [for kv in var.container-env_vars : format("%s: %s", kv.name, kv.value)],
+        container_name : (var.container-name),
+        command : (var.container-command),
+        ports : ["80:80"],
+      }
+    }
+  })
+}
+
+resource "aws_s3_bucket_public_access_block" "eb-s3-pab" {
+  bucket = aws_s3_bucket.compose-bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+  ignore_public_acls      = true
+
+}
