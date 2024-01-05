@@ -1,3 +1,9 @@
+// Namespacing ------------------------------------------------------------
+variable domain {
+  type = string
+  description = "Domain of the application"
+}
+
 // AWS configuration ------------------------------------------------------
 
 variable aws-region {
@@ -63,12 +69,6 @@ variable container-command {
 variable eb-app_name {
   type = string
   description = "Name of the EB app"
-}
-
-variable eb-app_type {
-  type = string
-  description = "Type of the EB app"
-  default = "app"
 }
 
 variable eb-instance_type {
