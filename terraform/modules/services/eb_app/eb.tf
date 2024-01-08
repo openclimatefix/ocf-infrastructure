@@ -28,7 +28,7 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
   }
 
   # the next line IS NOT RANDOM,
-#  see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
+  # see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
   solution_stack_name = "64bit Amazon Linux 2 v3.6.5 running Docker"
 
   # There are a LOT of settings, see here for the basic list:
