@@ -3,7 +3,7 @@
 resource "aws_security_group" "sg" {
   name        = "${var.domain}-${var.aws-environment}-${var.eb-app_name}-sg"
   description = "API security group to allow inbound/outbound traffic"
-  vpc_id      = var.aws-subnet_id
+  vpc_id      = var.aws-vpc_id
 
   ingress {
     from_port = "80"
