@@ -115,6 +115,7 @@ module "india-api" {
     }
   ]
   container-name = "india-api"
+  container-tag = var.version-india_api
   eb-app_name = "india-api"
 }
 
