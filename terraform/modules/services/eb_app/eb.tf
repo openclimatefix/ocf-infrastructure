@@ -6,20 +6,20 @@
 
 
 resource "aws_elastic_beanstalk_application" "eb-application" {
-  name        = "${var.aws-environment}-${var.eb-app_name}"
-  description = "${var.eb-app_name} ${var.eb-app_type} elastic beanstalk app"
+  name        = "${var.domain}-${var.aws-environment}-${var.eb-app_name}"
+  description = "${var.eb-app_name} elastic beanstalk app"
 
   tags = {
-    Name = "${var.eb-app_name}-${var.eb-app_type}"
+    Name = "${var.eb-app_name}"
     Type = "eb"
   }
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-environment" {
-  name        = "${var.aws-environment}-${var.eb-app_name}-${var.eb-app_type}"
+  name        = "${var.domain}-${var.aws-environment}-${var.eb-app_name}"
   application = aws_elastic_beanstalk_application.eb-application.name
-  cname_prefix = "${var.aws-environment}-${var.eb-app_name}-${var.eb-app_type}"
-  version_label = "${var.aws-environment}-${var.eb-app_name}-${var.container-tag}"
+  cname_prefix = "${var.domain}-${var.aws-environment}-${var.eb-app_name}"
+  version_label = "${var.domain}-${var.aws-environment}-${var.eb-app_name}-${var.container-tag}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -135,7 +135,7 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "${var.aws-environment}-${var.eb-app_name}-${var.eb-app_type}-${var.container-tag}"
+  name        = "${var.domain}-${var.aws-environment}-${var.eb-app_name}-${var.container-tag}"
   application = aws_elastic_beanstalk_application.eb-application.name
   description = "Application version created by terraform (${var.container-tag})"
   bucket      = aws_s3_bucket.eb-app-docker-bucket.id

@@ -2,7 +2,7 @@
 # for the Elastic Beanstalk app
 
 resource "aws_s3_bucket" "eb-app-docker-bucket" {
-  bucket = "${var.aws-environment}-eb-${var.eb-app_name}-${var.eb-app_type}"
+  bucket = "${var.domain}-${var.aws-environment}-eb-${var.eb-app_name}"
 }
 
 resource "aws_s3_object" "eb-object" {
