@@ -21,11 +21,6 @@ module "network" {
   domain      = local.domain
 }
 
-import {
-  to = module.network.aws_db_subnet_group.private_subnet_group
-  id = "private-subnet-group-development"
-}
-
 /*
 # 1.1
 module "ecs-cluster" {
