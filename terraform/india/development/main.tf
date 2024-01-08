@@ -109,10 +109,8 @@ module "india-api" {
   aws-vpc_id = module.network.vpc_id
   container-command = []
   container-env_vars = [
-    {
-      "name": "SOURCE",
-      "value": "dummydb"
-    }
+    { "name": "SOURCE", "value": "dummydb" },
+    { "name": "PORT", "value": "80" },
   ]
   container-name = "india-api"
   container-tag = var.version-india_api
