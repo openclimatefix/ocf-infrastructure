@@ -114,6 +114,6 @@ module "india-api" {
     }
   ]
   container-name = "india-api"
-  eb-app_name = "rews-api"
+  eb-app_name = "india-api"
 }
 

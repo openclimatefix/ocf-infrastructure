@@ -40,6 +40,9 @@ locals {
 # 0.1
 module "networking" {
   source = "../../modules/networking"
+  domain = local.domain
+  environment = local.environment
+  region = var.region
 }
 
 # 0.2

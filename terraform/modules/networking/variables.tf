@@ -51,7 +51,6 @@ variable "availability_zones" {
 variable "domain" {
   type = string
   description = "The domain of the VPC"
-  default = "uk"
   validation {
     condition = contains(["uk", "india"], var.domain)
     error_message = "Domain can only be one of 'uk' or 'india'."

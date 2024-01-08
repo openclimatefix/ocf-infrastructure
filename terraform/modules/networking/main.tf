@@ -64,14 +64,17 @@ resource "aws_subnet" "private_subnets" {
 
 // Create a subnet group from the private subnets
 resource "aws_db_subnet_group" "private_subnet_group" {
-  name        = "private-subnet-group-${var.environment}"
+  name        = "private-subnet-group-development"
   description = "Terraform private subnet group"
   subnet_ids = [
     for subnet in aws_subnet.private_subnets : subnet.id
   ]
+  tags = {
+    Name = "${local.prefix}-private-subnet-group"
+  }
 }
 
-// Rouning table for the private subnets
+// Routing table for the private subnets
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.vpc.id
   tags = {
