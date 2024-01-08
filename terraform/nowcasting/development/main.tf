@@ -45,11 +45,6 @@ module "networking" {
   region = var.region
 }
 
-import {
-  to = module.networking.aws_db_subnet_group.private_subnet_group
-  id = "private-subnet-group-development"
-}
-
 # 0.2
 module "ec2-bastion" {
   source = "../../modules/networking/ec2_bastion"
