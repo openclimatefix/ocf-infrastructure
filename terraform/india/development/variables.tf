@@ -4,12 +4,6 @@ variable region {
   description = "AWS region"
 }
 
-variable "airflow_conn_slack_api_default" {
-  type = string
-  description = "The slack connection string for airflow"
-  default = "not-set"
-}
-
 variable version-nwp {
   type = string
   default = "0.1.25"
@@ -20,4 +14,10 @@ variable version-india_api {
   type = string
   default = "0.1.0"
   description = "Container image tag of the India API to use: openclimatefix/india-api"
+}
+
+variable apikey-slack {
+  type = string
+  default = "not-set"
+  description = "Slack API key"
 }

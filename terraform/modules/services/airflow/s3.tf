@@ -5,7 +5,7 @@ locals {
 }
 
 resource "aws_s3_bucket" "airflow-s3" {
-  bucket = "ocf-airflow-${var.environment}-bucket"
+  bucket = "ocf-airflow-${var.aws-environment}-bucket"
 }
 
 resource "aws_s3_object" "eb_object" {

@@ -4,7 +4,7 @@
 # Instance role needs to be able to kick off ECS tasks
 
 locals {
-  secretsmanager_arn = "arn:aws:secretsmanager:${var.region}:${var.owner_id}"
+  secretsmanager_arn = "arn:aws:secretsmanager:${var.aws-region}:${var.aws-owner_id}"
 }
 
 data "aws_iam_policy_document" "service" {
@@ -124,7 +124,7 @@ resource "aws_iam_policy" "read-secrets" {
 ##################
 
 resource "aws_iam_role" "api-service-role" {
-  name = "ocf-airflow-${var.environment}-service-role"
+  name = "ocf-airflow-${var.aws-environment}-service-role"
   path = "/"
   assume_role_policy = join("", data.aws_iam_policy_document.service.*.json)
 
@@ -155,7 +155,7 @@ resource "aws_iam_role_policy_attachment" "attach-read-s3" {
 ##################
 
 resource "aws_iam_role" "instance-role" {
-  name = "ocf-airflow-${var.environment}-role"
+  name = "ocf-airflow-${var.aws-environment}-role"
   path = "/"
 
   assume_role_policy = join("", data.aws_iam_policy_document.instance.*.json)
@@ -177,7 +177,7 @@ resource "aws_iam_role_policy_attachment" "attach-logs" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "airflow-instance-eb-${var.environment}"
+  name = "airflow-instance-eb-${var.aws-environment}"
   role = join("", aws_iam_role.instance-role.*.name)
 }
 

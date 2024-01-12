@@ -6,7 +6,7 @@
 
 
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
-  name        = "ocf-airflow-${var.environment}"
+  name        = "ocf-airflow-${var.aws-environment}"
   description = "OCF Airflow"
 
   tags = {
@@ -16,9 +16,9 @@ resource "aws_elastic_beanstalk_application" "eb-api-application" {
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {
-  name        = "ocf-airflow-${var.environment}"
+  name        = "ocf-airflow-${var.aws-environment}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
-  cname_prefix = "ocf-airflow-${var.environment}"
+  cname_prefix = "ocf-airflow-${var.aws-environment}"
   version_label = "ocf-airflow-${var.docker-compose-version}-v1"
 
   setting {
@@ -50,7 +50,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
-    value     = var.db_url
+    value     = var.rds-db_secret_url
   }
 
   setting {
@@ -62,7 +62,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AWS_DEFAULT_REGION"
-    value     = var.region
+    value     = var.aws-region
   }
 
   setting {
@@ -86,19 +86,19 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ENVIRONMENT"
-    value     = var.environment
+    value     = var.aws-environment
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ECS_SUBNET"
-    value     = var.ecs_subnet_id
+    value     = var.ecs-subnet_id
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ECS_SECURITY_GROUP"
-    value     = var.ecs_security_group
+    value     = var.ecs-security_group
   }
 
   setting {
@@ -110,24 +110,24 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
-    value     = var.db_url
+    value     = var.rds-db_secret_url
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AIRFLOW_CONN_SLACK_API_DEFAULT"
-    value     = var.airflow_conn_slack_api_default
+    value     = var.slack_api_conn
   }
 
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
-    value     = var.vpc_id
+    value     = var.aws-vpc_id
   }
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
-    value    = var.subnet_id
+    value    = var.aws-subnet_id
     resource = ""
   }
   setting {
@@ -205,7 +205,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     # TODO, doesnt seem to work at the moment
   provisioner "local-exec" {
     command = join("", ["aws elasticbeanstalk update-environment ",
-      "--region ${var.region} ",
+      "--region ${var.aws-region} ",
       "--application-name ${aws_elastic_beanstalk_application.eb-api-application.name} ",
       "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
       "--environment-name ${aws_elastic_beanstalk_environment.eb-api-env.name}"

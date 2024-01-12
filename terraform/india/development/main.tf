@@ -1,29 +1,42 @@
 # Defines the development India platform
 # Creates the following in AWS:
 # 1.0 - VPC and Subnets
-# 1.1 - ECS Cluster
+# 1.1 - RDS Postgres database
+# 1.2 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
 # 4.0 - Airflow EB Instance
+# 5.0 - India API EB Instance
 
 locals {
   environment = "development"
   domain      = "india"
+  region      = "ap-south-1"
 }
 
 # 1.0
 module "network" {
-  source      = "../../modules/networking"
-  environment = local.environment
-  vpc_cidr    = "10.1.0.0/16"
-  region      = "ap-south-1"
+  source             = "../../modules/networking"
+  environment        = local.environment
+  vpc_cidr           = "10.1.0.0/16"
+  region             = local.region
   availability_zones = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
-  domain      = local.domain
+  domain             = local.domain
 }
 
-/*
 # 1.1
+module "postgres-rds" {
+  source               = "../../modules/storage/postgres"
+  region               = local.region
+  environment          = local.environment
+  vpc_id               = module.network.vpc_id
+  db_subnet_group_name = module.network.private_subnet_group_name
+  db_name              = "indiadb"
+  rds_instance_class   = "db.t3.small"
+}
+
+# 1.2
 module "ecs-cluster" {
   source   = "../../modules/ecs_cluster"
   name     = "india-ecs-cluster-${local.environment}"
@@ -31,6 +44,7 @@ module "ecs-cluster" {
   owner_id = module.network.owner_id
 }
 
+/*
 # 2.0
 module "s3-nwp-bucket" {
   source              = "../../modules/storage/s3-private"
@@ -82,38 +96,38 @@ module "npw_consumer_ecmwf_ecs" {
   ]
 }
 
+*/
+
 # 4.0
 module "airflow" {
   source                         = "../../modules/services/airflow"
-  environment                    = local.environment
-  vpc_id                         = module.network.vpc_id
-  subnet_id                      = module.network.public_subnet_ids[0]
-  db_url                         = "not-set"
+  aws-environment                = local.environment
+  aws-vpc_id                     = module.network.vpc_id
+  aws-subnet_id                  = module.network.public_subnet_ids[0]
+  rds-db_secret_url              = module.postgres-rds.secret-url
   docker-compose-version         = "0.0.4"
-  ecs_subnet_id                  = module.network.public_subnet_ids[0]
-  ecs_security_group             = module.network.default_security_group_id
-  owner_id                       = module.network.owner_id
-  airflow_conn_slack_api_default = var.airflow_conn_slack_api_default
+  ecs-subnet_id                  = module.network.public_subnet_ids[0]
+  ecs-security_group             = module.network.default_security_group_id
+  aws-owner_id                   = module.network.owner_id
+  slack_api_conn = var.apikey-slack
   dags_folder                    = "india"
 }
 
-*/
-
 # 5.0
 module "india-api" {
-  source = "../../modules/services/eb_app"
-  domain = local.domain
-  aws-region = var.region
-  aws-environment = local.environment
-  aws-subnet_id = module.network.public_subnet_ids[0]
-  aws-vpc_id = module.network.vpc_id
-  container-command = []
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.network.public_subnet_ids[0]
+  aws-vpc_id         = module.network.vpc_id
+  container-command  = []
   container-env_vars = [
-    { "name": "SOURCE", "value": "dummydb" },
-    { "name": "PORT", "value": "80" },
+    { "name" : "SOURCE", "value" : "dummydb" },
+    { "name" : "PORT", "value" : "80" },
   ]
   container-name = "india-api"
-  container-tag = var.version-india_api
-  eb-app_name = "india-api"
+  container-tag  = var.version-india_api
+  eb-app_name    = "india-api"
 }
 

@@ -23,7 +23,7 @@ resource "random_password" "fernet-password" {
 
 # Now create secret and secret versions for database main account
 resource "aws_secretsmanager_secret" "airflow-secret" {
-  name = "${var.environment}/airflow/login/"
+  name = "${var.aws-environment}/airflow/login/"
   # Once the secret is deleted, we cant get it back.
   # If we don't do this, then a new secret can be made with the same name until the recovery window is over
   recovery_window_in_days = 0
