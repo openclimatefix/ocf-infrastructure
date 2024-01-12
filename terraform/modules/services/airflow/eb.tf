@@ -6,7 +6,7 @@
 
 
 resource "aws_elastic_beanstalk_application" "eb-api-application" {
-  name        = "ocf-airflow-${var.aws-environment}"
+  name        = "${var.aws-domain}-${var.aws-environment}-airflow"
   description = "OCF Airflow"
 
   tags = {
@@ -16,10 +16,10 @@ resource "aws_elastic_beanstalk_application" "eb-api-application" {
 }
 
 resource "aws_elastic_beanstalk_environment" "eb-api-env" {
-  name        = "ocf-airflow-${var.aws-environment}"
+  name        = "${var.aws-domain}-${var.aws-environment}-airflow"
   application = aws_elastic_beanstalk_application.eb-api-application.name
-  cname_prefix = "ocf-airflow-${var.aws-environment}"
-  version_label = "ocf-airflow-${var.docker-compose-version}-v1"
+  cname_prefix = "${var.aws-domain}-${var.aws-environment}-airflow"
+  version_label = "${var.aws-domain}-${var.aws-environment}-airflow-${var.docker-compose-version}"
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -215,9 +215,9 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 }
 
 resource "aws_elastic_beanstalk_application_version" "latest" {
-  name        = "ocf-airflow-${var.docker-compose-version}-v1"
+  name        = "${var.aws-domain}-${var.aws-environment}-airflow-${var.docker-compose-version}"
   application = aws_elastic_beanstalk_application.eb-api-application.name
-  description = "application version created by terraform"
+  description = "application version created by terraform (${var.docker-compose-version})"
   bucket      = aws_s3_bucket.airflow-s3.id
   key         = aws_s3_object.eb_object.id
 }

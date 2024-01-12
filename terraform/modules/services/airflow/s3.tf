@@ -5,7 +5,7 @@ locals {
 }
 
 resource "aws_s3_bucket" "airflow-s3" {
-  bucket = "ocf-airflow-${var.aws-environment}-bucket"
+  bucket = "${var.aws-domain}-${var.aws-environment}-eb-airflow"
 }
 
 resource "aws_s3_object" "eb_object" {
@@ -26,7 +26,7 @@ resource "aws_s3_bucket_public_access_block" "eb-pab" {
 
 
 resource "aws_iam_policy" "read-policy" {
-  name        = "s3-airflow-read-policy"
+  name        = "${var.aws-domain}-${var.aws-environment}-airflow-read-policy"
   description = "Policy to read bucket: ${aws_s3_bucket.airflow-s3.bucket}"
 
   # Terraform's "jsonencode" function converts a

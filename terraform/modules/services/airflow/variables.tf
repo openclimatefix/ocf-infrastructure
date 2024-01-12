@@ -11,6 +11,10 @@ variable "aws-region" {
     default = "eu-west-1"
 }
 
+variable "aws-domain" {
+  description = "The domain name for the airflow instance"
+}
+
 variable "aws-vpc_id" {
   description = "The id of the vpc where this application will run"
 }
