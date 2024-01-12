@@ -114,7 +114,7 @@ services:
     image: amazon/aws-cli
     container_name: sync-s3
     entrypoint: >
-      bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://ocf-airflow-${ENVIRONMENT}-bucket/dags' '/airflow/dags';
+      bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://${BUCKET}/dags' '/airflow/dags';
       mkdir -p /airflow/{logs,dags}; 
       chmod -R 777 /airflow/{logs,dags}; do sleep 2; done;"
     volumes:
@@ -122,6 +122,7 @@ services:
     environment:
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
       ENVIRONMENT: $ENVIRONMENT
+      BUCKET: $BUCKET
     restart: always
 #    depends_on:
 #      - "airflowinit"
