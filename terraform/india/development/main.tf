@@ -2,6 +2,7 @@
 # Creates the following in AWS:
 # 1.0 - VPC and Subnets
 # 1.1 - RDS Postgres database
+# 1.2 - Bastion instance
 # 1.2 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
 # 3.0 - Secret containing environment variables for the NWP consumer
@@ -36,11 +37,20 @@ module "postgres-rds" {
   rds_instance_class   = "db.t3.small"
 }
 
+# 0.2
+module "ec2-bastion" {
+  source = "../../modules/networking/ec2_bastion"
+
+  region            = local.region
+  vpc_id            = module.network.vpc_id
+  public_subnets_id = module.network.public_subnet_ids[0]
+}
+
 # 1.2
 module "ecs-cluster" {
   source   = "../../modules/ecs_cluster"
   name     = "india-ecs-cluster-${local.environment}"
-  region   = var.region
+  region   = local.region
   owner_id = module.network.owner_id
 }
 
@@ -107,7 +117,7 @@ module "airflow" {
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   airflow-db-connection-url = "${module.postgres-rds.instance_connection_url}/airflow"
-  docker-compose-version    = "0.0.4"
+  docker-compose-version    = "0.0.5"
   ecs-subnet_id             = module.network.public_subnet_ids[0]
   ecs-security_group        = module.network.default_security_group_id
   aws-owner_id              = module.network.owner_id
@@ -119,7 +129,7 @@ module "airflow" {
 module "india-api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
-  aws-region         = var.region
+  aws-region         = local.region
   aws-environment    = local.environment
   aws-subnet_id      = module.network.public_subnet_ids[0]
   aws-vpc_id         = module.network.vpc_id
