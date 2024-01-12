@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "instance" {
 }
 
 resource "aws_iam_policy" "cloudwatch" {
-  name        = "ocf-airflow-cloudwatch-read-and-write"
+  name        = "${var.aws-domain}-${var.aws-environment}-cloudwatch-read-and-write-policy-airflow"
   path        = "/"
   description = "Policy to allow read and write to cloudwatch logs"
 
@@ -68,7 +68,7 @@ resource "aws_iam_policy" "cloudwatch" {
 }
 
 resource "aws_iam_policy" "ecs-run" {
-  name        = "ocf-airflow-ecs-run"
+  name        = "${var.aws-domain}-${var.aws-environment}-ecs-run-policy-airflow"
   path        = "/"
   description = "Policy to run all ecs tasks"
 
@@ -93,7 +93,7 @@ resource "aws_iam_policy" "ecs-run" {
 
 # Allow reading of secrets in region
 resource "aws_iam_policy" "read-secrets" {
-    name        = "ocf-airflow-read-secrets"
+    name        = "${var.aws-domain}-${var.aws-environment}read-secrets-policy-airflow"
     path        = "/"
     description = "Policy to read secrets from SSM"
 
@@ -124,7 +124,7 @@ resource "aws_iam_policy" "read-secrets" {
 ##################
 
 resource "aws_iam_role" "api-service-role" {
-  name = "ocf-airflow-${var.aws-environment}-service-role"
+  name = "${var.aws-domain}-${var.aws-environment}-service-role-airflow"
   path = "/"
   assume_role_policy = join("", data.aws_iam_policy_document.service.*.json)
 
@@ -155,7 +155,7 @@ resource "aws_iam_role_policy_attachment" "attach-read-s3" {
 ##################
 
 resource "aws_iam_role" "instance-role" {
-  name = "ocf-airflow-${var.aws-environment}-role"
+  name = "${var.aws-domain}-${var.aws-environment}-instance-role-airflow"
   path = "/"
 
   assume_role_policy = join("", data.aws_iam_policy_document.instance.*.json)
@@ -177,7 +177,7 @@ resource "aws_iam_role_policy_attachment" "attach-logs" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "airflow-instance-eb-${var.aws-environment}"
+  name = "${var.aws-domain}-${var.aws-environment}-instance-profile-airflow"
   role = join("", aws_iam_role.instance-role.*.name)
 }
 
