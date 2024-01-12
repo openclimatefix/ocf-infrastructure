@@ -28,8 +28,8 @@ variable "aws-owner_id" {
 
 // EB Environment Configuration -------------------------------------------------
 
-variable "rds-db_secret_url" {
-  description = "The database url"
+variable "airflow-db-connection-url" {
+  description = "The connection url to the database to store airflow metadata"
   type = string
 }
 
