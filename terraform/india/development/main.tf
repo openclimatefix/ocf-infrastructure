@@ -23,6 +23,8 @@ module "network" {
   domain      = local.domain
 }
 
+
+
 /*
 # 1.1
 module "ecs-cluster" {
@@ -42,7 +44,10 @@ module "s3-nwp-bucket" {
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
 }
 
-# 2.1 module "rds" {
+*/
+
+# 2.1
+module "rds" {
   source = "../../modules/storage/postgres"
   environment = local.environment
   region = var.region
@@ -51,6 +56,8 @@ module "s3-nwp-bucket" {
   db_name = "india"
   rds_instance_class = "db.t3.micro"
 }
+
+/*
 
 # 3.0
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
