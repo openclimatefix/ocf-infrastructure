@@ -410,6 +410,7 @@ module "airflow" {
   source = "../../modules/services/airflow"
 
   aws-environment   = local.environment
+  aws-domain        = local.domain
   aws-vpc_id        = module.networking.vpc_id
   aws-subnet_id       = module.networking.public_subnet_ids[0]
   airflow-db-connection-url        = module.database.forecast-database-secret-airflow-url

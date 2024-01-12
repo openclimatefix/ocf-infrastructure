@@ -103,6 +103,7 @@ module "airflow" {
   source                    = "../../modules/services/airflow"
   aws-environment           = local.environment
   aws-region                = local.region
+  aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   airflow-db-connection-url = "${module.postgres-rds.instance_connection_url}/airflow"
