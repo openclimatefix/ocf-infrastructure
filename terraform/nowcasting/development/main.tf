@@ -52,6 +52,7 @@ module "ec2-bastion" {
   region            = var.region
   vpc_id            = module.networking.vpc_id
   public_subnets_id = module.networking.public_subnet_ids[0]
+  bastion_ami = "ami-0069d66985b09d219"
 }
 
 # 0.3
