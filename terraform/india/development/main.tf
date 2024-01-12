@@ -104,7 +104,7 @@ module "airflow" {
   aws-environment                = local.environment
   aws-vpc_id                     = module.network.vpc_id
   aws-subnet_id                  = module.network.public_subnet_ids[0]
-  rds-db_secret_url              = module.postgres-rds.secret-url
+  airflow-db-connection-url              = "${module.postgres-rds.instance_connection_url}/airflow"
   docker-compose-version         = "0.0.4"
   ecs-subnet_id                  = module.network.public_subnet_ids[0]
   ecs-security_group             = module.network.default_security_group_id

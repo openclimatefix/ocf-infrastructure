@@ -412,7 +412,7 @@ module "airflow" {
   aws-environment   = local.environment
   aws-vpc_id        = module.networking.vpc_id
   aws-subnet_id       = module.networking.public_subnet_ids[0]
-  rds-db_secret_url        = module.database.forecast-database-secret-airflow-url
+  airflow-db-connection-url        = module.database.forecast-database-secret-airflow-url
   docker-compose-version       = "0.0.4"
   ecs-subnet_id = module.networking.public_subnet_ids[0]
   ecs-security_group=module.networking.default_security_group_id
@@ -445,7 +445,7 @@ module "pvsite_api" {
   subnet_id                       = module.networking.public_subnet_ids[0]
   docker_version                  = var.pvsite_api_version
   domain                          = local.domain
-  database_secret_url             = module.pvsite_database.secret-url
+  database_secret_url             = module.pvsite_database.default_db_connection_url
   database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
   sentry_dsn                      = var.sentry_dsn
   auth_api_audience               = var.auth_api_audience
