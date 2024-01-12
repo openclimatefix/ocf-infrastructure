@@ -3,6 +3,7 @@
 # 1.0 - VPC and Subnets
 # 1.1 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
+# 2.1 - RDS database
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
 # 4.0 - Airflow EB Instance
@@ -39,6 +40,16 @@ module "s3-nwp-bucket" {
   domain              = local.domain
   service_name        = "nwp"
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
+}
+
+# 2.1 module "rds" {
+  source = "../../modules/storage/postgres"
+  environment = local.environment
+  region = var.region
+  db_subnet_group_name = network.private_subnet_group_name
+  vpc_id = network.vpc_id
+  db_name = "india"
+  rds_instance_class = "db.t3.micro"
 }
 
 # 3.0
