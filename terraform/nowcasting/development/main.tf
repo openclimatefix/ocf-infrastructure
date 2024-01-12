@@ -409,15 +409,15 @@ module "forecast_blend" {
 module "airflow" {
   source = "../../modules/services/airflow"
 
-  environment   = local.environment
-  vpc_id        = module.networking.vpc_id
-  subnet_id       = module.networking.public_subnet_ids[0]
-  db_url        = module.database.forecast-database-secret-airflow-url
+  aws-environment   = local.environment
+  aws-vpc_id        = module.networking.vpc_id
+  aws-subnet_id       = module.networking.public_subnet_ids[0]
+  rds-db_secret_url        = module.database.forecast-database-secret-airflow-url
   docker-compose-version       = "0.0.4"
-  ecs_subnet_id = module.networking.public_subnet_ids[0]
-  ecs_security_group=module.networking.default_security_group_id
-  owner_id = module.networking.owner_id
-  airflow_conn_slack_api_default=var.airflow_conn_slack_api_default
+  ecs-subnet_id = module.networking.public_subnet_ids[0]
+  ecs-security_group=module.networking.default_security_group_id
+  aws-owner_id = module.networking.owner_id
+  slack_api_conn=var.airflow_conn_slack_api_default
 }
 
 # 6.1
