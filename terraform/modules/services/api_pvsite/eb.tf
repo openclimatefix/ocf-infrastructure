@@ -27,6 +27,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     value     = "t3.small"
   }
 
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name = "RootVolumeType"
+    value = "gp3"
+  }
+
   # the next line IS NOT RANDOM,
 #  see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
   solution_stack_name = "64bit Amazon Linux 2 v3.5.4 running Docker"
