@@ -23,9 +23,18 @@ resource "aws_s3_bucket_public_access_block" "access_block" {
 
 }
 
+resource "aws_s3_bucket_ownership_controls" "aws_s3_bucket_ownership_controls" {
+  bucket = aws_s3_bucket.bucket.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 # Private ACL for bucket
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl
 resource "aws_s3_bucket_acl" "acl" {
+  depends_on = [aws_s3_bucket_ownership_controls.aws_s3_bucket_ownership_controls]
+
   bucket = "${var.domain}-${var.service_name}-${var.environment}"
   acl = "private"
 }
