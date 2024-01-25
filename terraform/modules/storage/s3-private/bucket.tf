@@ -24,7 +24,7 @@ resource "aws_s3_bucket_public_access_block" "access_block" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "aws_s3_bucket_ownership_controls" {
-  bucket = aws_s3_bucket.example.id
+  bucket = aws_s3_bucket.bucket.id
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
