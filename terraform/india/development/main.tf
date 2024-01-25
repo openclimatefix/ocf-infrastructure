@@ -121,8 +121,8 @@ module "forecast" {
   ecs_config  = {
     docker_image   = "openclimatefix/india_forecast_app"
     docker_version = var.version-forecast
-    memory_mb      = 1024
-    cpu            = 1024
+    memory_mb      = 512
+    cpu            = 256
   }
   rds_config = {
     database_secret_arn             = module.postgres-rds.secret.arn
