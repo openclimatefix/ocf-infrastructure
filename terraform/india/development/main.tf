@@ -119,7 +119,7 @@ module "forecast" {
   environment = local.environment
   app-name    = "forecast"
   ecs_config  = {
-    docker_image   = "openclimatefix/pvnet_app"
+    docker_image   = "openclimatefix/india_forecast_app"
     docker_version = var.version-forecast
     memory_mb      = 1024
     cpu            = 1024
@@ -132,6 +132,11 @@ module "forecast" {
     bucket_id              = module.s3-nwp-bucket.bucket_id
     bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
     datadir                = "data"
+  }
+  // this isnt really needed
+  s3_ml_bucket = {
+    bucket_id              = module.s3-nwp-bucket.bucket_id
+    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
   }
   loglevel      = "INFO"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
