@@ -55,7 +55,7 @@ module "ecs-cluster" {
   owner_id = module.network.owner_id
 }
 
-/*
+
 # 2.0
 module "s3-nwp-bucket" {
   source              = "../../modules/storage/s3-private"
@@ -65,6 +65,8 @@ module "s3-nwp-bucket" {
   service_name        = "nwp"
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
 }
+
+/*
 
 # 3.0
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
@@ -125,6 +127,11 @@ module "forecast" {
   rds_config = {
     database_secret_arn             = module.postgres-rds.secret.arn
     database_secret_read_policy_arn = module.postgres-rds.secret-policy.arn
+  }
+  s3_nwp_bucket = {
+    bucket_id              = module.s3-nwp-bucket.bucket_id
+    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
+    datadir                = "data"
   }
   loglevel      = "INFO"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
