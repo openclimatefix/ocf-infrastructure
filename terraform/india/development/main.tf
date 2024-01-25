@@ -7,6 +7,7 @@
 # 2.0 - S3 bucket for NWP data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
+# 3.2 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
 
@@ -107,6 +108,27 @@ module "npw_consumer_ecmwf_ecs" {
 }
 
 */
+
+# 3.2 - Forecast
+module "forecast" {
+  source = "../../modules/services/forecast_generic"
+
+  region      = var.region
+  environment = local.environment
+  app-name    = "forecast"
+  ecs_config  = {
+    docker_image   = "openclimatefix/pvnet_app"
+    docker_version = var.version-forecast
+    memory_mb      = 1024
+    cpu            = 1024
+  }
+  rds_config = {
+    database_secret_arn             = module.postgres-rds.secret.arn
+    database_secret_read_policy_arn = module.postgres-rds.secret-policy.arn
+  }
+  loglevel      = "INFO"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+}
 
 # 4.0
 module "airflow" {

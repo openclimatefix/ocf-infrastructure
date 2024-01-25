@@ -21,3 +21,9 @@ variable apikey-slack {
   default = "not-set"
   description = "Slack API key"
 }
+
+variable version-forecast {
+  type = string
+  default = "0.1.0"
+  description = "Container image tag of the forecast to use: openclimatefix/forecast"
+}
