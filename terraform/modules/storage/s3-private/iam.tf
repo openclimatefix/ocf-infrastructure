@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "read_policy_description" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy
 resource "aws_iam_policy" "read-policy" {
-  name        = "s3-${var.service_name}-read-policy"
+  name        = "s3-${var.domain}-${var.service_name}-read-policy"
   description = "Policy to read bucket: ${aws_s3_bucket.bucket.bucket}"
 
   policy = data.aws_iam_policy_document.read_policy_description.json
@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "write_policy_description" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy
 resource "aws_iam_policy" "write-policy" {
-  name        = "s3-${var.service_name}-write-policy"
+  name        = "s3-${var.domain}-${var.service_name}-write-policy"
   description = "Policy to write to bucket: ${aws_s3_bucket.bucket.bucket}"
 
   # Terraform's "jsonencode" function converts a
