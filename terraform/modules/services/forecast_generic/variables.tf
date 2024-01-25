@@ -49,6 +49,11 @@ variable "s3_nwp_bucket" {
     bucket_read_policy_arn = string
     datadir = string
   })
+  default = {
+    bucket_id              = "not-set"
+    bucket_read_policy_arn = "not-set"
+    datadir                = "not-set"
+  }
   description = <<EOT
     s3_nwp_bucket_info = {
       bucket_id : "ID of the nwp S3 bucket"
@@ -84,6 +89,11 @@ variable "s3_ml_bucket" {
     bucket_id              = string
     bucket_read_policy_arn = string
   })
+  default = {
+    bucket_id              = "not-set"
+    bucket_read_policy_arn = "not-set"
+    datadir                = "not-set"
+  }
   description = <<EOT
     s3_ml_bucket_info = {
       bucket_id : "ID of the ml S3 bucket"
