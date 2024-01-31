@@ -135,7 +135,7 @@ module "ruvnl_consumer_ecs" {
   container-name        = "openclimatefix/ruvnl_consumer_app"
   container-command     = [
     "app",
-    "--write-to-db"",
+    "--write-to-db",
   ]
 }
 
