@@ -132,7 +132,8 @@ module "ruvnl_consumer_ecs" {
   ]
   container-secret_vars = ["DB_URL"]
   container-tag         = var.version-runvl-consumer
-  container-name        = "openclimatefix/ruvnl_consumer_app"
+  container-name        = "ruvnl_consumer_app"
+  container-registry    = "openclimatefix"
   container-command     = [
     "app",
     "--write-to-db",
