@@ -31,5 +31,5 @@ variable version-forecast {
 variable version-runvl-consumer {
   type = string
   default = "0.0.1"
-  description = "Container image tag of the forecast to use: openclimatefix/ruvnl_consumer_app"
+  description = "Container image tag of the runvl data consumer to use: openclimatefix/ruvnl_consumer_app"
 }

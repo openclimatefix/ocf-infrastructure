@@ -25,7 +25,7 @@ cluster = "india-ecs-cluster-development"
 
 with DAG(
     "runvl-data-consumer",
-    schedule_interval="0,30 * * * *",
+    schedule_interval="*/3 * * * *",
     default_args=default_args,
     concurrency=10,
     max_active_tasks=10,

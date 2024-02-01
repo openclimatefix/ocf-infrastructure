@@ -126,6 +126,11 @@ module "ruvnl_consumer_ecs" {
 
   s3-buckets = []
 
+  ecs-task_size = {
+    memory = 512
+    cpu    = 256
+  }
+
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
