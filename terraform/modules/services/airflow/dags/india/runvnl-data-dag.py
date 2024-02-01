@@ -51,4 +51,6 @@ with DAG(
         task_concurrency=10,
     )
 
+
     latest_only >> [runvl_data]
+
