@@ -7,7 +7,8 @@
 # 2.0 - S3 bucket for NWP data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
-# 3.2 - ECS task definition for the Forecast
+# 3.2 - ECS task definition for Collection RUVNL data
+# 3.3 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
 
@@ -111,7 +112,35 @@ module "npw_consumer_ecmwf_ecs" {
 
 */
 
-# 3.2 - Forecast
+# 3.2
+module "ruvnl_consumer_ecs" {
+  source = "../../modules/services/nwp_consumer"
+
+  ecs-task_name               = "runvl-consumer"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+  ]
+  container-secret_vars = ["DB_URL"]
+  container-tag         = var.version-runvl-consumer
+  container-name        = "openclimatefix/ruvnl_consumer_app"
+  container-command     = [
+    "app",
+    "--write-to-db",
+  ]
+}
+
+
+# 3.3 - Forecast
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 
