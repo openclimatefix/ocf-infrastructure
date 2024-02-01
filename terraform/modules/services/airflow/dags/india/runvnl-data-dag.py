@@ -9,7 +9,7 @@ from airflow.operators.latest_only import LatestOnlyOperator
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime.utcnow() - timedelta(hours=25),
+    "start_date": datetime.utcnow() - timedelta(hours=2),
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "max_active_runs": 10,
@@ -20,11 +20,11 @@ default_args = {
 env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
-cluster = f"india-ecs-cluster-{env}"
+cluster = "india-ecs-cluster-development"
 
 
 with DAG(
-    "site-forecast",
+    "runvl-data-consumer",
     schedule_interval="0,30 * * * *",
     default_args=default_args,
     concurrency=10,
@@ -34,7 +34,7 @@ with DAG(
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
-    forecast = EcsRunTaskOperator(
+    runvl_data = EcsRunTaskOperator(
         task_id="runvl-consumer",
         task_definition="runvl-consumer",
         cluster=cluster,
@@ -50,3 +50,5 @@ with DAG(
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
     )
+
+    latest_only >> [runvl_data]
