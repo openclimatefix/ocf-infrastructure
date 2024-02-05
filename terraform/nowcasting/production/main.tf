@@ -406,15 +406,17 @@ module "forecast_blend" {
 module "airflow" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=2747e85"
 
-  environment   = local.environment
-  vpc_id        = module.networking.vpc_id
-  subnet_id       = module.networking.public_subnet_ids[0]
-  db_url        = module.database.forecast-database-secret-airflow-url
-  docker-compose-version       = "0.0.4"
-  ecs_subnet_id = module.networking.public_subnet_ids[0]
-  ecs_security_group=module.networking.default_security_group_id
-  owner_id = module.networking.owner_id
-  airflow_conn_slack_api_default=var.airflow_conn_slack_api_default
+  aws-environment   = local.environment
+  aws-domain        = local.domain
+  aws-vpc_id        = module.networking.vpc_id
+  aws-subnet_id       = module.networking.public_subnet_ids[0]
+  airflow-db-connection-url        = module.database.forecast-database-secret-airflow-url
+  docker-compose-version       = "0.0.5"
+  ecs-subnet_id = module.networking.public_subnet_ids[0]
+  ecs-security_group=module.networking.default_security_group_id
+  aws-owner_id = module.networking.owner_id
+  slack_api_conn=var.airflow_conn_slack_api_default
+
 }
 
 # 6.1
