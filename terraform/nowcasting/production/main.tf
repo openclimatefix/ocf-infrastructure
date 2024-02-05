@@ -39,7 +39,10 @@ locals {
 # 0.1
 module "networking" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking?ref=2747e85"
+
+  domain = local.domain
   environment = local.environment
+  region = var.region
 }
 
 # 0.2
