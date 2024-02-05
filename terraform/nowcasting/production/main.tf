@@ -99,7 +99,7 @@ module "api" {
 
 # 2.1
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=057f808"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=2747e85"
 
   region               = var.region
   environment          = local.environment
@@ -419,7 +419,7 @@ module "airflow" {
 
 # 6.1
 module "pvsite_database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=057f808"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=2747e85"
 
   region                      = var.region
   environment                 = local.environment
