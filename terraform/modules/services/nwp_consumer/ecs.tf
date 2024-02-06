@@ -7,8 +7,8 @@ resource "aws_ecs_task_definition" "task_def" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
 
-  cpu    = var.ecs-task_cpu
-  memory = var.ecs-task_memory
+  cpu    = var.ecs-task_size.cpu
+  memory = var.ecs-task_size.memory
 
   tags = {
     name = "${var.ecs-task_name}-${var.ecs-task_type}"

@@ -130,18 +130,6 @@ variable ecs-task_size {
   }
 }
 
-variable ecs-task_cpu {
-  type = number
-  description = "CPU units for the ECS task"
-  default = 1024
-}
-
-variable ecs-task_memory {
-  type = number
-  description = "Memory units (MB) for the ECS task"
-  default = 5120
-}
-
 variable "ecs-task_execution_role_arn" {
   description = "The arn of the ECS cluster task execution role"
   type = string
