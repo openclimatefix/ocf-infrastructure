@@ -43,6 +43,9 @@ resource "aws_s3_bucket_acl" "acl" {
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration
 resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
 
+  # this makes sure that the lifecyle is not made, if there are no rules.
+  count = length(var.lifecycled_prefixes) == 0 ? 0 : 1
+
   bucket = aws_s3_bucket.bucket.id
 
   dynamic "rule" {
