@@ -48,10 +48,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
   dynamic "rule" {
     for_each = toset(var.lifecycled_prefixes)
     content {
-        id = "remove_old_${each.key}_files"
+        id = "remove_old_${rule.value}_files"
         status = "Enabled"
         filter {
-          prefix = "${each.key}/"
+          prefix = "${rule.value}/"
         }
         expiration {
           days = 7
