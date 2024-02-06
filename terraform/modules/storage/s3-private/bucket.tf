@@ -44,16 +44,18 @@ resource "aws_s3_bucket_acl" "acl" {
 resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
 
   bucket = aws_s3_bucket.bucket.id
-  
+
   dynamic "rule" {
     for_each = toset(var.lifecycled_prefixes)
-    id = "remove_old_${each.key}_files"
-    status = "Enabled"
-    filter {
-      prefix = "${each.key}/"
-    }
-    expiration {
-      days = 7
+    content {
+        id = "remove_old_${each.key}_files"
+        status = "Enabled"
+        filter {
+          prefix = "${each.key}/"
+        }
+        expiration {
+          days = 7
+        }
     }
   }
 }
