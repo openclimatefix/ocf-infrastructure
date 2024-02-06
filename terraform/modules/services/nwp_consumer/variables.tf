@@ -105,6 +105,7 @@ variable ecs-task_size {
     cpu = 1024
     memory = 5120
   }
+
   
   validation {
     condition = length(keys(var.ecs-task_size)) == 2
