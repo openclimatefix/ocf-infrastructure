@@ -42,17 +42,24 @@ resource "aws_s3_bucket_acl" "acl" {
 # Lifecycle for prefixed bucket data
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration
 resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
-  for_each = toset(var.lifecycled_prefixes)
+
+  # this makes sure that the lifecyle is not made, if there are no rules.
+  count = length(var.lifecycled_prefixes) == 0 ? 0 : 1
 
   bucket = aws_s3_bucket.bucket.id
-  rule {
-    id = "remove_old_${each.key}_files"
-    status = "Enabled"
-    filter {
-      prefix = "${each.key}/"
-    }
-    expiration {
-      days = 7
+
+  # loop over all rules
+  dynamic "rule" {
+    for_each = toset(var.lifecycled_prefixes)
+    content {
+        id = "remove_old_${rule.value}_files"
+        status = "Enabled"
+        filter {
+          prefix = "${rule.value}/"
+        }
+        expiration {
+          days = 7
+        }
     }
   }
 }
