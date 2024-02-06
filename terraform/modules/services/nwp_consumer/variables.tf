@@ -106,6 +106,7 @@ variable ecs-task_size {
     memory = 5120
   }
   
+  
   validation {
     condition = length(keys(var.ecs-task_size)) == 2
     error_message = "Variable ecs-task_size must have exactly two keys: cpu and memory."
@@ -128,18 +129,6 @@ variable ecs-task_size {
     )
     error_message = "Invalid combination of CPU and memory."
   }
-}
-
-variable ecs-task_cpu {
-  type = number
-  description = "CPU units for the ECS task"
-  default = 1024
-}
-
-variable ecs-task_memory {
-  type = number
-  description = "Memory units (MB) for the ECS task"
-  default = 5120
 }
 
 variable "ecs-task_execution_role_arn" {
