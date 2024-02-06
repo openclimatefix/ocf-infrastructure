@@ -48,6 +48,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
 
   bucket = aws_s3_bucket.bucket.id
 
+  # loop over all rules
   dynamic "rule" {
     for_each = toset(var.lifecycled_prefixes)
     content {
