@@ -203,8 +203,9 @@ module "india-api" {
   aws-vpc_id         = module.network.vpc_id
   container-command  = []
   container-env_vars = [
-    { "name" : "SOURCE", "value" : "dummydb" },
+    { "name" : "SOURCE", "value" : "indiadb" },
     { "name" : "PORT", "value" : "80" },
+    { "name" : "DB_URL", "value" : module.postgres-rds.instance_connection_url },
   ]
   container-name = "india-api"
   container-tag  = var.version-india_api
