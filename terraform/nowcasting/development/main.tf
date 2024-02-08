@@ -489,7 +489,7 @@ module "pvsite_forecast" {
   s3_nwp_bucket = {
     bucket_id              = module.s3.s3-nwp-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data"
+    datadir                = "data-national"
   }
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
