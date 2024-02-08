@@ -205,7 +205,7 @@ module "india-api" {
   container-env_vars = [
     { "name" : "SOURCE", "value" : "indiadb" },
     { "name" : "PORT", "value" : "80" },
-    { "name" : "DB_URL", "value" : module.postgres-rds.instance_connection_url },
+    { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url},
   ]
   container-name = "india-api"
   container-tag  = var.version-india_api
