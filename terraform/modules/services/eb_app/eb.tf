@@ -45,9 +45,9 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     dynamic "setting" {
         for_each = var.container-env_vars
         content {
-        namespace = "aws:elasticbeanstalk:application:environment"
-        name      = setting.name
-        value     = setting.value
+            namespace = "aws:elasticbeanstalk:application:environment"
+            name      = ${setting.name}
+            value     = ${setting.value}
         }
     }
 
