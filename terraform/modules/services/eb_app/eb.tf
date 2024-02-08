@@ -41,16 +41,6 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     value     = "*" #TODO change
   }
 
-  # use dynamic over all the container environment variables
-    dynamic "setting" {
-        for_each = var.container-env_vars
-        content {
-            namespace = "aws:elasticbeanstalk:application:environment"
-            name      = "${setting.value["name"]}"
-            value     = "${setting.value["value"]}"
-        }
-    }
-
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
