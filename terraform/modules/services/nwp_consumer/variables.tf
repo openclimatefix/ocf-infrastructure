@@ -107,6 +107,7 @@ variable ecs-task_size {
   }
 
   
+  
   validation {
     condition = length(keys(var.ecs-task_size)) == 2
     error_message = "Variable ecs-task_size must have exactly two keys: cpu and memory."
