@@ -30,23 +30,6 @@ with DAG('nwp-consumer', schedule_interval="10,25,40,55 * * * *", default_args=d
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
-    nwp_consumer = EcsRunTaskOperator(
-        task_id='nwp-consumer',
-        task_definition="nwp",
-        cluster=cluster,
-        overrides={},
-        launch_type = "FARGATE",
-        network_configuration={
-            "awsvpcConfiguration": {
-                "subnets": [subnet],
-                "securityGroups": [security_group],
-                "assignPublicIp": "ENABLED",
-            },
-        },
-        task_concurrency = 10,
-        on_failure_callback=on_failure_callback
-    )
-
     nwp_national_consumer = EcsRunTaskOperator(
         task_id='national-nwp-consumer',
         task_definition="nwp-national",
@@ -80,5 +63,5 @@ with DAG('nwp-consumer', schedule_interval="10,25,40,55 * * * *", default_args=d
     #     task_concurrency=10,
     # )
 
-    latest_only >> [nwp_national_consumer, nwp_consumer]
+    latest_only >> [nwp_national_consumer]
 
