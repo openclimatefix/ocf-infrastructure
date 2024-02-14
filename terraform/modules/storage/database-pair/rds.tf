@@ -4,7 +4,7 @@ resource "aws_db_instance" "db-forecast" {
   allocated_storage            = 150
   max_allocated_storage        = 200
   engine                       = "postgres"
-  engine_version               = "16.1"
+  engine_version               = "15.5"
   instance_class               = "db.t3.medium"
   db_name                      = "forecast${var.environment}"
   identifier                   = "forecast-${var.environment}"
@@ -21,7 +21,7 @@ resource "aws_db_instance" "db-forecast" {
   performance_insights_enabled = true
   allow_major_version_upgrade  = true
   storage_type                 = "gp3"
-  parameter_group_name         = aws_db_parameter_group.parameter-group-16.name
+  parameter_group_name         = aws_db_parameter_group.parameter-group.name
 
   tags = {
     Name        = "${var.environment}-rds"
@@ -31,9 +31,9 @@ resource "aws_db_instance" "db-forecast" {
 }
 
 
-resource "aws_db_parameter_group" "parameter-group-16" {
-  name   = "forecast${var.environment}-parameter-group-16"
-  family = "postgres16"
+resource "aws_db_parameter_group" "parameter-group" {
+  name   = "forecast${var.environment}-parameter-group"
+  family = "postgres15"
 
   lifecycle {
     create_before_destroy = true

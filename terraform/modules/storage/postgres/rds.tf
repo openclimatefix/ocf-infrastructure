@@ -4,7 +4,7 @@ resource "aws_db_instance" "postgres-db" {
   allocated_storage            = 25
   max_allocated_storage        = 200
   engine                       = "postgres"
-  engine_version               = "16.1"
+  engine_version               = "15.5"
   instance_class               = var.rds_instance_class
   db_name                      = "${var.db_name}${var.environment}"
   identifier                   = "${var.db_name}-${var.environment}"
@@ -21,7 +21,7 @@ resource "aws_db_instance" "postgres-db" {
   performance_insights_enabled = true
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   storage_type                 = "gp3"
-  parameter_group_name         = aws_db_parameter_group.parameter-group-16.name
+  parameter_group_name         = aws_db_parameter_group.parameter-group.name
 
   tags = {
     Name        = "${var.environment}-rds"
@@ -30,9 +30,9 @@ resource "aws_db_instance" "postgres-db" {
 
 }
 
-resource "aws_db_parameter_group" "parameter-group-16" {
-  name   = "${var.db_name}-${var.environment}-parameter-group-16"
-  family = "postgres16"
+resource "aws_db_parameter_group" "parameter-group" {
+  name   = "${var.db_name}-${var.environment}-parameter-group"
+  family = "postgres15"
 
   lifecycle {
     create_before_destroy = true
