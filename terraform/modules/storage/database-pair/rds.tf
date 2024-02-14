@@ -4,7 +4,7 @@ resource "aws_db_instance" "db-forecast" {
   allocated_storage            = 150
   max_allocated_storage        = 200
   engine                       = "postgres"
-  engine_version               = "15.5"
+  engine_version               = "16.1"
   instance_class               = "db.t3.medium"
   db_name                      = "forecast${var.environment}"
   identifier                   = "forecast-${var.environment}"
@@ -33,7 +33,7 @@ resource "aws_db_instance" "db-forecast" {
 
 resource "aws_db_parameter_group" "parameter-group" {
   name   = "forecast${var.environment}-parameter-group"
-  family = "postgres15"
+  family = "postgres16"
 
   lifecycle {
     create_before_destroy = true
