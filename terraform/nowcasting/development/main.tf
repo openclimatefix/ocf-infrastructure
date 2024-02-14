@@ -129,6 +129,10 @@ module "nwp-national" {
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 1024
+    memory = 7168
+  }
 
   aws-region                     = var.region
   aws-environment                = local.environment

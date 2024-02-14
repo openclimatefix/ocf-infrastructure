@@ -127,6 +127,10 @@ module "nwp-national" {
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 1024
+    memory = 7168
+  }
 
   aws-region                     = var.region
   aws-environment                = local.environment
@@ -312,7 +316,7 @@ module "forecast_pvnet" {
   s3_satellite_bucket = {
     bucket_id              = module.s3.s3-sat-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn
-    datadir                = "data-national/latest"
+    datadir                = "data/latest"
   }
   loglevel      = "INFO"
   pvnet_gsp_sum = "true"
