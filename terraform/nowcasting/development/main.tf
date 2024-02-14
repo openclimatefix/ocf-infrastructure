@@ -121,43 +121,6 @@ import {
   id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:development/data/nwp-consumer-UZrR8M"
 }
 
-# 3.1
-module "nwp" {
-  source = "../../modules/services/nwp_consumer"
-
-  ecs-task_name = "nwp"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id
-      access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
-    }
-  ]
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : "eu-west-1" },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "METOFFICE_ORDER_ID", "value" : "uk-11params-12steps" },
-  ]
-  container-secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
-  container-tag         = var.nwp_version
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "download",
-    "--source=metoffice",
-    "--sink=s3",
-    "--rdir=raw",
-    "--zdir=data",
-    "--create-latest"
-  ]
-}
 
 # 3.2
 module "nwp-national" {
@@ -182,9 +145,9 @@ module "nwp-national" {
     { "name" : "AWS_REGION", "value" : "eu-west-1" },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "METOFFICE_ORDER_ID", "value" : "uk-5params-42steps" },
+    { "name" : "METOFFICE_ORDER_ID", "value" : "uk-11params-42steps" },
   ]
-  container-secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
+  container-secret_vars = ["METOFFICE_API_KEY"]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
