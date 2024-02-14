@@ -4,7 +4,7 @@ resource "aws_db_instance" "postgres-db" {
   allocated_storage            = 25
   max_allocated_storage        = 200
   engine                       = "postgres"
-  engine_version               = "15.5"
+  engine_version               = "16.1"
   instance_class               = var.rds_instance_class
   db_name                      = "${var.db_name}${var.environment}"
   identifier                   = "${var.db_name}-${var.environment}"
@@ -32,7 +32,7 @@ resource "aws_db_instance" "postgres-db" {
 
 resource "aws_db_parameter_group" "parameter-group" {
   name   = "${var.db_name}-${var.environment}-parameter-group"
-  family = "postgres15"
+  family = "postgres16"
 
   lifecycle {
     create_before_destroy = true
