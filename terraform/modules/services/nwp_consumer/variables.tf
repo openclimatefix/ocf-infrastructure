@@ -121,7 +121,7 @@ variable ecs-task_size {
     condition = (
       var.ecs-task_size.cpu == 256 ? contains([512, 1024, 2048], var.ecs-task_size.memory) :
       var.ecs-task_size.cpu == 512 ? contains(range(1024, 4096, 1024), var.ecs-task_size.memory) :
-      var.ecs-task_size.cpu == 1024 ? contains(range(2048, 8192, 1024), var.ecs-task_size.memory) :
+      var.ecs-task_size.cpu == 1024 ? contains(range(2048, 9216, 1024), var.ecs-task_size.memory) :
       var.ecs-task_size.cpu == 2048 ? contains(range(4096, 16384, 1024), var.ecs-task_size.memory) :
       var.ecs-task_size.cpu == 4096 ? contains(range(8192, 30720, 1024), var.ecs-task_size.memory) :
       var.ecs-task_size.cpu == 8192 ? contains(range(16384, 61440, 4096), var.ecs-task_size.memory) :
