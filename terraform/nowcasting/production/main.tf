@@ -122,7 +122,7 @@ import {
 
 # 3.2
 module "nwp-national" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=631503a"
 
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
