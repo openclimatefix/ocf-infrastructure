@@ -312,7 +312,7 @@ module "forecast_pvnet" {
   s3_satellite_bucket = {
     bucket_id              = module.s3.s3-sat-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn
-    datadir                = "data/latest"
+    datadir                = "data-national/latest"
   }
   loglevel      = "INFO"
   pvnet_gsp_sum = "true"
