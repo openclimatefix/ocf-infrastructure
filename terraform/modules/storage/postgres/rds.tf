@@ -31,7 +31,7 @@ resource "aws_db_instance" "postgres-db" {
 }
 
 resource "aws_db_parameter_group" "parameter-group-16" {
-  name   = "${var.db_name}-${var.environment}-parameter-group"
+  name   = "${var.db_name}-${var.environment}-parameter-group-16"
   family = "postgres16"
 
   lifecycle {
