@@ -31,7 +31,7 @@ resource "aws_db_instance" "db-forecast" {
 }
 
 
-resource "aws_db_parameter_group" "parameter-group" {
+resource "aws_db_parameter_group" "parameter-group-16" {
   name   = "forecast${var.environment}-parameter-group"
   family = "postgres16"
 
