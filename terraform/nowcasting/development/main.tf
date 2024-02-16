@@ -404,23 +404,29 @@ module "pvsite_database" {
 }
 
 # 6.2
-# TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
-  source = "../../modules/services/api_pvsite"
-
-  region                          = var.region
-  app_name                        = "sites-api"
-  environment                     = local.environment
-  vpc_id                          = module.networking.vpc_id
-  subnet_id                       = module.networking.public_subnet_ids[0]
-  docker_version                  = var.pvsite_api_version
-  domain                          = local.domain
-  database_secret_url             = module.pvsite_database.default_db_connection_url
-  database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
-  sentry_dsn                      = var.sentry_dsn
-  auth_api_audience               = var.auth_api_audience
-  auth_domain                     = var.auth_domain
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = local.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.network.public_subnet_ids[0]
+  aws-vpc_id         = module.network.vpc_id
+  container-command  = []
+  container-env_vars = [
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "FAKE", "value" : "0" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "AUTH_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH_DOMAIN", "value" : var.auth_domain }
+    { "name" : "AUTH0_ALGORITHM", "value" : "RS256" }
+  ]
+  container-name = "nowcasting_site_api"
+  container-tag  = var.pvsite_api_version
+  eb-app_name    = "sites-api"
+  eb-instance_type = "t3.small"
 }
+
 
 # 6.3
 module "pvsite_ml_bucket" {
