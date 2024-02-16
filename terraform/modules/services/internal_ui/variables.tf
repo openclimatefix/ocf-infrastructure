@@ -56,6 +56,10 @@ variable "database_config" {
   EOT
 }
 
+variable "site_db_url" {
+  description = "The URL of the site database"
+}
+
 
 variable "auth_config" {
   type = object({

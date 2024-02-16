@@ -345,6 +345,7 @@ module "analysis_dashboard" {
     secret          = module.database.forecast-database-secret-url
     read_policy_arn = module.database.iam-policy-forecast-db-read.arn
   }
+  site_db_url=module.pvsite_database.default_db_connection_url
   auth_config = {
     auth0_domain    = var.auth_domain
     auth0_client_id = var.auth_dashboard_client_id
