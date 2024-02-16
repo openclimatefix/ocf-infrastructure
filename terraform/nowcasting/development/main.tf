@@ -411,7 +411,7 @@ module "pvsite_api" {
   aws-environment    = local.environment
   aws-subnet_id      = module.networking.public_subnet_ids[0]
   aws-vpc_id         = module.networking.vpc_id
-  container-command  = []
+  container-command  = ["poetry", "run", "uvicorn", "pv_site_api.main:app", "--host", "0.0.0.0", "--port", "80"]
   container-env_vars = [
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
