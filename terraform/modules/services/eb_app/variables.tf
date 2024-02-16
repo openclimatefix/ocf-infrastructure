@@ -31,7 +31,7 @@ variable aws-subnet_id {
 variable container-registry {
   type = string
   description = "Container registry where container resides"
-  default = "ghcr.io"
+  default = "ghcr.io/openclimatefix"
 }
 
 variable container-name {

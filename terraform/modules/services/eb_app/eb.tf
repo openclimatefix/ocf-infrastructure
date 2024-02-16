@@ -35,12 +35,6 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
   # https://is.gd/vfB51g
   # This should be the minimally required set for Docker.
 
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ORIGINS"
-    value     = "*" #TODO change
-  }
-
   # use dynamic over all the container environment variables
     dynamic "setting" {
         for_each = var.container-env_vars

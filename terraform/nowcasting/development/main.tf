@@ -416,13 +416,15 @@ module "pvsite_api" {
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
     { "name" : "FAKE", "value" : "0" },
+    { "name" : "ORIGINS", "value" : "*" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "AUTH_API_AUDIENCE", "value" : var.auth_api_audience },
-    { "name" : "AUTH_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
   ]
   container-name = "nowcasting_site_api"
   container-tag  = var.pvsite_api_version
+  container-registry = "openclimatefix"
   eb-app_name    = "sites-api"
   eb-instance_type = "t3.small"
 }
