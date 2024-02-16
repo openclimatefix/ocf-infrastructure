@@ -418,8 +418,8 @@ module "pvsite_api" {
     { "name" : "FAKE", "value" : "0" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "AUTH_API_AUDIENCE", "value" : var.auth_api_audience },
-    { "name" : "AUTH_DOMAIN", "value" : var.auth_domain }
-    { "name" : "AUTH0_ALGORITHM", "value" : "RS256" }
+    { "name" : "AUTH_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
   ]
   container-name = "nowcasting_site_api"
   container-tag  = var.pvsite_api_version
