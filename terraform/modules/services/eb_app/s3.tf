@@ -16,7 +16,7 @@ resource "aws_s3_object" "eb-object" {
         "environment" = [for kv in var.container-env_vars : format("%s=$%s", kv.name, kv.name)],
         "container_name" = (var.container-name),
         "command" = (var.container-command),
-        "ports" = ["80:80"],
+        "ports" = ["80:${var.container-port}"],
       }
     }
   })

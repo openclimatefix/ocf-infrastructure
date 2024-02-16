@@ -347,6 +347,7 @@ module "analysis_dashboard" {
   container-name = "uk-analysis-dashboard"
   container-tag  = var.internal_ui_version
   container-registry = "ghcr.io/openclimatefix/"
+  container-port = 8501
   eb-app_name    = "internal-ui"
   eb-instance_type = "t3.small"
 }
