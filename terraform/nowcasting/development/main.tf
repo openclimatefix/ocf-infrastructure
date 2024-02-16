@@ -327,30 +327,28 @@ module "forecast_pvnet" {
 
 # 5.1
 module "analysis_dashboard" {
-  source = "../../modules/services/internal_ui"
-
-  region        = var.region
-  environment   = local.environment
-  eb_app_name   = "internal-ui"
-  domain        = local.domain
-  docker_config = {
-    image   = "ghcr.io/openclimatefix/uk-analysis-dashboard"
-    version = var.internal_ui_version
-  }
-  networking_config = {
-    vpc_id  = module.networking.vpc_id
-    subnets = module.networking.public_subnet_ids
-  }
-  database_config = {
-    secret          = module.database.forecast-database-secret-url
-    read_policy_arn = module.database.iam-policy-forecast-db-read.arn
-  }
-  site_db_url=module.pvsite_database.default_db_connection_url
-  auth_config = {
-    auth0_domain    = var.auth_domain
-    auth0_client_id = var.auth_dashboard_client_id
-  }
-  show_pvnet_gsp_sum = "true"
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["streamlit", "run", "main.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
+  container-env_vars = [
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "DB_URL", "value" :  module.database.default_db_connection_url},
+    { "name" : "SITES_DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "SHOW_PVNET_GSP_SUM", "value" : "true" },
+    { "name" : "ORIGINS", "value" : "*" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+  ]
+  container-name = "uk-analysis-dashboard"
+  container-tag  = var.internal_ui_version
+  container-registry = "ghcr.io/openclimatefix/"
+  eb-app_name    = "internal-ui"
+  eb-instance_type = "t3.small"
 }
 
 # 4.5
