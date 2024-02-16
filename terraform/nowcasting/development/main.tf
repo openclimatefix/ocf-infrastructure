@@ -336,7 +336,7 @@ module "analysis_dashboard" {
   container-command  = ["streamlit", "run", "main.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
   container-env_vars = [
     { "name" : "PORT", "value" : "80" },
-    { "name" : "DB_URL", "value" :  module.database.default_db_connection_url},
+    { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
     { "name" : "SITES_DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
     { "name" : "SHOW_PVNET_GSP_SUM", "value" : "true" },
     { "name" : "ORIGINS", "value" : "*" },
