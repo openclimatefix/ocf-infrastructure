@@ -407,10 +407,10 @@ module "pvsite_database" {
 module "pvsite_api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
-  aws-region         = local.region
+  aws-region         = var.region
   aws-environment    = local.environment
-  aws-subnet_id      = module.network.public_subnet_ids[0]
-  aws-vpc_id         = module.network.vpc_id
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
   container-command  = []
   container-env_vars = [
     { "name" : "PORT", "value" : "80" },
