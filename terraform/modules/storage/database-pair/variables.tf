@@ -15,3 +15,9 @@ variable "db_subnet_group_name" {
 variable "vpc_id" {
   description = "The id of the vpc where this application will run"
 }
+
+variable "engine_version" {
+  description = "The version of the postgres database"
+  type = string
+  default     = "15.5"
+}

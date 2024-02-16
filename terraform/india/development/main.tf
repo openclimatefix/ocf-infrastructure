@@ -37,6 +37,8 @@ module "postgres-rds" {
   db_subnet_group_name = module.network.private_subnet_group_name
   db_name              = "indiadb"
   rds_instance_class   = "db.t3.small"
+  allow_major_version_upgrade  = true
+  engine_version = "16.1"
 }
 
 # 0.2
