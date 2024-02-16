@@ -10,8 +10,8 @@ resource "aws_elastic_beanstalk_application" "eb-api-application" {
   description = "${var.app_name} elastic beanstalk app"
 
   tags = {
-    Name = var.app_name
-    Type = "eb"
+    app_name = var.app_name
+    type = "eb"
   }
 }
 
