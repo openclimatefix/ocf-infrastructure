@@ -31,8 +31,8 @@ resource "aws_db_instance" "postgres-db" {
 }
 
 resource "aws_db_parameter_group" "parameter-group" {
-  name   = "${var.db_name}-${var.environment}-parameter-group"
-  family = "postgres15"
+  name   = "${var.db_name}-${var.environment}-parameter-group-${split(".",var.engine_version)[0]}"
+  family = "postgres${split(".",var.engine_version)[0]}"
 
   lifecycle {
     create_before_destroy = true

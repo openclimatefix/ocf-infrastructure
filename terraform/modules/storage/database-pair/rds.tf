@@ -32,8 +32,8 @@ resource "aws_db_instance" "db-forecast" {
 
 
 resource "aws_db_parameter_group" "parameter-group" {
-  name   = "forecast${var.environment}-parameter-group"
-  family = "postgres15"
+  name   = "forecast${var.environment}-parameter-group-${split(".",var.engine_version)[0]}"
+  family = "postgres${split(".",var.engine_version)[0]}"
 
   lifecycle {
     create_before_destroy = true
