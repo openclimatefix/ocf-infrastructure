@@ -1,9 +1,9 @@
 # Add secruity group for API
 
-resource "aws_security_group" "sg" {
-  name        = "${var.domain}-${var.environment}-${var.app_name}-sg"
+resource "aws_security_group" "api-sg" {
+  name        = "${var.domain}-${var.environment}-${var.eb_app_name}"
   description = "API security group to allow inbound/outbound traffic"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.networking_config.vpc_id
 
   ingress {
     from_port = "80"
@@ -21,6 +21,6 @@ resource "aws_security_group" "sg" {
   }
 
   tags = {
-    Environment = var.environment
+    Environment = "${var.environment}"
   }
 }
