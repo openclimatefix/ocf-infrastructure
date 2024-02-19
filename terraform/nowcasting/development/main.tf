@@ -83,7 +83,6 @@ module "forecasting_models_bucket" {
 }
 
 # 1.1
-# TODO: Make sites api and nowcasting api use same module
 module "api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
