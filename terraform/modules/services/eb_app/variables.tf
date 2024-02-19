@@ -64,6 +64,12 @@ variable container-command {
   description = "Command to run in the container"
 }
 
+variable container-port {
+  type = number
+  description = "Port on which the container listens"
+  default = 80
+}
+
 // EB configuration --------------------------------------------------------
 
 variable eb-app_name {
