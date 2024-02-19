@@ -93,7 +93,7 @@ module "api" {
   container-env_vars = [
     { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_api },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
@@ -345,7 +345,6 @@ module "analysis_dashboard" {
     { "name" : "SITES_DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
     { "name" : "SHOW_PVNET_GSP_SUM", "value" : "true" },
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
   ]
@@ -422,7 +421,7 @@ module "pvsite_api" {
     { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
     { "name" : "FAKE", "value" : "0" },
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_siteapi },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
