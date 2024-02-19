@@ -12,11 +12,11 @@ resource "aws_s3_object" "eb-object" {
     "version" = "3",
     "services" = {
       "eb-app" = {
-        "image" = "${var.container-registry}/openclimatefix/${var.container-name}:${var.container-tag}",
-        "environment" = [for kv in var.container-env_vars : format("%s=%s", kv.name, kv.value)],
+        "image" = "${var.container-registry}/${var.container-name}:${var.container-tag}",
+        "environment" = [for kv in var.container-env_vars : format("%s=$%s", kv.name, kv.name)],
         "container_name" = (var.container-name),
         "command" = (var.container-command),
-        "ports" = ["80:80"],
+        "ports" = ["80:${var.container-port}"],
       }
     }
   })

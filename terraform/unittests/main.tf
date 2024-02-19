@@ -30,16 +30,6 @@ module "ecs" {
   environment = var.environment
 }
 
-module "api" {
-  source = "../modules/services/api"
-
-  region            = var.region
-  environment       = var.environment
-  vpc_id            = module.networking.vpc_id
-  subnet_ids           = module.networking.public_subnets
-  auth_api_audience = var.auth_api_audience
-  auth_domain       = var.auth_domain
-}
 
 module "postgres" {
   source = "../modules/storage/postgres"

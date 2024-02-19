@@ -10,8 +10,8 @@ resource "aws_elastic_beanstalk_application" "eb-application" {
   description = "${var.eb-app_name} elastic beanstalk app"
 
   tags = {
-    Name = "${var.eb-app_name}"
-    Type = "eb"
+    name = "${var.eb-app_name}"
+    type = "eb"
   }
 }
 
@@ -34,12 +34,6 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
   # There are a LOT of settings, see here for the basic list:
   # https://is.gd/vfB51g
   # This should be the minimally required set for Docker.
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ORIGINS"
-    value     = "*" #TODO change
-  }
 
   # use dynamic over all the container environment variables
     dynamic "setting" {
@@ -88,6 +82,15 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     name      = "MaxSize"
     value     = "1"
   }
+
+  # Following https://discuss.streamlit.io/t/howto-streamlit-on-aws-with-elastic-beanstalk-and-docker/10353
+  setting {
+    namespace = "aws:elb:listener"
+    name      = "ListenerProtocol"
+    value     = "TCP"
+    resource  = ""
+  }
+
 
   ###=========================== Logging ========================== ###
 

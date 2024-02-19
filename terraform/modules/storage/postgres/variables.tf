@@ -39,3 +39,9 @@ variable "rds_instance_class" {
     error_message = "Valid values for var: rds_instance_class are (db.t3.small, db.t3.micro)."
   }
 }
+
+variable "engine_version" {
+  description = "The version of the postgres database"
+  type = string
+  default     = "15.5"
+}

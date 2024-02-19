@@ -31,7 +31,7 @@ variable aws-subnet_id {
 variable container-registry {
   type = string
   description = "Container registry where container resides"
-  default = "ghcr.io"
+  default = "ghcr.io/openclimatefix"
 }
 
 variable container-name {
@@ -62,6 +62,12 @@ variable container-env_vars {
 variable container-command {
   type = list(string)
   description = "Command to run in the container"
+}
+
+variable container-port {
+  type = number
+  description = "Port on which the container listens"
+  default = 80
 }
 
 // EB configuration --------------------------------------------------------

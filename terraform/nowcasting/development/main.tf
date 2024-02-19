@@ -85,20 +85,29 @@ module "forecasting_models_bucket" {
 # 1.1
 # TODO: Make sites api and nowcasting api use same module
 module "api" {
-  source = "../../modules/services/api"
-
-  region                              = var.region
-  environment                         = local.environment
-  vpc_id                              = module.networking.vpc_id
-  subnet_id                           = module.networking.public_subnet_ids[0]
-  docker_version                      = var.api_version
-  database_forecast_secret_url        = module.database.forecast-database-secret-url
-  iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
-  auth_domain                         = var.auth_domain
-  auth_api_audience                   = var.auth_api_audience
-  n_history_days                      = "2"
-  adjust_limit                        = 2000.0
-  sentry_dsn                          = var.sentry_dsn
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
+  container-env_vars = [
+    { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
+    { "name" : "ORIGINS", "value" : "*" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+    { "name" : "ADJUST_MW_LIMIT", "value" : "1000" },
+    { "name" : "N_HISTORY_DAYS", "value" : "2" },
+  ]
+  container-name = "nowcasting_api"
+  container-tag  = var.api_version
+  container-registry = "openclimatefix"
+  eb-app_name    = "nowcasting-api"
+  eb-instance_type = "t3.small"
 }
 
 # 2.1
@@ -121,43 +130,6 @@ import {
   id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:development/data/nwp-consumer-UZrR8M"
 }
 
-# 3.1
-module "nwp" {
-  source = "../../modules/services/nwp_consumer"
-
-  ecs-task_name = "nwp"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id
-      access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
-    }
-  ]
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : "eu-west-1" },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "METOFFICE_ORDER_ID", "value" : "uk-11params-12steps" },
-  ]
-  container-secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
-  container-tag         = var.nwp_version
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "download",
-    "--source=metoffice",
-    "--sink=s3",
-    "--rdir=raw",
-    "--zdir=data",
-    "--create-latest"
-  ]
-}
 
 # 3.2
 module "nwp-national" {
@@ -166,6 +138,10 @@ module "nwp-national" {
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 1024
+    memory = 8192
+  }
 
   aws-region                     = var.region
   aws-environment                = local.environment
@@ -182,9 +158,9 @@ module "nwp-national" {
     { "name" : "AWS_REGION", "value" : "eu-west-1" },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "METOFFICE_ORDER_ID", "value" : "uk-5params-42steps" },
+    { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
   ]
-  container-secret_vars = ["METOFFICE_CLIENT_ID", "METOFFICE_CLIENT_SECRET"]
+  container-secret_vars = ["METOFFICE_API_KEY"]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
@@ -360,29 +336,28 @@ module "forecast_pvnet" {
 
 # 5.1
 module "analysis_dashboard" {
-  source = "../../modules/services/internal_ui"
-
-  region        = var.region
-  environment   = local.environment
-  eb_app_name   = "internal-ui"
-  domain        = local.domain
-  docker_config = {
-    image   = "ghcr.io/openclimatefix/uk-analysis-dashboard"
-    version = var.internal_ui_version
-  }
-  networking_config = {
-    vpc_id  = module.networking.vpc_id
-    subnets = module.networking.public_subnet_ids
-  }
-  database_config = {
-    secret          = module.database.forecast-database-secret-url
-    read_policy_arn = module.database.iam-policy-forecast-db-read.arn
-  }
-  auth_config = {
-    auth0_domain    = var.auth_domain
-    auth0_client_id = var.auth_dashboard_client_id
-  }
-  show_pvnet_gsp_sum = "true"
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["streamlit", "run", "main.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
+  container-env_vars = [
+    { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
+    { "name" : "SITES_DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "SHOW_PVNET_GSP_SUM", "value" : "true" },
+    { "name" : "ORIGINS", "value" : "*" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+  ]
+  container-name = "uk-analysis-dashboard"
+  container-tag  = var.internal_ui_version
+  container-registry = "ghcr.io/openclimatefix"
+  container-port = 8501
+  eb-app_name    = "internal-ui"
+  eb-instance_type = "t3.small"
 }
 
 # 4.5
@@ -436,23 +411,31 @@ module "pvsite_database" {
 }
 
 # 6.2
-# TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
-  source = "../../modules/services/api_pvsite"
-
-  region                          = var.region
-  app_name                        = "sites-api"
-  environment                     = local.environment
-  vpc_id                          = module.networking.vpc_id
-  subnet_id                       = module.networking.public_subnet_ids[0]
-  docker_version                  = var.pvsite_api_version
-  domain                          = local.domain
-  database_secret_url             = module.pvsite_database.default_db_connection_url
-  database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
-  sentry_dsn                      = var.sentry_dsn
-  auth_api_audience               = var.auth_api_audience
-  auth_domain                     = var.auth_domain
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["poetry", "run", "uvicorn", "pv_site_api.main:app", "--host", "0.0.0.0", "--port", "80"]
+  container-env_vars = [
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "FAKE", "value" : "0" },
+    { "name" : "ORIGINS", "value" : "*" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
+  ]
+  container-name = "nowcasting_site_api"
+  container-tag  = var.pvsite_api_version
+  container-registry = "openclimatefix"
+  eb-app_name    = "sites-api"
+  eb-instance_type = "t3.small"
 }
+
 
 # 6.3
 module "pvsite_ml_bucket" {
