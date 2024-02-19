@@ -8,7 +8,7 @@ Terraform infrastructure-as-code for cloud environments.
 <p align="center">
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
   <a href="https://app.terraform.io/app/openclimatefix/workspaces" alt="Terraform Cloud">
@@ -82,6 +82,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/wsharpe41"><img src="https://avatars.githubusercontent.com/u/122390836?v=4?s=100" width="100px;" alt="wsharpe41"/><br /><sub><b>wsharpe41</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=wsharpe41" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.pgarcia.dev"><img src="https://avatars.githubusercontent.com/u/10740572?v=4?s=100" width="100px;" alt="Pedro Garcia Rodriguez"/><br /><sub><b>Pedro Garcia Rodriguez</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=BreakingPitt" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
