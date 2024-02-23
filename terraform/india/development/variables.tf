@@ -6,7 +6,7 @@ variable region {
 
 variable version-nwp {
   type = string
-  default = "0.1.25"
+  default = "0.5.1"
   description = "Container image tag of the NWP consumer to use: openclimatefix/nwp-consumer"
 }
 

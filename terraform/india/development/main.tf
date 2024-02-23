@@ -69,7 +69,31 @@ module "s3-nwp-bucket" {
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
 }
 
-/*
+
+
+resource "aws_iam_policy" "iam_policy_ecmwf_live_s3_read" {
+  name        = "s3-nwp-read-policy"
+  description = "Policy to read bucket: ${aws_s3_bucket.s3-nwp-bucket.bucket}"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:ListBucket",
+          "s3:GetObject",
+        ]
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:s3:::ocf-ecmwf-production",
+          "arn:aws:s3:::ocf-ecmwf-production/*",
+         ]
+      },
+    ]
+  })
+}
 
 # 3.0
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
@@ -88,14 +112,22 @@ module "npw_consumer_ecmwf_ecs" {
   aws-environment               = local.environment
   aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
-  s3-buckets = [{ 
-    id: module.s3-nwp-bucket.bucket_id,
-    access_policy_arn: module.s3-nwp-bucket.write_policy_arn
-  }]
+  s3-buckets = [
+    { 
+      id: module.s3-nwp-bucket.bucket_id,
+      access_policy_arn: module.s3-nwp-bucket.write_policy_arn
+    },
+    {
+      id: "ocf-ecmwf-production",
+      access_policy_arn: aws_iam_policy.iam_policy_ecmwf_live_s3_read.arn
+    }
+]
 
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
   ]
@@ -104,7 +136,7 @@ module "npw_consumer_ecmwf_ecs" {
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "download",
-    "--source=ecmwf-mars",
+    "--source=ecmwf-s3",
     "--sink=s3",
     "--rdir=ecmwf/raw",
     "--zdir=ecmwf/data",
@@ -112,7 +144,6 @@ module "npw_consumer_ecmwf_ecs" {
   ]
 }
 
-*/
 
 # 3.2
 module "ruvnl_consumer_ecs" {
