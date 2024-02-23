@@ -22,7 +22,7 @@ subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"india-ecs-cluster-development"
 
-with DAG('nwp-consumer', schedule_interval="10,25,40,55 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+with DAG('nwp-consumer', schedule_interval="5 0,6,12,18 * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get NWP data"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
