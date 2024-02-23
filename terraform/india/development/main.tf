@@ -101,7 +101,7 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 }
 
 # 3.1
-module "npw_consumer_ecmwf_ecs" {
+module "nwp_consumer_ecmwf_live_ecs_task" {
   source = "../../modules/services/nwp_consumer"
 
   ecs-task_name               = "nwp-consumer-ecmwf"
