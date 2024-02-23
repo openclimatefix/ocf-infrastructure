@@ -132,7 +132,7 @@ module "npw_consumer_ecmwf_ecs" {
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
   ]
   container-secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
-  container-tag         = var.version_nwp
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "download",
