@@ -69,32 +69,6 @@ module "s3-nwp-bucket" {
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
 }
 
-
-
-resource "aws_iam_policy" "iam_policy_ecmwf_live_s3_read" {
-  name        = "s3-nwp-read-policy"
-  description = "Policy to read bucket: ocf-ecmwf-production"
-
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "s3:ListBucket",
-          "s3:GetObject",
-        ]
-        Effect = "Allow"
-        Resource = [
-          "arn:aws:s3:::ocf-ecmwf-production",
-          "arn:aws:s3:::ocf-ecmwf-production/*",
-         ]
-      },
-    ]
-  })
-}
-
 # 3.0
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
   name = "${local.environment}/data/nwp-consumer"
@@ -112,16 +86,10 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   aws-environment               = local.environment
   aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
-  s3-buckets = [
-    { 
-      id: module.s3-nwp-bucket.bucket_id,
-      access_policy_arn: module.s3-nwp-bucket.write_policy_arn
-    },
-    {
-      id: "ocf-ecmwf-production",
-      access_policy_arn: aws_iam_policy.iam_policy_ecmwf_live_s3_read.arn
-    }
-]
+  s3-buckets = [{ 
+    id: module.s3-nwp-bucket.bucket_id,
+    access_policy_arn: module.s3-nwp-bucket.write_policy_arn
+}]
 
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
@@ -131,7 +99,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
   ]
-  container-secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
+  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
