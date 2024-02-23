@@ -73,7 +73,7 @@ module "s3-nwp-bucket" {
 
 resource "aws_iam_policy" "iam_policy_ecmwf_live_s3_read" {
   name        = "s3-nwp-read-policy"
-  description = "Policy to read bucket: ${aws_s3_bucket.s3-nwp-bucket.bucket}"
+  description = "Policy to read bucket: ocf-ecmwf-production"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
