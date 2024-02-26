@@ -180,7 +180,7 @@ module "nwp-ecmwf" {
 
   ecs-task_name               = "nwp-consumer-ecmwf"
   ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
   aws-region                    = var.region
   aws-environment               = local.environment
@@ -200,7 +200,7 @@ module "nwp-ecmwf" {
     { "name" : "ECMWF_AREA", "value" : "uk" },
   ]
   container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
-  container-tag         = var.version-nwp
+  container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "download",
