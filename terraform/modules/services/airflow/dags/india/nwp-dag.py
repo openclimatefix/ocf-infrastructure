@@ -28,8 +28,8 @@ with DAG('nwp-consumer', schedule_interval="0 * * * *", default_args=default_arg
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     nwp_consumer_ecmwf = EcsRunTaskOperator(
-         task_id='nwp-consumer-ecmwf',
-         task_definition="nwp-consumer-ecmwf",
+         task_id='nwp-consumer-ecmwf-india',
+         task_definition="nwp-consumer-ecmwf-india",
          cluster=cluster,
          overrides={},
          launch_type="FARGATE",
