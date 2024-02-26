@@ -178,32 +178,33 @@ module "nwp-national" {
 module "nwp-ecmwf" {
   source = "../../modules/services/nwp_consumer"
 
-  ecs-task_name = "nwp-ecmwf"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_name               = "nwp-consumer-ecmwf"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
-  aws-region                     = var.region
-  aws-environment                = local.environment
+  aws-region                    = var.region
+  aws-environment               = local.environment
   aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id
-      access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
-    }
-  ]
+  s3-buckets = [{
+    id : module.s3.s3-nwp-bucket.id
+    access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
+  }]
 
   container-env_vars = [
-    { "name" : "AWS_REGION", "value" : "eu-west-1" },
+    { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "ECMWF_AREA", "value" : "uk" },
   ]
-  container-secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
-  container-tag         = var.nwp_version
+  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "download",
-    "--source=ecmwf-mars",
+    "--source=ecmwf-s3",
     "--sink=s3",
     "--rdir=ecmwf/raw",
     "--zdir=ecmwf/data",
