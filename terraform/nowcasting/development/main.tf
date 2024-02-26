@@ -178,7 +178,7 @@ module "nwp-national" {
 module "nwp-ecmwf" {
   source = "../../modules/services/nwp_consumer"
 
-  ecs-task_name               = "nwp-consumer-ecmwf"
+  ecs-task_name               = "nwp-consumer-ecmwf-uk"
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
