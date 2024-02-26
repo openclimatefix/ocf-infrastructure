@@ -47,21 +47,21 @@ with DAG('nwp-consumer', schedule_interval="10,25,40,55 * * * *", default_args=d
         on_failure_callback=on_failure_callback
     )
 
-    # nwp_ecmwf_consumer = EcsRunTaskOperator(
-    #     task_id='ecmwf-nwp-consumer',
-    #     task_definition="nwp-ecmwf",
-    #     cluster=cluster,
-    #     overrides={},
-    #     launch_type="FARGATE",
-    #     network_configuration={
-    #         "awsvpcConfiguration": {
-    #             "subnets": [subnet],
-    #             "securityGroups": [security_group],
-    #             "assignPublicIp": "ENABLED",
-    #         },
-    #     },
-    #     task_concurrency=10,
-    # )
+    nwp_ecmwf_consumer = EcsRunTaskOperator(
+        task_id='ecmwf-nwp-consumer',
+        task_definition="nwp-ecmwf",
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+    )
 
-    latest_only >> [nwp_national_consumer]
+    latest_only >> nwp_national_consumer >> nwp_ecmwf_consumer
 
