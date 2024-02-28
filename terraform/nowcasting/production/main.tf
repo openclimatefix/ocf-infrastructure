@@ -337,7 +337,6 @@ module "analysis_dashboard" {
     { "name" : "SITES_DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
     { "name" : "SHOW_PVNET_GSP_SUM", "value" : "true" },
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
   ]
