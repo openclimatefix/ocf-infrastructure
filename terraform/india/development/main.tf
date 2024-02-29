@@ -156,8 +156,8 @@ module "forecast" {
   ecs_config  = {
     docker_image   = "openclimatefix/india_forecast_app"
     docker_version = var.version-forecast
-    memory_mb      = 512
-    cpu            = 256
+    memory_mb      = 2048
+    cpu            = 1024
   }
   rds_config = {
     database_secret_arn             = module.postgres-rds.secret.arn
@@ -166,7 +166,7 @@ module "forecast" {
   s3_nwp_bucket = {
     bucket_id              = module.s3-nwp-bucket.bucket_id
     bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
-    datadir                = "data"
+    datadir                = "ecmwf/data"
   }
   // this isnt really needed
   s3_ml_bucket = {
