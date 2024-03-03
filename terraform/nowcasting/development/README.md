@@ -65,13 +65,6 @@ National xg makes forecast from 0 to 36 hours. It is a XGBoost model that used S
 and [Airflow Dag](https://github.com/openclimatefix/ocf-infrastructure/blob/main/terraform/modules/services/airflow/dags/forecastg-national-dag.py)
    - AWS logs: [aws/ecs/forecast_national/](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fforecast_national$252F)
 
-### PVnet 1 (ECS Task)
-Pvnet 1 is a backup forecast for PVNet 2 and makes forecasts from 0 to 8 hours. It is a CNN model that used Satellite, NWP, PV and GSP data. First GSP forecasts are made, and then a they are summed up to forecast the national PV generation.
-   - Code: [PVnet](https://github.com/openclimatefix/nowcasting_forecast)
-   - [Terraform](https://github.com/openclimatefix/ocf-infrastructure/tree/main/terraform/modules/services/forecast) 
-and [Airflow Dag](https://github.com/openclimatefix/ocf-infrastructure/blob/main/terraform/modules/services/airflow/dags/forecastg-gsp-dag.py)
-   - AWS logs: [aws/ecs/forecast/](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fforecast$252F)
-
 ### Forecast Blend (ECS Task)
 The Forecast blend service reads all of the above forecasts and blends them together apprioately.
 
