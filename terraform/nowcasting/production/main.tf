@@ -224,6 +224,7 @@ module "pv" {
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret_forecast = module.database.forecast-database-secret
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  docker_version = var.pv_version
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
