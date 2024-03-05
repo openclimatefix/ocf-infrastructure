@@ -132,10 +132,10 @@ import {
 
 
 # 3.2
-module "nwp-national" {
+module "nwp-metoffice" {
   source = "../../modules/services/nwp_consumer"
 
-  ecs-task_name = "nwp-national"
+  ecs-task_name = "nwp-metoffice"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -168,7 +168,7 @@ module "nwp-national" {
     "--source=metoffice",
     "--sink=s3",
     "--rdir=raw-national",
-    "--zdir=data-national",
+    "--zdir=data-metoffice",
     "--create-latest"
   ]
 }
@@ -294,7 +294,7 @@ module "national_forecast" {
   s3_nwp_bucket = {
     bucket_id              = module.s3.s3-nwp-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data-national"
+    datadir                = "data-metoffice"
   }
 }
 
@@ -322,7 +322,7 @@ module "forecast_pvnet" {
   s3_nwp_bucket = {
     bucket_id              = module.s3.s3-nwp-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data-national"
+    datadir                = "data-metoffice"
   }
   s3_satellite_bucket = {
     bucket_id              = module.s3.s3-sat-bucket.id
@@ -472,7 +472,7 @@ module "pvsite_forecast" {
   s3_nwp_bucket = {
     bucket_id              = module.s3.s3-nwp-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data-national"
+    datadir                = "data-metoffice"
   }
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
