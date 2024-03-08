@@ -358,6 +358,9 @@ module "analysis_dashboard" {
   container-port = 8501
   eb-app_name    = "internal-ui"
   eb-instance_type = "t3.small"
+  s3_nwp_bucket = {
+    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
+  }
 }
 
 # 4.5
