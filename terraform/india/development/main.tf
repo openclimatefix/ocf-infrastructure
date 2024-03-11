@@ -11,6 +11,7 @@
 # 3.3 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
+# 5.1 - India Analysis Dashboard
 
 locals {
   environment = "development"
@@ -211,5 +212,30 @@ module "india-api" {
   container-name = "india-api"
   container-tag  = var.version-india_api
   eb-app_name    = "india-api"
+}
+
+# 5.1
+module "analysis_dashboard" {
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["streamlit", "run", "main_india.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
+  container-env_vars = [
+    { "name" : "DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
+    { "name" : "SITES_DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
+    { "name" : "ORIGINS", "value" : "*" },
+  ]
+  container-name = "uk-analysis-dashboard"
+  container-tag  = var.analysis_dashboard_version
+  container-registry = "ghcr.io/openclimatefix"
+  container-port = 8501
+  eb-app_name    = "analysis_dashboard"
+  eb-instance_type = "t3.small"
+  s3_nwp_bucket = {
+    bucket_read_policy_arn = module.s3-nwp-bucket.iam-policy-s3-nwp-read.arn
+  }
 }
 
