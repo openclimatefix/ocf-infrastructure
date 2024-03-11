@@ -13,7 +13,7 @@ resource "aws_db_instance" "postgres-db" {
   skip_final_snapshot          = true
   publicly_accessible          = false
   vpc_security_group_ids       = [aws_security_group.rds-postgres-sg.id]
-  ca_cert_identifier           = "rds-ca-2019"
+  ca_cert_identifier           = "rds-ca-rsa2048-g1"
   backup_window                = "00:00-00:30"
   backup_retention_period      = 7
   db_subnet_group_name         = var.db_subnet_group_name
