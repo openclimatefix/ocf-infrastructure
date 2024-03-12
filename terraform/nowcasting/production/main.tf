@@ -83,7 +83,7 @@ module "forecasting_models_bucket" {
 
 # 1.1
 module "api" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=1504e45"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=35af5da"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -225,15 +225,14 @@ module "sat" {
 
 # 3.5
 module "pv" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=60ef9f7"
 
   region                  = var.region
   environment             = local.environment
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret_forecast = module.database.forecast-database-secret
-  docker_version          = var.pv_version
-  docker_version_ss          = var.pv_ss_version
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  docker_version_ss          = var.pv_ss_version
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
