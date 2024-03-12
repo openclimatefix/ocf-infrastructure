@@ -33,3 +33,9 @@ variable version-runvl-consumer {
   default = "0.0.1"
   description = "Container image tag of the runvl data consumer to use: openclimatefix/ruvnl_consumer_app"
 }
+
+
+variable "analysis_dashboard_version" {
+   description = "The Analysis Dashboard version"
+   default = "main"
+}

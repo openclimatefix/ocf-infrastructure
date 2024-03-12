@@ -235,7 +235,6 @@ module "pv" {
   environment             = local.environment
   public_subnet_ids       = module.networking.public_subnet_ids
   database_secret_forecast = module.database.forecast-database-secret
-  docker_version          = var.pv_version
   docker_version_ss          = var.pv_ss_version
   iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
@@ -359,6 +358,9 @@ module "analysis_dashboard" {
   container-port = 8501
   eb-app_name    = "internal-ui"
   eb-instance_type = "t3.small"
+  s3_nwp_bucket = {
+    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
+  }
 }
 
 # 4.5

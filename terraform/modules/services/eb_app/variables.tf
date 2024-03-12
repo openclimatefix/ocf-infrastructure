@@ -82,3 +82,17 @@ variable eb-instance_type {
   description = "Instance Type of the EB app"
   default = "t3.small"
 }
+
+variable "s3_nwp_bucket" {
+  type = object({
+    bucket_read_policy_arn = string
+  })
+  default = {
+    bucket_read_policy_arn = "not-set"
+  }
+  description = <<EOT
+    s3_nwp_bucket_info = {
+      bucket_read_policy_arn : "ARN of the read policy on the nwp S3 bucket"
+    }
+  EOT
+}
