@@ -96,3 +96,9 @@ variable "s3_nwp_bucket" {
     }
   EOT
 }
+
+variable "s3_nwp_buckets" {
+  type = list(string)
+  default = []
+  description = "List of ARNs for S3 buckets to grant read access"
+}
