@@ -90,6 +90,13 @@ resource "aws_iam_role_policy_attachment" "attach-logs-service" {
   policy_arn = aws_iam_policy.cloudwatch.arn
 }
 
+# Attached policies for S3 bucket access
+resource "aws_iam_role_policy_attachment" "attach-read-s3-nwp" {
+  count      = length(var.s3_nwp_buckets) > 0 ? 1 : 0
+  role       = aws_iam_role.api-service-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
 ##################
 # Instance role
 ##################

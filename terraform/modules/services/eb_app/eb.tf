@@ -45,6 +45,16 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
         }
     }
 
+  # New settings for S3 bucket access
+    dynamic "setting" {
+      for_each = var.s3_nwp_buckets
+      content {
+        namespace = "aws:elasticbeanstalk:application:environment"
+        name      = "S3_NWP_BUCKET_ARN_${setting.key}"
+        value     = setting.value
+      }
+    }
+
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
@@ -142,7 +152,11 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
       "--region ${var.aws-region} ",
       "--application-name ${aws_elastic_beanstalk_application.eb-application.name} ",
       "--version-label ${aws_elastic_beanstalk_application_version.latest.name} ",
-      "--environment-name ${aws_elastic_beanstalk_environment.eb-environment.name}"
+      "--environment-name ${aws_elastic_beanstalk_environment.eb-environment.name}",
+      # Including the S3 bucket settings
+      "--option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=S3_NWP_BUCKET_ARN_1,Value=${var.s3_nwp_buckets[0]} ",
+      "--option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=S3_NWP_BUCKET_ARN_2,Value=${var.s3_nwp_buckets[1]} ",
+      # More setting can be added as per the requirements
     ])
   }
 }
