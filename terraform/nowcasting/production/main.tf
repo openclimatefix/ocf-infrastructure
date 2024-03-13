@@ -82,22 +82,30 @@ module "forecasting_models_bucket" {
 }
 
 # 1.1
-# TODO: Make sites api and nowcasting api use same module
 module "api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api?ref=2747e85"
-
-  region                              = var.region
-  environment                         = local.environment
-  vpc_id                              = module.networking.vpc_id
-  subnet_id                           = module.networking.public_subnet_ids[0]
-  docker_version                      = var.api_version
-  database_forecast_secret_url        = module.database.forecast-database-secret-url
-  iam-policy-rds-forecast-read-secret = module.database.iam-policy-forecast-db-read
-  auth_domain                         = var.auth_domain
-  auth_api_audience                   = var.auth_api_audience
-  n_history_days                      = "2"
-  adjust_limit                        = 2000.0
-  sentry_dsn                          = var.sentry_monitor_dsn_api
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=35af5da"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
+  container-env_vars = [
+    { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
+    { "name" : "ORIGINS", "value" : "*" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_api },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+    { "name" : "ADJUST_MW_LIMIT", "value" : "1000" },
+    { "name" : "N_HISTORY_DAYS", "value" : "2" },
+  ]
+  container-name = "nowcasting_api"
+  container-tag  = var.api_version
+  container-registry = "openclimatefix"
+  eb-app_name    = "nowcasting-api"
+  eb-instance_type = "t3.small"
 }
 
 # 2.1
@@ -399,22 +407,29 @@ module "pvsite_database" {
 }
 
 # 6.2
-# TODO: Make sites api and nowcasting api use same module
 module "pvsite_api" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/api_pvsite?ref=2747e85"
-
-  region                          = var.region
-  app_name                        = "sites-api"
-  environment                     = local.environment
-  vpc_id                          = module.networking.vpc_id
-  subnet_id                       = module.networking.public_subnet_ids[0]
-  docker_version                  = var.pvsite_api_version
-  domain                          = local.domain
-  database_secret_url             = module.pvsite_database.default_db_connection_url
-  database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
-  sentry_dsn                      = var.sentry_monitor_dsn_siteapi
-  auth_api_audience               = var.auth_api_audience
-  auth_domain                     = var.auth_domain
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=35af5da"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["poetry", "run", "uvicorn", "pv_site_api.main:app", "--host", "0.0.0.0", "--port", "80"]
+  container-env_vars = [
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "FAKE", "value" : "0" },
+    { "name" : "ORIGINS", "value" : "*" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_siteapi },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
+  ]
+  container-name = "nowcasting_site_api"
+  container-tag  = var.pvsite_api_version
+  container-registry = "openclimatefix"
+  eb-app_name    = "sites-api"
+  eb-instance_type = "t3.small"
 }
 
 # 6.3
