@@ -408,7 +408,7 @@ module "pvsite_database" {
 
 # 6.2
 module "pvsite_api" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=1504e45"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=35af5da"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
