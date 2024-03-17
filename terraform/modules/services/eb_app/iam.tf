@@ -130,3 +130,9 @@ resource "aws_iam_role_policy_attachment" "attach-read-s3-nwp" {
   role       = aws_iam_role.instance-role.name
   policy_arn = var.s3_nwp_bucket.bucket_read_policy_arn
 }
+
+resource "aws_iam_role_policy_attachment" "attach-read-s3-nwp" {
+  count      = length(var.s3_nwp_bucket) > 1 ? length(var.s3_nwp_bucket) : 0
+  role       = aws_iam_role.instance-role.name
+  policy_arn = var.s3_nwp_bucket[count.index].bucket_read_policy_arn
+}
