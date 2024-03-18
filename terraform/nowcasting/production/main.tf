@@ -296,7 +296,7 @@ module "national_forecast" {
 
 # 4.4
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=7678388"
 
   region      = var.region
   environment = local.environment
