@@ -173,7 +173,7 @@ module "nwp-national" {
 
 # 3.3
 module "nwp-ecmwf" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=7678388"
 
   ecs-task_name = "nwp-ecmwf"
   ecs-task_type = "consumer"
@@ -194,13 +194,16 @@ module "nwp-ecmwf" {
     { "name" : "AWS_REGION", "value" : "eu-west-1" },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ECMWF_AREA", "value" : "uk" },
   ]
   container-secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "download",
-    "--source=ecmwf-mars",
+    "--source=ecmwf-s3",
     "--sink=s3",
     "--rdir=ecmwf/raw",
     "--zdir=ecmwf/data",
