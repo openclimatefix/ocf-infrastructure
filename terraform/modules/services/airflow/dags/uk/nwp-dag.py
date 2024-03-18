@@ -63,5 +63,6 @@ with DAG('nwp-consumer', schedule_interval="10,25,40,55 * * * *", default_args=d
         task_concurrency=10,
     )
 
-    latest_only >> nwp_national_consumer >> nwp_ecmwf_consumer
+    latest_only >> nwp_national_consumer
+    latest_only >> nwp_ecmwf_consumer
 
