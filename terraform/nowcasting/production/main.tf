@@ -175,7 +175,7 @@ module "nwp-national" {
 module "nwp-ecmwf" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=7678388"
 
-  ecs-task_name = "nwp-ecmwf"
+  ecs-task_name = "nwp-consumer-ecmwf-uk"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
