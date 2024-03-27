@@ -1,9 +1,3 @@
-# user_groups/main.tf
-
-variable "region" {
-  description = "AWS region where the user group will be created"
-}
-
 resource "aws_iam_group" "developer_group" {
   name = "${var.region}-developer"
 }
