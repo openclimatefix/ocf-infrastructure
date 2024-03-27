@@ -14,7 +14,7 @@ resource "aws_iam_policy" "full_access_policy" {
     {
       "Effect": "Allow",
       "Action": "*",
-      "Resource": "*"
+      "Resource": "arn:aws:*:::${var.region}:*"
     }
   ]
 }
@@ -43,7 +43,7 @@ resource "aws_iam_policy" "ecs_policy" {
       "Action": [
         "ecs:*"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:ecs:${var.region}::*"
     }
   ]
 }
@@ -69,7 +69,7 @@ resource "aws_iam_policy" "s3_policy" {
       "Action": [
         "s3:*"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:s3:::${var.region}-*"
     }
   ]
 }
@@ -95,7 +95,7 @@ resource "aws_iam_policy" "secrets_manager_policy" {
       "Action": [
         "secretsmanager:*"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:secretsmanager:${var.region}::*"
     }
   ]
 }
@@ -121,7 +121,7 @@ resource "aws_iam_policy" "cloudwatch_policy" {
       "Action": [
         "cloudwatch:*"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:cloudwatch:${var.region}::*"
     }
   ]
 }
@@ -147,7 +147,7 @@ resource "aws_iam_policy" "beanstalk_policy" {
       "Action": [
         "elasticbeanstalk:*"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:elasticbeanstalk:${var.region}::*"
     }
   ]
 }
@@ -173,7 +173,7 @@ resource "aws_iam_policy" "rds_policy" {
       "Action": [
         "rds:*"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:rds:${var.region}::*"
     }
   ]
 }
@@ -199,7 +199,7 @@ resource "aws_iam_policy" "ec2_policy" {
       "Action": [
         "ec2:*"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:ec2:${var.region}::instance/*"
     }
   ]
 }
