@@ -239,3 +239,7 @@ module "analysis_dashboard" {
   }
 }
 
+module "developer_group" {
+  source = "../../modules/user_groups"
+  region = var.region
+}
