@@ -4,6 +4,11 @@
 # 1.1 - RDS Postgres database
 # 1.2 - Bastion instance
 # 1.2 - ECS Cluster
+# 2.0 - S3 bucket for NWP data
+# 3.0 - Secret containing environment variables for the NWP consumer
+# 3.1 - ECS task definition for the NWP consumer
+# 3.2 - ECS task definition for Collection RUVNL data
+# 3.3 - ECS task definition for the Forecast
 
 locals {
   environment = "production"
@@ -49,5 +54,123 @@ module "ecs-cluster" {
   name     = "india-ecs-cluster-${local.environment}"
   region   = local.region
   owner_id = module.network.owner_id
+}
+
+# 2.0
+module "s3-nwp-bucket" {
+  source              = "../../modules/storage/s3-private"
+  environment         = local.environment
+  region              = var.region
+  domain              = local.domain
+  service_name        = "nwp"
+  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
+}
+
+# 3.0
+resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
+  name = "${local.environment}/data/nwp-consumer"
+}
+
+# 3.1
+module "nwp_consumer_ecmwf_live_ecs_task" {
+  source = "../../modules/services/nwp_consumer"
+
+  ecs-task_name               = "nwp-consumer-ecmwf-india"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
+
+  s3-buckets = [{ 
+    id: module.s3-nwp-bucket.bucket_id,
+    access_policy_arn: module.s3-nwp-bucket.write_policy_arn
+}]
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "ECMWF_AREA", "value" : "nw-india" },
+  ]
+  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+  container-tag         = var.version-nwp
+  container-name        = "openclimatefix/nwp-consumer"
+  container-command     = [
+    "download",
+    "--source=ecmwf-s3",
+    "--sink=s3",
+    "--rdir=ecmwf/raw",
+    "--zdir=ecmwf/data",
+    "--create-latest"
+  ]
+}
+
+
+# 3.2
+module "ruvnl_consumer_ecs" {
+  source = "../../modules/services/nwp_consumer"
+
+  ecs-task_name               = "runvl-consumer"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
+
+  s3-buckets = []
+
+  ecs-task_size = {
+    memory = 512
+    cpu    = 256
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+  ]
+  container-secret_vars = ["DB_URL"]
+  container-tag         = var.version-runvl-consumer
+  container-name        = "ruvnl_consumer_app"
+  container-registry    = "openclimatefix"
+  container-command     = [
+    "--write-to-db",
+  ]
+}
+
+
+# 3.3 - Forecast
+module "forecast" {
+  source = "../../modules/services/forecast_generic"
+
+  region      = var.region
+  environment = local.environment
+  app-name    = "forecast"
+  ecs_config  = {
+    docker_image   = "openclimatefix/india_forecast_app"
+    docker_version = var.version-forecast
+    memory_mb      = 2048
+    cpu            = 1024
+  }
+  rds_config = {
+    database_secret_arn             = module.postgres-rds.secret.arn
+    database_secret_read_policy_arn = module.postgres-rds.secret-policy.arn
+  }
+  s3_nwp_bucket = {
+    bucket_id              = module.s3-nwp-bucket.bucket_id
+    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
+    datadir                = "ecmwf/data"
+  }
+  // this isnt really needed
+  s3_ml_bucket = {
+    bucket_id              = module.s3-nwp-bucket.bucket_id
+    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
+  }
+  loglevel      = "INFO"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 }
 
