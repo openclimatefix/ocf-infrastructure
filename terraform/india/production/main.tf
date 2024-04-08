@@ -21,7 +21,7 @@ locals {
 
 # 1.0
 module "network" {
-  source             = "../../modules/networking"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking?ref=deeb2f"
   environment        = local.environment
   vpc_cidr           = "10.1.0.0/16"
   region             = local.region
@@ -31,7 +31,7 @@ module "network" {
 
 # 1.1
 module "postgres-rds" {
-  source               = "../../modules/storage/postgres"
+  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=deeb2f"
   region               = local.region
   environment          = local.environment
   vpc_id               = module.network.vpc_id
@@ -44,7 +44,7 @@ module "postgres-rds" {
 
 # 0.2
 module "ec2-bastion" {
-  source = "../../modules/networking/ec2_bastion"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=deeb2f"
 
   region            = local.region
   vpc_id            = module.network.vpc_id
@@ -53,7 +53,7 @@ module "ec2-bastion" {
 
 # 1.2
 module "ecs-cluster" {
-  source   = "../../modules/ecs_cluster"
+  source   = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=deeb2f"
   name     = "india-ecs-cluster-${local.environment}"
   region   = local.region
   owner_id = module.network.owner_id
@@ -61,7 +61,7 @@ module "ecs-cluster" {
 
 # 2.0
 module "s3-nwp-bucket" {
-  source              = "../../modules/storage/s3-private"
+  source              = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=deeb2f"
   environment         = local.environment
   region              = var.region
   domain              = local.domain
@@ -76,7 +76,7 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 
 # 3.1
 module "nwp_consumer_ecmwf_live_ecs_task" {
-  source = "../../modules/services/nwp_consumer"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=deeb2f"
 
   ecs-task_name               = "nwp-consumer-ecmwf-india"
   ecs-task_type               = "consumer"
@@ -115,7 +115,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 
 # 3.2
 module "ruvnl_consumer_ecs" {
-  source = "../../modules/services/nwp_consumer"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=deeb2f"
 
   ecs-task_name               = "runvl-consumer"
   ecs-task_type               = "consumer"
@@ -148,7 +148,7 @@ module "ruvnl_consumer_ecs" {
 
 # 3.3 - Forecast
 module "forecast" {
-  source = "../../modules/services/forecast_generic"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=deeb2f"
 
   region      = var.region
   environment = local.environment
@@ -180,7 +180,7 @@ module "forecast" {
 
 # 4.0
 module "airflow" {
-  source                    = "../../modules/services/airflow"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=deeb2f"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
@@ -197,7 +197,7 @@ module "airflow" {
 
 # 5.0
 module "india-api" {
-  source             = "../../modules/services/eb_app"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=deeb2f"
   domain             = local.domain
   aws-region         = local.region
   aws-environment    = local.environment
@@ -216,7 +216,7 @@ module "india-api" {
 
 # 5.1
 module "analysis_dashboard" {
-  source             = "../../modules/services/eb_app"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=deeb2f"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
