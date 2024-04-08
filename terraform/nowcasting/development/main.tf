@@ -267,6 +267,7 @@ module "metrics" {
 
   container-name = "openclimatefix/nowcasting_metrics"
   container-tag = var.metrics_version
+  container-registry = "docker.io"
   container-command = []
   container-env_vars = [
     {"name": "LOGLEVEL", "value": "DEBUG"},
