@@ -120,21 +120,19 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 module "ruvnl_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name               = "runvl-consumer"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-
   aws-region                    = var.region
   aws-environment               = local.environment
   aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
 
-  s3-buckets = []
-
+  ecs-task_name               = "runvl-consumer"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   ecs-task_size = {
     memory = 512
     cpu    = 256
   }
 
+  s3-buckets = []
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
