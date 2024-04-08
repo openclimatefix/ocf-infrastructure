@@ -44,20 +44,23 @@ module "postgres" {
 }
 
 module "nwp" {
-  source = "../modules/services/nwp_consumer"
+  source = "../modules/services/ecs_task"
 
-  aws_config = {
-    region = var.region
-    environment = var.environment
-    public_subnet_ids = [module.networking.public_subnets[0].id]
-  }
+  aws-environment = var.environment
+  aws-region = var.region
+  aws-secretsmanager_secret_arn = ""
 
-  s3_config = {
-    bucket_id = module.s3.s3-nwp-bucket.id
-    bucket_write_policy_arn = module.s3.iam-policy-s3-nwp-write.arn
-  }
+  ecs-task_execution_role_arn   = module.ecs.ecs_task_execution_role_arn
+  ecs-task_name                 = ""
 
-  docker_config = {}
+  container-command = []
+  container-env_vars = []
+  container-name = ""
+  container-tag = ""
+  container-secret_vars         = []
 
-  app_name = ""
+  s3-buckets = [{
+    id : module.s3.s3-nwp-bucket.id,
+    access-policy-arn : module.s3.iam-policy-s3-nwp-write.arn
+  }]
 }
