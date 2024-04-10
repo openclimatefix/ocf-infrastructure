@@ -84,7 +84,7 @@ services:
       - data:/airflow
 
 
-# only need to run this once
+  # only need to run this once
   airflowinit:
     image: apache/airflow:2.6.2
     container_name: airflow-init
@@ -105,7 +105,7 @@ services:
       bash -c "pip install apache-airflow[amazon]
       && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
       && chmod -v 777 /airflow/{logs,dags}
-      && airflow db init"
+      && airflow db init -v"
     volumes:
       - data:/airflow
 
