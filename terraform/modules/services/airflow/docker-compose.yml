@@ -22,8 +22,8 @@ services:
       - data:/airflow
 
   scheduler:
-#    depends_on:
-#      - "airflowinit"
+    depends_on:
+      - "airflowinit"
     image: apache/airflow:2.6.2
     container_name: airflow-scheduler
     command: scheduler
@@ -55,8 +55,8 @@ services:
     image: apache/airflow:2.6.2
     container_name: airflow-webserver
     command: webserver -w 4
-#    depends_on:
-#      - "airflowinit"
+    depends_on:
+      - "airflowinit"
     ports:
       - 80:8080
     restart: always
@@ -124,5 +124,5 @@ services:
       ENVIRONMENT: $ENVIRONMENT
       BUCKET: $BUCKET
     restart: always
-#    depends_on:
-#      - "airflowinit"
+    depends_on:
+      - "airflowinit"
