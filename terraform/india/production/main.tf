@@ -180,14 +180,14 @@ module "forecast" {
 
 # 4.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=205465e"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=df92730"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   airflow-db-connection-url = "${module.postgres-rds.instance_connection_url}/airflow"
-  docker-compose-version    = "0.0.7"
+  docker-compose-version    = "0.0.8"
   ecs-subnet_id             = module.network.public_subnet_ids[0]
   ecs-security_group        = module.network.default_security_group_id
   aws-owner_id              = module.network.owner_id
