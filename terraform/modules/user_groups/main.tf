@@ -3,31 +3,6 @@ resource "aws_iam_group" "developer_group" {
   name = "${var.region}-developer"
 }
 
-# Full access policy
-resource "aws_iam_policy" "full_access_policy" {
-  name        = "${var.region}-full-access-policy"
-  description = "Policy granting full access to AWS services in ${var.region}"
-  policy      = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "*",
-      "Resource": "arn:aws:*:::${var.region}:*"
-    }
-  ]
-}
-EOF
-}
-
-# Attach full access policy to the developer group
-resource "aws_iam_policy_attachment" "attach_full_access_policy" {
-  name       = "${var.region}-full-access-attachment"
-  policy_arn = aws_iam_policy.full_access_policy.arn
-  groups     = [aws_iam_group.developer_group.name]
-}
-
 # Custom policies with restricted access for each service
 
 # ECS
