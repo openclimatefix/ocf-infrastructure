@@ -110,7 +110,7 @@ module "api" {
 
 # 2.1
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=26e3b29"
 
   region               = var.region
   environment          = local.environment
@@ -130,7 +130,7 @@ import {
 
 # 3.2
 module "nwp-national" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=631503a"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
 
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
@@ -173,9 +173,9 @@ module "nwp-national" {
 
 # 3.3
 module "nwp-ecmwf" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/nwp_consumer?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
 
-  ecs-task_name = "nwp-ecmwf"
+  ecs-task_name = "nwp-consumer-ecmwf-uk"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
@@ -194,13 +194,16 @@ module "nwp-ecmwf" {
     { "name" : "AWS_REGION", "value" : "eu-west-1" },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ECMWF_AREA", "value" : "uk" },
   ]
-  container-secret_vars = ["ECMWF_API_KEY", "ECMWF_API_EMAIL", "ECMWF_API_URL"]
+  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "download",
-    "--source=ecmwf-mars",
+    "--source=ecmwf-s3",
     "--sink=s3",
     "--rdir=ecmwf/raw",
     "--zdir=ecmwf/data",
@@ -251,16 +254,28 @@ module "gsp" {
 
 # 4.1
 module "metrics" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/metrics?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
 
-  region                  = var.region
-  environment             = local.environment
-  public_subnet_ids       = module.networking.public_subnet_ids
-  database_secret         = module.database.forecast-database-secret
-  docker_version          = var.metrics_version
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+
+  aws-environment = local.environment
+  aws-region = var.region
+  aws-secretsmanager_secret_arn = module.database.forecast-database-secret.arn
+
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  use_pvnet_gsp_sum = "true"
+  ecs-task_name = "metrics"
+  ecs-task_type = "anaylsis"
+  ecs-task_size = {"cpu": 256, "memory": 512}
+
+  container-name = "openclimatefix/nowcasting_metrics"
+  container-tag = var.metrics_version
+  container-registry = "docker.io"
+  container-command = []
+  container-env_vars = [
+    {"name": "LOGLEVEL", "value": "DEBUG"},
+    {"name": "USE_PVNET_GSP_SUM", "value": "true"},
+  ]
+  container-secret_vars = ["DB_URL"]
+  s3-buckets = []
 }
 
 # 4.2 PVnet 1 has been removed
@@ -296,7 +311,7 @@ module "national_forecast" {
 
 # 4.4
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=7678388"
 
   region      = var.region
   environment = local.environment
@@ -378,7 +393,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=3e5cc1e"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=1af4f8a"
 
   aws-environment   = local.environment
   aws-domain        = local.domain
