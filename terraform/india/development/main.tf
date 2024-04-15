@@ -212,6 +212,9 @@ module "india-api" {
   container-name = "india-api"
   container-tag  = var.version-india_api
   eb-app_name    = "india-api"
+  s3_nwp_bucket = [
+    { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn }
+  ]
 }
 
 # 5.1
@@ -234,12 +237,12 @@ module "analysis_dashboard" {
   container-name     = "uk-analysis-dashboard"
   container-tag      = var.analysis_dashboard_version
   container-registry = "ghcr.io/openclimatefix"
-  container-port     = 8501
-  eb-app_name        = "analysis-dashboard"
-  eb-instance_type   = "t3.small"
-  s3_nwp_bucket = {
-    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
-  }
+  container-port = 8501
+  eb-app_name    = "analysis-dashboard"
+  eb-instance_type = "t3.small"
+  s3_nwp_bucket = [
+    { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn }
+  ]
 }
 
 module "developer_group" {
