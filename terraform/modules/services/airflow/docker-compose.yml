@@ -44,9 +44,9 @@ services:
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
-    depends_on:
-      airflowinit:
-        condition: service_completed_successfully
+    # depends_on:
+    #   airflowinit:
+    #     condition: service_completed_successfully
 
 
   webserver:
@@ -83,33 +83,34 @@ services:
         condition: service_completed_successfully
 
 
-  # only need to run this once. Ref 3d1a6b8 has this uncommented.
-  airflowinit:
-    image: apache/airflow:2.6.2
-    container_name: airflow-init
-    environment:
-      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
-      SECRET_KEY: ${SECRET_KEY}
-      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
-      _AIRFLOW_DB_UPGRADE: 'True'
-      _AIRFLOW_WWW_USER_CREATE: 'True'
-      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
-      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
-      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
-      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
-      AIRFLOW_UID: "50000"
-    user: "${AIRFLOW_UID:-50000}:0"
-    command: >
-      bash -c "echo 'Installing dependencies'
-      && pip install --quiet apache-airflow[amazon]
-      && echo 'Making directories'
-      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
-      && chmod -v 777 /airflow/{logs,dags}
-      && echo 'Initializing database'
-      && airflow db init -v"
-    volumes:
-      - data:/airflow
+  # only need to run this once. Commit ref 96b5bb8 has this uncommented.
+  # Make sure create a database called "airflow" first!
+  #  airflowinit:
+  #    image: apache/airflow:2.6.2
+  #    container_name: airflow-init
+  #    environment:
+  #      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+  #      SECRET_KEY: ${SECRET_KEY}
+  #      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
+  #      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+  #      _AIRFLOW_DB_UPGRADE: 'True'
+  #      _AIRFLOW_WWW_USER_CREATE: 'True'
+  #      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
+  #      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+  #      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+  #      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+  #      AIRFLOW_UID: "50000"
+  #    user: "${AIRFLOW_UID:-50000}:0"
+  #    command: >
+  #      bash -c "echo 'Installing dependencies'
+  #      && pip install --quiet apache-airflow[amazon]
+  #      && echo 'Making directories'
+  #      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
+  #      && chmod -v 777 /airflow/{logs,dags}
+  #      && echo 'Initializing database'
+  #      && airflow db init -v"
+  #    volumes:
+  #      - data:/airflow
 
   sync-s3:
     image: amazon/aws-cli
@@ -125,6 +126,6 @@ services:
       ENVIRONMENT: $ENVIRONMENT
       BUCKET: $BUCKET
     restart: always
-    depends_on:
-      airflowinit:
-        condition: service_completed_successfully
+    # depends_on:
+    #   airflowinit:
+    #     condition: service_completed_successfully
