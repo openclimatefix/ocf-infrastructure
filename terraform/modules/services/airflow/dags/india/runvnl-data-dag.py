@@ -20,7 +20,7 @@ default_args = {
 env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
-cluster = "india-ecs-cluster-development"
+cluster = f"india-ecs-cluster-{env}"
 
 
 with DAG(
