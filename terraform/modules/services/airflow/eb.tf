@@ -25,23 +25,26 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
     value     = "t4g.large"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name = "RootVolumeType"
     value = "gp3"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name = "RootVolumeSize"
     value = "16"
+    resource  = ""
   }
 
   # the next line IS NOT RANDOM,
   # see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
-  solution_stack_name = "64bit Amazon Linux 2 v3.7.1 running Docker"
+  solution_stack_name = "64bit Amazon Linux 2 v3.8.0 running Docker"
 
   # There are a LOT of settings, see here for the basic list:
   # https://is.gd/vfB51g
@@ -51,84 +54,98 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
     value     = var.airflow-db-connection-url
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AIRFLOW_UID"
     value     = "50000"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AWS_DEFAULT_REGION"
     value     = var.aws-region
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "SECRET_KEY"
     value     = random_password.secret-password.result
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "FERNET_KEY"
     value     = "VFCFMh8gFtPkYNFJXQLjAloeILFyGvgqebnQNtnEbNQ="
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "PASSWORD"
     value     = random_password.airflow-password.result
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ENVIRONMENT"
     value     = var.aws-environment
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "BUCKET"
     value     = aws_s3_bucket.airflow-s3.id
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ECS_SUBNET"
     value     = var.ecs-subnet_id
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ECS_SECURITY_GROUP"
     value     = var.ecs-security_group
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "LOGLEVEL"
     value     = "INFO"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "DB_URL"
     value     = var.airflow-db-connection-url
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "AIRFLOW_CONN_SLACK_API_DEFAULT"
     value     = var.slack_api_conn
+    resource  = ""
   }
 
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.aws-vpc_id
+    resource  = ""
   }
   setting {
     namespace = "aws:ec2:vpc"
@@ -140,27 +157,32 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = aws_security_group.api-sg.id
+    resource  = ""
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = aws_iam_instance_profile.ec2.name
+    resource  = ""
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = aws_iam_role.api-service-role.arn
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
     value     = "1"
+    resource  = ""
   }
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = "1"
+    resource  = ""
   }
 
   ### =========================== Logging ========================== ###

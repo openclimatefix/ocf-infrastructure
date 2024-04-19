@@ -135,7 +135,7 @@ import {
 
 # 3.2
 module "nwp-national" {
-  source = "../../modules/services/nwp_consumer"
+  source = "../../modules/services/ecs_task"
 
   ecs-task_name = "nwp-national"
   ecs-task_type = "consumer"
@@ -178,7 +178,7 @@ module "nwp-national" {
 
 # 3.3
 module "nwp-ecmwf" {
-  source = "../../modules/services/nwp_consumer"
+  source = "../../modules/services/ecs_task"
 
   ecs-task_name               = "nwp-consumer-ecmwf-uk"
   ecs-task_type               = "consumer"
@@ -257,16 +257,27 @@ module "gsp" {
 
 # 4.1
 module "metrics" {
-  source = "../../modules/services/metrics"
+  source = "../../modules/services/ecs_task"
 
-  region                  = var.region
-  environment             = local.environment
-  public_subnet_ids       = module.networking.public_subnet_ids
-  database_secret         = module.database.forecast-database-secret
-  docker_version          = var.metrics_version
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
-  use_pvnet_gsp_sum = "true"
+  aws-environment = local.environment
+  aws-region = var.region
+  aws-secretsmanager_secret_arn = module.database.forecast-database-secret.arn
+
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_name = "metrics"
+  ecs-task_type = "anaylsis"
+  ecs-task_size = {"cpu": 256, "memory": 512}
+
+  container-name = "openclimatefix/nowcasting_metrics"
+  container-tag = var.metrics_version
+  container-registry = "docker.io"
+  container-command = []
+  container-env_vars = [
+    {"name": "LOGLEVEL", "value": "DEBUG"},
+    {"name": "USE_PVNET_GSP_SUM", "value": "true"},
+  ]
+  container-secret_vars = ["DB_URL"]
+  s3-buckets = []
 }
 
 # 4.2 - We have removed PVnet 1

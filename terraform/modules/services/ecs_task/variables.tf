@@ -106,7 +106,6 @@ variable ecs-task_size {
     memory = 5120
   }
   
-  
   validation {
     condition = length(keys(var.ecs-task_size)) == 2
     error_message = "Variable ecs-task_size must have exactly two keys: cpu and memory."
@@ -132,7 +131,7 @@ variable ecs-task_size {
 }
 
 variable "ecs-task_execution_role_arn" {
-  description = "The arn of the ECS cluster task execution role"
+  description = "The arn of the ECS cluster task execution role."
   type = string
 }
 
