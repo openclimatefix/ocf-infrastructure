@@ -78,12 +78,12 @@ services:
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
-    depends_on:
-      airflowinit:
-        condition: service_completed_successfully
+      #  depends_on:
+      #    airflowinit:
+      #      condition: service_completed_successfully
 
 
-  # only need to run this once. Commit ref 96b5bb8 has this uncommented.
+  # only need to (and only able to!) run this once. Commit ref 96b5bb8 has this uncommented.
   # Make sure create a database called "airflow" first!
   #  airflowinit:
   #    image: apache/airflow:2.6.2

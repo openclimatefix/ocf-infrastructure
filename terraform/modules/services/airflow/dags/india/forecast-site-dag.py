@@ -20,7 +20,7 @@ default_args = {
 env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
-cluster = f"india-ecs-cluster-development"
+cluster = f"india-ecs-cluster-{env}"
 
 
 with DAG('runvl-forecast', schedule_interval="0 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
