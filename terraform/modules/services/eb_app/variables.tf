@@ -83,7 +83,7 @@ variable eb-instance_type {
   default = "t3.small"
 }
 
-variable "s3_nwp_bucket" {
+variable "s3_bucket" {
   type = list(object({
     bucket_read_policy_arn = string
   }))
@@ -92,7 +92,7 @@ variable "s3_nwp_bucket" {
   }]
   description = <<EOT
     s3_nwp_bucket_info = {
-      bucket_read_policy_arn : "ARNs of the read policies on the nwp S3 buckets"
+      bucket_read_policy_arn : "ARNs of the read policies on the S3 buckets"
     }
   EOT
 }
