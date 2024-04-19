@@ -212,7 +212,7 @@ module "india-api" {
   container-name = "india-api"
   container-tag  = var.version-india_api
   eb-app_name    = "india-api"
-  s3_nwp_bucket = [
+  s3_bucket = [
     { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn }
   ]
 }
