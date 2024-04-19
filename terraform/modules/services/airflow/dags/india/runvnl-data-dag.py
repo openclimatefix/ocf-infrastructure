@@ -22,9 +22,10 @@ subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"india-ecs-cluster-{env}"
 
+region = 'india'
 
 with DAG(
-    "runvl-data-consumer",
+    f'{region}-runvl-data-consumer',
     schedule_interval="*/3 * * * *",
     default_args=default_args,
     concurrency=10,

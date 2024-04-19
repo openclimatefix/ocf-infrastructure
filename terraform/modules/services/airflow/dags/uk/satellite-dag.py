@@ -25,9 +25,10 @@ cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
+region = 'uk'
 
 with DAG(
-    "national-satellite-consumer",
+    f'{region}-national-satellite-consumer',
     schedule_interval="*/5 * * * *",
     default_args=default_args,
     concurrency=10,
@@ -57,9 +58,8 @@ with DAG(
 
     latest_only >> sat_consumer
 
-
 with DAG(
-    "national-satellite-cleanup",
+    f'{region}-national-satellite-cleanup',
     schedule_interval="0 0,6,12,18 * * *",
     default_args=default_args,
     concurrency=10,
