@@ -25,8 +25,10 @@ cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
+region = 'uk'
+
 with DAG(
-    "national-day-after",
+    f'{region}-national-day-after',
     schedule_interval="0 11 * * *",
     default_args=default_args,
     concurrency=10,
@@ -53,7 +55,7 @@ with DAG(
     )
 
 with DAG(
-    "gsp-day-after",
+    f'{region}-gsp-day-after',
     schedule_interval="30 11 * * *",
     default_args=default_args,
     concurrency=10,

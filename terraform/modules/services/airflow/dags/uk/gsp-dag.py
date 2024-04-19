@@ -23,7 +23,10 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
-with DAG('gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+
+region = 'uk'
+
+with DAG(f'{region}-gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get PV data"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
