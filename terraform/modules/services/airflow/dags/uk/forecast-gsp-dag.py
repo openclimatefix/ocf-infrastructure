@@ -33,8 +33,8 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     forecast = EcsRunTaskOperator(
-        task_id='gsp-forecast-pvnet-2',
-        task_definition="forecast_pvnet",
+        task_id=f'{region}-gsp-forecast-pvnet-2',
+        task_definition='forecast_pvnet',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",
@@ -50,8 +50,8 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
     )
 
     forecast_blend = EcsRunTaskOperator(
-        task_id='forecast-blend-pvnet-2',
-        task_definition="forecast_blend",
+        task_id=f'{region}-forecast-blend-pvnet-2',
+        task_definition='forecast_blend',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
