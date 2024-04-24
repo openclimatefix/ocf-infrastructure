@@ -31,7 +31,7 @@ with DAG(f'{region}-runvl-forecast', schedule_interval="0 * * * *", default_args
 
     forecast = EcsRunTaskOperator(
         task_id=f'{region}-forecast',
-        task_definition=f'{region}-forecast',
+        task_definition='forecast',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",

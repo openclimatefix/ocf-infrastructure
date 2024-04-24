@@ -37,7 +37,7 @@ with DAG(
 
     runvl_data = EcsRunTaskOperator(
         task_id=f'{region}-runvl-consumer',
-        task_definition=f'{region}-runvl-consumer',
+        task_definition='runvl-consumer',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",

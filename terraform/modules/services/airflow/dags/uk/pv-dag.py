@@ -34,7 +34,7 @@ with DAG(f'{region}-pv-consumer', schedule_interval="*/5 * * * *", default_args=
 
     pv_consumer = EcsRunTaskOperator(
         task_id=f'{region}-pv-consumer',
-        task_definition=f'{region}-pv',
+        task_definition='pv',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",

@@ -33,7 +33,7 @@ with DAG(f'{region}-site-forecast', schedule_interval="*/15 * * * *", default_ar
 
     forecast = EcsRunTaskOperator(
         task_id=f'{region}-site-forecast',
-        task_definition=f'{region}-pvsite_forecast',
+        task_definition='pvsite_forecast',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",
@@ -55,7 +55,7 @@ with DAG(f'{region}-site-forecast-db-clean', schedule_interval="0 0 * * *", defa
 
     database_clean_up = EcsRunTaskOperator(
         task_id=f'{region}-site-forecast-db-clean',
-        task_definition=f'{region}-database_clean_up',
+        task_definition='database_clean_up',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",

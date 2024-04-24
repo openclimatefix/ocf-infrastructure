@@ -33,7 +33,7 @@ with DAG(f'{region}-national-forecast', schedule_interval="15,45 * * * *", defau
 
     national_forecast = EcsRunTaskOperator(
         task_id=f'{region}-national-forecast',
-        task_definition=f'{region}-forecast_national',
+        task_definition='forecast_national',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -50,7 +50,7 @@ with DAG(f'{region}-national-forecast', schedule_interval="15,45 * * * *", defau
 
     forecast_blend = EcsRunTaskOperator(
         task_id=f'{region}-forecast-blend-national-xg',
-        task_definition=f'{region}-forecast_blend',
+        task_definition='forecast_blend',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",

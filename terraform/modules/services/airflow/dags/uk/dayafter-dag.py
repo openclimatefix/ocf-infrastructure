@@ -66,7 +66,7 @@ with DAG(
 
     gsp_day_after = EcsRunTaskOperator(
         task_id=f'{region}-gsp-day-after',
-        task_definition=f'{region}-gsp-day-after',
+        task_definition='gsp-day-after',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -84,7 +84,7 @@ with DAG(
 
     metrics = EcsRunTaskOperator(
         task_id=f'{region}-metrics',
-        task_definition=f'{region}-metrics',
+        task_definition='metrics',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",

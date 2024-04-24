@@ -41,7 +41,7 @@ with DAG(
 
     sat_consumer = EcsRunTaskOperator(
         task_id=f'{region}-national-satellite-consumer',
-        task_definition=f'{region}-sat',
+        task_definition='sat',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -72,7 +72,7 @@ with DAG(
 
     sat_consumer = EcsRunTaskOperator(
         task_id=f'{region}-national-satellite-cleanup',
-        task_definition=f'{region}-sat-clean-up',
+        task_definition='sat-clean-up',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
