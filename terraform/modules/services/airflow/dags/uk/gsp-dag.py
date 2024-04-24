@@ -32,8 +32,8 @@ with DAG(f'{region}-gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     gsp_consumer = EcsRunTaskOperator(
-        task_id='gsp-consumer',
-        task_definition="gsp",
+        task_id=f'{region}-gsp-consumer',
+        task_definition=f'{region}-gsp',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
