@@ -32,8 +32,8 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     nwp_national_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-national-nwp-consumer',
-        task_definition=f'{region}-nwp-national',
+        task_id='national-nwp-consumer',
+        task_definition="nwp-national",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -49,8 +49,8 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
     )
 
     nwp_ecmwf_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-nwp-consumer-ecmwf-uk',
-        task_definition=f'{region}-nwp-consumer-ecmwf-uk',
+        task_id='nwp-consumer-ecmwf-uk',
+        task_definition="nwp-consumer-ecmwf-uk",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",

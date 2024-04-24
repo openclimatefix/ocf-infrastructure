@@ -40,8 +40,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     sat_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-national-satellite-consumer',
-        task_definition=f'{region}-sat',
+        task_id="national-satellite-consumer",
+        task_definition="sat",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -71,8 +71,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     sat_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-national-satellite-cleanup',
-        task_definition=f'{region}-sat-clean-up',
+        task_id="national-satellite-cleanup",
+        task_definition="sat-clean-up",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
