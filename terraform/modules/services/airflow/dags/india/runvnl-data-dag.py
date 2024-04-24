@@ -36,8 +36,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     runvl_data = EcsRunTaskOperator(
-        task_id="runvl-consumer",
-        task_definition="runvl-consumer",
+        task_id=f'{region}-runvl-consumer',
+        task_definition=f'{region}-runvl-consumer',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",

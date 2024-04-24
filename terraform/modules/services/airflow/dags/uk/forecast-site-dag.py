@@ -32,8 +32,8 @@ with DAG(f'{region}-site-forecast', schedule_interval="*/15 * * * *", default_ar
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     forecast = EcsRunTaskOperator(
-        task_id='site-forecast',
-        task_definition="pvsite_forecast",
+        task_id=f'{region}-site-forecast',
+        task_definition=f'{region}-pvsite_forecast',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",
@@ -54,8 +54,8 @@ with DAG(f'{region}-site-forecast-db-clean', schedule_interval="0 0 * * *", defa
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     database_clean_up = EcsRunTaskOperator(
-        task_id='site-forecast-db-clean',
-        task_definition="database_clean_up",
+        task_id=f'{region}-site-forecast-db-clean',
+        task_definition=f'{region}-database_clean_up',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",
