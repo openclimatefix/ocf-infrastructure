@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 
@@ -9,7 +9,7 @@ from utils.slack import on_failure_callback
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime.utcnow() - timedelta(hours=0.5),
+    'start_date': datetime.now(tz=timezone.utc) - timedelta(hours=0.5),
     'retries': 2,
     'retry_delay': timedelta(minutes=1),
     'max_active_runs':10,

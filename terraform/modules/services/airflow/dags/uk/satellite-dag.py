@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
@@ -33,7 +33,7 @@ with DAG(
     default_args=default_args,
     concurrency=10,
     max_active_tasks=10,
-    start_date=datetime.utcnow() - timedelta(hours=0.5),
+    start_date=datetime.now(tz=timezone.utc) - timedelta(hours=0.5),
 ) as dag:
     dag.doc_md = "Get Satellite data"
 
@@ -64,7 +64,7 @@ with DAG(
     default_args=default_args,
     concurrency=10,
     max_active_tasks=10,
-    start_date=datetime.utcnow() - timedelta(hours=7),
+    start_date=datetime.now(tz=timezone.utc) - timedelta(hours=7),
 ) as dag:
     dag.doc_md = "Satellite data clean up"
 
