@@ -433,26 +433,26 @@ module "pvsite_api" {
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
-  aws-subnet_id      = module.networking.public_subnet_ids[0]
-  aws-vpc_id         = module.networking.vpc_id
+  aws-subnet_id      = nonsensitive(module.networking.public_subnet_ids[0])
+  aws-vpc_id         = nonsensitive(module.networking.vpc_id)
   container-command  = ["poetry", "run", "uvicorn", "pv_site_api.main:app", "--host", "0.0.0.0", "--port", "80"]
   container-env_vars = [
     { "name" : "PORT", "value" : "80" },
-    { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "DB_URL", "value" : nonsensitive(module.pvsite_database.default_db_connection_url)},
     { "name" : "FAKE", "value" : "0" },
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
-    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "SENTRY_DSN", "value" : nonsensitive(var.sentry_dsn) },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : nonsensitive(var.auth_api_audience) },
+    { "name" : "AUTH0_DOMAIN", "value" : nonsensitive(var.auth_domain) },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
   ]
   container-name = "nowcasting_site_api"
-  container-tag  = var.pvsite_api_version
+  container-tag  = nonsensitive(var.pvsite_api_version)
   container-registry = "openclimatefix"
   eb-app_name    = "sites-api"
   eb-instance_type = "t3.small"
   s3_bucket = [
-    { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn }
+    { bucket_read_policy_arn = nonsensitive(module.s3.iam-policy-s3-nwp-read.arn) }
   ]
 }
 
