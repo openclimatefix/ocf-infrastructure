@@ -40,3 +40,4 @@ terraform.rc
 .vscode
 .fleet
 .DS_Store
+venv

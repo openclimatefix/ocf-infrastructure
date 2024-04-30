@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 
@@ -9,7 +9,7 @@ from utils.slack import on_failure_callback
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime.utcnow() - timedelta(hours=0.5),
+    'start_date': datetime.now(tz=timezone.utc) - timedelta(hours=0.5),
     'retries': 2,
     'retry_delay': timedelta(minutes=1),
     'max_active_runs':10,
@@ -24,15 +24,16 @@ cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
+region = 'uk'
 
-with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+with DAG(f'{region}-national-forecast', schedule_interval="15,45 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get PV data"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     national_forecast = EcsRunTaskOperator(
-        task_id='national-forecast',
-        task_definition="forecast_national",
+        task_id=f'{region}-national-forecast',
+        task_definition='forecast_national',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -48,8 +49,8 @@ with DAG('national-forecast', schedule_interval="15,45 * * * *", default_args=de
     )
 
     forecast_blend = EcsRunTaskOperator(
-        task_id='forecast-blend-national-xg',
-        task_definition="forecast_blend",
+        task_id=f'{region}-forecast-blend-national-xg',
+        task_definition='forecast_blend',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",

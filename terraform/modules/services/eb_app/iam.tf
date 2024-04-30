@@ -125,7 +125,7 @@ resource "aws_iam_instance_profile" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "attach-read-s3-nwp" {
-  count      = length(var.s3_nwp_bucket) > 1 ? length(var.s3_nwp_bucket) : 0
+  count      = length(var.s3_bucket) > 1 ? length(var.s3_bucket) : 0
   role       = aws_iam_role.instance-role.name
-  policy_arn = var.s3_nwp_bucket[count.index].bucket_read_policy_arn
+  policy_arn = var.s3_bucket[count.index].bucket_read_policy_arn
 }
