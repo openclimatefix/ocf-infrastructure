@@ -7,8 +7,9 @@
 # 2.0 - S3 bucket for NWP data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
-# 3.2 - ECS task definition for Collection RUVNL data
-# 3.3 - ECS task definition for the Forecast
+# 3.2 - ECS task definition for the Meteomatics consumer
+# 3.3 - ECS task definition for Collection RUVNL data
+# 3.4 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
 # 5.1 - India Analysis Dashboard
@@ -115,8 +116,45 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
 }
 
-
 # 3.2
+module "nwp_consumer_meteomatics_live_ecs_task" {
+  source = "../../modules/services/ecs_task"
+
+  ecs-task_name               = "nwp-consumer-meteomatics-india"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
+
+  s3-buckets = [
+    {
+      id : module.s3-nwp-bucket.bucket_id,
+      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
+    }
+  ]
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+  ]
+  container-secret_vars = ["METEOMATICS_USERNAME", "METEOMATICS_PASSWORD"]
+  container-tag         = var.version-nwp
+  container-name        = "openclimatefix/nwp-consumer"
+  container-command     = [
+    "download",
+    "--source=meteomatics",
+    "--sink=s3",
+    "--rdir=meteomatics/raw",
+    "--zdir=meteomatics/data",
+    "--create-latest"
+  ]
+}
+
+
+# 3.3
 module "ruvnl_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
@@ -147,7 +185,7 @@ module "ruvnl_consumer_ecs" {
 }
 
 
-# 3.3 - Forecast
+# 3.4 - Forecast
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 

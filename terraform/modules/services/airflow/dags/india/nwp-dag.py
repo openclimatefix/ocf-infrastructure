@@ -45,5 +45,22 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="0 * * * *", default_args=d
          task_concurrency=10,
     )
 
-    latest_only >> [nwp_consumer_ecmwf]
+    nwp_consumer_meteomatics = EcsRunTaskOperator(
+         task_id=f'{region}-nwp-consumer-meteomatics-india',
+         task_definition='nwp-consumer-meteomatics-india',
+         cluster=cluster,
+         overrides={},
+         launch_type="FARGATE",
+         network_configuration={
+             "awsvpcConfiguration": {
+                 "subnets": [subnet],
+                 "securityGroups": [security_group],
+                 "assignPublicIp": "ENABLED",
+             },
+         },
+         task_concurrency=10,
+    )
+
+    latest_only >> nwp_consumer_ecmwf
+    latest_only >> nwp_consumer_meteomatics
 
