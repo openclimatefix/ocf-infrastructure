@@ -83,7 +83,7 @@ module "forecasting_models_bucket" {
 
 # 1.1
 module "api" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=35af5da"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -110,7 +110,7 @@ module "api" {
 
 # 2.1
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=26e3b29"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=6e24edf"
 
   region               = var.region
   environment          = local.environment
@@ -347,7 +347,7 @@ module "forecast_pvnet" {
 
 # 5.1
 module "analysis_dashboard" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=35af5da"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -410,7 +410,7 @@ module "airflow" {
 
 # 6.1
 module "pvsite_database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=6e24edf"
 
   region                      = var.region
   environment                 = local.environment
@@ -423,7 +423,7 @@ module "pvsite_database" {
 
 # 6.2
 module "pvsite_api" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=35af5da"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment

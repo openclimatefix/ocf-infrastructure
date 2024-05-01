@@ -31,7 +31,7 @@ module "network" {
 
 # 1.1
 module "postgres-rds" {
-  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=205465e"
+  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=6e24edf"
   region               = local.region
   environment          = local.environment
   vpc_id               = module.network.vpc_id
@@ -197,7 +197,7 @@ module "airflow" {
 
 # 5.0
 module "india-api" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=205465e"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
   domain             = local.domain
   aws-region         = local.region
   aws-environment    = local.environment
@@ -216,7 +216,7 @@ module "india-api" {
 
 # 5.1
 module "analysis_dashboard" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=205465e"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -234,8 +234,8 @@ module "analysis_dashboard" {
   container-port = 8501
   eb-app_name    = "analysis-dashboard"
   eb-instance_type = "t3.small"
-  s3_nwp_bucket = {
-    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
-  }
+  s3_bucket = [
+    { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn }
+  ]
 }
 
