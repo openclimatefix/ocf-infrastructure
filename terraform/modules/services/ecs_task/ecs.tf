@@ -16,7 +16,7 @@ resource "aws_ecs_task_definition" "task_def" {
   }
 
   volume {
-    name = "tmp"
+    name = "${var.ecs-task_name}-temp-data"
   }
 
   task_role_arn         = aws_iam_role.run_task_role.arn
@@ -49,7 +49,7 @@ resource "aws_ecs_task_definition" "task_def" {
       mountPoints : [
         {
           "containerPath" : "/tmp/nwpc",
-          "sourceVolume" : "tmp"
+          "sourceVolume" : "${var.ecs-task_name}-temp-data"
         }
       ]
     }
