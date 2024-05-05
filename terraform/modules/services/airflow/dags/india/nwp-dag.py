@@ -62,5 +62,5 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="0 * * * *", default_args=d
     )
 
     latest_only >> nwp_consumer_ecmwf
-    latest_only >> nwp_consumer_meteomatics
+    # latest_only >> nwp_consumer_meteomatics
 
