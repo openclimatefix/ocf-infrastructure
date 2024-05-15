@@ -347,7 +347,7 @@ module "forecast_pvnet" {
 
 # 5.1
 module "analysis_dashboard" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=537020d"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=f16703d"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
