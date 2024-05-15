@@ -214,6 +214,7 @@ module "forecast" {
   }
   loglevel                    = "INFO"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  sentry_dsn= var.sentry_dsn
 }
 
 # 4.0

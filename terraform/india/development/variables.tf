@@ -39,3 +39,8 @@ variable "analysis_dashboard_version" {
    description = "The Analysis Dashboard version"
    default = "main"
 }
+
+variable "sentry_dsn" {
+  type = string
+  description = "DNS for Sentry monitoring"
+}
