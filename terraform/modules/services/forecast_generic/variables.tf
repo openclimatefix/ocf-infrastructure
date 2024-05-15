@@ -128,3 +128,9 @@ variable "ecs-task_execution_role_arn" {
   description = "The arn of the ECS cluster task execution role"
   type = string
 }
+
+variable "sentry_dsn" {
+  type = string
+  description = "DNS for Sentry monitoring"
+  default=""
+}
