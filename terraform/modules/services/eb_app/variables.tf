@@ -96,3 +96,4 @@ variable "s3_bucket" {
     }
   EOT
 }
+
