@@ -347,7 +347,7 @@ module "forecast_pvnet" {
 
 # 5.1
 module "analysis_dashboard" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=537020d"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -368,6 +368,10 @@ module "analysis_dashboard" {
   container-port = 8501
   eb-app_name    = "internal-ui"
   eb-instance_type = "t3.small"
+  s3_bucket = [
+    { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
+    { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
+  ]
 }
 
 # 4.5
