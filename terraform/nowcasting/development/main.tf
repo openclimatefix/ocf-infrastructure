@@ -345,6 +345,7 @@ module "forecast_pvnet" {
   loglevel      = "INFO"
   pvnet_gsp_sum = "true"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  run_extra_models = "true"
 }
 
 # 5.1
