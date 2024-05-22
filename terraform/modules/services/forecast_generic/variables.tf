@@ -134,3 +134,9 @@ variable "sentry_dsn" {
   description = "DNS for Sentry monitoring"
   default=""
 }
+
+variable "run_extra_models" {
+  type = string
+  description = "Whether to run extra models"
+  default     = "false"
+}
