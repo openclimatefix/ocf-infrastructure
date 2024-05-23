@@ -25,9 +25,10 @@ cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
+region = 'uk'
 
 with DAG(
-    'national-day-after',
+    f'{region}-national-day-after',
     schedule_interval="0 11 * * *",
     default_args=default_args,
     concurrency=10,
@@ -36,8 +37,8 @@ with DAG(
     dag1.doc_md = "Get National PVLive updated values"
 
     national_day_after = EcsRunTaskOperator(
-        task_id='national-day-after',
-        task_definition='national-day-after',
+        task_id=f'{region}-national-day-after',
+        task_definition=f'{region}-national-day-after',
         cluster=cluster,
         overrides={},
         awslogs_region="eu-west-1",
@@ -54,7 +55,7 @@ with DAG(
     )
 
 with DAG(
-    'gsp-day-after',
+    f'{region}-gsp-day-after',
     schedule_interval="30 11 * * *",
     default_args=default_args,
     concurrency=10,
@@ -64,7 +65,7 @@ with DAG(
     dag2.doc_md = "Get GSP PVLive updated values, and then triggers metrics DAG"
 
     gsp_day_after = EcsRunTaskOperator(
-        task_id='gsp-day-after',
+        task_id=f'{region}-gsp-day-after',
         task_definition='gsp-day-after',
         cluster=cluster,
         overrides={},
@@ -82,7 +83,7 @@ with DAG(
     )
 
     metrics = EcsRunTaskOperator(
-        task_id='metrics',
+        task_id=f'{region}-metrics',
         task_definition='metrics',
         cluster=cluster,
         overrides={},
