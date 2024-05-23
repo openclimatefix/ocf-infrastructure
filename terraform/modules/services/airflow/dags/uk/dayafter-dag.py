@@ -65,7 +65,7 @@ with DAG(
     dag2.doc_md = "Get GSP PVLive updated values, and then triggers metrics DAG"
 
     gsp_day_after = EcsRunTaskOperator(
-        task_id='gsp-day-after',
+        task_id=f'{region}-gsp-day-after',
         task_definition='gsp-day-after',
         cluster=cluster,
         overrides={},
@@ -83,7 +83,7 @@ with DAG(
     )
 
     metrics = EcsRunTaskOperator(
-        task_id='metrics',
+        task_id=f'{region}-metrics',
         task_definition='metrics',
         cluster=cluster,
         overrides={},
