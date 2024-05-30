@@ -27,6 +27,11 @@ cluster = f"Nowcasting-{env}"
 
 region = 'uk'
 
+if env == 'development':
+    url = "http://api-dev.quartz.solar"
+else:
+    url = "http://api.quartz.solar"
+
 with DAG(f'{region}-gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get PV data"
 
