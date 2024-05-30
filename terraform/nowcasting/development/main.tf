@@ -108,7 +108,7 @@ module "api" {
   eb-app_name    = "nowcasting-api"
   eb-instance_type = "t3.small"
   s3_bucket = [
-    { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn }
+    { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
     { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
   ]
 }
