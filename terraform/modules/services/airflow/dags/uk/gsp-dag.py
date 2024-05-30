@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
+from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
 from utils.slack import on_failure_callback
@@ -48,7 +49,13 @@ with DAG(f'{region}-gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,
         on_failure_callback=on_failure_callback
     )
 
-    latest_only >> gsp_consumer
+    command = f'curl -X GET {url}/v0/solar/GB/update_last_data?component=gsp'
+    gsp_update = BashOperator(
+        task_id=f"{region}-gsp-update",
+        bash_command=command,
+    )
+
+    latest_only >> gsp_consumer >> gsp_update
 
 
 
