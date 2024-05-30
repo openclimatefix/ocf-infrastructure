@@ -62,7 +62,7 @@ with DAG(
         on_failure_callback=on_failure_callback
     )
 
-    file = f's3://nowcasting-sat-{env}/ecmwf/data/latest/latest.zarr.zip'
+    file = f's3://nowcasting-sat-{env}/data/latest/latest.zarr.zip'
     command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=satellite&file={file}"'
     satellite_update = BashOperator(
         task_id=f"{region}-satellite-update",
