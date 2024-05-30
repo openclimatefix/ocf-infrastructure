@@ -71,14 +71,14 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
     )
 
     file = f's3://nowcasting-nwp-{env}/data-national/latest.zarr.zip'
-    command = f'curl -X GET {url}/v0/solar/GB/update_last_data?component=nwp&file={file}'
+    command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=nwp&file={file}"'
     nwp_update_ukv = BashOperator(
         task_id="nwp-update-ukv",
         bash_command=command,
     )
 
     file = f's3://nowcasting-nwp-{env}/ecmwf/data/latest.zarr.zip'
-    command = f'curl -X GET {url}/v0/solar/GB/update_last_data?component=nwp&file={file}'
+    command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=nwp&file={file}"'
     nwp_update_ecmwf = BashOperator(
         task_id="nwp-update-ecmwf",
         bash_command=command,
