@@ -140,3 +140,9 @@ variable "run_extra_models" {
   description = "Whether to run extra models"
   default     = "false"
 }
+
+variable "day_ahead_model" {
+  type        = string
+  description = "Whether to run the day ahead model"
+  default     = "false"
+}

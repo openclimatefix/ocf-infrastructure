@@ -21,7 +21,8 @@ The componentes ares:
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
 4.4 - Forecast PVnet 2
-4.5 - Forecast Blend
+4.5 - Forecast PVnet DA
+4.6 - Forecast Blend
 5.1 - OCF Dashboard
 5.2 - Airflow instance
 6.1 - PVSite database
@@ -349,6 +350,42 @@ module "forecast_pvnet" {
   run_extra_models = "true"
 }
 
+# 4.5
+module "forecast_pvnet_day_ahead" {
+  source = "../../modules/services/forecast_generic"
+
+  region      = var.region
+  environment = local.environment
+  app-name    = "forecast_pvnet_day_ahead"
+  ecs_config  = {
+    docker_image   = "openclimatefix/pvnet_app"
+    docker_version = var.forecast_pvnet_day_ahead_docker_version
+    memory_mb      = 8192
+    cpu            = 2048
+  }
+  rds_config = {
+    database_secret_arn             = module.database.forecast-database-secret.arn
+    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
+  }
+  s3_ml_bucket = {
+    bucket_id              = module.forecasting_models_bucket.bucket_id
+    bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn
+  }
+  s3_nwp_bucket = {
+    bucket_id              = module.s3.s3-nwp-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
+    datadir                = "data-national"
+  }
+  s3_satellite_bucket = {
+    bucket_id              = module.s3.s3-sat-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn
+    datadir                = "data/latest"
+  }
+  loglevel      = "INFO"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  day_ahead_model = "true"
+}
+
 # 5.1
 module "analysis_dashboard" {
   source             = "../../modules/services/eb_app"
@@ -379,7 +416,7 @@ module "analysis_dashboard" {
   ]
 }
 
-# 4.5
+# 4.6
 module "forecast_blend" {
   source = "../../modules/services/forecast_blend"
 
