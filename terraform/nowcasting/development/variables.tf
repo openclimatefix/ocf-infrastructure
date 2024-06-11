@@ -111,7 +111,7 @@ variable "airflow_conn_slack_api_default" {
   default = "not-set"
 }
 
-variable "forecast_pvnet_day_ahead_version" {
+variable "forecast_pvnet_day_ahead_docker_version" {
   type = string
   description = "The Forecast PVnet 2.0 day ahead docker version"
   default = "not-set"

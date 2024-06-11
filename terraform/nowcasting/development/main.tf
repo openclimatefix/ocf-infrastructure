@@ -350,7 +350,7 @@ module "forecast_pvnet" {
   run_extra_models = "true"
 }
 
-# 4.4
+# 4.5
 module "forecast_pvnet_day_ahead" {
   source = "../../modules/services/forecast_generic"
 
@@ -359,7 +359,7 @@ module "forecast_pvnet_day_ahead" {
   app-name    = "forecast_pvnet_day_ahead"
   ecs_config  = {
     docker_image   = "openclimatefix/pvnet_app"
-    docker_version = var.forecast_pvnet_day_ahead_version
+    docker_version = var.forecast_pvnet_day_ahead_docker_version
     memory_mb      = 8192
     cpu            = 2048
   }
@@ -382,9 +382,7 @@ module "forecast_pvnet_day_ahead" {
     datadir                = "data/latest"
   }
   loglevel      = "INFO"
-  pvnet_gsp_sum = "true"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  run_extra_models = "true"
   day_ahead_model = "true"
 }
 
