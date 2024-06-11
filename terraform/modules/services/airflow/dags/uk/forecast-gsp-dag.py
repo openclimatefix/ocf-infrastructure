@@ -68,3 +68,45 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
 
     latest_only >> forecast >> forecast_blend
 
+
+with DAG(f'{region}-gsp-forecast-pvnet-day-ahead', schedule_interval="15 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+    dag.doc_md = "Run Forecast day ahead"
+
+    latest_only = LatestOnlyOperator(task_id="latest_only")
+
+    forecast_pvnet_day_ahead = EcsRunTaskOperator(
+        task_id=f'{region}-gsp-forecast-pvnet-day-ahead',
+        task_definition='forecast_pvnet_day_ahead',
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+        on_failure_callback=on_failure_callback,
+    )
+
+    forecast_blend = EcsRunTaskOperator(
+        task_id=f'{region}-forecast-blend',
+        task_definition='forecast_blend',
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+        on_failure_callback=on_failure_callback,
+    )
+
+    latest_only >> forecast_pvnet_day_ahead >> forecast_blend
+
