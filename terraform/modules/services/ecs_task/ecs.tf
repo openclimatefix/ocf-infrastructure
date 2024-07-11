@@ -18,8 +18,8 @@ resource "aws_ecs_task_definition" "task_def" {
   volume {
     name = "${var.ecs-task_name}-temp-data"
     docker_volume_configuration {
-      scope = "task",
-      driver = "local",
+      scope = "task"
+      driver = "local"
     }
   }
 
