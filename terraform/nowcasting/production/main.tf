@@ -485,7 +485,7 @@ module "pvsite_api" {
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
-    { "name" : "environment", "value" : "production" },
+    { "name" : "ENVIRONMENT", "value" : "production" },
   ]
   container-name = "nowcasting_site_api"
   container-tag  = var.pvsite_api_version
