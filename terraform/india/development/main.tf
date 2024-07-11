@@ -7,7 +7,7 @@
 # 2.0 - S3 bucket for NWP data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
-# 3.2 - ECS task definition for the Meteomatics consumer
+# 3.2 - ECS task definition for the GFS consumer
 # 3.3 - ECS task definition for Collection RUVNL data
 # 3.4 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
@@ -117,47 +117,16 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 }
 
 # 3.2
-module "nwp_consumer_meteomatics_live_ecs_task" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name               = "nwp-consumer-meteomatics-india"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
-
-  s3-buckets = [
-    {
-      id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
-    }
-  ]
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-  ]
-  container-secret_vars = ["METEOMATICS_USERNAME", "METEOMATICS_PASSWORD"]
-  container-tag         = var.version-nwp
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "download",
-    "--source=meteomatics",
-    "--sink=s3",
-    "--rdir=meteomatics/raw",
-    "--zdir=meteomatics/data",
-    "--create-latest"
-  ]
-}
-
 module "nwp_consumer_gfs_live_ecs_task" {
   source = "../../modules/services/ecs_task"
 
   ecs-task_name               = "nwp-consumer-gfs-india"
   ecs-task_type               = "consumer"
+  ecs-task_size = {
+    cpu    = 1024
+    memory = 5120
+    storage = 40
+  }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
   aws-region                    = var.region
