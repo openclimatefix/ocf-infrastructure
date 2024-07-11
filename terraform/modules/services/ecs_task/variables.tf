@@ -100,7 +100,7 @@ variable ecs-task_size {
       memory : "Memory units (MB) for the ECS task"
       storage : "Ephemeral storage (GB) for the ECS task"
     }
-    ecs-task_size: "Size of the ECS task in terms of compute, memory, and epehemral storage."
+    ecs-task_size: "Size of the ECS task in terms of compute, memory, and ephemeral storage."
   EOT
 
   default = {

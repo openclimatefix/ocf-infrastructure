@@ -268,7 +268,7 @@ module "metrics" {
 
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_name = "metrics"
-  ecs-task_type = "anaylsis"
+  ecs-task_type = "analysis"
   ecs-task_size = {
     cpu = 256
     memory = 512
