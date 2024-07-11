@@ -175,6 +175,7 @@ module "ruvnl_consumer_ecs" {
   ecs-task_size = {
     memory = 512
     cpu    = 256
+    storage = 21
   }
 
   s3-buckets = []
