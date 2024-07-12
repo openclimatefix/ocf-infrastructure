@@ -145,6 +145,7 @@ module "nwp-national" {
   ecs-task_size = {
     cpu    = 1024
     memory = 8192
+    storage = 21
   }
 
   aws-region                     = var.region
@@ -267,8 +268,12 @@ module "metrics" {
 
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_name = "metrics"
-  ecs-task_type = "anaylsis"
-  ecs-task_size = {"cpu": 256, "memory": 512}
+  ecs-task_type = "analysis"
+  ecs-task_size = {
+    cpu = 256
+    memory = 512
+    storage = 21
+  }
 
   container-name = "openclimatefix/nowcasting_metrics"
   container-tag = var.metrics_version

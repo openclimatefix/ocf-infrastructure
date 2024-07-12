@@ -91,24 +91,27 @@ variable ecs-task_size {
   type = object({
     cpu = number
     memory = number
+    storage = number
   })
 
   description = <<EOT
     ecs-task_size = {
       cpu : "CPU units for the ECS task"
       memory : "Memory units (MB) for the ECS task"
+      storage : "Ephemeral storage (GB) for the ECS task"
     }
-    ecs-task_size: "Size of the ECS task in terms of compute and memory"
+    ecs-task_size: "Size of the ECS task in terms of compute, memory, and ephemeral storage."
   EOT
 
   default = {
     cpu = 1024
     memory = 5120
+    storage = 21
   }
   
   validation {
-    condition = length(keys(var.ecs-task_size)) == 2
-    error_message = "Variable ecs-task_size must have exactly two keys: cpu and memory."
+    condition = length(keys(var.ecs-task_size)) == 3
+    error_message = "Variable ecs-task_size must have exactly three keys: cpu, memory, and storage."
   }
   validation {
     condition = contains([256, 512, 1024, 2048, 4096, 8192], var.ecs-task_size.cpu)
@@ -127,6 +130,14 @@ variable ecs-task_size {
       true
     )
     error_message = "Invalid combination of CPU and memory."
+  }
+  validation {
+    condition = var.ecs-task_size.storage >= 21
+    error_message = "Storage must be at least 21."
+  }
+  validation {
+    condition = var.ecs-task_size.storage <= 200
+    error_message = "Storage must be at most 200."
   }
 }
 

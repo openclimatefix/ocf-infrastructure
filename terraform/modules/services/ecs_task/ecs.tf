@@ -17,6 +17,14 @@ resource "aws_ecs_task_definition" "task_def" {
 
   volume {
     name = "${var.ecs-task_name}-temp-data"
+    docker_volume_configuration {
+      scope = "task"
+      driver = "local"
+    }
+  }
+
+  ephemeral_storage {
+    size_in_gib = var.ecs-task_size.storage
   }
 
   task_role_arn         = aws_iam_role.run_task_role.arn
