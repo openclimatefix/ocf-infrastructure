@@ -125,7 +125,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ecs-task_size = {
     cpu    = 1024
     memory = 5120
-    storage = 40
+    storage = 60
   }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
