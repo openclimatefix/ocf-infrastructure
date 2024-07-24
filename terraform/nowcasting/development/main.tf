@@ -409,7 +409,7 @@ module "analysis_dashboard" {
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
   ]
-  container-name = "uk-analysis-dashboard"
+  container-name = "analysis-dashboard"
   container-tag  = var.internal_ui_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501
