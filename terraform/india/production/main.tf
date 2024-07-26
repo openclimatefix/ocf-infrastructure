@@ -230,7 +230,7 @@ module "analysis_dashboard" {
     { "name" : "SITES_DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
     { "name" : "ORIGINS", "value" : "*" },
   ]
-  container-name = "uk-analysis-dashboard"
+  container-name = "uk-analysis-dashboard" # TODO remove uk
   container-tag  = var.analysis_dashboard_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501
