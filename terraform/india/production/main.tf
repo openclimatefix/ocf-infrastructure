@@ -66,7 +66,7 @@ module "s3-nwp-bucket" {
   region              = var.region
   domain              = local.domain
   service_name        = "nwp"
-  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
+  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw", "gfs/data", "gfs/raw"]
 }
 
 # 3.0
