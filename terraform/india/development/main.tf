@@ -151,6 +151,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
   container-command     = [
     "download",
     "--source=gfs",
+    "--from=latest",
     "--sink=s3",
     "--rdir=gfs/raw",
     "--zdir=gfs/data",
