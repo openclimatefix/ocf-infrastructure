@@ -404,7 +404,7 @@ module "analysis_dashboard" {
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
   ]
-  container-name = "uk-analysis-dashboard" # TODO remove uk
+  container-name = "analysis-dashboard" 
   container-tag  = var.internal_ui_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501
@@ -485,6 +485,7 @@ module "pvsite_api" {
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
+    { "name" : "ENVIRONMENT", "value" : "production" },
   ]
   container-name = "nowcasting_site_api"
   container-tag  = var.pvsite_api_version
