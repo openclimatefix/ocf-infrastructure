@@ -26,7 +26,7 @@ cluster = f"Nowcasting-{env}"
 
 region = 'uk'
 
-with DAG(f'{region}-national-forecast', schedule_interval="15,45 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+with DAG(f'{region}-national-forecast', schedule_interval="15 */2 * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get PV data"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
