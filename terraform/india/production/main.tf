@@ -66,7 +66,7 @@ module "s3-nwp-bucket" {
   region              = var.region
   domain              = local.domain
   service_name        = "nwp"
-  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
+  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw", "gfs/data", "gfs/raw"]
 }
 
 # 3.0
@@ -208,6 +208,8 @@ module "india-api" {
     { "name" : "SOURCE", "value" : "indiadb" },
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url},
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
   ]
   container-name = "india-api"
   container-tag  = var.version-india_api
@@ -228,7 +230,7 @@ module "analysis_dashboard" {
     { "name" : "SITES_DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
     { "name" : "ORIGINS", "value" : "*" },
   ]
-  container-name = "uk-analysis-dashboard"
+  container-name = "uk-analysis-dashboard" # TODO remove uk
   container-tag  = var.analysis_dashboard_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501

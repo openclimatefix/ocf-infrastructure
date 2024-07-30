@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
+from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
 from utils.slack import on_failure_callback
@@ -26,6 +27,11 @@ cluster = f"Nowcasting-{env}"
 # Tasks can still be defined in terraform, or defined here
 
 region = 'uk'
+
+if env == 'development':
+    url = "http://api-dev.quartz.solar"
+else:
+    url = "http://api.quartz.solar"
 
 with DAG(
     f'{region}-national-satellite-consumer',
@@ -56,7 +62,14 @@ with DAG(
         on_failure_callback=on_failure_callback
     )
 
-    latest_only >> sat_consumer
+    file = f's3://nowcasting-sat-{env}/data/latest/latest.zarr.zip'
+    command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=satellite&file={file}"'
+    satellite_update = BashOperator(
+        task_id=f"{region}-satellite-update",
+        bash_command=command,
+    )
+
+    latest_only >> sat_consumer >> satellite_update
 
 with DAG(
     f'{region}-national-satellite-cleanup',

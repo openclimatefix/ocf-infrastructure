@@ -7,7 +7,7 @@
 # 2.0 - S3 bucket for NWP data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
-# 3.2 - ECS task definition for the Meteomatics consumer
+# 3.2 - ECS task definition for the GFS consumer
 # 3.3 - ECS task definition for Collection RUVNL data
 # 3.4 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
@@ -117,11 +117,16 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 }
 
 # 3.2
-module "nwp_consumer_meteomatics_live_ecs_task" {
+module "nwp_consumer_gfs_live_ecs_task" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name               = "nwp-consumer-meteomatics-india"
+  ecs-task_name               = "nwp-consumer-gfs-india"
   ecs-task_type               = "consumer"
+  ecs-task_size = {
+    cpu    = 1024
+    memory = 5120
+    storage = 60
+  }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
   aws-region                    = var.region
@@ -140,18 +145,20 @@ module "nwp_consumer_meteomatics_live_ecs_task" {
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
   ]
-  container-secret_vars = ["METEOMATICS_USERNAME", "METEOMATICS_PASSWORD"]
+  container-secret_vars = []
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "download",
-    "--source=meteomatics",
+    "--source=gfs",
     "--sink=s3",
-    "--rdir=meteomatics/raw",
-    "--zdir=meteomatics/data",
-    "--create-latest"
+    "--rdir=gfs/raw",
+    "--zdir=gfs/data",
+    "--create-latest",
+    "--no-rename-vars"
   ]
 }
+
 
 
 # 3.3
@@ -168,6 +175,7 @@ module "ruvnl_consumer_ecs" {
   ecs-task_size = {
     memory = 512
     cpu    = 256
+    storage = 21
   }
 
   s3-buckets = []
@@ -247,6 +255,8 @@ module "india-api" {
     { "name" : "SOURCE", "value" : "indiadb" },
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
   ]
   container-name = "india-api"
   container-tag  = var.version-india_api
@@ -273,7 +283,7 @@ module "analysis_dashboard" {
     { "name" : "SITES_DB_URL", "value" : module.postgres-rds.default_db_connection_url },
     { "name" : "ORIGINS", "value" : "*" },
   ]
-  container-name     = "uk-analysis-dashboard"
+  container-name     = "analysis-dashboard"
   container-tag      = var.analysis_dashboard_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501

@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
+from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
 from utils.slack import on_failure_callback
@@ -26,6 +27,11 @@ cluster = f"Nowcasting-{env}"
 
 region = 'uk'
 
+if env == 'development':
+    url = "http://api-dev.quartz.solar"
+else:
+    url = "http://api.quartz.solar"
+
 with DAG(f'{region}-gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,42,44,50 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Get PV data"
 
@@ -48,7 +54,13 @@ with DAG(f'{region}-gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,
         on_failure_callback=on_failure_callback
     )
 
-    latest_only >> gsp_consumer
+    command = f'curl -X GET {url}/v0/solar/GB/update_last_data?component=gsp'
+    gsp_update = BashOperator(
+        task_id=f"{region}-gsp-update",
+        bash_command=command,
+    )
+
+    latest_only >> gsp_consumer >> gsp_update
 
 
 

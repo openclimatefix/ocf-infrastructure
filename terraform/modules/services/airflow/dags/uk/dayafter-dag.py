@@ -38,7 +38,7 @@ with DAG(
 
     national_day_after = EcsRunTaskOperator(
         task_id=f'{region}-national-day-after',
-        task_definition=f'{region}-national-day-after',
+        task_definition='national-day-after',
         cluster=cluster,
         overrides={},
         awslogs_region="eu-west-1",

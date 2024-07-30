@@ -64,7 +64,14 @@ Pvnet 2 is currently our best forecast from 0 to 8 hours. It is a complex CNN mo
    - [Terraform](https://github.com/openclimatefix/ocf-infrastructure/tree/main/terraform/modules/services/forecast_generic) 
 and [Airflow Dag](https://github.com/openclimatefix/ocf-infrastructure/blob/main/terraform/modules/services/airflow/dags/uk/forecastg-gsp-dag.py)
    - AWS logs: [aws/ecs/forecast_pvnet/](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fforecast_pvnet$252F)
-   - 
+
+### 📈 DA GSP Forecast Prediction (PVnet Day Ahead) (ECS Task)
+Pvnet Day Head is our PVnet model fro 0 to 36 hours. It is a complex CNN model that used Satellite and NWP. First GSP forecasts are made, and then added up for a national PV generation.
+   - Code: [PVnet](https://github.com/openclimatefix/Pvnet), [PVnet App](https://github.com/openclimatefix/Pvnet_app)
+   - [Terraform](https://github.com/openclimatefix/ocf-infrastructure/tree/main/terraform/modules/services/forecast_generic)
+and [Airflow Dag](https://github.com/openclimatefix/ocf-infrastructure/blob/main/terraform/modules/services/airflow/dags/uk/forecastg-gsp-dag.py)
+   - AWS logs: [aws/ecs/forecast_pvnet_day_ahead/](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fforecast_pvnet_day_ahead$252F)
+
 ### National Forecast Prediction (XGBoost) (ECS Task)
 National xg makes forecast from 0 to 36 hours. It is a XGBoost model that used Satellite and NWP data. It prdocues a National forecast with probabilistic forecasts.
 

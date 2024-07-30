@@ -39,3 +39,13 @@ variable "analysis_dashboard_version" {
     description = "The Analysis Dashboard version"
     default = "main"
 }
+
+variable "auth_domain" {
+  description = "The Auth domain that should be used"
+  default = "not-set"
+}
+
+variable "auth_api_audience" {
+  description = "The Auth API Audience that should be used"
+  default = "not-set"
+}

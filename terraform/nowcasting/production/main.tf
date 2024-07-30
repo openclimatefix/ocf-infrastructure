@@ -20,7 +20,8 @@ The componentes ares:
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
 4.4 - Forecast PVnet 2
-4.5 - Forecast Blend
+4.5 - Forecast PVNet Day Ahead
+4.6 - Forecast Blend
 5.1 - OCF Dashboard
 5.2 - Airflow instance
 6.1 - PVSite database
@@ -83,7 +84,7 @@ module "forecasting_models_bucket" {
 
 # 1.1
 module "api" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=72ba38d"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -106,6 +107,10 @@ module "api" {
   container-registry = "openclimatefix"
   eb-app_name    = "nowcasting-api"
   eb-instance_type = "t3.small"
+  s3_bucket = [
+    { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
+    { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
+  ]
 }
 
 # 2.1
@@ -345,6 +350,43 @@ module "forecast_pvnet" {
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
+
+# 4.5
+module "forecast_pvnet_day_ahead" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=4d421e0"
+
+  region      = var.region
+  environment = local.environment
+  app-name    = "forecast_pvnet_day_ahead"
+  ecs_config  = {
+    docker_image   = "openclimatefix/pvnet_app"
+    docker_version = var.forecast_pvnet_day_ahead_docker_version
+    memory_mb      = 8192
+    cpu            = 2048
+  }
+  rds_config = {
+    database_secret_arn             = module.database.forecast-database-secret.arn
+    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
+  }
+  s3_ml_bucket = {
+    bucket_id              = module.forecasting_models_bucket.bucket_id
+    bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn
+  }
+  s3_nwp_bucket = {
+    bucket_id              = module.s3.s3-nwp-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
+    datadir                = "data-national"
+  }
+  s3_satellite_bucket = {
+    bucket_id              = module.s3.s3-sat-bucket.id
+    bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn
+    datadir                = "data/latest"
+  }
+  loglevel      = "INFO"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  day_ahead_model = "true"
+}
+
 # 5.1
 module "analysis_dashboard" {
   source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=f16703d"
@@ -362,7 +404,7 @@ module "analysis_dashboard" {
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
   ]
-  container-name = "uk-analysis-dashboard"
+  container-name = "analysis-dashboard" 
   container-tag  = var.internal_ui_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501
@@ -374,7 +416,7 @@ module "analysis_dashboard" {
   ]
 }
 
-# 4.5
+# 4.6
 module "forecast_blend" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=2747e85"
 
@@ -397,7 +439,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=e4534fb"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=4d421e0"
 
   aws-environment   = local.environment
   aws-domain        = local.domain
@@ -443,6 +485,7 @@ module "pvsite_api" {
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
+    { "name" : "ENVIRONMENT", "value" : "production" },
   ]
   container-name = "nowcasting_site_api"
   container-tag  = var.pvsite_api_version
