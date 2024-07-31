@@ -31,6 +31,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
         {"name": "NWP_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/${var.s3_nwp_bucket.datadir}/latest.zarr"},
         {"name": "NWP_UKV_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/${var.s3_nwp_bucket.datadir}/latest.zarr"},
         {"name": "NWP_ECMWF_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/ecmwf/data/latest.zarr"},
+        {"name": "NWP_GFS_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/gfs/data/latest.zarr"},
         {"name": "SATELLITE_ZARR_PATH", "value":"s3://${var.s3_satellite_bucket.bucket_id}/${var.s3_satellite_bucket.datadir}/latest.zarr.zip"},
         {"name": "ML_MODEL_PATH", "value": "s3://${var.s3_ml_bucket.bucket_id}/"},
         {"name": "ML_MODEL_BUCKET", "value": var.s3_ml_bucket.bucket_id},
