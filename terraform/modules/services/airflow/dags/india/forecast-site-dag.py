@@ -24,7 +24,7 @@ cluster = f"india-ecs-cluster-{env}"
 
 region = 'india' 
 
-with DAG(f'{region}-runvl-forecast', schedule_interval="0 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+with DAG(f'{region}-runvl-forecast', schedule_interval="15 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Run the forecast"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
