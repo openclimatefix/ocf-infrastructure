@@ -115,7 +115,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 
 # 3.2
 module "nwp_consumer_gfs_live_ecs_task" {
-  source = "../../modules/services/ecs_task"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
   ecs-task_name               = "nwp-consumer-gfs-india"
   ecs-task_type               = "consumer"
