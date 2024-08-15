@@ -9,7 +9,8 @@ from utils.slack import on_failure_callback
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime.now(tz=timezone.utc) - timedelta(hours=0.5),
+    # the start_date needs to be less than the last cron run
+    'start_date': datetime.now(tz=timezone.utc) - timedelta(hours=3),
     'retries': 2,
     'retry_delay': timedelta(minutes=1),
     'max_active_runs':10,
