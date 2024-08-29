@@ -237,6 +237,7 @@ module "satellite_consumer_ecs" {
   container-tag         = var.satellite-consumer
   container-name        = "satip"
   container-registry    = "openclimatefix"
+  container-command     = []
 }
 
 
