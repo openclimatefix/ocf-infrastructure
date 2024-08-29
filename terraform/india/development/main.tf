@@ -228,7 +228,6 @@ module "satellite_consumer_ecs" {
     storage = 21
   }
 
-  s3-buckets = []
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
@@ -268,7 +267,7 @@ module "forecast" {
     bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn
     datadir                = "data"
   }
-  
+
   // this isnt really needed
   s3_ml_bucket = {
     bucket_id              = module.s3-nwp-bucket.bucket_id
