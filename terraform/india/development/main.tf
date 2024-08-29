@@ -90,7 +90,7 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 }
 
 # 3.1
-data "aws_secretsmanager_secret" "satellite_consumer_secret" {
+resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
 }
 
