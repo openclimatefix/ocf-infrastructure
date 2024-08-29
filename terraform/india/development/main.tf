@@ -73,7 +73,7 @@ module "s3-nwp-bucket" {
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
 }
 
-# 2.0
+# 2.1
 module "s3-satellite-bucket" {
   source              = "../../modules/storage/s3-private"
   environment         = local.environment
