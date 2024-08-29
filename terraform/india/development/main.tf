@@ -9,7 +9,8 @@
 # 3.1 - ECS task definition for the NWP consumer
 # 3.2 - ECS task definition for the GFS consumer
 # 3.3 - ECS task definition for Collection RUVNL data
-# 3.4 - ECS task definition for the Forecast
+# 3.4 - Satellite Consumer
+# 3.5 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
 # 5.1 - India Analysis Dashboard
@@ -192,8 +193,39 @@ module "ruvnl_consumer_ecs" {
   ]
 }
 
+# 3.4 - Satellite Consumer
+module "satellite_consumer_ecs" {
+  source = "../../modules/services/ecs_task"
 
-# 3.4 - Forecast
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
+
+  # TODO add read policy, add satellite s3 bucket
+
+  ecs-task_name               = "sat-consumer"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 5120
+    cpu    = 1024
+    storage = 21
+  }
+
+  s3-buckets = []
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "USE_IODC", "value" : "True" },
+  ]
+  container-tag         = var.satellite-consumer
+  container-name        = "satip"
+  container-registry    = "openclimatefix"
+}
+
+
+
+# 3.5 - Forecast
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 
