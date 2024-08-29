@@ -233,6 +233,7 @@ module "satellite_consumer_ecs" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "USE_IODC", "value" : "True" },
   ]
+  container-secret_vars = ["DB_URL"]
   container-tag         = var.satellite-consumer
   container-name        = "satip"
   container-registry    = "openclimatefix"
