@@ -5,6 +5,7 @@
 # 1.2 - Bastion instance
 # 1.2 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
+# 2.1 - S3 bucket for Satellite data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - ECS task definition for the NWP consumer
 # 3.2 - ECS task definition for the GFS consumer
@@ -70,6 +71,16 @@ module "s3-nwp-bucket" {
   domain              = local.domain
   service_name        = "nwp"
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
+}
+
+# 2.0
+module "s3-satellite-bucket" {
+  source              = "../../modules/storage/s3-private"
+  environment         = local.environment
+  region              = var.region
+  domain              = local.domain
+  service_name        = "nwp"
+  lifecycled_prefixes = ["data"]
 }
 
 # 3.0
@@ -201,7 +212,12 @@ module "satellite_consumer_ecs" {
   aws-environment               = local.environment
   aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
 
-  # TODO add read policy, add satellite s3 bucket
+  s3-buckets = [
+    {
+      id : module.s3-satellite-bucket.bucket_id,
+      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
+    }
+  ]
 
   ecs-task_name               = "sat-consumer"
   ecs-task_type               = "consumer"
@@ -247,11 +263,18 @@ module "forecast" {
     bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
     datadir                = "ecmwf/data"
   }
+  s3_satellite_bucket = {
+    bucket_id              = module.s3-satellite-bucket.bucket_id
+    bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn
+    datadir                = "data"
+  }
+  
   // this isnt really needed
   s3_ml_bucket = {
     bucket_id              = module.s3-nwp-bucket.bucket_id
     bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
   }
+
   loglevel                    = "INFO"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   sentry_dsn= var.sentry_dsn
