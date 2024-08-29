@@ -7,11 +7,12 @@
 # 2.0 - S3 bucket for NWP data
 # 2.1 - S3 bucket for Satellite data
 # 3.0 - Secret containing environment variables for the NWP consumer
-# 3.1 - ECS task definition for the NWP consumer
-# 3.2 - ECS task definition for the GFS consumer
-# 3.3 - ECS task definition for Collection RUVNL data
-# 3.4 - Satellite Consumer
-# 3.5 - ECS task definition for the Forecast
+# 3.1 - Secret containing environment variables for the Satellite consumer
+# 3.2 - ECS task definition for the NWP consumer
+# 3.3 - ECS task definition for the GFS consumer
+# 3.4 - ECS task definition for Collection RUVNL data
+# 3.5 - Satellite Consumer
+# 3.6 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
 # 5.1 - India Analysis Dashboard
@@ -89,6 +90,11 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 }
 
 # 3.1
+data "aws_secretsmanager_secret" "satellite_consumer_secret" {
+  name = "${var.environment}/data/satellite-consumer"
+}
+
+# 3.2
 module "nwp_consumer_ecmwf_live_ecs_task" {
   source = "../../modules/services/ecs_task"
 
@@ -128,7 +134,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
 }
 
-# 3.2
+# 3.3
 module "nwp_consumer_gfs_live_ecs_task" {
   source = "../../modules/services/ecs_task"
 
@@ -173,7 +179,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
 
 
 
-# 3.3
+# 3.4
 module "ruvnl_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
@@ -204,13 +210,13 @@ module "ruvnl_consumer_ecs" {
   ]
 }
 
-# 3.4 - Satellite Consumer
+# 3.5 - Satellite Consumer
 module "satellite_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.satellite_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -232,8 +238,10 @@ module "satellite_consumer_ecs" {
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "USE_IODC", "value" : "True" },
+    { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
+    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
   ]
-  container-secret_vars = ["DB_URL"]
+  container-secret_vars = ["API_KEY", "API_SECRET"]
   container-tag         = var.satellite-consumer
   container-name        = "satip"
   container-registry    = "openclimatefix"
@@ -242,7 +250,7 @@ module "satellite_consumer_ecs" {
 
 
 
-# 3.5 - Forecast
+# 3.6 - Forecast
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 
