@@ -77,7 +77,7 @@ module "s3-satellite-bucket" {
   environment         = local.environment
   region              = var.region
   domain              = local.domain
-  service_name        = "nwp"
+  service_name        = "satellite"
   lifecycled_prefixes = ["data"]
 }
 
