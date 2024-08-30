@@ -94,6 +94,13 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
 }
 
+import {
+  to = aws_secretsmanager_secret.satellite_consumer_secret
+  id = "arn:aws:secretsmanager:ap-south-1:008129123253:secret:development/data/satellite-consumer-4WNh2s"
+}
+
+
+
 # 3.2
 module "nwp_consumer_ecmwf_live_ecs_task" {
   source = "../../modules/services/ecs_task"
