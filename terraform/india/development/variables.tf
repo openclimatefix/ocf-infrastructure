@@ -34,6 +34,12 @@ variable version-runvl-consumer {
   description = "Container image tag of the runvl data consumer to use: openclimatefix/ruvnl_consumer_app"
 }
 
+variable satellite-consumer {
+  type = string
+  default = "0.0.1"
+  description = "Container image tag of the satellite data consumer to use: openclimatefix/satip"
+}
+
 
 variable "analysis_dashboard_version" {
    description = "The Analysis Dashboard version"
