@@ -5,11 +5,14 @@
 # 1.2 - Bastion instance
 # 1.2 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
+# 2.1 - S3 bucket for Satellite data
 # 3.0 - Secret containing environment variables for the NWP consumer
-# 3.1 - ECS task definition for the NWP consumer
-# 3.2 - ECS task definition for the GFS consumer
-# 3.3 - ECS task definition for Collection RUVNL data
-# 3.4 - ECS task definition for the Forecast
+# 3.1 - Secret containing environment variables for the Satellite consumer
+# 3.2 - ECS task definition for the NWP consumer
+# 3.3 - ECS task definition for the GFS consumer
+# 3.4 - ECS task definition for Collection RUVNL data
+# 3.5 - Satellite Consumer
+# 3.6 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
 # 5.1 - India Analysis Dashboard
@@ -86,6 +89,17 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 }
 
 # 3.1
+resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
+  name = "${local.environment}/data/satellite-consumer"
+}
+
+import {
+  to = aws_secretsmanager_secret.satellite_consumer_secret
+  id = "arn:aws:secretsmanager:ap-south-1:752135663966:secret:production/data/satellite-consumer-SOZCn1"
+}
+
+
+# 3.2
 module "nwp_consumer_ecmwf_live_ecs_task" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -123,7 +137,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
 }
 
-# 3.2
+# 3.3
 module "nwp_consumer_gfs_live_ecs_task" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -167,7 +181,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
 }
 
 
-# 3.3
+# 3.4
 module "ruvnl_consumer_ecs" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -200,7 +214,46 @@ module "ruvnl_consumer_ecs" {
 }
 
 
-# 3.4 - Forecast
+# 3.5 - Satellite Consumer
+module "satellite_consumer_ecs" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.satellite_consumer_secret.arn
+
+  s3-buckets = [
+    {
+      id : module.s3-satellite-bucket.bucket_id,
+      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
+    }
+  ]
+
+  ecs-task_name               = "sat-consumer"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 5120
+    cpu    = 1024
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "USE_IODC", "value" : "True" },
+    { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
+    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
+  ]
+  container-secret_vars = ["API_KEY", "API_SECRET"]
+  container-tag         = var.satellite-consumer
+  container-name        = "satip"
+  container-registry    = "openclimatefix"
+  container-command     = []
+}
+
+
+# 3.6 - Forecast
 module "forecast" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=42eba24"
 
@@ -222,6 +275,12 @@ module "forecast" {
     bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
     datadir                = "ecmwf/data"
   }
+  s3_satellite_bucket = {
+    bucket_id              = module.s3-satellite-bucket.bucket_id
+    bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn
+    datadir                = "data"
+  }
+
   // this isnt really needed
   s3_ml_bucket = {
     bucket_id              = module.s3-nwp-bucket.bucket_id
@@ -234,7 +293,7 @@ module "forecast" {
 
 # 4.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=b2bad84"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=e03117d"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
@@ -272,7 +331,7 @@ module "india-api" {
 
 # 5.1
 module "analysis_dashboard" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=5bc9429"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -284,14 +343,15 @@ module "analysis_dashboard" {
     { "name" : "SITES_DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
     { "name" : "ORIGINS", "value" : "*" },
   ]
-  container-name = "uk-analysis-dashboard" # TODO remove uk
+  container-name = "analysis-dashboard"
   container-tag  = var.analysis_dashboard_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501
   eb-app_name    = "analysis-dashboard"
   eb-instance_type = "t3.small"
   s3_bucket = [
-    { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn }
+    { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn },
+    { bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn }
   ]
 }
 
