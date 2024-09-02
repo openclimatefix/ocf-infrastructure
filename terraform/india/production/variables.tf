@@ -49,3 +49,9 @@ variable "auth_api_audience" {
   description = "The Auth API Audience that should be used"
   default = "not-set"
 }
+
+variable satellite-consumer {
+  type = string
+  default = "0.0.1"
+  description = "Container image tag of the satellite data consumer to use: openclimatefix/satip"
+}
