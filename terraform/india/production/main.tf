@@ -70,6 +70,16 @@ module "s3-nwp-bucket" {
   lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw", "gfs/data", "gfs/raw"]
 }
 
+# 2.1
+module "s3-satellite-bucket" {
+  source              = "../../modules/storage/s3-private"
+  environment         = local.environment
+  region              = var.region
+  domain              = local.domain
+  service_name        = "satellite"
+  lifecycled_prefixes = ["data"]
+}
+
 # 3.0
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
   name = "${local.environment}/data/nwp-consumer"
