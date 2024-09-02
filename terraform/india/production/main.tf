@@ -83,7 +83,6 @@ module "s3-satellite-bucket" {
   lifecycled_prefixes = ["data"]
 }
 
-
 # 3.0
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
   name = "${local.environment}/data/nwp-consumer"
