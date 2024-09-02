@@ -347,8 +347,8 @@ module "analysis_dashboard" {
     { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
     { "name" : "SITES_DB_URL", "value" : module.postgres-rds.default_db_connection_url },
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "REGION", 'value': locals.domain}
-    { "name" : "ENVIRONMENT", 'value': "locals.environment"}
+    { "name" : "REGION", 'value': locals.domain},
+    { "name" : "ENVIRONMENT", 'value': "locals.environment"},
   ]
   container-name     = "analysis-dashboard"
   container-tag      = var.analysis_dashboard_version
