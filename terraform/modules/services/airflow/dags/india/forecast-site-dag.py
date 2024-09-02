@@ -22,9 +22,12 @@ subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"india-ecs-cluster-{env}"
 
-region = 'india' 
+region = 'india'
 
-with DAG(f'{region}-runvl-forecast', schedule_interval="0 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+# hour the forecast can run, not include 7,8,19,20
+hours = '0,1,2,3,4,5,6,9,10,11,12,13,14,15,16,17,18,21,22,23'
+
+with DAG(f'{region}-runvl-forecast', schedule_interval=f"0 {hours} * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Run the forecast"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
