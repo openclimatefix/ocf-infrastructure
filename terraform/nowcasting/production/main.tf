@@ -483,7 +483,7 @@ module "pvsite_api" {
     { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
     { "name" : "FAKE", "value" : "0" },
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_siteapi },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_api },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },

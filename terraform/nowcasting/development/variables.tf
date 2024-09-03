@@ -116,3 +116,9 @@ variable "forecast_pvnet_day_ahead_docker_version" {
   description = "The Forecast PVnet 2.0 day ahead docker version"
   default = "not-set"
 }
+
+variable "sentry_dsn_backend" {
+  type = string
+  description = "The Sentry DSN for all backend components"
+  default = ""
+}
