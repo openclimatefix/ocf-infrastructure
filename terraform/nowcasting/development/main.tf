@@ -409,6 +409,8 @@ module "analysis_dashboard" {
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+    { "name" : "REGION", "value": local.domain},
+    { "name" : "ENVIRONMENT", "value": local.environment},
   ]
   container-name = "analysis-dashboard"
   container-tag  = var.internal_ui_version
