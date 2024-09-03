@@ -353,6 +353,7 @@ module "forecast_pvnet" {
   pvnet_gsp_sum = "true"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   run_extra_models = "true"
+  sentry_dsn = var.sentry_dsn_backend
 }
 
 # 4.5
