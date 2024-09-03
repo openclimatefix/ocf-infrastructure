@@ -72,11 +72,6 @@ variable "sentry_monitor_dsn_api" {
   description = "DSN for Sentry monitoring for the api"
 }
 
-variable "sentry_monitor_dsn_siteapi" {
-  type = string
-  description = "DSN for Sentry monitoring for the site api"
-}
-
 variable "forecast_pvnet_version" {
   description = "The Forecast PVnet 2.0 docker version"
 }
