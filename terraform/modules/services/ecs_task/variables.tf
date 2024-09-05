@@ -10,11 +10,6 @@ variable aws-environment {
   description = "Deployment environment"
 }
 
-variable aws-secretsmanager_secret_arn {
-  type = string
-  description = "ARN of the secretsmanager secret to pull environment variables from"
-}
-
 // S3 configuration -------------------------------------------------------
 
 variable s3-buckets {
@@ -61,11 +56,6 @@ variable container-env_vars {
     }
     container-env_vars : "Environment variables to be set in the container"
   EOT
-}
-
-variable container-secret_vars {
-  type = list(string)
-  description = "List of keys to be mounted in the container env from secretsmanager secret"
 }
 
 variable container-command {
@@ -145,4 +135,19 @@ variable "ecs-task_execution_role_arn" {
   description = "The arn of the ECS cluster task execution role."
   type = string
 }
+
+variable ecs-secretsmanager_secrets {
+  type = list(object({
+    id = string
+    secret_policy_arn = string
+    values=list(string)
+  }))
+  description = "ARN of the secretsmanager secret to pull environment variables from.
+  The values will be set as (secret) environment variables in the container.
+  For example { id = 'my-secret,
+  secret_policy_arn = 'arn:aws:iam::123456789012:policy/my-policy',
+  values=['key1', 'key2'] }"
+}
+
+
 
