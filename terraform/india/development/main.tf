@@ -100,6 +100,7 @@ resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
   name = "${local.environment}/huggingface/token"
 }
 
+# TODO temporary import statement remove this
 import {
   to = aws_secretsmanager_secret.huggingface_consumer_secret
   id = "arn:aws:secretsmanager:ap-south-1:008129123253:secret:development/huggingface/token-rke1Kp"
