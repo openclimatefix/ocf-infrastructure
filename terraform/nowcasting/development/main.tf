@@ -164,7 +164,7 @@ module "nwp-national" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
   ]
-  container-secrets_vars = [
+  container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
   values: ["METOFFICE_API_KEY"]}
   ]
@@ -205,7 +205,7 @@ module "nwp-ecmwf" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "uk" },
   ]
-  container-secrets_vars = [
+  container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
   values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]}
   ]
@@ -286,7 +286,7 @@ module "metrics" {
     {"name": "LOGLEVEL", "value": "DEBUG"},
     {"name": "USE_PVNET_GSP_SUM", "value": "true"},
   ]
-  container-secrets_vars = [
+  container-secret_vars = [
   {secret_policy_arn: module.database.forecast-database-secret.arn,
   values: ["DB_URL"]}
   ]
