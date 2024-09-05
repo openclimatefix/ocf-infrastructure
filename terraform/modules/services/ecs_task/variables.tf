@@ -63,6 +63,19 @@ variable container-command {
   description = "Command to run in the container"
 }
 
+variable container-secretsmanager_secrets {
+  type = list(object({
+    id = string
+    secret_policy_arn = string
+    values=list(string)
+  }))
+  description = "ARN of the secretsmanager secret to pull environment variables from.
+  The values will be set as (secret) environment variables in the container.
+  For example { id = 'my-secret,
+  secret_policy_arn = 'arn:aws:iam::123456789012:policy/my-policy',
+  values=['key1', 'key2'] }"
+}
+
 // ECS configuration --------------------------------------------------------
 
 variable ecs-task_name {

@@ -35,10 +35,10 @@ resource "aws_ecs_task_definition" "task_def" {
       command : var.container-command
 
       secrets :  flatten([
-        for _, secret_policy_arn, values  in ecs-secretsmanager_secrets : [
+        for _, secret_policy_arn, values  in container-secretsmanager_secrets : [
             for value, values in values: {
                 name : value
-                valueFrom : "${var.ecs-secretsmanager_secrets}:${value}::"
+                valueFrom : "${secret_policy_arn}:${value}::"
          }
        ]
       ])
