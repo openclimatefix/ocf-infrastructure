@@ -339,9 +339,9 @@ module "forecast-ad" {
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
-    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
+    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${modules3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     # TODO something about Client name
       ]
