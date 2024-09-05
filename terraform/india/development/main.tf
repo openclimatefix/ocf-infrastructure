@@ -13,7 +13,8 @@
 # 4.1 - ECS task definition for the GFS consumer
 # 4.2 - ECS task definition for Collection RUVNL data
 # 4.3 - Satellite Consumer
-# 4.4 - ECS task definition for the Forecast
+# 4.4 - ECS task definition for the Forecast - Client RU
+# 4.5 - ECS task definition for the Forecast - Client AD
 # 5.0 - Airflow EB Instance
 # 5.1 - India API EB Instance
 # 5.2 - India Analysis Dashboard
@@ -262,7 +263,7 @@ module "satellite_consumer_ecs" {
 
 
 
-# 4.4 - Forecast
+# 4.4 - Forecast - Client RU
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 
@@ -299,6 +300,53 @@ module "forecast" {
   loglevel                    = "INFO"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   sentry_dsn= var.sentry_dsn
+}
+
+# 4.5 - Forecast - Client AD
+module "forecast-ad" {
+  source = "../../modules/services/ecs_task"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.huggingface_consumer_secret.arn
+
+  s3-buckets = [
+    {
+      id : module.s3-satellite-bucket.bucket_id,
+      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
+    },
+    {
+      id : module.s3-nwp-bucket.bucket_id,
+      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
+    }
+  ]
+
+  ecs-task_name               = "client-ad"
+  ecs-task_type               = "forecast"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 3072
+    cpu    = 1024
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name": "NWP_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/${var.s3_nwp_bucket.datadir}/latest.zarr"},
+    { "name": "NWP_ECMWF_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/ecmwf/data/latest.zarr"},
+    { "name": "NWP_GFS_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/gfs/data/latest.zarr"},
+    { "name": "SATELLITE_ZARR_PATH", "value":"s3://${var.s3_satellite_bucket.bucket_id}/${var.s3_satellite_bucket.datadir}/latest.zarr.zip"},
+    { "name": "SENTRY_DSN",  "value": var.sentry_dsn},
+    # TODO something about Client name
+      ]
+  ]
+  container-secret_vars = ["HUGGINGFACE_TOKEN"]
+  container-tag         = var.forecast-client-ad
+  container-name        = "india_forecast_app"
+  container-registry    = "openclimatefix"
+  container-command     = []
 }
 
 # 5.0
