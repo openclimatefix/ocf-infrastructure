@@ -350,7 +350,16 @@ module "forecast-ad" {
     # TODO something about Client name
       ]
   ]
-  container-secret_vars = ["HUGGINGFACE_TOKEN"]
+  container-secrets = [
+  {id:"huggingface",
+        secret_policy_arn: aws_secretsmanager_secret.huggingface_consumer_secret.arn,
+        values: ["HUGGINGFACE_TOKEN"]
+       },
+       {id:"rds",
+        secret_policy_arn: module.postgres-rds.secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
   container-tag         = var.forecast-client-ad
   container-name        = "india_forecast_app"
   container-registry    = "openclimatefix"
