@@ -150,7 +150,6 @@ module "nwp-national" {
 
   aws-region                     = var.region
   aws-environment                = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -165,7 +164,11 @@ module "nwp-national" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
   ]
-  container-secret_vars = ["METOFFICE_API_KEY"]
+  container-secrets = [
+  {id:"nwp",
+  secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
+  values: ["METOFFICE_API_KEY"]}
+  ]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
@@ -189,7 +192,6 @@ module "nwp-ecmwf" {
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [{
     id : module.s3.s3-nwp-bucket.id
@@ -204,7 +206,11 @@ module "nwp-ecmwf" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "uk" },
   ]
-  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+  container-secrets = [
+  {id:"nwp",
+  secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
+  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]}
+  ]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
@@ -264,7 +270,6 @@ module "metrics" {
 
   aws-environment = local.environment
   aws-region = var.region
-  aws-secretsmanager_secret_arn = module.database.forecast-database-secret.arn
 
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_name = "metrics"
@@ -283,7 +288,11 @@ module "metrics" {
     {"name": "LOGLEVEL", "value": "DEBUG"},
     {"name": "USE_PVNET_GSP_SUM", "value": "true"},
   ]
-  container-secret_vars = ["DB_URL"]
+  container-secrets = [
+  {id:"rds",
+  secret_policy_arn: module.database.forecast-database-secret.arn,
+  values: ["DB_URL"]}
+  ]
   s3-buckets = []
 }
 

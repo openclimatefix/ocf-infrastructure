@@ -34,12 +34,15 @@ resource "aws_ecs_task_definition" "task_def" {
       environment : var.container-env_vars
       command : var.container-command
 
-      secrets : [
-        for key in var.container-secret_vars : {
-          name : key
-          valueFrom : "${var.aws-secretsmanager_secret_arn}:${key}::"
-        }
-      ]
+      secrets :  flatten([
+        for secret in var.container-secrets : [
+            for value in secret.values: {
+                name : value
+                valueFrom : "${secret.secret_policy_arn}:${value}::"
+         }
+       ]
+      ])
+
 
       logConfiguration : {
         "logDriver" : "awslogs",
