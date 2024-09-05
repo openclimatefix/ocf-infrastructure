@@ -347,7 +347,7 @@ module "forecast-ad" {
     { "name": "SENTRY_DSN",  "value": var.sentry_dsn},
     # TODO something about Client name
       ]
-  ]
+
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.huggingface_consumer_secret.arn,
         values: ["HUGGINGFACE_TOKEN"]
