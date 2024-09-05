@@ -134,10 +134,9 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
   ]
-  container-secrets = [
-  {id: "nwp",
-        secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
-        values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+  container-secret_vars = [
+  {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
+  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
        }]
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
@@ -179,7 +178,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
   ]
-  container-secrets = []
+  container-secret_vars = []
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
@@ -216,7 +215,7 @@ module "ruvnl_consumer_ecs" {
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
   ]
-  container-secrets = [{id:"rds",
+  container-secret_vars = [{
         secret_policy_arn: module.postgres-rds.secret.arn,
         values: ["DB_URL"]
        }]
@@ -258,9 +257,8 @@ module "satellite_consumer_ecs" {
     { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
   ]
-  container-secrets = [
-  {id:"satellite",
-        secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
+  container-secret_vars = [
+  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
         values: ["API_KEY", "API_SECRET"]
        }]
   container-tag         = var.satellite-consumer

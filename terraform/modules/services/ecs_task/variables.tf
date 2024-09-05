@@ -63,16 +63,15 @@ variable container-command {
   description = "Command to run in the container"
 }
 
-variable container-secrets {
+variable container-secret_vars {
   type = list(object({
-    id = string
     secret_policy_arn = string
     values=list(string)
   }))
   description = <<EOH
   ARN of the secretsmanager secret to pull environment variables from.
   The values will be set as (secret) environment variables in the container.
-  For example { id = 'my-secret,
+  For example {
   secret_policy_arn = 'arn:aws:iam::123456789012:policy/my-policy',
   values=['key1', 'key2'] }
   EOH
