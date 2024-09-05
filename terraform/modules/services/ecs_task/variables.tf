@@ -63,9 +63,8 @@ variable container-command {
   description = "Command to run in the container"
 }
 
-variable container-secrets {
+variable container-secrets_vars {
   type = list(object({
-    id = string
     secret_policy_arn = string
     values=list(string)
   }))
