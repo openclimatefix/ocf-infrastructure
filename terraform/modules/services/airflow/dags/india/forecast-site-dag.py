@@ -50,3 +50,27 @@ with DAG(f'{region}-runvl-forecast', schedule_interval=f"0 {hours} * * *", defau
     )
 
     latest_only >> [forecast]
+
+with DAG(f'{region}-runvl-forecast', schedule_interval=f"0 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+    dag.doc_md = "Run the forecast for client AD"
+
+    latest_only = LatestOnlyOperator(task_id="latest_only")
+
+    forecast = EcsRunTaskOperator(
+        task_id=f'{region}-forecast',
+        task_definition='client-ad-forecast',
+        cluster=cluster,
+        overrides={},
+        launch_type = "FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        on_failure_callback=on_failure_callback,
+     task_concurrency = 10,
+    )
+
+    latest_only >> [forecast]
