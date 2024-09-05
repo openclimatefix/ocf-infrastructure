@@ -113,11 +113,14 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 
   ecs-task_name               = "nwp-consumer-ecmwf-india"
   ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-secretsmanager_secrets
+    = [{id:nwp,
+        secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
+        values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+       }]
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -134,7 +137,6 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
   ]
-  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
@@ -159,10 +161,10 @@ module "nwp_consumer_gfs_live_ecs_task" {
     storage = 60
   }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-secretsmanager_secrets = []
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -208,6 +210,11 @@ module "ruvnl_consumer_ecs" {
     cpu    = 256
     storage = 21
   }
+  ecs-secretsmanager_secrets
+    = [{id:rds,
+        secret_policy_arn: module.postgres-rds.secret.arn,
+        values: ["DB_URL"]
+       }]
 
   s3-buckets = []
   container-env_vars = [
@@ -229,7 +236,6 @@ module "satellite_consumer_ecs" {
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.satellite_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -246,6 +252,11 @@ module "satellite_consumer_ecs" {
     cpu    = 1024
     storage = 21
   }
+  ecs-secretsmanager_secrets
+    = [{id:satellite,
+        secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
+        values: ["API_KEY", "API_SECRET"]
+       }]
 
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
@@ -308,7 +319,6 @@ module "forecast-ad" {
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.huggingface_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -329,6 +339,15 @@ module "forecast-ad" {
     cpu    = 1024
     storage = 21
   }
+  ecs-secretsmanager_secrets
+    = [{id:rds,
+        secret_policy_arn: module.postgres-rds.secret.arn,
+        values: ["DB_URL"]
+       },{
+       {id:hf,
+        secret_policy_arn: aws_secretsmanager_secret.huggingface_consumer_secret.arn,
+        values: ["HUGGINGFACE_TOKEN"]}
+       ]
 
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
@@ -339,9 +358,11 @@ module "forecast-ad" {
     { "name": "NWP_GFS_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/gfs/data/latest.zarr"},
     { "name": "SATELLITE_ZARR_PATH", "value":"s3://${var.s3_satellite_bucket.bucket_id}/${var.s3_satellite_bucket.datadir}/latest.zarr.zip"},
     { "name": "SENTRY_DSN",  "value": var.sentry_dsn},
+
     # TODO something about Client name
       ]
   ]
+  # TODO need to add the secret for the database
   container-secret_vars = ["HUGGINGFACE_TOKEN"]
   container-tag         = var.forecast-client-ad
   container-name        = "india_forecast_app"
