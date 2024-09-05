@@ -103,9 +103,9 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
+
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -122,7 +122,10 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
   ]
-  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+  container-secret_vars = [
+  {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
+  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+       }]
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
@@ -150,7 +153,6 @@ module "nwp_consumer_gfs_live_ecs_task" {
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -186,7 +188,6 @@ module "ruvnl_consumer_ecs" {
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
 
   ecs-task_name               = "runvl-consumer"
   ecs-task_type               = "consumer"
@@ -202,7 +203,10 @@ module "ruvnl_consumer_ecs" {
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
   ]
-  container-secret_vars = ["DB_URL"]
+  container-secret_vars = [{
+        secret_policy_arn: module.postgres-rds.secret.arn,
+        values: ["DB_URL"]
+       }]
   container-tag         = var.version-runvl-consumer
   container-name        = "ruvnl_consumer_app"
   container-registry    = "openclimatefix"
@@ -217,7 +221,6 @@ module "satellite_consumer_ecs" {
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.satellite_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -242,7 +245,10 @@ module "satellite_consumer_ecs" {
     { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
   ]
-  container-secret_vars = ["API_KEY", "API_SECRET"]
+  container-secret_vars = [
+  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
+        values: ["API_KEY", "API_SECRET"]
+       }]
   container-tag         = var.satellite-consumer
   container-name        = "satip"
   container-registry    = "openclimatefix"
