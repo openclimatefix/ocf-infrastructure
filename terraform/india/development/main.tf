@@ -8,14 +8,15 @@
 # 2.1 - S3 bucket for Satellite data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - Secret containing environment variables for the Satellite consumer
-# 3.2 - ECS task definition for the NWP consumer
-# 3.3 - ECS task definition for the GFS consumer
-# 3.4 - ECS task definition for Collection RUVNL data
-# 3.5 - Satellite Consumer
-# 3.6 - ECS task definition for the Forecast
-# 4.0 - Airflow EB Instance
-# 5.0 - India API EB Instance
-# 5.1 - India Analysis Dashboard
+# 3.2 - Secret containing HF read access
+# 4.0 - ECS task definition for the NWP consumer
+# 4.1 - ECS task definition for the GFS consumer
+# 4.2 - ECS task definition for Collection RUVNL data
+# 4.3 - Satellite Consumer
+# 4.4 - ECS task definition for the Forecast
+# 5.0 - Airflow EB Instance
+# 5.1 - India API EB Instance
+# 5.2 - India Analysis Dashboard
 
 locals {
   environment = "development"
@@ -94,8 +95,17 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
 }
 
+# 3.1
+resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
+  name = "${local.environment}/huggingface/token"
+}
 
-# 3.2
+import {
+  to = aws_secretsmanager_secret.huggingface_consumer_secret
+  id = "arn:aws:secretsmanager:ap-south-1:008129123253:secret:development/huggingface/token-rke1Kp"
+}
+
+# 4.0
 module "nwp_consumer_ecmwf_live_ecs_task" {
   source = "../../modules/services/ecs_task"
 
@@ -135,7 +145,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
 }
 
-# 3.3
+# 4.1
 module "nwp_consumer_gfs_live_ecs_task" {
   source = "../../modules/services/ecs_task"
 
@@ -180,7 +190,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
 
 
 
-# 3.4
+# 4.2
 module "ruvnl_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
@@ -211,7 +221,7 @@ module "ruvnl_consumer_ecs" {
   ]
 }
 
-# 3.5 - Satellite Consumer
+# 4.3 - Satellite Consumer
 module "satellite_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
@@ -251,7 +261,7 @@ module "satellite_consumer_ecs" {
 
 
 
-# 3.6 - Forecast
+# 4.4 - Forecast
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 
@@ -290,7 +300,7 @@ module "forecast" {
   sentry_dsn= var.sentry_dsn
 }
 
-# 4.0
+# 5.0
 module "airflow" {
   source                    = "../../modules/services/airflow"
   aws-environment           = local.environment
@@ -307,7 +317,7 @@ module "airflow" {
   dags_folder               = "india"
 }
 
-# 5.0
+# 5.1
 module "india-api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
@@ -331,7 +341,7 @@ module "india-api" {
   ]
 }
 
-# 5.1
+# 5.2
 module "analysis_dashboard" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
