@@ -339,11 +339,10 @@ module "forecast-ad" {
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name": "NWP_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/${var.s3_nwp_bucket.datadir}/latest.zarr"},
-    { "name": "NWP_ECMWF_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/ecmwf/data/latest.zarr"},
-    { "name": "NWP_GFS_ZARR_PATH", "value":"s3://${var.s3_nwp_bucket.bucket_id}/gfs/data/latest.zarr"},
-    { "name": "SATELLITE_ZARR_PATH", "value":"s3://${var.s3_satellite_bucket.bucket_id}/${var.s3_satellite_bucket.datadir}/latest.zarr.zip"},
-    { "name": "SENTRY_DSN",  "value": var.sentry_dsn},
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
+    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     # TODO something about Client name
       ]
 
