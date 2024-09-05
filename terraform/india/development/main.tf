@@ -314,7 +314,6 @@ module "forecast-ad" {
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.huggingface_consumer_secret.arn
 
   s3-buckets = [
     {
