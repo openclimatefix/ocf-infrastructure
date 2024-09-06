@@ -96,7 +96,7 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
 }
 
-# 3.1
+# 3.2
 resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
   name = "${local.environment}/huggingface/token"
 }
@@ -343,8 +343,8 @@ module "forecast-ad" {
     { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
     { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name" : "USE_SATELLITE", "value": "True"}
-    # TODO something about Client name
+    { "name" : "USE_SATELLITE", "value": "True"},
+    { "name" : "CLIENT_NAME", "value": "ad"}
       ]
 
   container-secret_vars = [
@@ -355,7 +355,7 @@ module "forecast-ad" {
         values: ["DB_URL"]
        }
        ]
-       
+
   container-tag         = var.version-forecast-ad
   container-name        = "india_forecast_app"
   container-registry    = "openclimatefix"
