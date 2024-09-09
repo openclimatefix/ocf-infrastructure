@@ -13,7 +13,8 @@
 # 4.1 - ECS task definition for the GFS consumer
 # 4.2 - ECS task definition for Collection RUVNL data
 # 4.3 - Satellite Consumer
-# 4.4 - ECS task definition for the Forecast
+# 4.4 - ECS task definition for the Forecast - Client RU
+# 4.5 - ECS task definition for the Forecast - Client AD
 # 5.0 - Airflow EB Instance
 # 5.1 - India API EB Instance
 # 5.2 - India Analysis Dashboard
@@ -95,7 +96,7 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
 }
 
-# 3.1
+# 3.2
 resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
   name = "${local.environment}/huggingface/token"
 }
@@ -268,7 +269,7 @@ module "satellite_consumer_ecs" {
 
 
 
-# 4.4 - Forecast
+# 4.4 - Forecast - Client RU
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 
@@ -307,6 +308,62 @@ module "forecast" {
   sentry_dsn= var.sentry_dsn
 }
 
+
+# 4.5 - Forecast - Client AD
+module "forecast-ad" {
+  source = "../../modules/services/ecs_task"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3-satellite-bucket.bucket_id,
+      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
+    },
+    {
+      id : module.s3-nwp-bucket.bucket_id,
+      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
+    }
+  ]
+
+  ecs-task_name               = "client-ad"
+  ecs-task_type               = "forecast"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 3072
+    cpu    = 1024
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
+    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    { "name" : "USE_SATELLITE", "value": "True"},
+    { "name" : "CLIENT_NAME", "value": "ad"}
+      ]
+
+  container-secret_vars = [
+  {secret_policy_arn: aws_secretsmanager_secret.huggingface_consumer_secret.arn,
+        values: ["HUGGINGFACE_TOKEN"]
+       },
+       {secret_policy_arn: module.postgres-rds.secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
+
+  container-tag         = var.version-forecast-ad
+  container-name        = "india_forecast_app"
+  container-registry    = "openclimatefix"
+  container-command     = []
+}
+
+    
 # 5.0
 module "airflow" {
   source                    = "../../modules/services/airflow"
