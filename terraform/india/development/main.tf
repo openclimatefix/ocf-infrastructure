@@ -327,7 +327,7 @@ module "forecast-ad" {
     }
   ]
 
-  ecs-task_name               = "client-ad"
+  ecs-task_name               = "forecast-ad"
   ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   ecs-task_size = {

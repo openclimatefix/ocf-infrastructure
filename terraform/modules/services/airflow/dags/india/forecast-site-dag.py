@@ -58,7 +58,7 @@ with DAG(f'{region}-ad-forecast', schedule_interval=f"0 * * * *", default_args=d
 
     forecast = EcsRunTaskOperator(
         task_id=f'{region}-forecast',
-        task_definition='client-ad-forecast',
+        task_definition='forecast-ad',
         cluster=cluster,
         overrides={},
         launch_type = "FARGATE",
