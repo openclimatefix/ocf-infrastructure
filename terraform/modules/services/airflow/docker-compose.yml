@@ -22,7 +22,7 @@ services:
     image: apache/airflow:2.6.2
     container_name: airflow-scheduler
     command: scheduler
-    restart: on-failure
+    restart: always
     ports:
       - "8793:8793"
     environment:
