@@ -214,6 +214,8 @@ module "ruvnl_consumer_ecs" {
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [{
         secret_policy_arn: module.postgres-rds.secret.arn,
