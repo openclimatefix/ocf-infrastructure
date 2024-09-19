@@ -46,6 +46,11 @@ variable "analysis_dashboard_version" {
     default = "main"
 }
 
+variable "sentry_dsn" {
+  type = string
+  description = "DNS for Sentry monitoring"
+}
+
 variable "auth_domain" {
   description = "The Auth domain that should be used"
   default = "not-set"
