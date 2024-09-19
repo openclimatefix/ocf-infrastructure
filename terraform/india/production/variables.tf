@@ -28,6 +28,12 @@ variable version-forecast {
     description = "Container image tag of the forecast to use: openclimatefix/forecast"
 }
 
+variable version-forecast-ad {
+  type = string
+  default = "0.1.0"
+  description = "Container image tag of the forecast ad to use: openclimatefix/forecast"
+}
+
 variable version-runvl-consumer {
     type = string
     default = "0.0.1"
