@@ -326,6 +326,8 @@ module "national_forecast" {
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
     datadir                = "data-national"
   }
+
+  sentry_dsn = var.sentry_dsn_backend
 }
 
 # 4.4
@@ -400,6 +402,7 @@ module "forecast_pvnet_day_ahead" {
   loglevel      = "INFO"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   day_ahead_model = "true"
+  sentry_dsn = var.sentry_dsn_backend
 }
 
 # 5.1
@@ -553,6 +556,7 @@ module "pvsite_forecast" {
     datadir                = "data-national"
   }
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn_backend
 }
 
 # 6.5
