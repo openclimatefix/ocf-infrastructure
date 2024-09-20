@@ -163,6 +163,8 @@ module "nwp-national" {
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
@@ -204,6 +206,8 @@ module "nwp-ecmwf" {
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "uk" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,

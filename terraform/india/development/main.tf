@@ -133,6 +133,8 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [
   {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
@@ -177,6 +179,8 @@ module "nwp_consumer_gfs_live_ecs_task" {
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = []
   container-tag         = var.version-nwp
@@ -258,6 +262,8 @@ module "satellite_consumer_ecs" {
     { "name" : "USE_IODC", "value" : "True" },
     { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
