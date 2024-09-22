@@ -226,18 +226,44 @@ module "nwp-ecmwf" {
 }
 
 # 3.4 Sat Consumer
-module "sat" {
-  source = "../../modules/services/sat"
+module "satellite_consumer_ecs" {
+  source = "../../modules/services/ecs_task"
 
-  region                  = var.region
-  environment             = local.environment
-  iam-policy-s3-sat-write = module.s3.iam-policy-s3-sat-write
-  s3-bucket               = module.s3.s3-sat-bucket
-  public_subnet_ids       = module.networking.public_subnet_ids
-  docker_version          = var.sat_version
-  database_secret         = module.database.forecast-database-secret
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3-satellite-bucket.bucket_id,
+      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
+    }
+  ]
+
+  ecs-task_name               = "sat-consumer"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 5120
+    cpu    = 1024
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
+    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
+        values: ["API_KEY", "API_SECRET"]
+       }]
+  container-tag         = var.satellite-consumer
+  container-name        = "satip"
+  container-registry    = "openclimatefix"
+  container-command     = []
 }
 
 # 3.5
