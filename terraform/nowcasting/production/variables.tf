@@ -67,7 +67,7 @@ variable "national_forecast_version" {
   description = "The National Forecast version"
 }
 
-variable "sentry_monitor_dsn_api" {
+variable "sentry_dsn_api" {
   type = string
   description = "DSN for Sentry monitoring for the api"
 }

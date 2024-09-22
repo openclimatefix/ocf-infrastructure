@@ -94,7 +94,7 @@ module "api" {
   container-env_vars = [
     { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_api },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
@@ -161,6 +161,8 @@ module "nwp-national" {
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["METOFFICE_API_KEY"]
   container-tag         = var.nwp_version
@@ -202,6 +204,8 @@ module "nwp-ecmwf" {
     { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "ECMWF_AREA", "value" : "uk" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
   container-tag         = var.nwp_version
@@ -278,6 +282,8 @@ module "metrics" {
   container-env_vars = [
     {"name": "LOGLEVEL", "value": "DEBUG"},
     {"name": "USE_PVNET_GSP_SUM", "value": "true"},
+    {"name": "SENTRY_DSN", "value": var.sentry_dsn},
+    {"name": "ENVIRONMENT", "value": local.enviornment},
   ]
   container-secret_vars = ["DB_URL"]
   s3-buckets = []
@@ -312,6 +318,7 @@ module "national_forecast" {
     datadir                = "data-national"
   }
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn
 }
 
 # 4.4
@@ -348,6 +355,7 @@ module "forecast_pvnet" {
   loglevel      = "INFO"
   pvnet_gsp_sum = "true"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn
 }
 
 
@@ -385,6 +393,7 @@ module "forecast_pvnet_day_ahead" {
   loglevel      = "INFO"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   day_ahead_model = "true"
+  sentry_dsn = var.sentry_dsn
 }
 
 # 5.1
@@ -405,6 +414,7 @@ module "analysis_dashboard" {
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
     { "name" : "REGION", "value": local.domain},
     { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
   ]
   container-name = "analysis-dashboard" 
   container-tag  = var.internal_ui_version
@@ -483,7 +493,7 @@ module "pvsite_api" {
     { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
     { "name" : "FAKE", "value" : "0" },
     { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_api },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
@@ -534,6 +544,7 @@ module "pvsite_forecast" {
     datadir                = "data-national"
   }
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn
 }
 
 # 6.5
