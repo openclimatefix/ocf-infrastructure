@@ -293,7 +293,7 @@ module "metrics" {
 
 # 4.3
 module "national_forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=942fc1e"
 
   region      = var.region
   environment = local.environment
@@ -323,7 +323,7 @@ module "national_forecast" {
 
 # 4.4
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=7678388"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=942fc1e"
 
   region      = var.region
   environment = local.environment
@@ -361,7 +361,7 @@ module "forecast_pvnet" {
 
 # 4.5
 module "forecast_pvnet_day_ahead" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=4d421e0"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=942fc1e"
 
   region      = var.region
   environment = local.environment
@@ -519,7 +519,7 @@ module "pvsite_ml_bucket" {
 
 # 6.4
 module "pvsite_forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=942fc1e"
 
   region      = var.region
   environment = local.environment
