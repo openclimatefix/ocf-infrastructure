@@ -267,7 +267,7 @@ module "satellite_consumer_ecs" {
   {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
         values: ["API_KEY", "API_SECRET"]
        }]
-  container-tag         = var.satellite-consumer
+  container-tag         = var.sat_version
   container-name        = "satip"
   container-registry    = "openclimatefix"
   container-command     = []
