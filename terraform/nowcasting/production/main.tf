@@ -283,7 +283,7 @@ module "metrics" {
     {"name": "LOGLEVEL", "value": "DEBUG"},
     {"name": "USE_PVNET_GSP_SUM", "value": "true"},
     {"name": "SENTRY_DSN", "value": var.sentry_dsn},
-    {"name": "ENVIRONMENT", "value": local.enviornment},
+    {"name": "ENVIRONMENT", "value": local.environment},
   ]
   container-secret_vars = ["DB_URL"]
   s3-buckets = []
