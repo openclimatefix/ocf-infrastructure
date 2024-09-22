@@ -241,14 +241,14 @@ module "satellite_consumer_ecs" {
 
   s3-buckets = [
     {
-      id : module.s3-satellite-bucket.bucket_id,
-      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
+      id : module.s3.s3-sat-bucket.bucket_id,
+      access_policy_arn : module.s3.s3-sat-bucket.iam-policy-s3-sat-write
     }
   ]
 
   ecs-task_name               = "sat-consumer"
   ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
     memory = 5120
     cpu    = 1024
@@ -258,8 +258,8 @@ module "satellite_consumer_ecs" {
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
-    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
+    { "name" : "SAVE_DIR", "value" : "s3://${module.s3.s3-sat-bucket.bucket_id}/data" },
+    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.bucket_id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
