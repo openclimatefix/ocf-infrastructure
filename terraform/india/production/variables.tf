@@ -52,6 +52,12 @@ variable "sentry_dsn" {
   default = ""
 }
 
+variable "sentry_dsn_api" {
+  type = string
+  description = "DNS for Sentry monitoring"
+  default=""
+}
+
 variable "auth_domain" {
   description = "The Auth domain that should be used"
   default = "not-set"
