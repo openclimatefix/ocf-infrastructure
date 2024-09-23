@@ -457,7 +457,7 @@ module "forecast_blend" {
 
   container-env_vars = [
         {"name": "LOGLEVEL", "value" : "INFO"},
-        {"name": "OCF_ENVIRONMENT", "value": var.environment},
+        {"name": "OCF_ENVIRONMENT", "value": local.environment},
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
   ]
