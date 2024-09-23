@@ -117,7 +117,7 @@ variable "forecast_pvnet_day_ahead_docker_version" {
   default = "not-set"
 }
 
-variable "sentry_dsn_backend" {
+variable "sentry_dsn_api" {
   type = string
   description = "The Sentry DSN for all backend components"
   default = ""
