@@ -33,7 +33,7 @@ with DAG(f'{region}-runvl-forecast', schedule_interval=f"0 {hours} * * *", defau
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     forecast = EcsRunTaskOperator(
-        task_id=f'{region}-forecast',
+        task_id=f'{region}-forecast-ruvnl',
         task_definition='forecast',
         cluster=cluster,
         overrides={},
@@ -57,7 +57,7 @@ with DAG(f'{region}-ad-forecast', schedule_interval=f"0 * * * *", default_args=d
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     forecast = EcsRunTaskOperator(
-        task_id=f'{region}-forecast',
+        task_id=f'{region}-forecast-ad',
         task_definition='forecast-ad',
         cluster=cluster,
         overrides={},
