@@ -8,11 +8,12 @@
 # 2.1 - S3 bucket for Satellite data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - Secret containing environment variables for the Satellite consumer
-# 3.2 - ECS task definition for the NWP consumer
-# 3.3 - ECS task definition for the GFS consumer
-# 3.4 - ECS task definition for Collection RUVNL data
-# 3.5 - Satellite Consumer
-# 3.6 - ECS task definition for the Forecast
+# 3.2 - Secret containing HF read access
+# 3.3 - ECS task definition for the NWP consumer
+# 3.4 - ECS task definition for the GFS consumer
+# 3.5 - ECS task definition for Collection RUVNL data
+# 3.6 - Satellite Consumer
+# 3.7 - ECS task definition for the Forecast
 # 4.0 - Airflow EB Instance
 # 5.0 - India API EB Instance
 # 5.1 - India Analysis Dashboard
@@ -98,8 +99,18 @@ import {
   id = "arn:aws:secretsmanager:ap-south-1:752135663966:secret:production/data/satellite-consumer-SOZCn1"
 }
 
-
 # 3.2
+resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
+  name = "${local.environment}/huggingface/token"
+}
+
+# TODO temporary import statement remove this
+import {
+  to = aws_secretsmanager_secret.huggingface_consumer_secret
+  id = "arn:aws:secretsmanager:ap-south-1:752135663966:secret:prod/huggingface/token-9lPQsb"
+}
+
+# 3.3
 module "nwp_consumer_ecmwf_live_ecs_task" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -137,7 +148,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
 }
 
-# 3.3
+# 3.4
 module "nwp_consumer_gfs_live_ecs_task" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -181,7 +192,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
 }
 
 
-# 3.4
+# 3.5
 module "ruvnl_consumer_ecs" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -214,7 +225,7 @@ module "ruvnl_consumer_ecs" {
 }
 
 
-# 3.5 - Satellite Consumer
+# 3.6 - Satellite Consumer
 module "satellite_consumer_ecs" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -253,7 +264,7 @@ module "satellite_consumer_ecs" {
 }
 
 
-# 3.6 - Forecast
+# 3.7 - Forecast
 module "forecast" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=42eba24"
 
