@@ -3,7 +3,7 @@
 # 1.0 - VPC and Subnets
 # 1.1 - RDS Postgres database
 # 1.2 - Bastion instance
-# 1.2 - ECS Cluster
+# 1.3 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
 # 2.1 - S3 bucket for Satellite data
 # 3.0 - Secret containing environment variables for the NWP consumer
@@ -48,7 +48,7 @@ module "postgres-rds" {
   engine_version              = "16.3"
 }
 
-# 0.2
+# 1.2
 module "ec2-bastion" {
   source = "../../modules/networking/ec2_bastion"
 
@@ -57,7 +57,7 @@ module "ec2-bastion" {
   public_subnets_id = module.network.public_subnet_ids[0]
 }
 
-# 1.2
+# 1.3
 module "ecs-cluster" {
   source   = "../../modules/ecs_cluster"
   name     = "india-ecs-cluster-${local.environment}"
