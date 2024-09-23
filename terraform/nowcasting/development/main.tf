@@ -242,7 +242,7 @@ module "satellite_consumer_ecs" {
   s3-buckets = [
     {
       id : module.s3.s3-sat-bucket.bucket_id,
-      access_policy_arn : module.s3.s3-sat-bucket.iam-policy-s3-sat-write
+      access_policy_arn : module.s3.iam-policy-s3-sat-write
     }
   ]
 
@@ -258,8 +258,8 @@ module "satellite_consumer_ecs" {
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "SAVE_DIR", "value" : "s3://${module.s3.s3-sat-bucket.bucket_id}/data" },
-    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.bucket_id}/raw" },
+    { "name" : "SAVE_DIR", "value" : "s3://${module.s3.s3-sat-bucket.id}/data" },
+    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
