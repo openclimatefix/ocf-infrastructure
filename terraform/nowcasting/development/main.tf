@@ -289,6 +289,8 @@ module "metrics" {
   container-env_vars = [
     {"name": "LOGLEVEL", "value": "DEBUG"},
     {"name": "USE_PVNET_GSP_SUM", "value": "true"},
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value": local.environment},
   ]
   container-secret_vars = [
   {secret_policy_arn: module.database.forecast-database-secret.arn,
