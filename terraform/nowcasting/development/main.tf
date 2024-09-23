@@ -241,7 +241,7 @@ module "satellite_consumer_ecs" {
 
   s3-buckets = [
     {
-      id : module.s3.s3-sat-bucket.bucket_id,
+      id : module.s3.s3-sat-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-sat-write
     }
   ]
