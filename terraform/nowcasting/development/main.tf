@@ -468,6 +468,7 @@ module "forecast_blend" {
   container-tag         = var.forecast_blend_version
   container-name        = "openclimatefix/uk_pv_forecast_blend"
   s3-buckets = []
+  container-command = []
 }
 
 
