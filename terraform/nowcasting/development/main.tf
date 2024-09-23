@@ -233,7 +233,7 @@ module "nwp-ecmwf" {
 }
 
 # 3.4 Sat Consumer
-module "satellite_consumer_ecs" {
+module "sat" {
   source = "../../modules/services/ecs_task"
 
   aws-region                    = var.region
