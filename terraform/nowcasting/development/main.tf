@@ -441,24 +441,34 @@ module "analysis_dashboard" {
 
 # 4.6
 module "forecast_blend" {
-  source = "../../modules/services/forecast_blend"
+  source = "../../modules/services/ecs_task"
 
-  region      = var.region
-  environment = local.environment
-  app-name    = "forecast_blend"
-  ecs_config  = {
-    docker_image   = "openclimatefix/uk_pv_forecast_blend"
-    docker_version = var.forecast_blend_version
-    memory_mb      = 1024
-    cpu            = 512
-  }
-  rds_config = {
-    database_secret_arn             = module.database.forecast-database-secret.arn
-    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
-  }
-  loglevel = "INFO"
+  ecs-task_name = "forecast-blend"
+  ecs-task_type = "blend"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 512
+    memory = 1024
+    storage = 21
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  container-env_vars = [
+        {"name": "LOGLEVEL", "value" : "INFO"},
+        {"name": "OCF_ENVIRONMENT", "value": var.environment},
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.database.forecast-database-secret.arn,
+  values: ["DB_URL"]}
+  ]
+  container-tag         = var.forecast_blend_version
+  container-name        = "openclimatefix/uk_pv_forecast_blend"
 }
+
 
 # 5.2
 module "airflow" {
