@@ -276,7 +276,7 @@ module "sat" {
 }
 
 # 3.5 Sat Data Tailor clean up
-module "sat" {
+module "sat_clean_up" {
   source = "../../modules/services/ecs_task"
 
   aws-region                    = var.region
