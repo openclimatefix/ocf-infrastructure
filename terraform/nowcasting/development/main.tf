@@ -443,7 +443,7 @@ module "analysis_dashboard" {
 module "forecast_blend" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "forecast"
+  ecs-task_name = "forecast_blend"
   ecs-task_type = "blend"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
