@@ -247,7 +247,7 @@ module "sat" {
     }
   ]
 
-  ecs-task_name               = "sat-consumer"
+  ecs-task_name               = "sat"
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -289,7 +289,7 @@ module "sat_clean_up" {
     }
   ]
 
-  ecs-task_name               = "sat-consumer"
+  ecs-task_name               = "sat-clean-up"
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
