@@ -293,8 +293,8 @@ module "sat_clean_up" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
-    memory = 5120
-    cpu    = 1024
+    memory = 1024
+    cpu    = 512
     storage = 21
   }
 
