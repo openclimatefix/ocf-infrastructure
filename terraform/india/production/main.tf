@@ -388,6 +388,9 @@ module "india-api" {
     { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url},
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "ENVIRONMENT", "value": local.environment},
+
   ]
   container-name = "india-api"
   container-tag  = var.version-india_api
