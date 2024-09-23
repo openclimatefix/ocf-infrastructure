@@ -270,8 +270,8 @@ module "sat" {
         values: ["API_KEY", "API_SECRET"]
        }]
   container-tag         = var.sat_version
-  container-name        = "satip"
-  container-registry    = "openclimatefix"
+  container-name        = "openclimatefix/satip"
+  container-registry = "docker.io"
   container-command     = []
 }
 
@@ -314,8 +314,8 @@ module "sat_clean_up" {
         values: ["API_KEY", "API_SECRET"]
        }]
   container-tag         = var.sat_version
-  container-name        = "satip"
-  container-registry    = "openclimatefix"
+  container-name        = "openclimatefix/satip"
+  container-registry = "docker.io"
   container-command     = []
 }
 
