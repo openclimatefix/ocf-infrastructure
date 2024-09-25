@@ -344,7 +344,7 @@ module "gsp-consumer" {
   ecs-task_size = {
     cpu    = 256
     memory = 512
-    storage = 8
+    storage = 21
   }
 
   aws-region                     = var.region
@@ -378,7 +378,7 @@ module "gsp-consumer-day-after-gsp" {
   ecs-task_size = {
     cpu    = 256
     memory = 512
-    storage = 8
+    storage = 21
   }
 
   aws-region                     = var.region
@@ -412,7 +412,7 @@ module "gsp-consumer-day-after-national" {
   ecs-task_size = {
     cpu    = 256
     memory = 512
-    storage = 8
+    storage = 21
   }
 
   aws-region                     = var.region
