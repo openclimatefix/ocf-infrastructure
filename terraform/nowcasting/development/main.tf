@@ -338,7 +338,7 @@ module "pv" {
 module "gsp-consumer" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "gsp-consumer"
+  ecs-task_name = "gsp"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -372,7 +372,7 @@ module "gsp-consumer" {
 module "gsp-consumer-day-after-gsp" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "gsp-consumer-day-after"
+  ecs-task_name = "gsp-day-after"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
