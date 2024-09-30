@@ -162,6 +162,8 @@ module "nwp-national" {
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["METOFFICE_API_KEY"]
   container-tag         = var.nwp_version
@@ -203,6 +205,8 @@ module "nwp-ecmwf" {
     { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "ECMWF_AREA", "value" : "uk" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
   container-tag         = var.nwp_version
@@ -279,6 +283,8 @@ module "metrics" {
   container-env_vars = [
     {"name": "LOGLEVEL", "value": "DEBUG"},
     {"name": "USE_PVNET_GSP_SUM", "value": "true"},
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["DB_URL"]
   s3-buckets = []
@@ -313,6 +319,7 @@ module "national_forecast" {
     datadir                = "data-national"
   }
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn
 }
 
 # 4.4
@@ -349,6 +356,7 @@ module "forecast_pvnet" {
   loglevel      = "INFO"
   pvnet_gsp_sum = "true"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn
 }
 
 
@@ -386,6 +394,7 @@ module "forecast_pvnet_day_ahead" {
   loglevel      = "INFO"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   day_ahead_model = "true"
+  sentry_dsn = var.sentry_dsn
 }
 
 # 5.1
@@ -406,6 +415,7 @@ module "analysis_dashboard" {
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
     { "name" : "REGION", "value": local.domain},
     { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
   ]
   container-name = "analysis-dashboard" 
   container-tag  = var.internal_ui_version
@@ -536,6 +546,7 @@ module "pvsite_forecast" {
     datadir                = "data-national"
   }
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn
 }
 
 # 6.5
