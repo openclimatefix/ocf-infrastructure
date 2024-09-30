@@ -521,7 +521,7 @@ module "pvsite_ml_bucket" {
 
 # 6.4
 module "pvsite_forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=4d421e0"
 
   region      = var.region
   environment = local.environment
