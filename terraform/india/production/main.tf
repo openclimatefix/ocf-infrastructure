@@ -135,6 +135,8 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "nw-india" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
   container-tag         = var.version-nwp
@@ -177,6 +179,8 @@ module "nwp_consumer_gfs_live_ecs_task" {
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = []
   container-tag         = var.version-nwp
@@ -215,6 +219,8 @@ module "ruvnl_consumer_ecs" {
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["DB_URL"]
   container-tag         = var.version-runvl-consumer
@@ -256,6 +262,8 @@ module "satellite_consumer_ecs" {
     { "name" : "USE_IODC", "value" : "True" },
     { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = ["API_KEY", "API_SECRET"]
   container-tag         = var.satellite-consumer
@@ -300,6 +308,7 @@ module "forecast" {
   }
   loglevel      = "INFO"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  sentry_dsn = var.sentry_dsn
 }
 
 # 4.5 - Forecast - Client AD
