@@ -365,6 +365,7 @@ module "gsp-consumer" {
   ]
   container-tag         = var.gsp_version
   container-name        = "openclimatefix/gspconsumer"
+  container-registry = "docker.io"
   container-command     = []
 }
 
@@ -399,6 +400,7 @@ module "gsp-consumer-day-after-gsp" {
   ]
   container-tag         = var.gsp_version
   container-name        = "openclimatefix/gspconsumer"
+  container-registry = "docker.io"
   container-command     = []
 }
 
@@ -433,6 +435,7 @@ module "gsp-consumer-day-after-national" {
   ]
   container-tag         = var.gsp_version
   container-name        = "openclimatefix/gspconsumer"
+  container-registry = "docker.io"
   container-command     = []
 }
 
