@@ -75,7 +75,7 @@ variable "sentry_monitor_dsn_api" {
 variable "sentry_dsn" {
   type = string
   description = "DNS for Sentry monitoring"
-  default=''
+  default=""
 }
 
 variable "forecast_pvnet_version" {
