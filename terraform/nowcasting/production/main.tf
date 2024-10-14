@@ -361,6 +361,61 @@ module "forecast_pvnet" {
 
 
 # 4.5
+module "forecast_pvnet_ecwmf" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=c676a5d"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-nwp-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
+    }
+  ]
+
+  ecs-task_name               = "forecast_pvnet_ecmwf"
+  ecs-task_type               = "forecast"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 8192
+    cpu    = 2048
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    {"name": "LOGLEVEL", "value" : "INFO"},
+    {"name": "USE_ADJUSTER", "value": "false"},
+    {"name": "SAVE_GSP_SUM", "value": "true"},
+    {"name": "SENTRY_DSN",  "value": var.sentry_dsn},
+    {"name": "RUN_EXTRA_MODELS",  "value": "false"},
+    {"name": "DAY_AHEAD_MODEL",  "value": "false"},
+    {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
+    # soon to be legacy
+    {"name": "USE_SATELLITE",  "value": "false"},
+    {"name": "PVNET_V2_VERSION",  "value": "35d55181a82440bdd087f380d650bfd0b64bd322"},
+    {"name": "PVNET_V2_SUMMATION_VERSION",  "value": "9002baf1e9dc1ec141f3c4a1fa8447b6316a4558"},
+  ]
+
+  container-secret_vars = [
+       {secret_policy_arn: module.database.forecast-database-secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
+
+  container-tag         = var.forecast_pvnet_ecmwf_version
+  container-name        = "openclimatefix/pvnet_app"
+  container-registry    = "docker.io"
+  container-command     = []
+
+}
+
+# 4.6
 module "forecast_pvnet_day_ahead" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=4d421e0"
 
@@ -429,7 +484,7 @@ module "analysis_dashboard" {
   ]
 }
 
-# 4.6
+# 4.7
 module "forecast_blend" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=2747e85"
 
@@ -452,7 +507,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=4d421e0"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=c676a5d"
 
   aws-environment   = local.environment
   aws-domain        = local.domain
