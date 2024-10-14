@@ -604,7 +604,7 @@ source = "../../modules/services/ecs_task"
 
 # 4.6
 module "forecast_pvnet_day_ahead" {
-  source = "../../modules/services/ecs_task"
+  source = "../../modules/services/forecast_generic"
 
   region      = var.region
   environment = local.environment
