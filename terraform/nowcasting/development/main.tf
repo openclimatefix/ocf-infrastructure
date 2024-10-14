@@ -564,7 +564,7 @@ source = "../../modules/services/ecs_task"
 
   ecs-task_name               = "forecast_pvnet_ecmwf"
   ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
     memory = 8192
     cpu    = 2048
