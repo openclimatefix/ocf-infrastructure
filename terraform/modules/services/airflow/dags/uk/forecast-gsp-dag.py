@@ -49,6 +49,24 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
         on_failure_callback=on_failure_callback,
     )
 
+    forecast_ecmwf = EcsRunTaskOperator(
+        task_id=f'{region}-gsp-forecast-pvnet-2-ecwmf',
+        task_definition='forecast_pvnet_ecmwf',
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+        on_failure_callback=on_failure_callback,
+        trigger_rule="all_failed"
+    )
+
     forecast_blend = EcsRunTaskOperator(
         task_id=f'{region}-forecast-blend-pvnet-2',
         task_definition='forecast_blend',
@@ -64,9 +82,11 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
+        trigger_rule="one_success"
     )
 
     latest_only >> forecast >> forecast_blend
+    forecast >> forecast_ecmwf >> forecast_blend
 
 
 with DAG(f'{region}-gsp-forecast-pvnet-day-ahead', schedule_interval="15 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
