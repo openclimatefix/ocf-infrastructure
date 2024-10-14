@@ -362,7 +362,7 @@ module "forecast_pvnet" {
 
 # 4.5
 module "forecast_pvnet_ecwmf" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_blend?ref=c676a5d"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=c676a5d"
 
   aws-region                    = var.region
   aws-environment               = local.environment
