@@ -555,10 +555,6 @@ source = "../../modules/services/ecs_task"
     {
       id : module.s3.s3-nwp-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
-    },
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
     }
   ]
 
@@ -576,9 +572,6 @@ source = "../../modules/services/ecs_task"
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/gfs/data/latest.zarr" },
-    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-national/latest.zarr"},
-    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     {"name": "LOGLEVEL", "value" : "INFO"},
     {"name": "USE_ADJUSTER", "value": "false"},
