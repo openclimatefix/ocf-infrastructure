@@ -585,8 +585,8 @@ source = "../../modules/services/ecs_task"
     {"name": "SAVE_GSP_SUM", "value": "true"},
     {"name": "SENTRY_DSN",  "value": var.sentry_dsn},
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
-    {"name": "DAY_AHEAD_MODEL",  "value": "false"}
-    {"name": "USE_ECMWF_ONLY",  "value": "true"} # THIS IS THE IMPORTANT one
+    {"name": "DAY_AHEAD_MODEL",  "value": "false"},
+    {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
   ]
 
   container-secret_vars = [
