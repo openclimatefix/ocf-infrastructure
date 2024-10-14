@@ -82,6 +82,7 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
+        trigger_rule="one_success"
     )
 
     latest_only >> forecast >> forecast_blend
