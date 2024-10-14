@@ -25,8 +25,9 @@ The componentes ares:
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
 4.4 - Forecast PVnet 2
-4.5 - Forecast PVnet DA
-4.6 - Forecast Blend
+4.5 - Forecast PVnet ECMWF only
+4.6 - Forecast PVnet DA
+4.7 - Forecast Blend
 5.1 - OCF Dashboard
 5.2 - Airflow instance
 6.1 - PVSite database
@@ -544,8 +545,66 @@ module "forecast_pvnet" {
 }
 
 # 4.5
+module "forecast_pvnet_ecwmf" {
+source = "../../modules/services/ecs_task"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-nwp-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
+    },
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    }
+  ]
+
+  ecs-task_name               = "forecast_pvnet_ecmwf"
+  ecs-task_type               = "forecast"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 8192
+    cpu    = 2048
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
+    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/gfs/data/latest.zarr" },
+    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-national/latest.zarr"},
+    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    {"name": "LOGLEVEL", "value" : "INFO"},
+    {"name": "USE_ADJUSTER", "value": "false"},
+    {"name": "SAVE_GSP_SUM", "value": "true"},
+    {"name": "SENTRY_DSN",  "value": var.sentry_dsn},
+    {"name": "RUN_EXTRA_MODELS",  "value": "false"},
+    {"name": "DAY_AHEAD_MODEL",  "value": "false"}
+    {"name": "USE_ECMWF_ONLY",  "value": "true"} # THIS IS THE IMPORTANT one
+  ]
+
+  container-secret_vars = [
+       {secret_policy_arn: module.database.forecast-database-secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
+
+  container-tag         = var.forecast_pvnet_version
+  container-name        = "openclimatefix/pvnet_app"
+  container-registry    = "docker.io"
+  container-command     = []
+
+}
+
+# 4.6
 module "forecast_pvnet_day_ahead" {
-  source = "../../modules/services/forecast_generic"
+  source = "../../modules/services/ecs_task"
 
   region      = var.region
   environment = local.environment
@@ -612,7 +671,7 @@ module "analysis_dashboard" {
   ]
 }
 
-# 4.6
+# 4.7
 module "forecast_blend" {
   source = "../../modules/services/ecs_task"
 
