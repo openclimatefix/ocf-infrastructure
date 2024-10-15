@@ -254,7 +254,7 @@ module "pv" {
 
 # 3.6
 module "gsp-consumer" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
 
   ecs-task_name = "gsp"
   ecs-task_type = "consumer"
@@ -289,7 +289,7 @@ module "gsp-consumer" {
 
 # 3.7
 module "gsp-consumer-day-after-gsp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
 
   ecs-task_name = "gsp-day-after"
   ecs-task_type = "consumer"
@@ -324,7 +324,7 @@ module "gsp-consumer-day-after-gsp" {
 
 # 3.8
 module "gsp-consumer-day-after-national" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
 
   ecs-task_name = "national-day-after"
   ecs-task_type = "consumer"
