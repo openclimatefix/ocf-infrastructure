@@ -15,7 +15,9 @@ The componentes ares:
 3.3 - NWP Consumer (ECMWF UK)
 3.4 - Satellite Consumer
 3.5 - PV Consumer
-3.6 - GSP Consumer (from PVLive)
+3.6 - GSP Consumer (From PVLive)
+3.7 - GSP Consumer - GSP Day After
+3.8 - GSP Consumer - National Day After
 4.1 - Metrics
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
@@ -249,17 +251,110 @@ module "pv" {
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 }
 
-# 3.6
-module "gsp" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/gsp?ref=2747e85"
 
-  region                  = var.region
-  environment             = local.environment
-  public_subnet_ids       = module.networking.public_subnet_ids
-  database_secret         = module.database.forecast-database-secret
-  docker_version          = var.gsp_version
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
-  ecs_task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+# 3.6
+module "gsp-consumer" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
+
+  ecs-task_name = "gsp"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+    storage = 21
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG"},
+    { "name" :"REGIME", "value" : "in-day"},
+    { "name" :"N_GSPS", "value" : "317"}
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.database.forecast-database-secret.arn,
+  values: ["DB_URL"]}
+  ]
+  container-tag         = var.gsp_version
+  container-name        = "openclimatefix/gspconsumer"
+  container-registry = "docker.io"
+  container-command     = []
+}
+
+# 3.7
+module "gsp-consumer-day-after-gsp" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
+
+  ecs-task_name = "gsp-day-after"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+    storage = 21
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG"},
+    { "name" :"REGIME", "value" : "day-after"},
+    { "name" :"N_GSPS", "value" : "317"}
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.database.forecast-database-secret.arn,
+  values: ["DB_URL"]}
+  ]
+  container-tag         = var.gsp_version
+  container-name        = "openclimatefix/gspconsumer"
+  container-registry = "docker.io"
+  container-command     = []
+}
+
+# 3.8
+module "gsp-consumer-day-after-national" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=26e3b29"
+
+  ecs-task_name = "national-day-after"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+    storage = 21
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" :"REGIME", "value" : "day-after"},
+    { "name" :"N_GSPS", "value" : "0"},
+    { "name" :"INCLUDE_NATIONAL", "value" : "True"},
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.database.forecast-database-secret.arn,
+  values: ["DB_URL"]}
+  ]
+  container-tag         = var.gsp_version
+  container-name        = "openclimatefix/gspconsumer"
+  container-registry = "docker.io"
+  container-command     = []
 }
 
 # 4.1
