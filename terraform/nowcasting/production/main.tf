@@ -14,10 +14,11 @@ The componentes ares:
 3.2 - NWP Consumer (MetOffice National)
 3.3 - NWP Consumer (ECMWF UK)
 3.4 - Satellite Consumer
-3.5 - PV Consumer
-3.6 - GSP Consumer (From PVLive)
-3.7 - GSP Consumer - GSP Day After
-3.8 - GSP Consumer - National Day After
+3.5 - Satellite Data Tailor Clean up
+3.6 - PV Consumer
+3.7 - GSP Consumer (From PVLive)
+3.8 - GSP Consumer - GSP Day After
+3.9 - GSP Consumer - National Day After
 4.1 - Metrics
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
@@ -224,22 +225,94 @@ module "nwp-ecmwf" {
   ]
 }
 
+
 # 3.4 Sat Consumer
 module "sat" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/sat?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
 
-  region                  = var.region
-  environment             = local.environment
-  iam-policy-s3-sat-write = module.s3.iam-policy-s3-sat-write
-  s3-bucket               = module.s3.s3-sat-bucket
-  public_subnet_ids       = module.networking.public_subnet_ids
-  docker_version          = var.sat_version
-  database_secret         = module.database.forecast-database-secret
-  iam-policy-rds-read-secret = module.database.iam-policy-forecast-db-read
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
+    }
+  ]
+
+  ecs-task_name               = "sat"
+  ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 5120
+    cpu    = 1024
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SAVE_DIR", "value" : "s3://${module.s3.s3-sat-bucket.id}/data" },
+    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "HISTORY", "value" : "120 minutes" },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
+        values: ["API_KEY", "API_SECRET"]
+       }]
+  container-tag         = var.sat_version
+  container-name        = "openclimatefix/satip"
+  container-registry = "docker.io"
+  container-command     = []
 }
 
-# 3.5
+# 3.5 Sat Data Tailor clean up
+module "sat_clean_up" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
+    }
+  ]
+
+  ecs-task_name               = "sat-clean-up"
+  ecs-task_type               = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 1024
+    cpu    = 512
+    storage = 21
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SAVE_DIR", "value" : "s3://${module.s3.s3-sat-bucket.id}/data" },
+    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "HISTORY", "value" : "120 minutes" },
+    { "name" : "CLEANUP",  "value" : "1" },
+
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
+        values: ["API_KEY", "API_SECRET"]
+       }]
+  container-tag         = var.sat_version
+  container-name        = "openclimatefix/satip"
+  container-registry = "docker.io"
+  container-command     = []
+}
+
+# 3.6
 module "pv" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/pv?ref=60ef9f7"
 
@@ -253,7 +326,7 @@ module "pv" {
 }
 
 
-# 3.6
+# 3.7
 module "gsp-consumer" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
 
@@ -288,7 +361,7 @@ module "gsp-consumer" {
   container-command     = []
 }
 
-# 3.7
+# 3.8
 module "gsp-consumer-day-after-gsp" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
 
@@ -323,7 +396,7 @@ module "gsp-consumer-day-after-gsp" {
   container-command     = []
 }
 
-# 3.8
+# 3.9
 module "gsp-consumer-day-after-national" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f2296a4"
 
