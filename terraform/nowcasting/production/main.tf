@@ -136,12 +136,12 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 
 # 2.3
 resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
-  name = "${local.environment}/data/sat-consumer"
+  name = "${local.environment}/data/satellite-consumer"
 }
 
 import {
   to = aws_secretsmanager_secret.satellite_consumer_secret
-  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/data/sat-consumer-M8mPps"
+  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/data/satellite-consumer-xrLcJN"
 }
 
 # 3.2
