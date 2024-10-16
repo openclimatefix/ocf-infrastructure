@@ -42,8 +42,8 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
         {"name": "ESMFMKFILE",  "value": "/opt/conda/lib/esmf.mk"},
         {"name": "SENTRY_DSN",  "value": var.sentry_dsn},
         {"name": "RUN_EXTRA_MODELS",  "value": var.run_extra_models},
-        {"name": "DAY_AHEAD_MODEL",  "value": var.day_ahead_model}
-        {"name": "USE_OCF_DATA_SAMPLER",  "value": var.use_data_sample}
+        {"name": "DAY_AHEAD_MODEL",  "value": var.day_ahead_model},
+        {"name": "USE_OCF_DATA_SAMPLER",  "value": var.use_data_sample},
       ]
 
       secrets : [
