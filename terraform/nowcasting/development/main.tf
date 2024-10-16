@@ -573,10 +573,8 @@ source = "../../modules/services/ecs_task"
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    {"name": "LOGLEVEL", "value" : "INFO"},
     {"name": "USE_ADJUSTER", "value": "false"},
     {"name": "SAVE_GSP_SUM", "value": "true"},
-    {"name": "SENTRY_DSN",  "value": var.sentry_dsn},
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "false"},
     {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
@@ -592,7 +590,6 @@ source = "../../modules/services/ecs_task"
   container-name        = "openclimatefix/pvnet_app"
   container-registry    = "docker.io"
   container-command     = []
-
 }
 
 # 4.6
