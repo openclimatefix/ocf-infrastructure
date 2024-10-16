@@ -136,7 +136,7 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 
 # 2.3
 resource "aws_secretsmanager_secret" "sat_consumer_secret" {
-  name = "${local.environment}/data/satellite-consumer"
+  name = "${local.environment}/data/sat-consumer"
 }
 
 import {
