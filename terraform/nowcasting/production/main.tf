@@ -141,7 +141,7 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
 
 import {
   to = aws_secretsmanager_secret.satellite_consumer_secret
-  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/consumer/sat-Yxeyc2"
+  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/data/sat-Yxeyc2"
 }
 
 # 3.2
