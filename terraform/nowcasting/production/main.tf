@@ -10,7 +10,8 @@ The componentes ares:
 0.5 - S3 bucket for forecasters
 1.1 - API
 2.1 - Database
-3.1 - NWP Consumer (MetOffice GSP)
+2.2 - NWP Consumer Secret
+2.3 - Satellite Consumer Secret
 3.2 - NWP Consumer (MetOffice National)
 3.3 - NWP Consumer (ECMWF UK)
 3.4 - Satellite Consumer
@@ -128,14 +129,19 @@ module "database" {
   engine_version       = "15.7"
 }
 
-# 3.0
+# 2.2
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
   name = "${local.environment}/data/nwp-consumer"
 }
 
+# 2.3
+resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
+  name = "${local.environment}/data/satellite-consumer"
+}
+
 import {
-  to = aws_secretsmanager_secret.nwp_consumer_secret
-  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/data/nwp-consumer-OwpzFS"
+  to = aws_secretsmanager_secret.satellite_consumer_secret
+  id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:production/consumer/sat-Yxeyc2"
 }
 
 # 3.2
