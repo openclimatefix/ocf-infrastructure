@@ -135,13 +135,13 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 }
 
 # 2.3
-resource "aws_secretsmanager_secret" "sat_consumer_secret" {
-  name = "${local.environment}/data/sat-consumer"
+resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
+  name = "${local.environment}/data/satellite-consumer"
 }
 
 import {
-  to = aws_secretsmanager_secret.sat_consumer_secret
-  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/data/satellite-consumer-5BCylq"
+  to = aws_secretsmanager_secret.satellite_consumer_secret
+  id = "arn:aws:secretsmanager:eu-west-1:752135663966:secret:production/data/satellite-consumer-xrLcJN"
 }
 
 # 3.2
@@ -265,7 +265,7 @@ module "sat" {
     { "name" : "HISTORY", "value" : "120 minutes" },
   ]
   container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.sat_consumer_secret.arn,
+  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
         values: ["API_KEY", "API_SECRET"]
        }]
   container-tag         = var.sat_version
@@ -309,7 +309,7 @@ module "sat_clean_up" {
 
   ]
   container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.sat_consumer_secret.arn,
+  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
         values: ["API_KEY", "API_SECRET"]
        }]
   container-tag         = var.sat_version
