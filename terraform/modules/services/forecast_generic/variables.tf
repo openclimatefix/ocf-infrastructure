@@ -146,3 +146,9 @@ variable "day_ahead_model" {
   description = "Whether to run the day ahead model"
   default     = "false"
 }
+
+variable "use_data_sample" {
+  type        = string
+  description = "Whether to use-data-sampler or not"
+  default     = "false"
+}
