@@ -15,14 +15,6 @@ resource "aws_ecs_task_definition" "task_def" {
     type = "ecs"
   }
 
-  volume {
-    name = "${var.ecs-task_name}-temp-data"
-  }
-
-  ephemeral_storage {
-    size_in_gib = var.ecs-task_size.storage
-  }
-
   task_role_arn         = aws_iam_role.run_task_role.arn
   execution_role_arn    = var.ecs-task_execution_role_arn
   container_definitions = jsonencode([
@@ -52,13 +44,6 @@ resource "aws_ecs_task_definition" "task_def" {
           "awslogs-stream-prefix" : "streaming"
         }
       }
-
-      mountPoints : [
-        {
-          "containerPath" : "/tmp/nwpc",
-          "sourceVolume" : "${var.ecs-task_name}-temp-data"
-        }
-      ]
     }
   ])
 }
