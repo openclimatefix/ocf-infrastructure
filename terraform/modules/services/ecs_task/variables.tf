@@ -103,7 +103,7 @@ variable ecs-task_size {
       cpu : "CPU units for the ECS task"
       memory : "Memory units (MB) for the ECS task"
     }
-    ecs-task_size: "Size of the ECS task in terms of compute, memory, and ephemeral storage."
+    ecs-task_size: "Size of the ECS task in terms of compute, and memory."
   EOT
 
   default = {
@@ -112,8 +112,8 @@ variable ecs-task_size {
   }
   
   validation {
-    condition = length(keys(var.ecs-task_size)) == 3
-    error_message = "Variable ecs-task_size must have exactly three keys: cpu, memory, and storage."
+    condition = length(keys(var.ecs-task_size)) == 2
+    error_message = "Variable ecs-task_size must have exactly three keys: cpu, and memory."
   }
   validation {
     condition = contains([256, 512, 1024, 2048, 4096, 8192], var.ecs-task_size.cpu)
