@@ -313,7 +313,7 @@ module "forecast" {
 
 # 4.5 - Forecast - Client AD
 module "forecast-ad" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=42eba24"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=73255a4"
 
   aws-region                    = var.region
   aws-environment               = local.environment
