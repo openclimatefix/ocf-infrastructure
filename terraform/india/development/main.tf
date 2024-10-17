@@ -161,7 +161,6 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ecs-task_size = {
     cpu    = 1024
     memory = 5120
-    storage = 60
   }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
@@ -211,7 +210,6 @@ module "ruvnl_consumer_ecs" {
   ecs-task_size = {
     memory = 512
     cpu    = 256
-    storage = 21
   }
 
   s3-buckets = []
@@ -253,7 +251,6 @@ module "satellite_consumer_ecs" {
   ecs-task_size = {
     memory = 5120
     cpu    = 1024
-    storage = 21
   }
 
   container-env_vars = [
@@ -341,7 +338,6 @@ module "forecast-ad" {
   ecs-task_size = {
     memory = 3072
     cpu    = 1024
-    storage = 21
   }
 
   container-env_vars = [
