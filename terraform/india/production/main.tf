@@ -313,7 +313,7 @@ module "forecast" {
 
 # 4.5 - Forecast - Client AD
 module "forecast-ad" {
-  source = "../../modules/services/ecs_task"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=42eba24"
 
   aws-region                    = var.region
   aws-environment               = local.environment
