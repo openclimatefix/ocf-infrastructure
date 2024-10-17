@@ -12,7 +12,6 @@ The componentes ares:
 2.1 - Database
 2.2 - NWP Consumer Secret
 2.3 - Satellite Consumer Secret
-3.1 - NWP Consumer (MetOffice GSP)
 3.2 - NWP Consumer (MetOffice National)
 3.3 - NWP Consumer (ECMWF UK)
 3.4 - Satellite Consumer
@@ -138,11 +137,6 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 # 2.3
 resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
-}
-
-import {
-  to = aws_secretsmanager_secret.satellite_consumer_secret
-  id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:development/consumer/sat-QBDxP6"
 }
 
 
