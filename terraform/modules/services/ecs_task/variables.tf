@@ -96,14 +96,12 @@ variable ecs-task_size {
   type = object({
     cpu = number
     memory = number
-    storage = number
   })
 
   description = <<EOT
     ecs-task_size = {
       cpu : "CPU units for the ECS task"
       memory : "Memory units (MB) for the ECS task"
-      storage : "Ephemeral storage (GB) for the ECS task"
     }
     ecs-task_size: "Size of the ECS task in terms of compute, memory, and ephemeral storage."
   EOT

@@ -150,7 +150,6 @@ module "nwp-national" {
   ecs-task_size = {
     cpu    = 1024
     memory = 8192
-    storage = 21
   }
 
   aws-region                     = var.region
@@ -250,7 +249,6 @@ module "sat" {
   ecs-task_size = {
     memory = 5120
     cpu    = 1024
-    storage = 21
   }
 
   container-env_vars = [
@@ -292,7 +290,6 @@ module "sat_clean_up" {
   ecs-task_size = {
     memory = 1024
     cpu    = 512
-    storage = 21
   }
 
   container-env_vars = [
@@ -339,7 +336,6 @@ module "gsp-consumer" {
   ecs-task_size = {
     cpu    = 256
     memory = 512
-    storage = 21
   }
 
   aws-region                     = var.region
@@ -374,7 +370,6 @@ module "gsp-consumer-day-after-gsp" {
   ecs-task_size = {
     cpu    = 256
     memory = 512
-    storage = 21
   }
 
   aws-region                     = var.region
@@ -409,7 +404,6 @@ module "gsp-consumer-day-after-national" {
   ecs-task_size = {
     cpu    = 256
     memory = 512
-    storage = 21
   }
 
   aws-region                     = var.region
@@ -447,7 +441,6 @@ module "metrics" {
   ecs-task_size = {
     cpu = 256
     memory = 512
-    storage = 21
   }
 
   container-name = "openclimatefix/nowcasting_metrics"
@@ -558,7 +551,6 @@ source = "../../modules/services/ecs_task"
   ecs-task_size = {
     memory = 8192
     cpu    = 2048
-    storage = 21
   }
 
   container-env_vars = [
@@ -665,7 +657,6 @@ module "forecast_blend" {
   ecs-task_size = {
     cpu    = 512
     memory = 1024
-    storage = 21
   }
 
   aws-region                     = var.region
