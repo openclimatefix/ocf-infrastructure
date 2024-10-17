@@ -109,7 +109,6 @@ variable ecs-task_size {
   default = {
     cpu = 1024
     memory = 5120
-    storage = 21
   }
   
   validation {
@@ -133,14 +132,6 @@ variable ecs-task_size {
       true
     )
     error_message = "Invalid combination of CPU and memory."
-  }
-  validation {
-    condition = var.ecs-task_size.storage >= 21
-    error_message = "Storage must be at least 21."
-  }
-  validation {
-    condition = var.ecs-task_size.storage <= 200
-    error_message = "Storage must be at most 200."
   }
 }
 
