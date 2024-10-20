@@ -84,7 +84,7 @@ variable "forecast_pvnet_version" {
 
 variable "forecast_pvnet_ecmwf_version" {
   description = "The Forecast PVnet 2.0 ECMWF docker version"
-  default = "2.3.30"
+  default = "2.4.13"
 }
 
 variable "forecast_blend_version" {
