@@ -565,6 +565,7 @@ source = "../../modules/services/ecs_task"
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "false"},
     {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"}
   ]
 
   container-secret_vars = [
@@ -577,7 +578,6 @@ source = "../../modules/services/ecs_task"
   container-name        = "openclimatefix/pvnet_app"
   container-registry    = "docker.io"
   container-command     = []
-  use_data_sample = "true"
 }
 
 # 4.6
