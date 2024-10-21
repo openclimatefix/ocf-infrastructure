@@ -499,7 +499,7 @@ module "national_forecast" {
 
 # 4.4
 module "forecast_pvnet" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=4d421e0"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=127c0b5"
 
   region      = var.region
   environment = local.environment
@@ -569,6 +569,7 @@ module "forecast_pvnet_ecwmf" {
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "false"},
     {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
+    {"name": "USE_OCF_DATA_SAMPLER",  "value": "false"},
     # soon to be legacy
     {"name": "USE_SATELLITE",  "value": "false"},
     {"name": "PVNET_V2_VERSION",  "value": "35d55181a82440bdd087f380d650bfd0b64bd322"},
