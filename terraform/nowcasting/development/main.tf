@@ -529,6 +529,7 @@ module "forecast_pvnet" {
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   run_extra_models = "true"
   sentry_dsn = var.sentry_dsn
+  use_data_sample = "true"
 }
 
 # 4.5
@@ -576,6 +577,7 @@ source = "../../modules/services/ecs_task"
   container-name        = "openclimatefix/pvnet_app"
   container-registry    = "docker.io"
   container-command     = []
+  use_data_sample = "true"
 }
 
 # 4.6
