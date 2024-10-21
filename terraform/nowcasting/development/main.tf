@@ -529,6 +529,7 @@ module "forecast_pvnet" {
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   run_extra_models = "true"
   sentry_dsn = var.sentry_dsn
+  use_data_sample = "true"
 }
 
 # 4.5
@@ -564,6 +565,7 @@ source = "../../modules/services/ecs_task"
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "false"},
     {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"}
   ]
 
   container-secret_vars = [
