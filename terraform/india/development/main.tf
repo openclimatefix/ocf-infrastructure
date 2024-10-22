@@ -115,8 +115,8 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   ecs-task_size = {
-      cpu    = 1024
-      memory = 9216
+      cpu    = 2048
+      memory = 10240
   }
 
   aws-region                    = var.region
