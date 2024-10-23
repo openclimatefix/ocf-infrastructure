@@ -118,6 +118,11 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ecs-task_name               = "nwp-consumer-ecmwf-india"
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+      cpu    = 2048
+      memory = 10240
+  }
+
 
   aws-region                    = var.region
   aws-environment               = local.environment
@@ -134,7 +139,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
     { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "ECMWF_AREA", "value" : "nw-india" },
+    { "name" : "ECMWF_AREA", "value" : "india" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
