@@ -89,7 +89,7 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
     forecast >> forecast_ecmwf >> forecast_blend
 
 
-with DAG(f'{region}-gsp-forecast-pvnet-day-ahead', schedule_interval="15 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+with DAG(f'{region}-gsp-forecast-pvnet-day-ahead', schedule_interval="45 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
     dag.doc_md = "Run Forecast day ahead"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
