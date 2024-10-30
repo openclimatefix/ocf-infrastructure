@@ -152,8 +152,6 @@ resource "aws_secretsmanager_secret" "pv_consumer_secret" {
 }
 
 
-
-
 # 3.2
 module "nwp-national" {
   source = "../../modules/services/ecs_task"
@@ -329,16 +327,39 @@ module "sat_clean_up" {
 
 # 3.6
 module "pv" {
-  source = "../../modules/services/pv"
+  source = "../../modules/services/ecs_task"
 
-  region                  = var.region
-  environment             = local.environment
-  public_subnet_ids       = module.networking.public_subnet_ids
-  database_secret_forecast = module.database.forecast-database-secret
-  docker_version_ss          = var.pv_ss_version
-  iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  ecs-task_name = "pv"
+  ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO"},
+    { "name" : "PROVIDER", "value" : "solar_sheffield_passiv"},
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.pvsite_database.secret.arn,
+  values: ["DB_URL"]},
+  {secret_policy_arn: aws_secretsmanager_secret.pv_consumer_secret.arn,
+  values: ["SS_USER_ID", "SS_KEY", "SS_URL"]}
+  ]
+  container-tag         = var.pv_ss_version
+  container-name        = "openclimatefix/pvconsumer"
+  container-registry = "docker.io"
+  container-command     = []
 }
+
 
 # 3.7
 module "gsp-consumer" {
