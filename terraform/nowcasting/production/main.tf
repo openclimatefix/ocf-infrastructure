@@ -681,7 +681,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=c676a5d"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=10a162d"
 
   aws-environment   = local.environment
   aws-domain        = local.domain
