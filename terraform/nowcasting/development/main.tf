@@ -351,7 +351,7 @@ module "pv" {
   container-secret_vars = [
   {secret_policy_arn: module.pvsite_database.secret.arn,
   values: ["DB_URL"]},
-  {secret_policy_arn: module.aws_secretsmanager_secret.pv_consumer_secret.arn,
+  {secret_policy_arn: module.pv_consumer_secret.arn,
   values: ["SS_USER_ID", "SS_KEY", "SS_URL"]}
   ]
   container-tag         = var.pv_ss_version
