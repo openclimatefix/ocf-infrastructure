@@ -12,6 +12,7 @@ The componentes ares:
 2.1 - Database
 2.2 - NWP Consumer Secret
 2.3 - Satellite Consumer Secret
+2.4 - PV Secret
 3.2 - NWP Consumer (MetOffice National)
 3.3 - NWP Consumer (ECMWF UK)
 3.4 - Satellite Consumer
@@ -137,6 +138,17 @@ resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
 # 2.3
 resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
+}
+
+# 2.4
+# TODO remove
+import {
+  to = aws_secretsmanager_secret.pv_consumer_secret
+  id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:development/consumer/solar_sheffield-2Tyskm"
+}
+
+resource "aws_secretsmanager_secret" "pv_consumer_secret" {
+  name = "${local.environment}/data/solar-sheffield"
 }
 
 
@@ -315,15 +327,37 @@ module "sat_clean_up" {
 
 # 3.6
 module "pv" {
-  source = "../../modules/services/pv"
+  source = "../../modules/services/ecs_task"
 
-  region                  = var.region
-  environment             = local.environment
-  public_subnet_ids       = module.networking.public_subnet_ids
-  database_secret_forecast = module.database.forecast-database-secret
-  docker_version_ss          = var.pv_ss_version
-  iam-policy-rds-read-secret_forecast = module.database.iam-policy-forecast-db-read
+  ecs-task_name = "pv"
+  ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO"},
+    { "name" : "PROVIDER", "value" : "solar_sheffield_passiv"},
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.pvsite_database.secret.arn,
+  values: ["DB_URL"]},
+  {secret_policy_arn: module.aws_secretsmanager_secret.pv_consumer_secret.arn,
+  values: ["SS_USER_ID", "SS_KEY", "SS_URL"]}
+  ]
+  container-tag         = var.pv_ss_version
+  container-name        = "openclimatefix/pvconsumer"
+  container-registry = "docker.io"
+  container-command     = []
 }
 
 # 3.7
