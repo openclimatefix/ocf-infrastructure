@@ -18,13 +18,12 @@ default_args = {
     "max_active_tasks": 10,
 }
 
-region = "uk"
+region = "india"
 env = os.getenv("ENVIRONMENT", "development")
 names = [
-    f"uk-{env}-airflow",
-    f"uk-{env}-internal-ui",
-    f"uk-{env}-nowcasting-api",
-    f"uk-{env}-sites-api",
+    f"{region}-{env}-airflow",
+    f"{region}-{env}-analysis-dashboard",
+    f"{region}-{env}-india-api",
 ]
 
 with DAG(
