@@ -1,3 +1,4 @@
+""" Dags to rotate ec2 machine in elastic beanstalk """
 import os
 from datetime import datetime, timedelta, timezone
 
