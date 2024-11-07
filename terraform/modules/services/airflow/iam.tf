@@ -121,6 +121,12 @@ resource "aws_iam_policy" "read-secrets" {
 
 # allow updating of elb and autoscaling
 resource "aws_iam_policy" "elb-auto-scaling"{
+
+    name        = "${var.aws-domain}-${var.aws-environment}-elb-auto-scale-policy-airflow"
+    path        = "/"
+    description = "Policy to allow airflow to auto scale and update elb"
+
+    policy = jsonencode({
 	"Version": "2012-10-17",
 	"Statement": [
 		{
@@ -153,6 +159,7 @@ resource "aws_iam_policy" "elb-auto-scaling"{
 			"Resource": "*"
 		}
 	]
+    })
 }
 
 ##################
