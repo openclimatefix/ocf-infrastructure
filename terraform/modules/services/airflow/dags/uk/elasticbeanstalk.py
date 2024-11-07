@@ -37,7 +37,7 @@ with DAG(f'{region}-reset-elb', schedule_interval="0 0 1 * *", default_args=defa
         elb_2 = PythonOperator(
             task_id=f"scale_2_{name}",
             python_callable=scale_elastic_beanstalk_instance,
-            op_args = {'name': name, 'number_of_instances': 2, 'sleep_seconds': 60*5},
+            op_kwargs = {'name': name, 'number_of_instances': 2, 'sleep_seconds': 60*5},
             task_concurrency=2,
             # on_failure_callback=on_failure_callback,
         )
@@ -45,7 +45,7 @@ with DAG(f'{region}-reset-elb', schedule_interval="0 0 1 * *", default_args=defa
         elb_1 = PythonOperator(
             task_id=f"scale_1_{name}",
             python_callable=scale_elastic_beanstalk_instance,
-            op_args={'name': name, 'number_of_instances': 1},
+            op_kwargs={'name': name, 'number_of_instances': 1},
             task_concurrency=2,
             # on_failure_callback=on_failure_callback,
         )

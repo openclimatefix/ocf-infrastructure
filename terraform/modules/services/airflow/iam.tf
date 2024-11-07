@@ -119,6 +119,42 @@ resource "aws_iam_policy" "read-secrets" {
     })
 }
 
+# allow updating of elb and autoscaling
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "VisualEditor0",
+			"Effect": "Allow",
+			"Action": [
+				"s3:*",
+				"ec2:DescribeSecurityGroups",
+				"ec2:DescribeImages",
+				"ec2:DescribeInstances",
+				"ec2:DescribeVpcs",
+				"ec2:DescribeSubnets",
+				"cloudformation:Describe*",
+				"cloudformation:Get*",
+				"cloudformation:List*",
+				"cloudformation:Validate*",
+				"cloudformation:Estimate*",
+				"cloudformation:UpdateStack",
+				"cloudformation:CancelUpdateStack",
+				"autoscaling:DescribeAutoScalingGroups",
+				"autoscaling:DescribeLaunchConfigurations",
+				"autoscaling:UpdateAutoScalingGroup",
+				"autoscaling:DescribeScalingActivities",
+				"elasticbeanstalk:UpdateEnvironment",
+				"elasticloadbalancing:DescribeLoadBalancers",
+				"logs:CreateLogGroup",
+				"logs:PutRetentionPolicy",
+				"logs:DescribeLogGroups"
+			],
+			"Resource": "*"
+		}
+	]
+}
+
 ##################
 # Service role
 ##################
