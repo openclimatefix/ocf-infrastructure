@@ -120,7 +120,7 @@ resource "aws_iam_policy" "read-secrets" {
 }
 
 # allow updating of elb and autoscaling
-{
+resource "aws_iam_policy" "elb-auto-scaling"{
 	"Version": "2012-10-17",
 	"Statement": [
 		{
@@ -236,4 +236,9 @@ resource "aws_iam_role_policy_attachment" "attach-ecs-run" {
 resource "aws_iam_role_policy_attachment" "attach-read-secrets" {
   role       = aws_iam_role.instance-role.name
   policy_arn = aws_iam_policy.read-secrets.arn
+}
+
+resource "aws_iam_role_policy_attachment" "attach-elb-auto-scaling" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = aws_iam_policy.elb-auto-scaling.arn
 }
