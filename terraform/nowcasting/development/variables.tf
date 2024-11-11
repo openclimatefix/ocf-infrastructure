@@ -1,21 +1,17 @@
 variable "region" {
   description = "The AWS region to use"
-  default = "eu-west-1"
+  default     = "eu-west-1"
 }
 
 //Networking
 variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
-  type = string
-  default = "10.0.0.0/16"
+  type        = string
+  default     = "10.0.0.0/16"
 }
 
 variable "api_version" {
   description = "The API version"
-}
-
-variable "data_visualization_version" {
-  description = "The Data Visualization version"
 }
 
 variable "forecast_version" {
@@ -40,12 +36,12 @@ variable "pv_ss_version" {
 
 variable "gsp_version" {
   description = "The GSP Consumer version"
-  default = "0.0.2"
+  default     = "0.0.2"
 }
 
 variable "internal_ui_version" {
-   description = "The Internal UI version"
-   default = "main"
+  description = "The Internal UI version"
+  default     = "main"
 }
 
 variable "cloudflare_zone_id" {
@@ -54,22 +50,22 @@ variable "cloudflare_zone_id" {
 
 variable "metrics_version" {
   description = "The Metrics version"
-  default = "0.0.2"
+  default     = "0.0.2"
 }
 
 variable "auth_domain" {
   description = "The Auth domain that should be used"
-  default = "not-set"
+  default     = "not-set"
 }
 
 variable "auth_dashboard_client_id" {
   description = "The Auth client id for the dashboard that should be used"
-  default = "not-set"
+  default     = "not-set"
 }
 
 variable "auth_api_audience" {
   description = "The Auth API Audience that should be used"
-  default = "not-set"
+  default     = "not-set"
 }
 
 variable "national_forecast_version" {
@@ -77,7 +73,7 @@ variable "national_forecast_version" {
 }
 
 variable "sentry_dsn" {
-  type = string
+  type        = string
   description = "DNS for Sentry monitoring"
 }
 
@@ -91,34 +87,34 @@ variable "forecast_blend_version" {
 }
 
 variable "pvsite_api_version" {
-  type = string
+  type        = string
   description = "This gives the version of the PV Site API"
 }
 
 variable "pvsite_forecast_version" {
-  type = string
+  type        = string
   description = "The version of the PVSite forecaster to use"
 }
 
 variable "database_cleanup_version" {
-  type = string
+  type        = string
   description = "The version of the database clean up to use"
 }
 
 variable "airflow_conn_slack_api_default" {
-  type = string
+  type        = string
   description = "The slack connection string for airflow"
-  default = "not-set"
+  default     = "not-set"
 }
 
 variable "forecast_pvnet_day_ahead_docker_version" {
-  type = string
+  type        = string
   description = "The Forecast PVnet 2.0 day ahead docker version"
-  default = "not-set"
+  default     = "not-set"
 }
 
 variable "sentry_dsn_api" {
-  type = string
+  type        = string
   description = "The Sentry DSN for all backend components"
-  default = ""
+  default     = ""
 }
