@@ -62,7 +62,7 @@ with DAG(
     max_active_tasks=10,
 ) as dag2:
 
-    dag2.doc_md = "Get GSP PVLive updated values, and then triggers metrics DAG"
+    dag2.doc_md = "Get GSP PVLive updated values"
 
     gsp_day_after = EcsRunTaskOperator(
         task_id=f'{region}-gsp-day-after',
@@ -82,6 +82,17 @@ with DAG(
         task_concurrency=10,
     )
 
+    gsp_day_after
+
+with DAG(
+        f'{region}-metrics-day-after',
+        schedule_interval="0 21 * * *",
+        default_args=default_args,
+        concurrency=10,
+        max_active_tasks=10,
+) as dag3:
+    dag3.doc_md = "Get Metrics"
+
     metrics = EcsRunTaskOperator(
         task_id=f'{region}-metrics',
         task_definition='metrics',
@@ -99,4 +110,4 @@ with DAG(
         task_concurrency=10,
     )
 
-    gsp_day_after >> metrics
+    metrics
