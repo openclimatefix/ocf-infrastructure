@@ -8,6 +8,7 @@ The componentes ares:
 0.3 - S3 buckets
 0.4 - ECS cluster
 0.5 - S3 bucket for forecasters
+0.6 - S3 bucket for site database
 1.1 - API
 2.1 - Database
 2.2 - NWP Consumer Secret
@@ -84,6 +85,17 @@ module "forecasting_models_bucket" {
   region              = var.region
   environment         = local.environment
   service_name        = "national-forecaster-models"
+  domain              = local.domain
+  lifecycled_prefixes = []
+}
+
+# 0.6
+module "site_database_models_bucket" {
+  source = "../../modules/storage/s3-private"
+
+  region              = var.region
+  environment         = local.environment
+  service_name        = "site-database"
   domain              = local.domain
   lifecycled_prefixes = []
 }
@@ -820,19 +832,32 @@ module "pvsite_forecast" {
 
 # 6.5
 module "pvsite_database_clean_up" {
-  source      = "../../modules/services/database_clean_up"
-  region      = var.region
-  environment = local.environment
-  app-name    = "database_clean_up"
-  ecs_config  = {
-    docker_image   = "openclimatefix/pvsite_database_cleanup"
-    docker_version = var.database_cleanup_version
-    memory_mb      = 512
-    cpu            = 256
-  }
-  rds_config = {
-    database_secret_arn             = module.pvsite_database.secret.arn
-    database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
-  }
+  source = "../../modules/services/ecs_task"
+
+  ecs-task_name = "database_clean_up"
+  ecs-task_type = "clean"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  container-env_vars = [
+        {"name": "LOGLEVEL", "value" : "INFO"},
+        {"name": "OCF_ENVIRONMENT", "value": local.environment},
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.pvsite_database.secret-policy.arn,
+  values: ["OCF_PV_DB_URL"]}
+  ]
+  container-tag         = var.database_cleanup_version
+  container-name        = "openclimatefix/pvsite_database_cleanup"
+  container-registry = "docker.io"
+  s3-buckets = []
+  container-command = []
 }
