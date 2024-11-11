@@ -8,7 +8,6 @@ The componentes ares:
 0.3 - S3 buckets
 0.4 - ECS cluster
 0.5 - S3 bucket for forecasters
-0.6 - S3 bucket for site database
 1.1 - API
 2.1 - Database
 2.2 - NWP Consumer Secret
@@ -85,17 +84,6 @@ module "forecasting_models_bucket" {
   region              = var.region
   environment         = local.environment
   service_name        = "national-forecaster-models"
-  domain              = local.domain
-  lifecycled_prefixes = []
-}
-
-# 0.6
-module "site_database_bucket" {
-  source = "../../modules/storage/s3-private"
-
-  region              = var.region
-  environment         = local.environment
-  service_name        = "site-database"
   domain              = local.domain
   lifecycled_prefixes = []
 }
@@ -859,6 +847,6 @@ module "pvsite_database_clean_up" {
   container-tag         = var.database_cleanup_version
   container-name        = "openclimatefix/pvsite_database_cleanup"
   container-registry = "docker.io"
-  s3-buckets = [{ bucket_write_policy_arn = module.site_database_bucket.write_policy_arn }]
+  s3-buckets = [{ bucket_write_policy_arn = module.pvsite_ml_bucket.write_policy_arn }]
   container-command = []
 }
