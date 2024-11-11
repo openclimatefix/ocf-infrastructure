@@ -62,7 +62,7 @@ module "ec2-bastion" {
 
 # 0.3
 module "s3" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-trio?ref=17f0d59"
 
   region      = var.region
   environment = local.environment
