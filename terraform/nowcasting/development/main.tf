@@ -801,7 +801,7 @@ source = "../../modules/services/ecs_task"
       access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
     },
     {
-      id : module.pvsite_ml_bucket.read.id,
+      id : module.pvsite_ml_bucket.id,
       access_policy_arn : module.pvsite_ml_bucket.read_policy_arn
     }
   ]
@@ -828,7 +828,7 @@ source = "../../modules/services/ecs_task"
        }
        ]
 
-  container-tag         = vvar.pvsite_forecast_version
+  container-tag         = var.pvsite_forecast_version
   container-name        = "openclimatefix/pvsite_forecast"
   container-registry    = "docker.io"
   container-command     = []
