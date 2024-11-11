@@ -838,7 +838,7 @@ module "pvsite_database_clean_up" {
         {"name": "OCF_ENVIRONMENT", "value": local.environment},
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "SAVE_DIR", "value" :  "s3://${module.site_database_bucket.bucket_id}/ecmwf/data/latest.zarr" },
+    { "name" : "SAVE_DIR", "value" :  "s3://${module.site_database_bucket.bucket_id}/database" },
   ]
   container-secret_vars = [
   {secret_policy_arn: module.pvsite_database.secret-policy.arn,
