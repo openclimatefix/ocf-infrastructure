@@ -838,7 +838,7 @@ module "pvsite_database_clean_up" {
         {"name": "OCF_ENVIRONMENT", "value": local.environment},
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "SAVE_DIR", "value" :  "s3://${module.site_database_bucket.bucket_id}/database" },
+    { "name" : "SAVE_DIR", "value" :  "s3://${module.pvsite_ml_bucket.bucket_id}/database" },
   ]
   container-secret_vars = [
   {secret_policy_arn: module.pvsite_database.secret-policy.arn,
@@ -847,6 +847,10 @@ module "pvsite_database_clean_up" {
   container-tag         = var.database_cleanup_version
   container-name        = "openclimatefix/pvsite_database_cleanup"
   container-registry = "docker.io"
-  s3-buckets = [{ bucket_write_policy_arn = module.pvsite_ml_bucket.write_policy_arn }]
+  s3-buckets = [
+                { id : module.pvsite_ml_bucket.bucket_id,
+                  access_policy_arn = module.pvsite_ml_bucket.write_policy_arn
+                 }
+                    ]
   container-command = []
 }
