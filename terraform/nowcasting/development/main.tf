@@ -801,7 +801,7 @@ source = "../../modules/services/ecs_task"
       access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
     },
     {
-      id : module.pvsite_ml_bucket.id,
+      id : module.pvsite_ml_bucket.bucket_id,
       access_policy_arn : module.pvsite_ml_bucket.read_policy_arn
     }
   ]
