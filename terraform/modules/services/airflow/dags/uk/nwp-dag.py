@@ -38,8 +38,8 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     nwp_national_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-national-nwp-consumer',
-        task_definition='nwp-national',
+        task_id=f'{region}-metoffice-nwp-consumer',
+        task_definition='nwp-metoffice',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
