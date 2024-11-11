@@ -153,7 +153,7 @@ resource "aws_secretsmanager_secret" "pv_consumer_secret" {
 
 
 # 3.2
-module "nwp-national" {
+module "nwp-metoffice" {
   source = "../../modules/services/ecs_task"
 
   ecs-task_name = "nwp-metoffice"
@@ -192,7 +192,7 @@ module "nwp-national" {
     "download",
     "--source=metoffice",
     "--sink=s3",
-    "--rdir=raw-national",
+    "--rdir=raw-metoffice",
     "--zdir=data-metoffice",
     "--create-latest"
   ]
@@ -639,7 +639,7 @@ module "forecast_pvnet_day_ahead" {
   s3_nwp_bucket = {
     bucket_id              = module.s3.s3-nwp-bucket.id
     bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data-national"
+    datadir                = "data-metoffice"
   }
   s3_satellite_bucket = {
     bucket_id              = module.s3.s3-sat-bucket.id

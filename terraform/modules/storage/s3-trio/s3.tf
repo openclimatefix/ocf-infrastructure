@@ -42,7 +42,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
   rule {
     id      = "remove_old_files"
     filter {
-      prefix = "data/"
+      prefix = "ecmwf/data/"
     }
     expiration {
       days = 7
@@ -53,7 +53,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
   rule {
     id      = "remove_old_raw_files"
     filter {
-      prefix = "raw/"
+      prefix = "ecmwf/raw/"
     }
     expiration {
       days = 7
@@ -64,7 +64,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
   rule {
     id      = "remove_old_files_national"
     filter {
-      prefix = "data-national/"
+      prefix = "data-metoffice/"
     }
     expiration {
       days = 7
@@ -75,7 +75,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
   rule {
     id      = "remove_old_raw_files_national"
     filter {
-      prefix = "raw-national/"
+      prefix = "raw-metoffice/"
     }
     expiration {
       days = 7
