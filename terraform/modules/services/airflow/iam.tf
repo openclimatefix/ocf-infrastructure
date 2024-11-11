@@ -119,6 +119,49 @@ resource "aws_iam_policy" "read-secrets" {
     })
 }
 
+# allow updating of elb and autoscaling
+resource "aws_iam_policy" "elb-auto-scaling"{
+
+    name        = "${var.aws-domain}-${var.aws-environment}-elb-auto-scale-policy-airflow"
+    path        = "/"
+    description = "Policy to allow airflow to auto scale and update elb"
+
+    policy = jsonencode({
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "VisualEditor0",
+			"Effect": "Allow",
+			"Action": [
+				"s3:*",
+				"ec2:DescribeSecurityGroups",
+				"ec2:DescribeImages",
+				"ec2:DescribeInstances",
+				"ec2:DescribeVpcs",
+				"ec2:DescribeSubnets",
+				"cloudformation:Describe*",
+				"cloudformation:Get*",
+				"cloudformation:List*",
+				"cloudformation:Validate*",
+				"cloudformation:Estimate*",
+				"cloudformation:UpdateStack",
+				"cloudformation:CancelUpdateStack",
+				"autoscaling:DescribeAutoScalingGroups",
+				"autoscaling:DescribeLaunchConfigurations",
+				"autoscaling:UpdateAutoScalingGroup",
+				"autoscaling:DescribeScalingActivities",
+				"elasticbeanstalk:UpdateEnvironment",
+				"elasticloadbalancing:DescribeLoadBalancers",
+				"logs:CreateLogGroup",
+				"logs:PutRetentionPolicy",
+				"logs:DescribeLogGroups"
+			],
+			"Resource": "*"
+		}
+	]
+    })
+}
+
 ##################
 # Service role
 ##################
@@ -200,4 +243,9 @@ resource "aws_iam_role_policy_attachment" "attach-ecs-run" {
 resource "aws_iam_role_policy_attachment" "attach-read-secrets" {
   role       = aws_iam_role.instance-role.name
   policy_arn = aws_iam_policy.read-secrets.arn
+}
+
+resource "aws_iam_role_policy_attachment" "attach-elb-auto-scaling" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = aws_iam_policy.elb-auto-scaling.arn
 }

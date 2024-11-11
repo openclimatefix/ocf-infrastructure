@@ -25,11 +25,12 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
     value     = var.eb-instance_type
+    resource  = ""
   }
 
   # the next line IS NOT RANDOM,
   # see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
-  solution_stack_name = "64bit Amazon Linux 2 v3.7.1 running Docker"
+  solution_stack_name = "64bit Amazon Linux 2 v3.8.0 running Docker"
 
   # There are a LOT of settings, see here for the basic list:
   # https://is.gd/vfB51g
@@ -42,6 +43,7 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
             namespace = "aws:elasticbeanstalk:application:environment"
             name      = "${setting.value["name"]}"
             value     = "${setting.value["value"]}"
+            resource  = ""
         }
     }
 
@@ -49,6 +51,7 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.aws-vpc_id
+    resource  = ""
   }
   setting {
     namespace = "aws:ec2:vpc"
@@ -60,32 +63,37 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = aws_security_group.sg.id
+    resource  = ""
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = aws_iam_instance_profile.ec2.name
+    resource  = ""
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = aws_iam_role.api-service-role.arn
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
     value     = "1"
+    resource  = ""
   }
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = "1"
+    resource  = ""
   }
 
   # Following https://discuss.streamlit.io/t/howto-streamlit-on-aws-with-elastic-beanstalk-and-docker/10353
   setting {
-    namespace = "aws:elb:listener"
+    namespace = "aws:elb:listener:80"
     name      = "ListenerProtocol"
     value     = "TCP"
     resource  = ""

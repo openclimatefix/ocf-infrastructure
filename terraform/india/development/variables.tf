@@ -28,14 +28,47 @@ variable version-forecast {
   description = "Container image tag of the forecast to use: openclimatefix/forecast"
 }
 
+variable version-forecast-ad {
+  type = string
+  default = "0.1.0"
+  description = "Container image tag of the forecast ad to use: openclimatefix/forecast"
+}
+
 variable version-runvl-consumer {
   type = string
   default = "0.0.1"
   description = "Container image tag of the runvl data consumer to use: openclimatefix/ruvnl_consumer_app"
 }
 
+variable satellite-consumer {
+  type = string
+  default = "0.0.1"
+  description = "Container image tag of the satellite data consumer to use: openclimatefix/satip"
+}
+
 
 variable "analysis_dashboard_version" {
    description = "The Analysis Dashboard version"
    default = "main"
+}
+
+variable "sentry_dsn" {
+  type = string
+  description = "DNS for Sentry monitoring"
+}
+
+variable "sentry_dsn_api" {
+  type = string
+  description = "DNS for Sentry monitoring"
+  default=""
+}
+
+variable "auth_domain" {
+  description = "The Auth domain that should be used"
+  default = "not-set"
+}
+
+variable "auth_api_audience" {
+  description = "The Auth API Audience that should be used"
+  default = "not-set"
 }

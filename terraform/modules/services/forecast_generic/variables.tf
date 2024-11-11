@@ -128,3 +128,27 @@ variable "ecs-task_execution_role_arn" {
   description = "The arn of the ECS cluster task execution role"
   type = string
 }
+
+variable "sentry_dsn" {
+  type = string
+  description = "DNS for Sentry monitoring"
+  default=""
+}
+
+variable "run_extra_models" {
+  type = string
+  description = "Whether to run extra models"
+  default     = "false"
+}
+
+variable "day_ahead_model" {
+  type        = string
+  description = "Whether to run the day ahead model"
+  default     = "false"
+}
+
+variable "use_data_sample" {
+  type        = string
+  description = "Whether to use-data-sampler or not"
+  default     = "false"
+}

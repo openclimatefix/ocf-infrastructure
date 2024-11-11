@@ -15,10 +15,6 @@ resource "aws_ecs_task_definition" "task_def" {
     type = "ecs"
   }
 
-  volume {
-    name = "tmp"
-  }
-
   task_role_arn         = aws_iam_role.run_task_role.arn
   execution_role_arn    = var.ecs-task_execution_role_arn
   container_definitions = jsonencode([
@@ -30,12 +26,15 @@ resource "aws_ecs_task_definition" "task_def" {
       environment : var.container-env_vars
       command : var.container-command
 
-      secrets : [
-        for key in var.container-secret_vars : {
-          name : key
-          valueFrom : "${var.aws-secretsmanager_secret_arn}:${key}::"
-        }
-      ]
+      secrets :  flatten([
+        for secret in var.container-secret_vars : [
+            for value in secret.values: {
+                name : value
+                valueFrom : "${secret.secret_policy_arn}:${value}::"
+         }
+       ]
+      ])
+
 
       logConfiguration : {
         "logDriver" : "awslogs",
@@ -45,13 +44,6 @@ resource "aws_ecs_task_definition" "task_def" {
           "awslogs-stream-prefix" : "streaming"
         }
       }
-
-      mountPoints : [
-        {
-          "containerPath" : "/tmp/nwpc",
-          "sourceVolume" : "tmp"
-        }
-      ]
     }
   ])
 }

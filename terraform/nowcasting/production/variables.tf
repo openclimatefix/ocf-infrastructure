@@ -72,13 +72,19 @@ variable "sentry_monitor_dsn_api" {
   description = "DSN for Sentry monitoring for the api"
 }
 
-variable "sentry_monitor_dsn_siteapi" {
+variable "sentry_dsn" {
   type = string
-  description = "DSN for Sentry monitoring for the site api"
+  description = "DNS for Sentry monitoring"
+  default=""
 }
 
 variable "forecast_pvnet_version" {
   description = "The Forecast PVnet 2.0 docker version"
+}
+
+variable "forecast_pvnet_ecmwf_version" {
+  description = "The Forecast PVnet 2.0 ECMWF docker version"
+  default = "2.4.13"
 }
 
 variable "forecast_blend_version" {
@@ -108,5 +114,11 @@ variable "database_cleanup_version" {
 variable "airflow_conn_slack_api_default" {
   type = string
   description = "The slack connection string for airflow"
+  default = "not-set"
+}
+
+variable "forecast_pvnet_day_ahead_docker_version" {
+  type = string
+  description = "The Forecast PVnet 2.0 day ahead docker version"
   default = "not-set"
 }

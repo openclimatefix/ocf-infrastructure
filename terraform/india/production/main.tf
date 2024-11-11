@@ -1,4 +1,4 @@
-# Defines the development India platform
+# Defines the production India platform
 # Creates the following in AWS:
 # 1.0 - VPC and Subnets
 # 1.1 - RDS Postgres database
@@ -20,14 +20,14 @@
 # 5.2 - India Analysis Dashboard
 
 locals {
-  environment = "development"
+  environment = "production"
   domain      = "india"
   region      = "ap-south-1"
 }
 
 # 1.0
 module "network" {
-  source             = "../../modules/networking"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking?ref=205465e"
   environment        = local.environment
   vpc_cidr           = "10.1.0.0/16"
   region             = local.region
@@ -37,20 +37,20 @@ module "network" {
 
 # 1.1
 module "postgres-rds" {
-  source                      = "../../modules/storage/postgres"
-  region                      = local.region
-  environment                 = local.environment
-  vpc_id                      = module.network.vpc_id
-  db_subnet_group_name        = module.network.private_subnet_group_name
-  db_name                     = "indiadb"
-  rds_instance_class          = "db.t3.small"
-  allow_major_version_upgrade = true
-  engine_version              = "16.3"
+  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=6e24edf"
+  region               = local.region
+  environment          = local.environment
+  vpc_id               = module.network.vpc_id
+  db_subnet_group_name = module.network.private_subnet_group_name
+  db_name              = "indiadb"
+  rds_instance_class   = "db.t3.small"
+  allow_major_version_upgrade  = true
+  engine_version = "16.3"
 }
 
 # 1.2
 module "ec2-bastion" {
-  source = "../../modules/networking/ec2_bastion"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=205465e"
 
   region            = local.region
   vpc_id            = module.network.vpc_id
@@ -59,21 +59,20 @@ module "ec2-bastion" {
 
 # 1.3
 module "ecs-cluster" {
-  source   = "../../modules/ecs_cluster"
+  source   = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=205465e"
   name     = "india-ecs-cluster-${local.environment}"
   region   = local.region
   owner_id = module.network.owner_id
 }
 
-
 # 2.0
 module "s3-nwp-bucket" {
-  source              = "../../modules/storage/s3-private"
+  source              = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=205465e"
   environment         = local.environment
   region              = var.region
   domain              = local.domain
   service_name        = "nwp"
-  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
+  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw", "gfs/data", "gfs/raw"]
 }
 
 # 2.1
@@ -96,6 +95,11 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
 }
 
+import {
+  to = aws_secretsmanager_secret.satellite_consumer_secret
+  id = "arn:aws:secretsmanager:ap-south-1:752135663966:secret:production/data/satellite-consumer-SOZCn1"
+}
+
 # 3.2
 resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
   name = "${local.environment}/huggingface/token"
@@ -104,12 +108,12 @@ resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
 # TODO temporary import statement remove this
 import {
   to = aws_secretsmanager_secret.huggingface_consumer_secret
-  id = "arn:aws:secretsmanager:ap-south-1:008129123253:secret:development/huggingface/token-rke1Kp"
+  id = "arn:aws:secretsmanager:ap-south-1:752135663966:secret:prod/huggingface/token-9lPQsb"
 }
 
 # 4.0
 module "nwp_consumer_ecmwf_live_ecs_task" {
-  source = "../../modules/services/ecs_task"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
   ecs-task_name               = "nwp-consumer-ecmwf-india"
   ecs-task_type               = "consumer"
@@ -119,30 +123,27 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
       memory = 10240
   }
 
+
   aws-region                    = var.region
   aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
-  s3-buckets = [
-    {
-      id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
-    }
-  ]
+  s3-buckets = [{ 
+    id: module.s3-nwp-bucket.bucket_id,
+    access_policy_arn: module.s3-nwp-bucket.write_policy_arn
+}]
 
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
-    { "name" : "ECMWF_AWS_REGION", "value" : "eu-west-1" },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "india" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
-  container-secret_vars = [
-  {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
-       }]
+  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
@@ -157,18 +158,20 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 
 # 4.1
 module "nwp_consumer_gfs_live_ecs_task" {
-  source = "../../modules/services/ecs_task"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
   ecs-task_name               = "nwp-consumer-gfs-india"
   ecs-task_type               = "consumer"
   ecs-task_size = {
     cpu    = 1024
     memory = 5120
+    storage = 60
   }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
   aws-region                    = var.region
   aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -199,33 +202,32 @@ module "nwp_consumer_gfs_live_ecs_task" {
 }
 
 
-
 # 4.2
 module "ruvnl_consumer_ecs" {
-  source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
   ecs-task_name               = "runvl-consumer"
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = module.postgres-rds.secret.arn
+
+  s3-buckets = []
+
   ecs-task_size = {
     memory = 512
     cpu    = 256
   }
 
-  s3-buckets = []
   container-env_vars = [
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
-  container-secret_vars = [{
-        secret_policy_arn: module.postgres-rds.secret.arn,
-        values: ["DB_URL"]
-       }]
+  container-secret_vars = ["DB_URL"]
   container-tag         = var.version-runvl-consumer
   container-name        = "ruvnl_consumer_app"
   container-registry    = "openclimatefix"
@@ -234,12 +236,14 @@ module "ruvnl_consumer_ecs" {
   ]
 }
 
+
 # 4.3 - Satellite Consumer
 module "satellite_consumer_ecs" {
-  source = "../../modules/services/ecs_task"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
   aws-region                    = var.region
   aws-environment               = local.environment
+  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.satellite_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -254,6 +258,7 @@ module "satellite_consumer_ecs" {
   ecs-task_size = {
     memory = 5120
     cpu    = 1024
+    storage = 21
   }
 
   container-env_vars = [
@@ -265,10 +270,7 @@ module "satellite_consumer_ecs" {
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
-  container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
-        values: ["API_KEY", "API_SECRET"]
-       }]
+  container-secret_vars = ["API_KEY", "API_SECRET"]
   container-tag         = var.satellite-consumer
   container-name        = "satip"
   container-registry    = "openclimatefix"
@@ -276,18 +278,17 @@ module "satellite_consumer_ecs" {
 }
 
 
-
 # 4.4 - Forecast - Client RU
 module "forecast" {
-  source = "../../modules/services/forecast_generic"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=42eba24"
 
   region      = var.region
   environment = local.environment
   app-name    = "forecast"
-  ecs_config = {
+  ecs_config  = {
     docker_image   = "openclimatefix/india_forecast_app"
     docker_version = var.version-forecast
-    memory_mb      = 3072
+    memory_mb      = 2048
     cpu            = 1024
   }
   rds_config = {
@@ -310,16 +311,14 @@ module "forecast" {
     bucket_id              = module.s3-nwp-bucket.bucket_id
     bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
   }
-
-  loglevel                    = "INFO"
+  loglevel      = "INFO"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  sentry_dsn= var.sentry_dsn
+  sentry_dsn = var.sentry_dsn
 }
-
 
 # 4.5 - Forecast - Client AD
 module "forecast-ad" {
-  source = "../../modules/services/ecs_task"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=73255a4"
 
   aws-region                    = var.region
   aws-environment               = local.environment
@@ -341,6 +340,7 @@ module "forecast-ad" {
   ecs-task_size = {
     memory = 3072
     cpu    = 1024
+    storage = 21
   }
 
   container-env_vars = [
@@ -370,17 +370,16 @@ module "forecast-ad" {
   container-command     = []
 }
 
-    
 # 5.0
 module "airflow" {
-  source                    = "../../modules/services/airflow"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=41a9ecf"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   airflow-db-connection-url = "${module.postgres-rds.instance_connection_url}/airflow"
-  docker-compose-version    = "0.0.8"
+  docker-compose-version    = "0.0.11"
   ecs-subnet_id             = module.network.public_subnet_ids[0]
   ecs-security_group        = module.network.default_security_group_id
   aws-owner_id              = module.network.owner_id
@@ -390,7 +389,7 @@ module "airflow" {
 
 # 5.1
 module "india-api" {
-  source             = "../../modules/services/eb_app"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=6e24edf"
   domain             = local.domain
   aws-region         = local.region
   aws-environment    = local.environment
@@ -400,41 +399,36 @@ module "india-api" {
   container-env_vars = [
     { "name" : "SOURCE", "value" : "indiadb" },
     { "name" : "PORT", "value" : "80" },
-    { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
+    { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url},
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value": local.environment},
+
   ]
   container-name = "india-api"
   container-tag  = var.version-india_api
   eb-app_name    = "india-api"
-  s3_bucket = [
-    { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn }
-  ]
 }
 
 # 5.2
 module "analysis_dashboard" {
-  source             = "../../modules/services/eb_app"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=5bc9429"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
   aws-subnet_id      = module.network.public_subnet_ids[0]
   aws-vpc_id         = module.network.vpc_id
-  container-command  = [
-    "streamlit", "run", "main_india.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0",
-    "--server.address=0.0.0.0", "–server.enableCORS False"
-  ]
+  container-command  = ["streamlit", "run", "main_india.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
   container-env_vars = [
-    { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
-    { "name" : "SITES_DB_URL", "value" : module.postgres-rds.default_db_connection_url },
+    { "name" : "DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
+    { "name" : "SITES_DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
     { "name" : "ORIGINS", "value" : "*" },
     { "name" : "REGION", "value": local.domain},
     { "name" : "ENVIRONMENT", "value": local.environment},
   ]
-  container-name     = "analysis-dashboard"
-  container-tag      = var.analysis_dashboard_version
+  container-name = "analysis-dashboard"
+  container-tag  = var.analysis_dashboard_version
   container-registry = "ghcr.io/openclimatefix"
   container-port = 8501
   eb-app_name    = "analysis-dashboard"
@@ -443,9 +437,4 @@ module "analysis_dashboard" {
     { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn },
     { bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn }
   ]
-}
-
-module "developer_group" {
-  source = "../../modules/user_groups"
-  region = var.region
 }

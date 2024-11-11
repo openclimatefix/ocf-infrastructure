@@ -10,11 +10,6 @@ variable aws-environment {
   description = "Deployment environment"
 }
 
-variable aws-secretsmanager_secret_arn {
-  type = string
-  description = "ARN of the secretsmanager secret to pull environment variables from"
-}
-
 // S3 configuration -------------------------------------------------------
 
 variable s3-buckets {
@@ -63,14 +58,24 @@ variable container-env_vars {
   EOT
 }
 
-variable container-secret_vars {
-  type = list(string)
-  description = "List of keys to be mounted in the container env from secretsmanager secret"
-}
-
 variable container-command {
   type = list(string)
   description = "Command to run in the container"
+}
+
+variable container-secret_vars {
+  type = list(object({
+    secret_policy_arn = string
+    values=list(string)
+  }))
+  description = <<EOH
+  ARN of the secretsmanager secret to pull environment variables from.
+  The values will be set as (secret) environment variables in the container.
+  For example {
+  secret_policy_arn = 'arn:aws:iam::123456789012:policy/my-policy',
+  values=['key1', 'key2'] }
+  EOH
+  default = []
 }
 
 // ECS configuration --------------------------------------------------------
@@ -98,14 +103,13 @@ variable ecs-task_size {
       cpu : "CPU units for the ECS task"
       memory : "Memory units (MB) for the ECS task"
     }
-    ecs-task_size: "Size of the ECS task in terms of compute and memory"
+    ecs-task_size: "Size of the ECS task in terms of compute, and memory."
   EOT
 
   default = {
     cpu = 1024
     memory = 5120
   }
-  
   
   validation {
     condition = length(keys(var.ecs-task_size)) == 2
@@ -132,7 +136,10 @@ variable ecs-task_size {
 }
 
 variable "ecs-task_execution_role_arn" {
-  description = "The arn of the ECS cluster task execution role"
+  description = "The arn of the ECS cluster task execution role."
   type = string
 }
+
+
+
 

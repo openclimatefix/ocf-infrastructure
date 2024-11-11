@@ -1,3 +1,6 @@
+version: "3"
+
+
 volumes:
   data:
 
@@ -19,10 +22,12 @@ services:
       - data:/airflow
 
   scheduler:
+#    depends_on:
+#      - "airflowinit"
     image: apache/airflow:2.6.2
     container_name: airflow-scheduler
     command: scheduler
-    restart: always
+    restart: on-failure
     ports:
       - "8793:8793"
     environment:
@@ -30,7 +35,8 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL_AIRFLOW}
+      DB_URL: ${DB_URL}
       AIRFLOW_UID: "50000"
       AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
@@ -39,20 +45,17 @@ services:
       ENVIRONMENT: $ENVIRONMENT
       ECS_SUBNET: $ECS_SUBNET
       ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
-      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
-      AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
-    # depends_on:
-    #   airflowinit:
-    #     condition: service_completed_successfully
 
 
   webserver:
     image: apache/airflow:2.6.2
     container_name: airflow-webserver
     command: webserver -w 4
+#    depends_on:
+#      - "airflowinit"
     ports:
       - 80:8080
     restart: always
@@ -62,7 +65,7 @@ services:
       AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL_AIRFLOW}
       FORWARDED_ALLOW_IPS: "*"
       AIRFLOW__WEBSERVER__WORKER_CLASS: "gevent"
       _AIRFLOW_PATCH_GEVENT: "1"
@@ -73,50 +76,42 @@ services:
       ENVIRONMENT: $ENVIRONMENT
       ECS_SUBNET: $ECS_SUBNET
       ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
-      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
-      AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
-      #  depends_on:
-      #    airflowinit:
-      #      condition: service_completed_successfully
 
 
-  # only need to (and only able to!) run this once. Commit ref 96b5bb8 has this uncommented.
-  # Make sure create a database called "airflow" first!
-  #  airflowinit:
-  #    image: apache/airflow:2.6.2
-  #    container_name: airflow-init
-  #    environment:
-  #      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
-  #      SECRET_KEY: ${SECRET_KEY}
-  #      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
-  #      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
-  #      _AIRFLOW_DB_UPGRADE: 'True'
-  #      _AIRFLOW_WWW_USER_CREATE: 'True'
-  #      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
-  #      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
-  #      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
-  #      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
-  #      AIRFLOW_UID: "50000"
-  #    user: "${AIRFLOW_UID:-50000}:0"
-  #    command: >
-  #      bash -c "echo 'Installing dependencies'
-  #      && pip install --quiet apache-airflow[amazon]
-  #      && echo 'Making directories'
-  #      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
-  #      && chmod -v 777 /airflow/{logs,dags}
-  #      && echo 'Initializing database'
-  #      && airflow db init -v"
-  #    volumes:
-  #      - data:/airflow
+# only need to run this once
+#  airflowinit:
+#    image: apache/airflow:2.6.2
+#    container_name: airflow-init
+#    environment:
+#      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+#      SECRET_KEY: ${SECRET_KEY}
+#      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
+#      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+#      _AIRFLOW_DB_UPGRADE: 'True'
+#      _AIRFLOW_WWW_USER_CREATE: 'True'
+#      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
+#      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+#      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+#      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+#      AIRFLOW_UID: "50000"
+#    user: "${AIRFLOW_UID:-50000}:0"
+#    command: >
+#      bash -c "pip install apache-airflow[amazon]
+#      && mkdir -p /airflow/logs /airflow/dags /airflow/plugins
+#      && chmod -v 777 /airflow/{logs,dags}
+#      && airflow db init"
+#    volumes:
+#      - data:/airflow
+
 
   sync-s3:
     image: amazon/aws-cli
     container_name: sync-s3
     entrypoint: >
-      bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://${BUCKET}/dags' '/airflow/dags';
+      bash -c "while true; aws s3 sync --exact-timestamps --delete 's3://ocf-airflow-${ENVIRONMENT}-bucket/dags' '/airflow/dags';
       mkdir -p /airflow/{logs,dags}; 
       chmod -R 777 /airflow/{logs,dags}; do sleep 2; done;"
     volumes:
@@ -124,8 +119,6 @@ services:
     environment:
       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
       ENVIRONMENT: $ENVIRONMENT
-      BUCKET: $BUCKET
     restart: always
-    # depends_on:
-    #   airflowinit:
-    #     condition: service_completed_successfully
+#    depends_on:
+#      - "airflowinit"
