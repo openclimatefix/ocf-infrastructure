@@ -841,7 +841,7 @@ module "pvsite_database_clean_up" {
     { "name" : "SAVE_DIR", "value" :  "s3://${module.pvsite_ml_bucket.bucket_id}/database" },
   ]
   container-secret_vars = [
-  {secret_policy_arn: module.pvsite_database.secret-policy.arn,
+  {secret_policy_arn: module.pvsite_database.secret.arn,
   values: ["OCF_PV_DB_URL"]}
   ]
   container-tag         = var.database_cleanup_version
