@@ -70,7 +70,7 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
         task_concurrency=10,
     )
 
-    file = f's3://nowcasting-nwp-{env}/data-national/latest.zarr.zip'
+    file = f's3://nowcasting-nwp-{env}/data-metoffice/latest.zarr.zip'
     command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=nwp&file={file}"'
     nwp_update_ukv = BashOperator(
         task_id="nwp-update-ukv",
