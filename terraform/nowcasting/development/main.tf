@@ -842,7 +842,7 @@ module "pvsite_database_clean_up" {
   ]
   container-secret_vars = [
   {secret_policy_arn: module.pvsite_database.secret.arn,
-  values: ["OCF_PV_DB_URL"]}
+  values: ["DB_URL"]},
   ]
   container-tag         = var.database_cleanup_version
   container-name        = "openclimatefix/pvsite_database_cleanup"
