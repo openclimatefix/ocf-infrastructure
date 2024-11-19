@@ -9,12 +9,13 @@
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - Secret containing environment variables for the Satellite consumer
 # 3.2 - Secret containing HF read access
-# 4.0 - ECS task definition for the NWP consumer
+# 4.0 - ECS task definition for the ECMWF consumer
 # 4.1 - ECS task definition for the GFS consumer
-# 4.2 - ECS task definition for Collection RUVNL data
-# 4.3 - Satellite Consumer
-# 4.4 - ECS task definition for the Forecast - Client RU
-# 4.5 - ECS task definition for the Forecast - Client AD
+# 4.2 - ECS task definition for the MetOffice consumer
+# 4.3 - ECS task definition for Collection RUVNL data
+# 4.4 - Satellite Consumer
+# 4.5 - ECS task definition for the Forecast - Client RU
+# 4.6 - ECS task definition for the Forecast - Client AD
 # 5.0 - Airflow EB Instance
 # 5.1 - India API EB Instance
 # 5.2 - India Analysis Dashboard
@@ -198,9 +199,49 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ]
 }
 
-
-
 # 4.2
+module "nwp-consumer-metoffice-live-ecs-task" {
+  source = "../../modules/services/ecs_task"
+
+  ecs-task_name = "nwp-consumer-metoffice-india"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 512
+    memory = 1024
+  }
+
+  aws-region = var.region
+  aws-environment = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-nwp-bucket.id
+      access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
+    }
+  ]
+
+  container-env_vars = [
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "METOFFICE_ORDER_ID", "value" : "india-11params-54steps" },
+    { "name" : "MODEL_REPOSITORY", "value" : "metoffice-datahub" },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    { "name" : "ZARRDIR", "value" : "s3://" + module.s3.s3-nwp-bucket.id + "/metoffice/data" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+  ]
+  container-secret_vars = [
+    {
+      secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
+      values: ["METOFFICE_API_KEY"],
+    }
+  ]
+  container-tag         = "devsjc-major-refactor"
+  container-name        = "openclimatefix/nwp-consumer"
+  container-command     = ["consume"]
+}
+
+
+# 4.3
 module "ruvnl_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
@@ -234,7 +275,7 @@ module "ruvnl_consumer_ecs" {
   ]
 }
 
-# 4.3 - Satellite Consumer
+# 4.4 - Satellite Consumer
 module "satellite_consumer_ecs" {
   source = "../../modules/services/ecs_task"
 
@@ -277,7 +318,7 @@ module "satellite_consumer_ecs" {
 
 
 
-# 4.4 - Forecast - Client RU
+# 4.5 - Forecast - Client RU
 module "forecast" {
   source = "../../modules/services/forecast_generic"
 
@@ -317,7 +358,7 @@ module "forecast" {
 }
 
 
-# 4.5 - Forecast - Client AD
+# 4.6 - Forecast - Client AD
 module "forecast-ad" {
   source = "../../modules/services/ecs_task"
 
