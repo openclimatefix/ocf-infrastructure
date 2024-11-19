@@ -205,7 +205,7 @@ module "nwp-consumer-metoffice-live-ecs-task" {
 
   ecs-task_name = "nwp-consumer-metoffice-india"
   ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs_cluster.ecs_task_execution_role_arn
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   ecs-task_size = {
     cpu    = 512
     memory = 1024
@@ -216,7 +216,7 @@ module "nwp-consumer-metoffice-live-ecs-task" {
 
   s3-buckets = [
     {
-      id : module.s3-nwp-bucket.id
+      id : module.s3-nwp-bucket.bucket_id
       access_policy_arn : module.s3-nwp-bucket.write_policy_arn
     }
   ]
@@ -226,7 +226,7 @@ module "nwp-consumer-metoffice-live-ecs-task" {
     { "name" : "METOFFICE_ORDER_ID", "value" : "india-11params-54steps" },
     { "name" : "MODEL_REPOSITORY", "value" : "metoffice-datahub" },
     { "name" : "CONCURRENCY", "value" : "false" },
-    { "name" : "ZARRDIR", "value" : "s3://" + module.s3-nwp-bucket.id + "/metoffice/data" },
+    { "name" : "ZARRDIR", "value" : format("s3://%s/metoffice/data", module.s3-nwp-bucket.bucket_id) },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
   ]
   container-secret_vars = [
