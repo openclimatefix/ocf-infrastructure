@@ -12,7 +12,6 @@ def determine_latest_zarr(bucket: str, prefix: str):
     # Get the size of the most recent zarr and the latest.zarr zarr
     s3bucket = s3hook.get_bucket(bucket_name=bucket)
     size_old, size_new = (0, 0)
-    print(s3hook.list_keys(bucket_name=bucket, prefix=prefix + "/latest.zarr/"))
     if len(zarrs) == 0:
         s3hook.log.info("No non-latest zarrs found in bucket, exiting")
         return
@@ -30,7 +29,7 @@ def determine_latest_zarr(bucket: str, prefix: str):
         if prefix + "/latest.zarr/" in prefixes:
             s3hook.log.debug(f"Deleting {prefix}/latest.zarr/")
             keys_to_delete = s3hook.list_keys(bucket_name=bucket, prefix=prefix + "/latest.zarr/")
-            s3hook.delete_objects(bucket_name=bucket, keys=keys_to_delete)
+            s3hook.delete_objects(bucket=bucket, keys=keys_to_delete)
         # Copy the new latest.zarr
         s3hook.log.info(f"Copying {zarrs[0]} to {prefix}/latest.zarr/")
         source_keys = s3hook.list_keys(bucket_name=bucket, prefix=zarrs[0])
