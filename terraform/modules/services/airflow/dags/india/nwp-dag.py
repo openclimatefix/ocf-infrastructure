@@ -68,7 +68,7 @@ with DAG(
          task_concurrency=10,
     )
 
-    nwp_consumer_metoffice = ECSRunTaskOperator(
+    nwp_consumer_metoffice = EcsRunTaskOperator(
         task_id=f'{region}-nwp-consumer-metoffice-india',
         task_definition='nwp-consumer-metoffice-india',
         cluster=cluster,
