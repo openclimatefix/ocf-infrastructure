@@ -142,6 +142,13 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   }
 
   setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AWS_DEFAULT_REGION"
+    value     = var.aws-region
+    resource  = ""
+  }
+
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.aws-vpc_id

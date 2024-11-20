@@ -5,6 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
 from utils.slack import on_failure_callback
+from utils.s3 import determine_latest_zarr
 
 default_args = {
     'owner': 'airflow',
@@ -24,7 +25,13 @@ cluster = f"india-ecs-cluster-{env}"
 
 region = 'india'
 
-with DAG(f'{region}-nwp-consumer', schedule_interval="0 * * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
+with DAG(
+    f'{region}-nwp-consumer',
+    schedule_interval="0 * * * *",
+    default_args=default_args,
+    concurrency=10,
+    max_active_tasks=10,
+) as dag:
     dag.doc_md = "Get NWP data"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
@@ -45,7 +52,6 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="0 * * * *", default_args=d
          task_concurrency=10,
     )
 
-
     nwp_consumer_gfs = EcsRunTaskOperator(
          task_id=f'{region}-nwp-consumer-gfs-india',
          task_definition='nwp-consumer-gfs-india',
@@ -62,23 +68,26 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="0 * * * *", default_args=d
          task_concurrency=10,
     )
 
-    # nwp_consumer_meteomatics = EcsRunTaskOperator(
-    #     task_id=f'{region}-nwp-consumer-meteomatics-india',
-    #     task_definition='nwp-consumer-meteomatics-india',
-    #     cluster=cluster,
-    #     overrides={},
-    #     launch_type="FARGATE",
-    #     network_configuration={
-    #         "awsvpcConfiguration": {
-    #             "subnets": [subnet],
-    #             "securityGroups": [security_group],
-    #             "assignPublicIp": "ENABLED",
-    #         },
-    #     },
-    #     task_concurrency=10,
-    # )
+    nwp_consumer_metoffice = ECSRuntaskOperator(
+        task_id=f'{region}-nwp-consumer-metoffice-india',
+        task_definition='nwp-consumer-metoffice-india',
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+    )
+    rename_zarr_metoffice = determine_latest_zarr.override(
+            task_id="determine_latest_zarr_metoffice",
+    )(bucket=f"india-nwp-{env}", prefix="metoffice/data")
 
     latest_only >> nwp_consumer_ecmwf
     latest_only >> nwp_consumer_gfs
-    # latest_only >> nwp_consumer_meteomatics
+    latest_only >> nwp_consumer_metoffice >> rename_zarr_metoffice
 
