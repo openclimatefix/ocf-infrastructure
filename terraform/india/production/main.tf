@@ -11,10 +11,11 @@
 # 3.2 - Secret containing HF read access
 # 4.0 - ECS task definition for the NWP consumer
 # 4.1 - ECS task definition for the GFS consumer
-# 4.2 - ECS task definition for Collection RUVNL data
-# 4.3 - Satellite Consumer
-# 4.4 - ECS task definition for the Forecast - Client RU
-# 4.5 - ECS task definition for the Forecast - Client AD
+# 4.2 - ECS task definition for the MetOffice consumer
+# 4.3 - ECS task definition for Collection RUVNL data
+# 4.4 - Satellite Consumer
+# 4.5 - ECS task definition for the Forecast - Client RU
+# 4.6 - ECS task definition for the Forecast - Client AD
 # 5.0 - Airflow EB Instance
 # 5.1 - India API EB Instance
 # 5.2 - India Analysis Dashboard
@@ -201,8 +202,49 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ]
 }
 
-
 # 4.2
+module "nwp-consumer-metoffice-live-ecs-task" {
+  source = "../../modules/services/ecs_task"
+
+  ecs-task_name = "nwp-consumer-metoffice-india"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 512
+    memory = 1024
+  }
+
+  aws-region = var.region
+  aws-environment = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3-nwp-bucket.bucket_id
+      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
+    }
+  ]
+
+  container-env_vars = [
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "METOFFICE_ORDER_ID", "value" : "india-11params-54steps" },
+    { "name" : "MODEL_REPOSITORY", "value" : "metoffice-datahub" },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    { "name" : "ZARRDIR", "value" : format("s3://%s/metoffice/data", module.s3-nwp-bucket.bucket_id) },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+  ]
+  container-secret_vars = [
+    {
+      secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
+      values: ["METOFFICE_API_KEY"],
+    }
+  ]
+  container-tag         = "devsjc-major-refactor"
+  container-name        = "openclimatefix/nwp-consumer"
+  container-command     = ["consume"]
+}
+
+
+# 4.3
 module "ruvnl_consumer_ecs" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -237,7 +279,7 @@ module "ruvnl_consumer_ecs" {
 }
 
 
-# 4.3 - Satellite Consumer
+# 4.4 - Satellite Consumer
 module "satellite_consumer_ecs" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
 
@@ -278,9 +320,9 @@ module "satellite_consumer_ecs" {
 }
 
 
-# 4.4 - Forecast - Client RU
+# 4.5 - Forecast - Client RU
 module "forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=42eba24"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=f0ecf51"
 
   region      = var.region
   environment = local.environment
@@ -316,7 +358,7 @@ module "forecast" {
   sentry_dsn = var.sentry_dsn
 }
 
-# 4.5 - Forecast - Client AD
+# 4.6 - Forecast - Client AD
 module "forecast-ad" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=73255a4"
 
@@ -372,7 +414,7 @@ module "forecast-ad" {
 
 # 5.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=c73cee9"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=f0ecf51"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
