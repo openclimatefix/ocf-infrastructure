@@ -204,7 +204,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
 
 # 4.2
 module "nwp-consumer-metoffice-live-ecs-task" {
-  source = "../../modules/services/ecs_task"
+    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f0ecf51"
 
   ecs-task_name = "nwp-consumer-metoffice-india"
   ecs-task_type = "consumer"
