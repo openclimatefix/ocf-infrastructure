@@ -330,7 +330,7 @@ module "forecast" {
   ecs_config  = {
     docker_image   = "openclimatefix/india_forecast_app"
     docker_version = var.version-forecast
-    memory_mb      = 2048
+    memory_mb      = 4096
     cpu            = 1024
   }
   rds_config = {
