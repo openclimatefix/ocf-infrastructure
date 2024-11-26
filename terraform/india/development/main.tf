@@ -338,10 +338,6 @@ module "forecast" {
 
   s3-buckets = [
     {
-      id : module.s3-satellite-bucket.bucket_id,
-      access_policy_arn : module.s3-satellite-bucket.read_policy_arn
-    },
-    {
       id : module.s3-nwp-bucket.bucket_id,
       access_policy_arn : module.s3-nwp-bucket.read_policy_arn
     },
@@ -366,16 +362,12 @@ module "forecast" {
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
     { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
     { "name" : "NWP_MO_GLOBAL_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/metoffice/data/latest.zarr" },
-    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name" : "USE_SATELLITE", "value": "True"},
+    { "name" : "USE_SATELLITE", "value": "False"},
     { "name" : "SAVE_BATCHES_DIR", "value": "RUVNL"}
       ]
 
   container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.huggingface_consumer_secret.arn,
-        values: ["HUGGINGFACE_TOKEN"]
-       },
        {secret_policy_arn: module.postgres-rds.secret.arn,
         values: ["DB_URL"]
        }
