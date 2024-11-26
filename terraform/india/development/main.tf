@@ -364,7 +364,7 @@ module "forecast" {
     { "name" : "NWP_MO_GLOBAL_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/metoffice/data/latest.zarr" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     { "name" : "USE_SATELLITE", "value": "False"},
-    { "name" : "SAVE_BATCHES_DIR", "value": "RUVNL"}
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.s3-forecast-bucket.bucket_id}/RUVNL"}
       ]
 
   container-secret_vars = [
@@ -421,7 +421,7 @@ module "forecast-ad" {
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     { "name" : "USE_SATELLITE", "value": "True"},
     { "name" : "CLIENT_NAME", "value": "ad"},
-    { "name" : "SAVE_BATCHES_DIR", "value": "ad"},
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.s3-forecast-bucket.bucket_id}/ad"},
       ]
 
   container-secret_vars = [
