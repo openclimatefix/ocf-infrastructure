@@ -6,6 +6,7 @@
 # 1.3 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
 # 2.1 - S3 bucket for Satellite data
+# 2.2 - S3 bucket for Forecast data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - Secret containing environment variables for the Satellite consumer
 # 3.2 - Secret containing HF read access
@@ -85,6 +86,16 @@ module "s3-satellite-bucket" {
   domain              = local.domain
   service_name        = "satellite"
   lifecycled_prefixes = ["data"]
+}
+
+# 2.2
+module "s3-forecast-bucket" {
+  source              = "../../modules/storage/s3-private"
+  environment         = local.environment
+  region              = var.region
+  domain              = local.domain
+  service_name        = "forecast"
+  lifecycled_prefixes = [""]
 }
 
 # 3.0
@@ -318,43 +329,62 @@ module "satellite_consumer_ecs" {
 
 
 
-# 4.5 - Forecast - Client RU
+# 4.5 - Forecast - Client RUVNL
 module "forecast" {
-  source = "../../modules/services/forecast_generic"
+  source = "../../modules/services/ecs_task"
 
-  region      = var.region
-  environment = local.environment
-  app-name    = "forecast"
-  ecs_config = {
-    docker_image   = "openclimatefix/india_forecast_app"
-    docker_version = var.version-forecast
-    memory_mb      = 3072
-    cpu            = 1024
-  }
-  rds_config = {
-    database_secret_arn             = module.postgres-rds.secret.arn
-    database_secret_read_policy_arn = module.postgres-rds.secret-policy.arn
-  }
-  s3_nwp_bucket = {
-    bucket_id              = module.s3-nwp-bucket.bucket_id
-    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
-    datadir                = "ecmwf/data"
-  }
-  s3_satellite_bucket = {
-    bucket_id              = module.s3-satellite-bucket.bucket_id
-    bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn
-    datadir                = "data"
-  }
+  aws-region                    = var.region
+  aws-environment               = local.environment
 
-  // this isnt really needed
-  s3_ml_bucket = {
-    bucket_id              = module.s3-nwp-bucket.bucket_id
-    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
-  }
+  s3-buckets = [
+    {
+      id : module.s3-satellite-bucket.bucket_id,
+      access_policy_arn : module.s3-satellite-bucket.read_policy_arn
+    },
+    {
+      id : module.s3-nwp-bucket.bucket_id,
+      access_policy_arn : module.s3-nwp-bucket.read_policy_arn
+    },
+    {
+      id : module.s3-forecast-bucket.bucket_id,
+      access_policy_arn : module.s3-forecast-bucket.write_policy_arn
+    }
+  ]
 
-  loglevel                    = "INFO"
+  ecs-task_name               = "forecast"
+  ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  sentry_dsn= var.sentry_dsn
+  ecs-task_size = {
+    memory = 3072
+    cpu    = 1024
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
+    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
+    { "name" : "NWP_MO_GLOBAL_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/metoffice/data/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    { "name" : "USE_SATELLITE", "value": "True"},
+    { "name" : "SAVE_BATCHES_DIR", "value": "RUVNL"}
+      ]
+
+  container-secret_vars = [
+  {secret_policy_arn: aws_secretsmanager_secret.huggingface_consumer_secret.arn,
+        values: ["HUGGINGFACE_TOKEN"]
+       },
+       {secret_policy_arn: module.postgres-rds.secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
+
+  container-tag         = var.version-forecast
+  container-name        = "india_forecast_app"
+  container-registry    = "openclimatefix"
+  container-command     = []
 }
 
 
@@ -368,11 +398,15 @@ module "forecast-ad" {
   s3-buckets = [
     {
       id : module.s3-satellite-bucket.bucket_id,
-      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
+      access_policy_arn : module.s3-satellite-bucket.read_policy_arn
     },
     {
       id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
+      access_policy_arn : module.s3-nwp-bucket.read_policy_arn
+    },
+    {
+      id : module.s3-forecast-bucket.bucket_id,
+      access_policy_arn : module.s3-forecast-bucket.write_policy_arn
     }
   ]
 
@@ -395,6 +429,7 @@ module "forecast-ad" {
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     { "name" : "USE_SATELLITE", "value": "True"},
     { "name" : "CLIENT_NAME", "value": "ad"}
+    { "name" : "SAVE_BATCHES_DIR", "value": "ad"}
       ]
 
   container-secret_vars = [
