@@ -73,3 +73,8 @@ variable satellite-consumer {
   default = "0.0.1"
   description = "Container image tag of the satellite data consumer to use: openclimatefix/satip"
 }
+
+variable "auth_dashboard_client_id" {
+  description = "The Auth client id for the dashboard that should be used"
+  default     = "not-set"
+}
