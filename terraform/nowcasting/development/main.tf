@@ -790,33 +790,50 @@ module "pvsite_ml_bucket" {
 
 # 6.4
 module "pvsite_forecast" {
-  source = "../../modules/services/forecast_generic"
+source = "../../modules/services/ecs_task"
 
-  region      = var.region
-  environment = local.environment
-  app-name    = "pvsite_forecast"
-  ecs_config  = {
-    docker_image   = "openclimatefix/pvsite_forecast"
-    docker_version = var.pvsite_forecast_version
-    memory_mb      = 4096
-    cpu            = 1024
-  }
-  rds_config = {
-    database_secret_arn             = module.pvsite_database.secret.arn
-    database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
-  }
-  s3_ml_bucket = {
-    bucket_id              = module.pvsite_ml_bucket.bucket_id
-    bucket_read_policy_arn = module.pvsite_ml_bucket.read_policy_arn
-  }
-  s3_nwp_bucket = {
-    bucket_id              = module.s3.s3-nwp-bucket.id
-    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data-metoffice"
-  }
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-nwp-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
+    },
+    {
+      id : module.pvsite_ml_bucket.bucket_id,
+      access_policy_arn : module.pvsite_ml_bucket.read_policy_arn
+    }
+  ]
+
+  ecs-task_name               = "pvsite_forecast"
+  ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  sentry_dsn = var.sentry_dsn
+  ecs-task_size = {
+    memory = 4096
+    cpu    = 1024
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "OCF_ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "NWP_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+  ]
+
+  container-secret_vars = [
+       {secret_policy_arn: module.pvsite_database.secret.arn,
+        values: ["OCF_PV_DB_URL"]
+       }
+       ]
+
+  container-tag         = var.pvsite_forecast_version
+  container-name        = "openclimatefix/pvsite_forecast"
+  container-registry    = "docker.io"
+  container-command     = []
 }
+
 
 # 6.5
 module "pvsite_database_clean_up" {
