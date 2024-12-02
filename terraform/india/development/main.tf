@@ -501,6 +501,8 @@ module "analysis_dashboard" {
     { "name" : "ORIGINS", "value" : "*" },
     { "name" : "REGION", "value": local.domain},
     { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
   ]
   container-name     = "analysis-dashboard"
   container-tag      = var.analysis_dashboard_version

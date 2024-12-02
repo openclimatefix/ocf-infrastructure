@@ -72,3 +72,8 @@ variable "auth_api_audience" {
   description = "The Auth API Audience that should be used"
   default = "not-set"
 }
+
+variable "auth_dashboard_client_id" {
+  description = "The Auth client id for the dashboard that should be used"
+  default     = "not-set"
+}
