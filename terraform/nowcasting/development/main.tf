@@ -499,33 +499,48 @@ module "metrics" {
 
 # 4.3
 module "national_forecast" {
-  source = "../../modules/services/forecast_generic"
+source = "../../modules/services/ecs_task"
 
-  region      = var.region
-  environment = local.environment
-  app-name    = "forecast_national"
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-nwp-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.read_policy_arn
+    }
+  ]
+
+  ecs-task_name               = "forecast_national"
+  ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs_config  = {
-    docker_image   = "openclimatefix/gradboost_pv"
-    docker_version = var.national_forecast_version
-    memory_mb      = 11264
-    cpu            = 2048
-  }
-  rds_config = {
-    database_secret_arn             = module.database.forecast-database-secret.arn
-    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
-  }
-  s3_ml_bucket = {
-    bucket_id              = module.forecasting_models_bucket.bucket_id
-    bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn
-  }
-  s3_nwp_bucket = {
-    bucket_id              = module.s3.s3-nwp-bucket.id
-    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data-metoffice"
+  ecs-task_size = {
+    memory = 11264
+    cpu    = 2048
   }
 
-  sentry_dsn = var.sentry_dsn
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "NWP_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+  ]
+
+  container-secret_vars = [
+       {secret_policy_arn: module.database.forecast-database-secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
+
+  container-tag         = var.national_forecast_version
+  container-name        = "openclimatefix/gradboost_pv"
+  container-registry    = "docker.io"
+  container-command     = []
 }
 
 # 4.4
