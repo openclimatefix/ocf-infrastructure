@@ -630,41 +630,58 @@ source = "../../modules/services/ecs_task"
   container-command     = []
 }
 
+
 # 4.6
 module "forecast_pvnet_day_ahead" {
-  source = "../../modules/services/forecast_generic"
+source = "../../modules/services/ecs_task"
 
-  region      = var.region
-  environment = local.environment
-  app-name    = "forecast_pvnet_day_ahead"
-  ecs_config  = {
-    docker_image   = "openclimatefix/pvnet_app"
-    docker_version = var.forecast_pvnet_day_ahead_docker_version
-    memory_mb      = 8192
-    cpu            = 2048
-  }
-  rds_config = {
-    database_secret_arn             = module.database.forecast-database-secret.arn
-    database_secret_read_policy_arn = module.database.iam-policy-forecast-db-read.arn
-  }
-  s3_ml_bucket = {
-    bucket_id              = module.forecasting_models_bucket.bucket_id
-    bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn
-  }
-  s3_nwp_bucket = {
-    bucket_id              = module.s3.s3-nwp-bucket.id
-    bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn
-    datadir                = "data-metoffice"
-  }
-  s3_satellite_bucket = {
-    bucket_id              = module.s3.s3-sat-bucket.id
-    bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn
-    datadir                = "data/latest"
-  }
-  loglevel      = "INFO"
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-nwp-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
+    },
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    }
+
+  ]
+
+  ecs-task_name               = "forecast_pvnet_day_ahead"
+  ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  day_ahead_model = "true"
-  sentry_dsn = var.sentry_dsn
+  ecs-task_size = {
+    memory = 8192
+    cpu    = 2048
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
+    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    {"name": "USE_ADJUSTER", "value": "true"},
+    {"name": "RUN_EXTRA_MODELS",  "value": "false"},
+    {"name": "DAY_AHEAD_MODEL",  "value": "true"},
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "false"}
+  ]
+
+  container-secret_vars = [
+       {secret_policy_arn: module.database.forecast-database-secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
+
+  container-tag         = var.forecast_pvnet_day_ahead_docker_version
+  container-name        = "openclimatefix/pvnet_app"
+  container-registry    = "docker.io"
+  container-command     = []
 }
 
 # 5.1
