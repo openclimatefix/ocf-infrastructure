@@ -35,6 +35,7 @@ The componentes ares:
 6.3 - PVSite ML bucket
 6.4 - PVSite Forecast
 6.5 - PVSite Database Clean Up
+7.1 - Open Data PVnet
 
 Variables used across all modules
 ======*/
@@ -917,4 +918,10 @@ module "pvsite_database_clean_up" {
                  }
                     ]
   container-command = []
+}
+
+
+# 7.1 Open Data PVnet - Public s3 bucket
+module "open_data_pvnet_s3" {
+  source = "../../modules/storage/open-data-pvnet-s3"
 }
