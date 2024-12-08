@@ -778,21 +778,40 @@ module "pvsite_forecast" {
   sentry_dsn = var.sentry_dsn
 }
 
+
 # 6.5
 module "pvsite_database_clean_up" {
-  source      = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/database_clean_up?ref=2747e85"
-  region      = var.region
-  environment = local.environment
-  app-name    = "database_clean_up"
-  ecs_config  = {
-    docker_image   = "openclimatefix/pvsite_database_cleanup"
-    docker_version = var.database_cleanup_version
-    memory_mb      = 512
-    cpu            = 256
-  }
-  rds_config = {
-    database_secret_arn             = module.pvsite_database.secret.arn
-    database_secret_read_policy_arn = module.pvsite_database.secret-policy.arn
-  }
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=c676a5d"
+
+  ecs-task_name = "database_clean_up"
+  ecs-task_type = "clean"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  container-env_vars = [
+        {"name": "LOGLEVEL", "value" : "INFO"},
+        {"name": "OCF_ENVIRONMENT", "value": local.environment},
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "SAVE_DIR", "value" :  "s3://${module.pvsite_ml_bucket.bucket_id}/database" },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.pvsite_database.secret.arn,
+  values: ["DB_URL"]},
+  ]
+  container-tag         = var.database_cleanup_version
+  container-name        = "openclimatefix/pvsite_database_cleanup"
+  container-registry = "docker.io"
+  s3-buckets = [
+                { id : module.pvsite_ml_bucket.bucket_id,
+                  access_policy_arn = module.pvsite_ml_bucket.write_policy_arn
+                 }
+                    ]
+  container-command = []
 }
