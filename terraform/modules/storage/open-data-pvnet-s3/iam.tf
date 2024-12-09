@@ -32,7 +32,7 @@ resource "aws_iam_group" "open_data_pvnet_write_group" {
 }
 
 # attach policy to group
-resource "aws_iam_group_policy_attachment" "open_data_pvnet_write_policy_attachment" {
+resource "aws_iam_policy_attachment" "open_data_pvnet_write_policy_attachment" {
   name       = "s3-write-attachment"
   policy_arn = aws_iam_policy.open_data_pvnet_write_policy.arn
   group      = aws_iam_group.open_data_pvnet_write_group.name
