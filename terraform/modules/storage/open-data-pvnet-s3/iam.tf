@@ -12,11 +12,6 @@ data "aws_iam_policy_document" "open_data_pvnet_write_policy_description" {
     resources = [aws_s3_bucket.bucket.arn, "${aws_s3_bucket.bucket.arn}/*"]
     effect = "Allow"
   }
-
-  tags = {
-    Name = "Open_Data_PVNet"
-  }
-
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy
