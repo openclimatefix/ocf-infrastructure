@@ -530,7 +530,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "NWP_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name": "ML_MODEL_BUCKET", "value": "s3://${module.forecasting_models_bucket.bucket_id}/"}
+    { "name": "ML_MODEL_BUCKET", "value": module.forecasting_models_bucket.bucket_id}
   ]
 
   container-secret_vars = [
