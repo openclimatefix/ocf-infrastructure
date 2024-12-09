@@ -3,10 +3,9 @@
 # Bucket itself
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
 resource "aws_s3_bucket" "bucket" {
-  bucket = "${var.domain}-${var.service_name}-${var.environment}"
+  bucket = "ocf-open-data-pvnet"
 
   tags = {
-    Name        = "${var.environment}-s3"
-    Environment = var.environment
+    Name        = "Open_Data_PVNet"
   }
 }
