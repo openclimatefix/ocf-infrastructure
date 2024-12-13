@@ -229,6 +229,12 @@ module "nwp-ecmwf" {
     { "name" : "ZARRDIR", "value" : format("s3://%s/ecmwf/data", module.s3.s3-nwp-bucket.id) },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    # legacy ones
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ECMWF_AREA", "value" : "uk" },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
