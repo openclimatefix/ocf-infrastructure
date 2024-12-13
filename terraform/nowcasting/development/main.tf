@@ -208,7 +208,7 @@ module "nwp-ecmwf" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
-  ecs-task-size = {
+  ecs-task_size = {
     cpu = 512
     memory = 1024
   }
