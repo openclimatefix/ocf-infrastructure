@@ -6,6 +6,7 @@ from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
 from utils.slack import on_failure_callback
+from utils.s3 import determine_latest_zarr
 
 default_args = {
     'owner': 'airflow',
@@ -70,6 +71,10 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
         task_concurrency=10,
     )
 
+    rename_zarr_ecmwf = determine_latest_zarr.override(
+        task_id="determine_latest_zarr_ecmwf",
+    )(bucket=f'nowcasting-nwp-{env}', prefix='ecmwf/data')
+
     file = f's3://nowcasting-nwp-{env}/data-metoffice/latest.zarr.zip'
     command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=nwp&file={file}"'
     nwp_update_ukv = BashOperator(
@@ -85,5 +90,5 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
     )
 
     latest_only >> nwp_national_consumer >> nwp_update_ukv
-    latest_only >> nwp_ecmwf_consumer >> nwp_update_ecmwf
+    latest_only >> nwp_ecmwf_consumer >> rename_zarr_ecmwf >> nwp_update_ecmwf
 
