@@ -208,6 +208,11 @@ module "nwp-ecmwf" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
+  ecs-task-size = {
+    cpu = 512
+    memory = 1024
+  }
+
   aws-region                    = var.region
   aws-environment               = local.environment
 
@@ -217,29 +222,21 @@ module "nwp-ecmwf" {
   }]
 
   container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
-    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
+    { "name" : "AWS_REGION", "value" : "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ZARRDIR", "value" : format("s3://%s/ecmwf/data", module.s3.s3-nwp-bucket.id) },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "ECMWF_AREA", "value" : "uk" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]}
+  values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]}
   ]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "download",
-    "--source=ecmwf-s3",
-    "--sink=s3",
-    "--rdir=ecmwf/raw",
-    "--zdir=ecmwf/data",
-    "--create-latest"
-  ]
+  container-command     = ["consume"]
 }
 
 # 3.4 Sat Consumer
