@@ -235,7 +235,7 @@ module "nwp-ecmwf" {
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
     { "name" : "ECMWF_AREA", "value" : "uk" },
     { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn }
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "LOGLEVEL", "value" : "DEBUG" }
   ]
   container-secret_vars = [
