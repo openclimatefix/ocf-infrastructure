@@ -87,7 +87,7 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
-    value     = "1"
+    value     = var.max_ec2_count
     resource  = ""
   }
 
