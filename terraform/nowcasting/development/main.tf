@@ -18,9 +18,9 @@ The componentes ares:
 3.4 - Satellite Consumer
 3.5 - Satellite Data Tailor Clean up
 3.6 - PV Consumer
-3.7 - GSP Consumer (From PVLive)
-3.8 - GSP Consumer - GSP Day After
-3.9 - GSP Consumer - National Day After
+3.7 - PVLive Consumer (From PVLive)
+3.8 - PVLive Consumer - GSP Day After
+3.9 - PVLive Consumer - National Day After
 4.1 - Metrics
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
@@ -367,7 +367,7 @@ module "pv" {
 module "gsp-consumer" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "gsp"
+  ecs-task_name = "pvlive"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -392,7 +392,7 @@ module "gsp-consumer" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/gspconsumer"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
@@ -401,7 +401,7 @@ module "gsp-consumer" {
 module "gsp-consumer-day-after-gsp" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "gsp-day-after"
+  ecs-task_name = "pvlive-gsp-day-after"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -426,7 +426,7 @@ module "gsp-consumer-day-after-gsp" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/gspconsumer"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
@@ -435,7 +435,7 @@ module "gsp-consumer-day-after-gsp" {
 module "gsp-consumer-day-after-national" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "national-day-after"
+  ecs-task_name = "pvlive-national-day-after"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -460,7 +460,7 @@ module "gsp-consumer-day-after-national" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/gspconsumer"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
