@@ -38,7 +38,7 @@ with DAG(
 
     national_day_after = EcsRunTaskOperator(
         task_id=f'{region}-national-day-after',
-        task_definition='national-day-after',
+        task_definition='pvlive-national-day-after',
         cluster=cluster,
         overrides={},
         awslogs_region="eu-west-1",
@@ -66,7 +66,7 @@ with DAG(
 
     gsp_day_after = EcsRunTaskOperator(
         task_id=f'{region}-gsp-day-after',
-        task_definition='gsp-day-after',
+        task_definition='pvlive-gsp-day-after',
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
