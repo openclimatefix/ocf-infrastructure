@@ -111,7 +111,7 @@ module "api" {
   container-tag  = var.api_version
   container-registry = "openclimatefix"
   eb-app_name    = "nowcasting-api"
-  eb-instance_type = "t3.small"
+  eb-instance_type = "t3.medium"
   s3_bucket = [
     { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
     { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
@@ -120,7 +120,7 @@ module "api" {
 
 # 2.1
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=6e24edf"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=7b0c0e0"
 
   region               = var.region
   environment          = local.environment

@@ -414,7 +414,7 @@ module "forecast-ad" {
 
 # 5.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=f0ecf51"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=7e27e14"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
