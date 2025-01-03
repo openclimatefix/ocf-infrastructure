@@ -362,7 +362,7 @@ module "gsp-consumer" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/pvlive"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
@@ -397,7 +397,7 @@ module "gsp-consumer-day-after-gsp" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/pvlive"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
@@ -432,7 +432,7 @@ module "gsp-consumer-day-after-national" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/pvlive"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
