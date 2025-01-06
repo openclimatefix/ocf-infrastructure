@@ -24,7 +24,7 @@ variable "nwp_version" {
 
 variable "nwp_ecmwf_version" {
   description = "The ECMWF NWP version"
-  default=1.0.8
+  default="1.0.8"
 }
 
 variable "sat_version" {
