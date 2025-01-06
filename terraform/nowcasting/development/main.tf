@@ -227,7 +227,7 @@ module "nwp-ecmwf" {
     { "name" : "AWS_REGION", "value" : "eu-west-1" },
     { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
     { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-    { "name" : "ZARRDIR", "value" : format("s3://%s/ecmwf/data", module.s3.s3-nwp-bucket.id) },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "CONCURRENCY", "value" : "false" },
