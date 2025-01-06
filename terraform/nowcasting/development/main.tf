@@ -230,6 +230,7 @@ module "nwp-ecmwf" {
     { "name" : "ZARRDIR", "value" : format("s3://%s/ecmwf/data", module.s3.s3-nwp-bucket.id) },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
     # legacy ones
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
@@ -243,7 +244,7 @@ module "nwp-ecmwf" {
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
   values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]}
   ]
-  container-tag         = var.nwp_version
+  container-tag         = var.nwp_ecmwf_version
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = ["consume"]
 }
