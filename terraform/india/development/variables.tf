@@ -10,6 +10,12 @@ variable version-nwp {
   description = "Container image tag of the NWP consumer to use: openclimatefix/nwp-consumer"
 }
 
+variable version-nwp-ecmwf {
+  type = string
+  default = "1.0.9"
+  description = "Container image tag of the NWP consumer to use for ECMWF: openclimatefix/nwp-consumer"
+}
+
 variable version-india_api {
   type = string
   default = "0.1.0"

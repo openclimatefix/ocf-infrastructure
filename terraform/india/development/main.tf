@@ -142,7 +142,16 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
 
   container-env_vars = [
+    { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
+    { "name" : "MODEL", "value" : "hres-ifs-india" },
     { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data" },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "ECMWF_AWS_REGION", "value" : "eu-west-1" },
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
@@ -153,17 +162,12 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
   container-secret_vars = [
   {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+  values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]
        }]
-  container-tag         = var.version-nwp
+  container-tag         = var.version-nwp-ecmwf
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
-    "download",
-    "--source=ecmwf-s3",
-    "--sink=s3",
-    "--rdir=ecmwf/raw",
-    "--zdir=ecmwf/data",
-    "--create-latest"
+    "consume"
   ]
 }
 
