@@ -91,7 +91,7 @@ with DAG(
         task_id="determine_latest_zarr_ecmwf",
     )(bucket=f'india-nwp-{env}', prefix='ecmwf/data')
 
-    latest_only >> rename_zarr_ecmwf >> nwp_consumer_ecmwf
+    latest_only >> nwp_consumer_ecmwf >> rename_zarr_ecmwf
     latest_only >> nwp_consumer_gfs
     latest_only >> nwp_consumer_metoffice >> rename_zarr_metoffice
 
