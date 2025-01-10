@@ -127,8 +127,8 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   ecs-task_size = {
-      cpu    = 2048
-      memory = 10240
+      cpu    = 512
+      memory = 1024
   }
 
   aws-region                    = var.region
@@ -176,8 +176,8 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ecs-task_name               = "nwp-consumer-gfs-india"
   ecs-task_type               = "consumer"
   ecs-task_size = {
-    cpu    = 1024
-    memory = 5120
+    cpu    = 512
+    memory = 1024
   }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
@@ -192,23 +192,21 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ]
 
   container-env_vars = [
+    { "name" : "MODEL_REPOSITORY", "value" : "gfs" },
     { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = []
-  container-tag         = var.version-nwp
+  container-tag         = var.version-nwp-gfs
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
-    "download",
-    "--source=gfs",
-    "--sink=s3",
-    "--rdir=gfs/raw",
-    "--zdir=gfs/data",
-    "--create-latest",
-    "--no-rename-vars"
+    "consume"
   ]
 }
 
