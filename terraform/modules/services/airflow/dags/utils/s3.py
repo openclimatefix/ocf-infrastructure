@@ -34,8 +34,6 @@ def determine_latest_zarr(bucket: str, prefix: str):
             keys_to_delete = s3hook.list_keys(bucket_name=bucket, prefix=prefix + "/latest.zarr/")
             s3hook.delete_objects(bucket=bucket, keys=keys_to_delete)
 
-        #
-
         # move latest zarr file to latest.zarr using s3 batch jobs
         s3hook.log.info(f"Creating {prefix}/latest.zarr/")
 
@@ -49,7 +47,6 @@ def determine_latest_zarr(bucket: str, prefix: str):
                 dest_bucket_name=bucket,
                 dest_bucket_key=prefix + "/latest.zarr/" + key.split(zarrs[0])[-1],
             )
-        s3hook.delete_objects(bucket=bucket, keys=source_keys)
 
     else:
         s3hook.log.info("No changes to latest.zarr required")
