@@ -18,7 +18,7 @@ variable version-nwp-ecmwf {
 
 variable version-nwp-gfs {
   type = string
-  default = "1.0.9"
+  default = "1.0.10"
   description = "Container image tag of the NWP consumer to use for GFS: openclimatefix/nwp-consumer"
 }
 
