@@ -193,20 +193,22 @@ module "nwp-metoffice" {
 module "nwp-ecmwf" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=2b68542"
 
-  ecs-task_name = "nwp-consumer-ecmwf-uk"
-  ecs-task_type = "consumer"
+  ecs-task_name               = "nwp-consumer-ecmwf-uk"
+  ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
-  aws-region                     = var.region
-  aws-environment                = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
+  ecs-task_size = {
+    cpu = 512
+    memory = 1024
+  }
 
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id
-      access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
-    }
-  ]
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [{
+    id : module.s3.s3-nwp-bucket.id
+    access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
+  }]
 
   container-env_vars = [
     { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
