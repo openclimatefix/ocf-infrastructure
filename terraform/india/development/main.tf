@@ -316,6 +316,7 @@ module "satellite_consumer_ecs" {
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "HISTORY", "value" : "75 minutes" },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
