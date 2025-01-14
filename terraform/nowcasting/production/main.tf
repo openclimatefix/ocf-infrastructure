@@ -106,6 +106,7 @@ module "api" {
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
     { "name" : "ADJUST_MW_LIMIT", "value" : "1000" },
     { "name" : "N_HISTORY_DAYS", "value" : "2" },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-name = "nowcasting_api"
   container-tag  = var.api_version
