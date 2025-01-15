@@ -75,14 +75,14 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
         task_id="determine_latest_zarr_ecmwf",
     )(bucket=f'nowcasting-nwp-{env}', prefix='ecmwf/data')
 
-    file = f's3://nowcasting-nwp-{env}/data-metoffice/latest.zarr.zip'
+    file = f's3://nowcasting-nwp-{env}/data-metoffice/latest.zarr'
     command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=nwp&file={file}"'
     nwp_update_ukv = BashOperator(
         task_id="nwp-update-ukv",
         bash_command=command,
     )
 
-    file = f's3://nowcasting-nwp-{env}/ecmwf/data/latest.zarr.zip'
+    file = f's3://nowcasting-nwp-{env}/ecmwf/data/latest.zarr'
     command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=nwp&file={file}"'
     nwp_update_ecmwf = BashOperator(
         task_id="nwp-update-ecmwf",
