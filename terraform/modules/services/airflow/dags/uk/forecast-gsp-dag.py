@@ -50,7 +50,7 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
     )
 
     forecast_ecmwf = EcsRunTaskOperator(
-        task_id=f'{region}-gsp-forecast-pvnet-2-ecwmf',
+        task_id=f'{region}-gsp-forecast-pvnet-2-ecmwf',
         task_definition='forecast_pvnet_ecmwf',
         cluster=cluster,
         overrides={},
