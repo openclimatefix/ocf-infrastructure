@@ -162,7 +162,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
   values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]
        }]
-  container-tag         = var.version-nwp-ecmwf
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "consume"
@@ -203,7 +203,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = []
-  container-tag         = var.version-nwp-gfs
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
     "consume"
@@ -246,7 +246,7 @@ module "nwp-consumer-metoffice-live-ecs-task" {
       values: ["METOFFICE_API_KEY"],
     }
   ]
-  container-tag         = "devsjc-major-refactor"
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = ["consume"]
 }
