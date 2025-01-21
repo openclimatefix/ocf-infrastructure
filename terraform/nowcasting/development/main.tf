@@ -521,10 +521,6 @@ source = "../../modules/services/ecs_task"
     {
       id : module.forecasting_models_bucket.bucket_id,
       access_policy_arn : module.forecasting_models_bucket.read_policy_arn
-    },
-    {
-      id : module.forecasting_models_bucket.bucket_id,
-      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
   ]
 
@@ -572,6 +568,10 @@ source = "../../modules/services/ecs_task"
     {
       id : module.s3.s3-sat-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
   ]
 
@@ -622,6 +622,10 @@ source = "../../modules/services/ecs_task"
     {
       id : module.s3.s3-nwp-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
   ]
 
@@ -676,6 +680,10 @@ source = "../../modules/services/ecs_task"
     {
       id : module.s3.s3-sat-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
 
   ]
