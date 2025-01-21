@@ -104,6 +104,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ACSE-vg822",
+      "name": "Vidushee Geetam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82698606?v=4",
+      "profile": "https://github.com/ACSE-vg822",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
