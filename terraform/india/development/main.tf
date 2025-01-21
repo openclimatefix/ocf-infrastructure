@@ -246,7 +246,7 @@ module "nwp-consumer-metoffice-live-ecs-task" {
       values: ["METOFFICE_API_KEY"],
     }
   ]
-  container-tag         = "var.version-nwp"
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = ["consume"]
 }
