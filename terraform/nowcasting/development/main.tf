@@ -521,6 +521,10 @@ source = "../../modules/services/ecs_task"
     {
       id : module.forecasting_models_bucket.bucket_id,
       access_policy_arn : module.forecasting_models_bucket.read_policy_arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
   ]
 
@@ -591,7 +595,8 @@ source = "../../modules/services/ecs_task"
     { "name" : "SAVE_GSP_SUM", "value": "true"},
     { "name" : "RUN_EXTRA_MODELS",  "value": "true"},
     { "name" : "DAY_AHEAD_MODEL",  "value": "false"},
-    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true"}
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true"},
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
   container-secret_vars = [
@@ -639,7 +644,8 @@ source = "../../modules/services/ecs_task"
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "false"},
     {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"}
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
+    {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
   container-secret_vars = [
@@ -693,7 +699,8 @@ source = "../../modules/services/ecs_task"
     {"name": "USE_ADJUSTER", "value": "true"},
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "true"},
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "false"}
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "false"},
+    {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
   container-secret_vars = [
