@@ -8,14 +8,14 @@ from utils.slack import on_failure_callback
 from utils.s3 import determine_latest_zarr
 
 default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'start_date': datetime.now(tz=timezone.utc) - timedelta(hours=1.5),
-    'retries': 1,
-    'retry_delay': timedelta(minutes=1),
-    'max_active_runs':10,
-    'concurrency':10,
-    'max_active_tasks':10,
+    "owner": "airflow",
+    "depends_on_past": False,
+    "start_date": datetime.now(tz=timezone.utc) - timedelta(hours=1.5),
+    "retries": 1,
+    "retry_delay": timedelta(minutes=1),
+    "max_active_runs": 10,
+    "concurrency": 10,
+    "max_active_tasks": 10,
 }
 
 env = os.getenv("ENVIRONMENT", "development")
@@ -23,10 +23,10 @@ subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"india-ecs-cluster-{env}"
 
-region = 'india'
+region = "india"
 
 with DAG(
-    f'{region}-nwp-consumer',
+    f"{region}-nwp-consumer",
     schedule_interval="0 * * * *",
     default_args=default_args,
     concurrency=10,
@@ -37,40 +37,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     nwp_consumer_ecmwf = EcsRunTaskOperator(
-         task_id=f'{region}-nwp-consumer-ecmwf-india',
-         task_definition='nwp-consumer-ecmwf-india',
-         cluster=cluster,
-         overrides={},
-         launch_type="FARGATE",
-         network_configuration={
-             "awsvpcConfiguration": {
-                 "subnets": [subnet],
-                 "securityGroups": [security_group],
-                 "assignPublicIp": "ENABLED",
-             },
-         },
-         task_concurrency=10,
-    )
-
-    nwp_consumer_gfs = EcsRunTaskOperator(
-         task_id=f'{region}-nwp-consumer-gfs-india',
-         task_definition='nwp-consumer-gfs-india',
-         cluster=cluster,
-         overrides={},
-         launch_type="FARGATE",
-         network_configuration={
-             "awsvpcConfiguration": {
-                 "subnets": [subnet],
-                 "securityGroups": [security_group],
-                 "assignPublicIp": "ENABLED",
-             },
-         },
-         task_concurrency=10,
-    )
-
-    nwp_consumer_metoffice = EcsRunTaskOperator(
-        task_id=f'{region}-nwp-consumer-metoffice-india',
-        task_definition='nwp-consumer-metoffice-india',
+        task_id=f"{region}-nwp-consumer-ecmwf-india",
+        task_definition="nwp-consumer-ecmwf-india",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -82,20 +50,60 @@ with DAG(
             },
         },
         task_concurrency=10,
+        awslogs_group="/aws/ecs/consumer/nwp-consumer-ecmwf-india",
+        awslogs_stream_prefix="streaming/nwp-consumer-ecmwf-india-consumer",
+        awslogs_region="ap-south-1",
+    )
+
+    nwp_consumer_gfs = EcsRunTaskOperator(
+        task_id=f"{region}-nwp-consumer-gfs-india",
+        task_definition="nwp-consumer-gfs-india",
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+        awslogs_group="/aws/ecs/consumer/nwp-consumer-gfs-india",
+        awslogs_stream_prefix="streaming/nwp-consumer-gfs-india-consumer",
+        awslogs_region="ap-south-1",
+    )
+
+    nwp_consumer_metoffice = EcsRunTaskOperator(
+        task_id=f"{region}-nwp-consumer-metoffice-india",
+        task_definition="nwp-consumer-metoffice-india",
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+        awslogs_group="/aws/ecs/consumer/nwp-consumer-metoffice-india",
+        awslogs_stream_prefix="streaming/nwp-consumer-metoffice-india-consumer",
+        awslogs_region="ap-south-1",
     )
     rename_zarr_metoffice = determine_latest_zarr.override(
-            task_id="determine_latest_zarr_metoffice",
+        task_id="determine_latest_zarr_metoffice",
     )(bucket=f"india-nwp-{env}", prefix="metoffice/data")
 
     rename_zarr_ecmwf = determine_latest_zarr.override(
         task_id="determine_latest_zarr_ecmwf",
-    )(bucket=f'india-nwp-{env}', prefix='ecmwf/data')
+    )(bucket=f"india-nwp-{env}", prefix="ecmwf/data")
 
     rename_zarr_gfs = determine_latest_zarr.override(
         task_id="determine_latest_zarr_gfs",
-    )(bucket=f'india-nwp-{env}', prefix='gfs/data')
+    )(bucket=f"india-nwp-{env}", prefix="gfs/data")
 
     latest_only >> nwp_consumer_ecmwf >> rename_zarr_ecmwf
     latest_only >> nwp_consumer_gfs >> rename_zarr_gfs
     latest_only >> nwp_consumer_metoffice >> rename_zarr_metoffice
-
