@@ -22,10 +22,10 @@ subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"india-ecs-cluster-{env}"
 
-region = 'india'
+region = "india"
 
 with DAG(
-    f'{region}-runvl-data-consumer',
+    f"{region}-runvl-data-consumer",
     schedule_interval="*/3 * * * *",
     default_args=default_args,
     concurrency=10,
@@ -36,8 +36,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     runvl_data = EcsRunTaskOperator(
-        task_id=f'{region}-runvl-consumer',
-        task_definition='runvl-consumer',
+        task_id=f"{region}-runvl-consumer",
+        task_definition="runvl-consumer",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -50,11 +50,9 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
-        awslogs_group='/aws/ecs/consumer/runvl-consumer',
-        awslogs_stream_prefix='streaming/runvl-consumer-consumer',
-        awslogs_region='ap-south-1'
+        awslogs_group="/aws/ecs/consumer/runvl-consumer",
+        awslogs_stream_prefix="streaming/runvl-consumer-consumer",
+        awslogs_region="ap-south-1",
     )
 
-
     latest_only >> [runvl_data]
-

@@ -14,7 +14,7 @@ default_args = {
     "max_active_runs": 10,
     "concurrency": 10,
     "max_active_tasks": 10,
-    "execution_timeout":timedelta(minutes=30),
+    "execution_timeout": timedelta(minutes=30),
 }
 
 env = os.getenv("ENVIRONMENT", "development")
@@ -24,10 +24,10 @@ cluster = f"india-ecs-cluster-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
-region = 'india'
+region = "india"
 
 with DAG(
-    f'{region}-satellite-consumer',
+    f"{region}-satellite-consumer",
     schedule_interval="*/5 * * * *",
     default_args=default_args,
     concurrency=10,
@@ -39,8 +39,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     sat_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-satellite-consumer',
-        task_definition='sat-consumer',
+        task_id=f"{region}-satellite-consumer",
+        task_definition="sat-consumer",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -53,9 +53,9 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
-        awslogs_group='/aws/ecs/consumer/sat-consumer',
-        awslogs_stream_prefix='streaming/sat-consumer-consumer',
-        awslogs_region='ap-south-1'
+        awslogs_group="/aws/ecs/consumer/sat-consumer",
+        awslogs_stream_prefix="streaming/sat-consumer-consumer",
+        awslogs_region="ap-south-1",
     )
 
     latest_only >> sat_consumer

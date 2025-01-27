@@ -25,10 +25,10 @@ cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
-region = 'uk'
+region = "uk"
 
 with DAG(
-    f'{region}-national-day-after',
+    f"{region}-national-day-after",
     schedule_interval="0 11 * * *",
     default_args=default_args,
     concurrency=10,
@@ -37,8 +37,8 @@ with DAG(
     dag1.doc_md = "Get National PVLive updated values"
 
     national_day_after = EcsRunTaskOperator(
-        task_id=f'{region}-national-day-after',
-        task_definition='pvlive-national-day-after',
+        task_id=f"{region}-national-day-after",
+        task_definition="pvlive-national-day-after",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -51,13 +51,13 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
-        awslogs_group='/aws/ecs/consumer/pvlive-national-day-after',
-        awslogs_stream_prefix='streaming/pvlive-national-day-after-consumer',
-        awslogs_region='eu-west-1',
+        awslogs_group="/aws/ecs/consumer/pvlive-national-day-after",
+        awslogs_stream_prefix="streaming/pvlive-national-day-after-consumer",
+        awslogs_region="eu-west-1",
     )
 
 with DAG(
-    f'{region}-gsp-day-after',
+    f"{region}-gsp-day-after",
     schedule_interval="30 11 * * *",
     default_args=default_args,
     concurrency=10,
@@ -67,8 +67,8 @@ with DAG(
     dag2.doc_md = "Get GSP PVLive updated values"
 
     gsp_day_after = EcsRunTaskOperator(
-        task_id=f'{region}-gsp-day-after',
-        task_definition='pvlive-gsp-day-after',
+        task_id=f"{region}-gsp-day-after",
+        task_definition="pvlive-gsp-day-after",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -81,25 +81,25 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
-        awslogs_group='/aws/ecs/consumer/pvlive-gsp-day-after',
-        awslogs_stream_prefix='streaming/pvlive-gsp-day-after-consumer',
-        awslogs_region='eu-west-1',
+        awslogs_group="/aws/ecs/consumer/pvlive-gsp-day-after",
+        awslogs_stream_prefix="streaming/pvlive-gsp-day-after-consumer",
+        awslogs_region="eu-west-1",
     )
 
     gsp_day_after
 
 with DAG(
-        f'{region}-metrics-day-after',
-        schedule_interval="0 21 * * *",
-        default_args=default_args,
-        concurrency=10,
-        max_active_tasks=10,
+    f"{region}-metrics-day-after",
+    schedule_interval="0 21 * * *",
+    default_args=default_args,
+    concurrency=10,
+    max_active_tasks=10,
 ) as dag3:
     dag3.doc_md = "Get Metrics"
 
     metrics = EcsRunTaskOperator(
-        task_id=f'{region}-metrics',
-        task_definition='metrics',
+        task_id=f"{region}-metrics",
+        task_definition="metrics",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -112,9 +112,9 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
-        awslogs_group='/aws/ecs/analysis/metrics',
-        awslogs_stream_prefix='streaming/metrics-analysis',
-        awslogs_region='eu-west-1',
+        awslogs_group="/aws/ecs/analysis/metrics",
+        awslogs_stream_prefix="streaming/metrics-analysis",
+        awslogs_region="eu-west-1",
     )
 
     metrics

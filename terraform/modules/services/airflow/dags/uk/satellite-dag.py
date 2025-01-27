@@ -16,25 +16,25 @@ default_args = {
     "max_active_runs": 10,
     "concurrency": 10,
     "max_active_tasks": 10,
-    "execution_timeout":timedelta(minutes=30),
+    "execution_timeout": timedelta(minutes=30),
 }
 
-env = os.getenv("ENVIRONMENT","development")
+env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
 
-region = 'uk'
+region = "uk"
 
-if env == 'development':
+if env == "development":
     url = "http://api-dev.quartz.solar"
 else:
     url = "http://api.quartz.solar"
 
 with DAG(
-    f'{region}-national-satellite-consumer',
+    f"{region}-national-satellite-consumer",
     schedule_interval="*/5 * * * *",
     default_args=default_args,
     concurrency=10,
@@ -46,8 +46,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     sat_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-national-satellite-consumer',
-        task_definition='sat',
+        task_id=f"{region}-national-satellite-consumer",
+        task_definition="sat",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -60,12 +60,12 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
-        awslogs_group='/aws/ecs/consumer/sat',
-        awslogs_stream_prefix='streaming/sat-consumer',
-        awslogs_region='eu-west-1'
+        awslogs_group="/aws/ecs/consumer/sat",
+        awslogs_stream_prefix="streaming/sat-consumer",
+        awslogs_region="eu-west-1",
     )
 
-    file = f's3://nowcasting-sat-{env}/data/latest/latest.zarr.zip'
+    file = f"s3://nowcasting-sat-{env}/data/latest/latest.zarr.zip"
     command = f'curl -X GET "{url}/v0/solar/GB/update_last_data?component=satellite&file={file}"'
     satellite_update = BashOperator(
         task_id=f"{region}-satellite-update",
@@ -75,7 +75,7 @@ with DAG(
     latest_only >> sat_consumer >> satellite_update
 
 with DAG(
-    f'{region}-national-satellite-cleanup',
+    f"{region}-national-satellite-cleanup",
     schedule_interval="0 0,6,12,18 * * *",
     default_args=default_args,
     concurrency=10,
@@ -87,8 +87,8 @@ with DAG(
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
     sat_consumer = EcsRunTaskOperator(
-        task_id=f'{region}-national-satellite-cleanup',
-        task_definition='sat-clean-up',
+        task_id=f"{region}-national-satellite-cleanup",
+        task_definition="sat-clean-up",
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
@@ -101,9 +101,9 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
-        awslogs_group='/aws/ecs/consumer/sat-clean-up',
-        awslogs_stream_prefix='streaming/sat-clean-up-consumer',
-        awslogs_region='eu-west-1'
+        awslogs_group="/aws/ecs/consumer/sat-clean-up",
+        awslogs_stream_prefix="streaming/sat-clean-up-consumer",
+        awslogs_region="eu-west-1",
     )
 
     latest_only >> sat_consumer
