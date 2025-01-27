@@ -82,7 +82,12 @@ resource "aws_iam_policy" "ecs-run" {
           "ecs:RunTask",
           "ecs:DescribeTasks",
           "ecs:StopTask",
-          "iam:PassRole"
+          "iam:PassRole",
+          "logs:GetLogEvents",
+          "logs:GetLogEvents",
+          "logs:GetLogRecord",
+          "logs:GetLogGroupFields",
+          "logs:GetQueryResults"
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -154,7 +159,7 @@ resource "aws_iam_policy" "elb-auto-scaling"{
 				"elasticloadbalancing:DescribeLoadBalancers",
 				"logs:CreateLogGroup",
 				"logs:PutRetentionPolicy",
-				"logs:DescribeLogGroups"
+				"logs:DescribeLogGroups",
 			],
 			"Resource": "*"
 		}

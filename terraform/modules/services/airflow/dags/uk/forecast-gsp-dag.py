@@ -47,6 +47,9 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
         },
         task_concurrency = 10,
         on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/forecast/forecast_pvnet',
+        awslogs_stream_prefix='streaming/forecast_pvnet-forecast',
+        awslogs_region='eu-west-1',
     )
 
     forecast_ecmwf = EcsRunTaskOperator(
@@ -64,7 +67,10 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
-        trigger_rule="all_failed"
+        trigger_rule="all_failed",
+        awslogs_group = '/aws/ecs/forecast/forecast_pvnet_ecmwf',
+        awslogs_stream_prefix = 'streaming/forecast_pvnet_ecmwf-forecast',
+        awslogs_region = 'eu-west-1',
     )
 
     forecast_blend = EcsRunTaskOperator(
@@ -82,7 +88,10 @@ with DAG(f'{region}-gsp-forecast-pvnet-2', schedule_interval="15,45 * * * *", de
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
-        trigger_rule="one_success"
+        trigger_rule="one_success",
+        awslogs_group='/aws/ecs/blend/forecast_blend',
+        awslogs_stream_prefix='streaming/forecast_blend-blend',
+        awslogs_region='eu-west-1',
     )
 
     latest_only >> forecast >> forecast_blend
@@ -109,6 +118,9 @@ with DAG(f'{region}-gsp-forecast-pvnet-day-ahead', schedule_interval="45 * * * *
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/forecast/forecast_pvnet_day_ahead',
+        awslogs_stream_prefix='streaming/forecast_pvnet_day_ahead-forecast',
+        awslogs_region='eu-west-1',
     )
 
     forecast_blend = EcsRunTaskOperator(
@@ -126,6 +138,9 @@ with DAG(f'{region}-gsp-forecast-pvnet-day-ahead', schedule_interval="45 * * * *
         },
         task_concurrency=10,
         on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/blend/forecast_blend',
+        awslogs_stream_prefix='streaming/forecast_blend-blend',
+        awslogs_region='eu-west-1',
     )
 
     latest_only >> forecast_pvnet_day_ahead >> forecast_blend

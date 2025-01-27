@@ -50,6 +50,9 @@ with DAG(
              },
          },
          task_concurrency=10,
+        awslogs_group='/aws/ecs/consumer/nwp-consumer-ecmwf-india',
+        awslogs_stream_prefix='streaming/nwp-consumer-ecmwf-india-consumer',
+        awslogs_region='ap-south-1'
     )
 
     nwp_consumer_gfs = EcsRunTaskOperator(
@@ -66,6 +69,9 @@ with DAG(
              },
          },
          task_concurrency=10,
+        awslogs_group='/aws/ecs/consumer/nwp-consumer-gfs-india',
+        awslogs_stream_prefix='streaming/nwp-consumer-gfs-india-consumer',
+        awslogs_region='ap-south-1'
     )
 
     nwp_consumer_metoffice = EcsRunTaskOperator(
@@ -82,6 +88,9 @@ with DAG(
             },
         },
         task_concurrency=10,
+        awslogs_group='/aws/ecs/consumer/nwp-consumer-metoffice-india',
+        awslogs_stream_prefix='streaming/nwp-consumer-metoffice-india-consumer',
+        awslogs_region='ap-south-1'
     )
     rename_zarr_metoffice = determine_latest_zarr.override(
             task_id="determine_latest_zarr_metoffice",

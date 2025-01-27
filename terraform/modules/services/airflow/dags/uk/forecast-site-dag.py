@@ -46,6 +46,9 @@ with DAG(f'{region}-site-forecast', schedule_interval="*/15 * * * *", default_ar
         },
         on_failure_callback=on_failure_callback,
      task_concurrency = 10,
+        awslogs_group='/aws/ecs/forecast/pvsite_forecast',
+        awslogs_stream_prefix='streaming/pvsite_forecast-forecast',
+        awslogs_region='eu-west-1',
     )
 
 with DAG(f'{region}-site-forecast-db-clean', schedule_interval="0 0 * * *", default_args=default_args, concurrency=10, max_active_tasks=10) as dag:
@@ -67,7 +70,10 @@ with DAG(f'{region}-site-forecast-db-clean', schedule_interval="0 0 * * *", defa
             },
         },
         task_concurrency = 10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/clean/database_clean_up',
+        awslogs_stream_prefix='streaming/database_clean_up-clean',
+        awslogs_region='eu-west-1',
     )
 
 

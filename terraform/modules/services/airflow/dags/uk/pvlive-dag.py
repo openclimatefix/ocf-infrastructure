@@ -51,7 +51,10 @@ with DAG(f'{region}-gsp-pvlive-consumer', schedule_interval="6,9,12,14,20,36,39,
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/consumer/pvlive',
+        awslogs_stream_prefix='streaming/pvlive-consumer',
+        awslogs_region='eu-west-1'
     )
 
     command = f'curl -X GET {url}/v0/solar/GB/update_last_data?component=gsp'

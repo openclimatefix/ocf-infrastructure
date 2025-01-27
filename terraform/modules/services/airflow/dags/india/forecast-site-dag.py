@@ -47,6 +47,9 @@ with DAG(f'{region}-runvl-forecast', schedule_interval=f"0 {hours} * * *", defau
         },
         on_failure_callback=on_failure_callback,
      task_concurrency = 10,
+        awslogs_group='/aws/ecs/forecast/forecast',
+        awslogs_stream_prefix='streaming/forecast-forecast',
+        awslogs_region='ap-south-1',
     )
 
     latest_only >> [forecast]
@@ -71,6 +74,9 @@ with DAG(f'{region}-ad-forecast', schedule_interval=f"0,15,30,45 * * * *", defau
         },
         on_failure_callback=on_failure_callback,
      task_concurrency = 10,
+        awslogs_group='/aws/ecs/forecast/forecast0ad',
+        awslogs_stream_prefix='streaming/forecast-ad-forecast',
+        awslogs_region='ap-south-1',
     )
 
     latest_only >> [forecast]

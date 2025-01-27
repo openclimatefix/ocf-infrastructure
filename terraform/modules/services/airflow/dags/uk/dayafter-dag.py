@@ -41,7 +41,6 @@ with DAG(
         task_definition='pvlive-national-day-after',
         cluster=cluster,
         overrides={},
-        awslogs_region="eu-west-1",
         launch_type="FARGATE",
         network_configuration={
             "awsvpcConfiguration": {
@@ -52,6 +51,9 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
+        awslogs_group='/aws/ecs/consumer/pvlive-national-day-after',
+        awslogs_stream_prefix='streaming/pvlive-national-day-after-consumer',
+        awslogs_region='eu-west-1',
     )
 
 with DAG(
@@ -70,7 +72,6 @@ with DAG(
         cluster=cluster,
         overrides={},
         launch_type="FARGATE",
-        awslogs_group="eu-west-1",
         network_configuration={
             "awsvpcConfiguration": {
                 "subnets": [subnet],
@@ -80,6 +81,9 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
+        awslogs_group='/aws/ecs/consumer/pvlive-gsp-day-after',
+        awslogs_stream_prefix='streaming/pvlive-gsp-day-after-consumer',
+        awslogs_region='eu-west-1',
     )
 
     gsp_day_after
@@ -108,6 +112,9 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
+        awslogs_group='/aws/ecs/analysis/metrics',
+        awslogs_stream_prefix='streaming/metrics-analysis',
+        awslogs_region='eu-west-1',
     )
 
     metrics

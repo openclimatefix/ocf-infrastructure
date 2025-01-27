@@ -46,7 +46,10 @@ with DAG(f'{region}-national-forecast', schedule_interval="15 */2 * * *", defaul
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/forecast/forecast_national',
+        awslogs_stream_prefix='streaming/forecast_national-forecast',
+        awslogs_region='eu-west-1',
     )
 
     forecast_blend = EcsRunTaskOperator(
@@ -63,7 +66,10 @@ with DAG(f'{region}-national-forecast', schedule_interval="15 */2 * * *", defaul
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/blend/forecast_blend',
+        awslogs_stream_prefix='streaming/forecast_blend-blend',
+        awslogs_region='eu-west-1',
     )
 
     latest_only >> national_forecast >> forecast_blend

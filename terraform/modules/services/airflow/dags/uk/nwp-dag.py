@@ -52,7 +52,10 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/consumer/nwp-metoffice',
+        awslogs_stream_prefix='streaming/nwp-metoffice-consumer',
+        awslogs_region='eu-west-1'
     )
 
     nwp_ecmwf_consumer = EcsRunTaskOperator(
@@ -69,6 +72,9 @@ with DAG(f'{region}-nwp-consumer', schedule_interval="10,25,40,55 * * * *", defa
             },
         },
         task_concurrency=10,
+        awslogs_group='/aws/ecs/consumer/nwp-consumer-ecmwf-uk',
+        awslogs_stream_prefix='streaming/nwp-consumer-ecmwf-uk-consumer',
+        awslogs_region='eu-west-1'
     )
 
     rename_zarr_ecmwf = determine_latest_zarr.override(

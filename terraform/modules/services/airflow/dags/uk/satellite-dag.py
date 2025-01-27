@@ -59,7 +59,10 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/consumer/sat',
+        awslogs_stream_prefix='streaming/sat-consumer',
+        awslogs_region='eu-west-1'
     )
 
     file = f's3://nowcasting-sat-{env}/data/latest/latest.zarr.zip'
@@ -97,7 +100,10 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/consumer/sat-clean-up',
+        awslogs_stream_prefix='streaming/sat-clean-up-consumer',
+        awslogs_region='eu-west-1'
     )
 
     latest_only >> sat_consumer

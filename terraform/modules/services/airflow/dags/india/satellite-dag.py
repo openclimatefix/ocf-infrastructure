@@ -52,7 +52,10 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/consumer/sat-consumer',
+        awslogs_stream_prefix='streaming/sat-consumer-consumer',
+        awslogs_region='ap-south-1'
     )
 
     latest_only >> sat_consumer

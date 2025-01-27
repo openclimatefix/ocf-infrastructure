@@ -50,6 +50,9 @@ with DAG(
         },
         on_failure_callback=on_failure_callback,
         task_concurrency=10,
+        awslogs_group='/aws/ecs/consumer/runvl-consumer',
+        awslogs_stream_prefix='streaming/runvl-consumer-consumer',
+        awslogs_region='ap-south-1'
     )
 
 

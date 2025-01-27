@@ -46,7 +46,10 @@ with DAG(f'{region}-pv-consumer', schedule_interval="*/5 * * * *", default_args=
             },
         },
         task_concurrency = 10,
-        on_failure_callback=on_failure_callback
+        on_failure_callback=on_failure_callback,
+        awslogs_group='/aws/ecs/consumer/pv',
+        awslogs_stream_prefix='streaming/pv-consumer',
+        awslogs_region='eu-west-1'
     )
 
     latest_only >> pv_consumer
