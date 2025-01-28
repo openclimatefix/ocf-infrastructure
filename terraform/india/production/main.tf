@@ -333,7 +333,7 @@ module "satellite_consumer_ecs" {
 
 # 4.5 - Forecast - Client RUVNL
 module "forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=73255a4"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=7045011"
 
   aws-region                    = var.region
   aws-environment               = local.environment
@@ -383,7 +383,7 @@ module "forecast" {
 
 # 4.6 - Forecast - Client AD
 module "forecast-ad" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=73255a4"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=7045011"
 
   aws-region                    = var.region
   aws-environment               = local.environment
