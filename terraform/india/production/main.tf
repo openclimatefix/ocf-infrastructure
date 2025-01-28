@@ -421,7 +421,7 @@ module "forecast-ad" {
     { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     { "name" : "USE_SATELLITE", "value": "True"},
-    { "name" : "CLIENT_NAME", "value": "ad"}
+    { "name" : "CLIENT_NAME", "value": "ad"},
     { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.s3-forecast-bucket.bucket_id}/ad"},
       ]
 
