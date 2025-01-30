@@ -89,7 +89,7 @@ with DAG(
     concurrency=10,
     max_active_tasks=10,
 ) as dag:
-    dag.doc_md = "Get PV data"
+    dag.doc_md = "Get NESO Solar forecast"
 
     latest_only = LatestOnlyOperator(task_id="latest_only")
 
