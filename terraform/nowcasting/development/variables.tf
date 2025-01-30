@@ -123,3 +123,9 @@ variable "sentry_dsn_api" {
   description = "The Sentry DSN for all backend components"
   default     = ""
 }
+
+variable "neso_forecast_consumer_version" {
+  type        = string
+  description = "The version of the neso forecast consumer"
+  default     = "1.0.3"
+}
