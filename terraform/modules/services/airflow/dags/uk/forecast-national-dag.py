@@ -79,3 +79,39 @@ with DAG(
     )
 
     latest_only >> national_forecast >> forecast_blend
+
+
+
+with DAG(
+    f"{region}-neso-forecast",
+    schedule_interval="0 * * * *",
+    default_args=default_args,
+    concurrency=10,
+    max_active_tasks=10,
+) as dag:
+    dag.doc_md = "Get PV data"
+
+    latest_only = LatestOnlyOperator(task_id="latest_only")
+
+    neso_forecast = EcsRunTaskOperator(
+        task_id=f"{region}-neso-forecast",
+        task_definition="neso-forecast",
+        cluster=cluster,
+        overrides={},
+        launch_type="FARGATE",
+        network_configuration={
+            "awsvpcConfiguration": {
+                "subnets": [subnet],
+                "securityGroups": [security_group],
+                "assignPublicIp": "ENABLED",
+            },
+        },
+        task_concurrency=10,
+        on_failure_callback=on_failure_callback,
+        awslogs_group="/aws/ecs/consume/neso-forecast",
+        awslogs_stream_prefix="streaming/neso-forecast-consume",
+        awslogs_region="eu-west-1",
+    )
+
+
+    latest_only >> neso_forecast

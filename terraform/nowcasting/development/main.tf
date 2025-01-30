@@ -21,6 +21,7 @@ The componentes ares:
 3.7 - PVLive Consumer (From PVLive)
 3.8 - PVLive Consumer - GSP Day After
 3.9 - PVLive Consumer - National Day After
+3.10 - NESO Forecast Consumer
 4.1 - Metrics
 4.2 - Forecast PVnet 1
 4.3 - Forecast National XG
@@ -468,6 +469,37 @@ module "gsp-consumer-day-after-national" {
   ]
   container-tag         = var.gsp_version
   container-name        = "openclimatefix/pvliveconsumer"
+  container-registry = "docker.io"
+  container-command     = []
+}
+
+# 3.10
+module "neso-forecast-consumer" {
+  source = "../../modules/services/ecs_task"
+
+  ecs-task_name = "neso-forecast"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.database.forecast-database-secret.arn,
+  values: ["DB_URL"]}
+  ]
+  container-tag         = var.neso_forecast_consumer_version
+  container-name        = "openclimatefix/neso_solar_consumer_api"
   container-registry = "docker.io"
   container-command     = []
 }
