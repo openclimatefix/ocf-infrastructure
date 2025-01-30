@@ -127,5 +127,5 @@ variable "sentry_dsn_api" {
 variable "neso_forecast_consumer_version" {
   type        = string
   description = "The version of the neso forecast consumer"
-  default     = "1.0.2"
+  default     = "1.0.3"
 }
