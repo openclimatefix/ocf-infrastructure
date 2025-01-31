@@ -280,7 +280,7 @@ module "sat" {
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "HISTORY", "value" : "120 minutes" },
+    { "name" : "HISTORY", "value" : "180 minutes" },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
