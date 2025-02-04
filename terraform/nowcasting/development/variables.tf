@@ -129,3 +129,9 @@ variable "neso_forecast_consumer_version" {
   description = "The version of the neso forecast consumer"
   default     = "1.0.3"
 }
+
+variable "cloudcasting_app_version" {
+  type        = string
+  description = "The version of the cloucasting app forecast consumer"
+  default     = "0.0.2"
+}

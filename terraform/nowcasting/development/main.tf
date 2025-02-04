@@ -23,7 +23,7 @@ The componentes ares:
 3.9 - PVLive Consumer - National Day After
 3.10 - NESO Forecast Consumer
 4.1 - Metrics
-4.2 - Forecast PVnet 1
+4.2 - Cloudcasting app
 4.3 - Forecast National XG
 4.4 - Forecast PVnet 2
 4.5 - Forecast PVnet ECMWF only
@@ -536,7 +536,47 @@ module "metrics" {
   s3-buckets = []
 }
 
-# 4.2 - We have removed PVnet 1
+# 4.2
+module "cloudcasting" {
+source = "../../modules/services/ecs_task"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    },
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
+    }
+  ]
+
+  ecs-task_name               = "cloudcasting"
+  ecs-task_type               = "forecast"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 2048
+    cpu    = 1024
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "OUTPUT_PREDICTION_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/forecast/latest/latest.zarr"},
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr"},
+  ]
+
+  container-secret_vars = []
+
+  container-tag         = var.cloudcasting_app_version
+  container-name        = "openclimatefix/cloudcasting-app"
+  container-registry    = "ghcr.io"
+  container-command     = []
+}
 
 # 4.3
 module "national_forecast" {
