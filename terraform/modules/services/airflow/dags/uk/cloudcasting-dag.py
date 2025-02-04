@@ -58,5 +58,5 @@ with DAG(
         awslogs_region="eu-west-1",
     )
 
-    latest_only >> cloudcasting_forecast >>
+    latest_only >> cloudcasting_forecast
 
