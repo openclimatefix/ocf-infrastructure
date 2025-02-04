@@ -125,7 +125,7 @@ import {
 
 # 4.0
 module "nwp_consumer_ecmwf_live_ecs_task" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=37046a3"
 
   ecs-task_name               = "nwp-consumer-ecmwf-india"
   ecs-task_type               = "consumer"
@@ -175,7 +175,7 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
 
 # 4.1
 module "nwp_consumer_gfs_live_ecs_task" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=37046a3"
 
   ecs-task_name               = "nwp-consumer-gfs-india"
   ecs-task_type               = "consumer"
@@ -216,7 +216,7 @@ module "nwp_consumer_gfs_live_ecs_task" {
 
 # 4.2
 module "nwp-consumer-metoffice-live-ecs-task" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=37046a3"
 
   ecs-task_name = "nwp-consumer-metoffice-india"
   ecs-task_type = "consumer"
