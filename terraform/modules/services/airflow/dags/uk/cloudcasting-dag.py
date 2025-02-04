@@ -29,7 +29,7 @@ region = "uk"
 
 with DAG(
     f"{region}-cloudcasting",
-    schedule_interval="5,20,35,50 * * * *",
+    schedule_interval="20,50 * * * *",
     default_args=default_args,
     concurrency=10,
     max_active_tasks=10,
