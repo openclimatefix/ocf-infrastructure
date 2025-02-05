@@ -558,7 +558,7 @@ source = "../../modules/services/ecs_task"
   ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
-    memory = 2048
+    memory = 4096
     cpu    = 1024
   }
 
@@ -566,7 +566,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "AWS_REGION", "value" : var.region },
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "OUTPUT_PREDICTION_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/forecast/latest/latest.zarr"},
+    { "name" : "OUTPUT_PREDICTION_DIRECTORY", "value":"s3://${module.s3.s3-sat-bucket.id}/cloudcasting_forecast"},
     { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr"},
   ]
 
