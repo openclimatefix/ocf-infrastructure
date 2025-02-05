@@ -558,7 +558,7 @@ source = "../../modules/services/ecs_task"
   ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
-    memory = 2048
+    memory = 4096
     cpu    = 1024
   }
 
