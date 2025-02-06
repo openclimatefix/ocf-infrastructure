@@ -779,7 +779,7 @@ source = "../../modules/services/ecs_task"
     {"name": "USE_ADJUSTER", "value": "true"},
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "true"},
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "false"},
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
     {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
