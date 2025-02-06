@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
+from airflow.providers.slack.notifications.slack import send_slack_notification
 from utils.slack import on_failure_callback
 
 from airflow.operators.latest_only import LatestOnlyOperator
@@ -52,7 +53,13 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=[send_slack_notification(
+            text="⚠️ The task {{ ti.task_id }} failed,"
+                 " but its ok. PVNET-ECMWF only will run next. "
+                 "No out of hours support is required. ⚠️",
+            channel=f"tech-ops-airflow-{env}",
+            username="Airflow",
+        )],
         awslogs_group="/aws/ecs/forecast/forecast_pvnet",
         awslogs_stream_prefix="streaming/forecast_pvnet-forecast",
         awslogs_region="eu-west-1",
