@@ -63,6 +63,9 @@ with DAG(
         on_failure_callback=[send_slack_notification(
             text="⚠️ The task {{ ti.task_id }} failed,"
                  " but its ok. The forecast will automatically move over to a PVNET-ECMWF. "
+                 "You can check (here)[https://uns.eumetsat.int/uns/] for any issues with EUMETSAT, "
+                 "and (here)[https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html]"
+                 "for detailed information on when the satellite data was delivered"
                  "No out of hours support is required. ⚠️",
             channel=f"tech-ops-airflow-{env}",
             username="Airflow",
