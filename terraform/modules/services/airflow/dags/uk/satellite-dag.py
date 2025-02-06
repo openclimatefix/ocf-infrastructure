@@ -4,6 +4,7 @@ from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
 from airflow.operators.bash import BashOperator
+from airflow.providers.slack.notifications.slack import send_slack_notification
 
 from airflow.operators.latest_only import LatestOnlyOperator
 from utils.slack import on_failure_callback
@@ -59,7 +60,13 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=[send_slack_notification(
+            text="⚠️ The task {{ ti.task_id }} failed,"
+                 " but its ok. The forecast will automatically move over to a PVNET-ECMWF. "
+                 "No out of hours support is required. ⚠️",
+            channel=f"tech-ops-airflow-{env}",
+            username="Airflow",
+        )],
         awslogs_group="/aws/ecs/consumer/sat",
         awslogs_stream_prefix="streaming/sat-consumer",
         awslogs_region="eu-west-1",
