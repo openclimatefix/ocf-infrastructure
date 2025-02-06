@@ -567,7 +567,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "OUTPUT_PREDICTION_DIRECTORY", "value":"s3://${module.s3.s3-sat-bucket.id}/cloudcasting_forecast"},
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr"},
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
   ]
 
   container-secret_vars = []
