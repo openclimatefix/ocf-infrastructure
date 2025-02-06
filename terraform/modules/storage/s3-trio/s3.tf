@@ -132,4 +132,16 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
     }
     status = "Enabled"
   }
+
+  rule {
+    id      = "remove_old_cloudcasting_forecast_files"
+    filter {
+      prefix = "cloudcasting_forecast/"
+    }
+    expiration {
+      days = 7
+    }
+    status = "Enabled"
+  }
+
 }
