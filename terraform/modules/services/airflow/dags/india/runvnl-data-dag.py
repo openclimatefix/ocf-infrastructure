@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback_no_action_required
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -48,7 +48,7 @@ with DAG(
                 "assignPublicIp": "ENABLED",
             },
         },
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback_no_action_required,
         task_concurrency=10,
         awslogs_group="/aws/ecs/consumer/runvl-consumer",
         awslogs_stream_prefix="streaming/runvl-consumer-consumer",

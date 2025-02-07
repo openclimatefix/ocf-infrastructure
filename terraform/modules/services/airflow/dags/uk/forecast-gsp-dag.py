@@ -33,13 +33,13 @@ forecast_pvnet_error_message = (
 
 forecast_pvnet_da_error_message = (
     "❌ The task {{ ti.task_id }} failed. "
-    "This would ideally before for DA actions at 09.00"
+    "This would ideally be fixed before for DA actions at 09.00"
     "Please see run book for appropriate actions."
 )
 
 forecast_ecmwf_error_message = (
     "❌ The task {{ ti.task_id }} failed. This is only run after the main PVnet has failed. "
-    "We have about 6 hours before this is needed. "
+    "We have about 6 hours before the blend services need this. "
     "Please see run book for appropriate actions. "
 )
 
