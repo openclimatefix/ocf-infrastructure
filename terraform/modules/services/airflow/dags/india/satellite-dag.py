@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 
 default_args = {
     "owner": "airflow",
@@ -23,6 +23,13 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"india-ecs-cluster-{env}"
 
 # Tasks can still be defined in terraform, or defined here
+
+satellite_error_message = (
+    "❌ The task {{ ti.task_id }} failed."
+    "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
+    "and <https://masif.eumetsat.int/ossi/webpages/level2.html?ossi_level2_filename=seviri_iodc.html|here>. "
+    "Please see run book for appropriate actions. "
+)
 
 region = "india"
 
@@ -52,7 +59,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(satellite_error_message),
         awslogs_group="/aws/ecs/consumer/sat-consumer",
         awslogs_stream_prefix="streaming/sat-consumer-consumer",
         awslogs_region="ap-south-1",

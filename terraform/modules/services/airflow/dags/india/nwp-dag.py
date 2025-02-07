@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 from utils.s3 import determine_latest_zarr
 
 default_args = {
@@ -24,6 +24,28 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"india-ecs-cluster-{env}"
 
 region = "india"
+
+nwp_metoffice_error_message = (
+    "❌ The task {{ ti.task_id }} failed."
+    "The forecast will continue running until it runs out of data."
+    "Metoffice status link is <https://datahub.metoffice.gov.uk/support/service-status|here> "
+    "Please see run book for appropriate actions. "
+)
+
+nwp_ecmwf_error_message = (
+    "❌ The task {{ ti.task_id }} failed."
+    "The forecast will continue running until it runs out of data. "
+    "ECMWF status link is <https://www.nco.ncep.noaa.gov/pmb/nwprod/prodstat/|here> "
+    "Please see run book for appropriate actions. "
+)
+
+nwp_gfs_error_message = (
+    "❌ The task {{ ti.task_id }} failed."
+    "The forecast will continue running until it runs out of data. "
+    "ECMWF status link is <https://status.ecmwf.int/|here> "
+    "Please see run book for appropriate actions. "
+)
+
 
 with DAG(
     f"{region}-nwp-consumer",
@@ -50,6 +72,7 @@ with DAG(
             },
         },
         task_concurrency=10,
+        on_failure_callback=slack_message_callback(nwp_ecmwf_error_message),
         awslogs_group="/aws/ecs/consumer/nwp-consumer-ecmwf-india",
         awslogs_stream_prefix="streaming/nwp-consumer-ecmwf-india-consumer",
         awslogs_region="ap-south-1",
@@ -69,6 +92,7 @@ with DAG(
             },
         },
         task_concurrency=10,
+        on_failure_callback=slack_message_callback(nwp_gfs_error_message),
         awslogs_group="/aws/ecs/consumer/nwp-consumer-gfs-india",
         awslogs_stream_prefix="streaming/nwp-consumer-gfs-india-consumer",
         awslogs_region="ap-south-1",
@@ -88,6 +112,7 @@ with DAG(
             },
         },
         task_concurrency=10,
+        on_failure_callback=slack_message_callback(nwp_metoffice_error_message),
         awslogs_group="/aws/ecs/consumer/nwp-consumer-metoffice-india",
         awslogs_stream_prefix="streaming/nwp-consumer-metoffice-india-consumer",
         awslogs_region="ap-south-1",

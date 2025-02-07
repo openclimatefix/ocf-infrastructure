@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback, slack_message_callback_no_action_required
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -23,6 +23,11 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
+
+site_forecast_error_message = (
+    "❌ The task {{ ti.task_id }} failed."
+    "Please see run book for appropriate actions. "
+)
 
 region = "uk"
 
@@ -50,7 +55,7 @@ with DAG(
                 "assignPublicIp": "ENABLED",
             },
         },
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(site_forecast_error_message),
         task_concurrency=10,
         awslogs_group="/aws/ecs/forecast/pvsite_forecast",
         awslogs_stream_prefix="streaming/pvsite_forecast-forecast",
@@ -82,7 +87,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback_no_action_required,
         awslogs_group="/aws/ecs/clean/database_clean_up",
         awslogs_stream_prefix="streaming/database_clean_up-clean",
         awslogs_region="eu-west-1",

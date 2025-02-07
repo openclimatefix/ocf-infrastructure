@@ -6,7 +6,7 @@ from airflow import DAG
 from airflow.operators.latest_only import LatestOnlyOperator
 from airflow.operators.python import PythonOperator
 from utils.elastic_beanstalk import scale_elastic_beanstalk_instance
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 
 default_args = {
     "owner": "airflow",
@@ -18,6 +18,12 @@ default_args = {
     "concurrency": 10,
     "max_active_tasks": 10,
 }
+
+elb_error_message = (
+    "⚠️ The task {{ ti.task_id }} failed,"
+    " but its ok. This task tried to reset the Elastic Beanstalk instances. "
+    "No out of hours support is required."
+)
 
 region = "uk"
 env = os.getenv("ENVIRONMENT", "development")
@@ -46,7 +52,7 @@ with DAG(
             python_callable=scale_elastic_beanstalk_instance,
             op_kwargs={"name": name, "number_of_instances": 2, "sleep_seconds": 60 * 5},
             task_concurrency=2,
-            on_failure_callback=on_failure_callback,
+            on_failure_callback=slack_message_callback(elb_error_message),
         )
 
         elb_1 = PythonOperator(
@@ -54,7 +60,7 @@ with DAG(
             python_callable=scale_elastic_beanstalk_instance,
             op_kwargs={"name": name, "number_of_instances": 1},
             task_concurrency=2,
-            on_failure_callback=on_failure_callback,
+            on_failure_callback=slack_message_callback(elb_error_message),
         )
 
         latest_only >> elb_2 >> elb_1
