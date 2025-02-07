@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, slack_message_callback_no_action_required
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -87,7 +87,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback_no_action_required,
         awslogs_group="/aws/ecs/clean/database_clean_up",
         awslogs_stream_prefix="streaming/database_clean_up-clean",
         awslogs_region="eu-west-1",
