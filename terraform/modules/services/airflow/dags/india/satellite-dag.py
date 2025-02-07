@@ -27,7 +27,7 @@ cluster = f"india-ecs-cluster-{env}"
 satellite_error_message = (
     "❌ The task {{ ti.task_id }} failed."
     "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
-    "and <https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html|here>. "
+    "and <https://masif.eumetsat.int/ossi/webpages/level2.html?ossi_level2_filename=seviri_iodc.html|here>. "
     "Please see run book for appropriate actions. "
 )
 

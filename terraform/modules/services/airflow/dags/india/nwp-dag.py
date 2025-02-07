@@ -28,7 +28,6 @@ region = "india"
 nwp_metoffice_error_message = (
     "❌ The task {{ ti.task_id }} failed."
     "The forecast will continue running until it runs out of data."
-    "which doesnt need Metoffice data. "
     "Metoffice status link is <https://datahub.metoffice.gov.uk/support/service-status|here> "
     "Please see run book for appropriate actions. "
 )
