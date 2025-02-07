@@ -5,7 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 
 default_args = {
     "owner": "airflow",
@@ -22,6 +22,13 @@ env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
+
+pvlive_error_message = (
+    "❌ The task {{ ti.task_id }} failed. "
+    "This is currently needed for PVNet, "
+    "but we have about 2 hours before things go wrong. "
+    "Its good to check <https://www.solar.sheffield.ac.uk/pvlive/|PV Live> to see if its working. "
+                        )
 
 # Tasks can still be defined in terraform, or defined here
 
@@ -57,7 +64,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(pvlive_error_message),
         awslogs_group="/aws/ecs/consumer/pvlive",
         awslogs_stream_prefix="streaming/pvlive-consumer",
         awslogs_region="eu-west-1",

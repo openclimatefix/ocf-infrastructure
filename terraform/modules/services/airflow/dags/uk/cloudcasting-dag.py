@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 
 default_args = {
     "owner": "airflow",
@@ -22,6 +22,12 @@ env = os.getenv("ENVIRONMENT", "development")
 subnet = os.getenv("ECS_SUBNET")
 security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
+
+cloudcasting_error_message = (
+    "⚠️ The task {{ ti.task_id }} failed,"
+    " but its ok. The cloudcasting is currently no critical. "
+    "No out of hours support is required."
+)
 
 # Tasks can still be defined in terraform, or defined here
 
@@ -52,7 +58,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(cloudcasting_error_message),
         awslogs_group="/aws/ecs/forecast/cloudcasting",
         awslogs_stream_prefix="streaming/cloudcasting-forecast",
         awslogs_region="eu-west-1",

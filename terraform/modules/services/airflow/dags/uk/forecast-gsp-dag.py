@@ -2,8 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from airflow.providers.slack.notifications.slack import send_slack_notification
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -25,6 +24,30 @@ cluster = f"Nowcasting-{env}"
 
 
 # Tasks can still be defined in terraform, or defined here
+
+forecast_pvnet_error_message = (
+    "⚠️ The task {{ ti.task_id }} failed,"
+    " but its ok. PVNET-ECMWF only will run next. "
+    "No out of hours support is required."
+)
+
+forecast_pvnet_da_error_message = (
+    "❌ The task {{ ti.task_id }} failed. "
+    "This would ideally before for DA actions at 09.00"
+    "Please see run book for appropriate actions."
+)
+
+forecast_ecmwf_error_message = (
+    "❌ The task {{ ti.task_id }} failed. This is only run after the main PVnet has failed. "
+    "We have about 6 hours before this is needed. "
+    "Please see run book for appropriate actions. "
+)
+
+forecast_blend_error_message = (
+    "❌ The task {{ ti.task_id }} failed."
+    "The blending of forecast has failed. "
+    "Please see run book for appropriate actions. "
+)
 
 region = "uk"
 
@@ -53,13 +76,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=[send_slack_notification(
-            text="⚠️ The task {{ ti.task_id }} failed,"
-                 " but its ok. PVNET-ECMWF only will run next. "
-                 "No out of hours support is required. ⚠️",
-            channel=f"tech-ops-airflow-{env}",
-            username="Airflow",
-        )],
+        on_failure_callback=slack_message_callback(forecast_pvnet_error_message),
         awslogs_group="/aws/ecs/forecast/forecast_pvnet",
         awslogs_stream_prefix="streaming/forecast_pvnet-forecast",
         awslogs_region="eu-west-1",
@@ -79,7 +96,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(forecast_ecmwf_error_message),
         trigger_rule="all_failed",
         awslogs_group="/aws/ecs/forecast/forecast_pvnet_ecmwf",
         awslogs_stream_prefix="streaming/forecast_pvnet_ecmwf-forecast",
@@ -100,7 +117,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(forecast_blend_error_message),
         trigger_rule="one_success",
         awslogs_group="/aws/ecs/blend/forecast_blend",
         awslogs_stream_prefix="streaming/forecast_blend-blend",
@@ -136,7 +153,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(forecast_pvnet_da_error_message),
         awslogs_group="/aws/ecs/forecast/forecast_pvnet_day_ahead",
         awslogs_stream_prefix="streaming/forecast_pvnet_day_ahead-forecast",
         awslogs_region="eu-west-1",
@@ -156,7 +173,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(forecast_blend_error_message),
         awslogs_group="/aws/ecs/blend/forecast_blend",
         awslogs_stream_prefix="streaming/forecast_blend-blend",
         awslogs_region="eu-west-1",

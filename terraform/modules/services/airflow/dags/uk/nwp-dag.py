@@ -5,7 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 from utils.s3 import determine_latest_zarr
 
 default_args = {
@@ -25,6 +25,22 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
+
+nwp_metoffice_error_message = (
+    "⚠️ The task {{ ti.task_id }} failed."
+    "But its ok, the forecast will automatically move over to a PVNET-ECMWF, "
+    "which doesnt need Metoffice data. "
+    "Metoffice status link is <https://datahub.metoffice.gov.uk/support/service-status|here> "
+    "No out of office hours support is required, but please log in an incident log. "
+)
+
+nwp_ecmwf_error_message = (
+    "❌ The task {{ ti.task_id }} failed."
+    "The forecast will continue running until it runs out of data. "
+    "ECMWF status link is <https://status.ecmwf.int/|here> "
+    "Please see run book for appropriate actions. "
+)
+
 
 region = "uk"
 
@@ -58,7 +74,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(nwp_metoffice_error_message),
         awslogs_group="/aws/ecs/consumer/nwp-metoffice",
         awslogs_stream_prefix="streaming/nwp-metoffice-consumer",
         awslogs_region="eu-west-1",
@@ -78,6 +94,7 @@ with DAG(
             },
         },
         task_concurrency=10,
+        on_failure_callback=slack_message_callback(nwp_ecmwf_error_message),
         awslogs_group="/aws/ecs/consumer/nwp-consumer-ecmwf-uk",
         awslogs_stream_prefix="streaming/nwp-consumer-ecmwf-uk-consumer",
         awslogs_region="eu-west-1",

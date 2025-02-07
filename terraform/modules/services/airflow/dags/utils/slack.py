@@ -12,3 +12,12 @@ on_failure_callback = [
             username="Airflow",
         )
     ]
+
+def slack_message_callback(message):
+    return [
+        send_slack_notification(
+            text=message,
+            channel=f"tech-ops-airflow-{env}",
+            username="Airflow",
+        )
+    ]

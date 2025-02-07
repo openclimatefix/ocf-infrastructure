@@ -5,7 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback
+from utils.slack import slack_message_callback
 
 default_args = {
     "owner": "airflow",
@@ -24,6 +24,12 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 # Tasks can still be defined in terraform, or defined here
+
+pv_consumer_error_message = (
+    "⚠️ The task {{ ti.task_id }} failed."
+    "But its ok, this isnt needed for any production services."
+    "No out of office hours support is required."
+)
 
 region = "uk"
 
@@ -52,7 +58,7 @@ with DAG(
             },
         },
         task_concurrency=10,
-        on_failure_callback=on_failure_callback,
+        on_failure_callback=slack_message_callback(pv_consumer_error_message),
         awslogs_group="/aws/ecs/consumer/pv",
         awslogs_stream_prefix="streaming/pv-consumer",
         awslogs_region="eu-west-1",
