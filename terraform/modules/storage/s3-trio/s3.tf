@@ -40,7 +40,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
   bucket = aws_s3_bucket.s3-nwp-bucket.id
 
   rule {
-    id      = "remove_old_files"
+    id      = "remove_old_ecmwf"
     filter {
       prefix = "ecmwf/data/"
     }
@@ -51,9 +51,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
   }
 
   rule {
-    id      = "remove_old_raw_files"
+    id      = "remove_old_metoffice"
     filter {
-      prefix = "ecmwf/raw/"
+      prefix = "metoffice/"
     }
     expiration {
       days = 7
@@ -61,27 +61,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
     status = "Enabled"
   }
 
-  rule {
-    id      = "remove_old_files_national"
-    filter {
-      prefix = "data-metoffice/"
-    }
-    expiration {
-      days = 7
-    }
-    status = "Enabled"
-  }
-
-  rule {
-    id      = "remove_old_raw_files_national"
-    filter {
-      prefix = "raw-metoffice/"
-    }
-    expiration {
-      days = 7
-    }
-    status = "Enabled"
-  }
 }
 
 
@@ -153,4 +132,16 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
     }
     status = "Enabled"
   }
+
+  rule {
+    id      = "remove_old_cloudcasting_forecast_files"
+    filter {
+      prefix = "cloudcasting_forecast/"
+    }
+    expiration {
+      days = 7
+    }
+    status = "Enabled"
+  }
+
 }
