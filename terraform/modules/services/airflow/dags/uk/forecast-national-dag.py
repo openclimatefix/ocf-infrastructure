@@ -26,19 +26,19 @@ cluster = f"Nowcasting-{env}"
 # Tasks can still be defined in terraform, or defined here
 
 national_xg_forecast_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed."
+    "⚠️ The task {{ ti.task_id }} failed. "
     "But its ok, this forecast is only a backup. "
     "No out of office hours support is required, unless other forecasts are failing"
 )
 
 neso_forecast_consumer_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed."
+    "⚠️ The task {{ ti.task_id }} failed. "
     "But its ok, this only used for comparison. "
     "No out of office hours support is required."
 )
 
 forecast_blend_error_message = (
-    "❌ The task {{ ti.task_id }} failed."
+    "❌ The task {{ ti.task_id }} failed. "
     "The blending of forecast has failed. "
     "Please see run book for appropriate actions. "
 )

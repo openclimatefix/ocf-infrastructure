@@ -25,7 +25,7 @@ cluster = f"Nowcasting-{env}"
 # Tasks can still be defined in terraform, or defined here
 
 site_forecast_error_message = (
-    "❌ The task {{ ti.task_id }} failed."
+    "❌ The task {{ ti.task_id }} failed. "
     "Please see run book for appropriate actions. "
 )
 

@@ -25,7 +25,7 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 satellite_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed."
+    "⚠️ The task {{ ti.task_id }} failed. "
     "But its ok, the forecast will automatically move over to a PVNET-ECMWF, "
     "which doesnt need satellite data. "
     "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
@@ -34,7 +34,7 @@ satellite_error_message = (
 )
 
 satellite_clean_up_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed."
+    "⚠️ The task {{ ti.task_id }} failed. " 
     "But its ok, this is only used for cleaning up the EUMETSAT customisation, "
     "but the satellite consumer should also do this. "
     "No out of office hours support is required."

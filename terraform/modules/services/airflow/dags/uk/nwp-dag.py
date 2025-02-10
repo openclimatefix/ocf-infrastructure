@@ -35,7 +35,7 @@ nwp_metoffice_error_message = (
 )
 
 nwp_ecmwf_error_message = (
-    "❌ The task {{ ti.task_id }} failed."
+    "❌ The task {{ ti.task_id }} failed. "
     "The forecast will continue running until it runs out of data. "
     "ECMWF status link is <https://status.ecmwf.int/|here> "
     "Please see run book for appropriate actions. "

@@ -33,7 +33,7 @@ forecast_pvnet_error_message = (
 
 forecast_pvnet_da_error_message = (
     "❌ The task {{ ti.task_id }} failed. "
-    "This would ideally be fixed before for DA actions at 09.00"
+    "This would ideally be fixed before for DA actions at 09.00. "
     "Please see run book for appropriate actions."
 )
 
