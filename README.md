@@ -9,7 +9,7 @@ Terraform infrastructure-as-code for cloud environments.
 
 [![ease of contribution: medium](https://img.shields.io/badge/ease%20of%20contribution:%20medium-f4900c)](https://github.com/openclimatefix/ocf-meta-repo?tab=readme-ov-file#how-easy-is-it-to-get-involved)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
   <a href="https://app.terraform.io/app/openclimatefix/workspaces" alt="Terraform Cloud">
@@ -87,6 +87,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/erikg16"><img src="https://avatars.githubusercontent.com/u/81220397?v=4?s=100" width="100px;" alt="erikg16"/><br /><sub><b>erikg16</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=erikg16" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://aatmanvaidya.github.io/"><img src="https://avatars.githubusercontent.com/u/56875084?v=4?s=100" width="100px;" alt="Aatman Vaidya"/><br /><sub><b>Aatman Vaidya</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=aatmanvaidya" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ACSE-vg822"><img src="https://avatars.githubusercontent.com/u/82698606?v=4?s=100" width="100px;" alt="Vidushee Geetam"/><br /><sub><b>Vidushee Geetam</b></sub></a><br /><a href="#maintenance-ACSE-vg822" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mahmoud-40"><img src="https://avatars.githubusercontent.com/u/116794637?v=4?s=100" width="100px;" alt="Mahmoud Abdulmawlaa"/><br /><sub><b>Mahmoud Abdulmawlaa</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=mahmoud-40" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
