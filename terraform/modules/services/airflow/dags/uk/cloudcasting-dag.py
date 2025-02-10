@@ -25,7 +25,7 @@ cluster = f"Nowcasting-{env}"
 
 cloudcasting_error_message = (
     "⚠️ The task {{ ti.task_id }} failed,"
-    " but its ok. The cloudcasting is currently no critical. "
+    " but its ok. The cloudcasting is currently not critical. "
     "No out of hours support is required."
 )
 

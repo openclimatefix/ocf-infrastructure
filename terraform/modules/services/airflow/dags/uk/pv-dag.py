@@ -26,8 +26,8 @@ cluster = f"Nowcasting-{env}"
 # Tasks can still be defined in terraform, or defined here
 
 pv_consumer_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed."
-    "But its ok, this isnt needed for any production services."
+    "⚠️ The task {{ ti.task_id }} failed. "
+    "But its ok, this isnt needed for any production services. "
     "No out of office hours support is required."
 )
 
