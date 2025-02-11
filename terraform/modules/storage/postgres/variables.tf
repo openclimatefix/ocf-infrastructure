@@ -43,5 +43,5 @@ variable "rds_instance_class" {
 variable "engine_version" {
   description = "The version of the postgres database"
   type = string
-  default     = "16.3"
+  default     = "17.2"
 }

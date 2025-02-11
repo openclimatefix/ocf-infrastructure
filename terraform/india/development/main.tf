@@ -75,7 +75,7 @@ module "s3-nwp-bucket" {
   region              = var.region
   domain              = local.domain
   service_name        = "nwp"
-  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw"]
+  lifecycled_prefixes = ["ecmwf", "gfs", "metoffice"]
 }
 
 # 2.1
@@ -85,7 +85,7 @@ module "s3-satellite-bucket" {
   region              = var.region
   domain              = local.domain
   service_name        = "satellite"
-  lifecycled_prefixes = ["data"]
+  lifecycled_prefixes = ["data", "raw"]
 }
 
 # 2.2
@@ -127,8 +127,8 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   ecs-task_size = {
-      cpu    = 2048
-      memory = 10240
+      cpu    = 512
+      memory = 1024
   }
 
   aws-region                    = var.region
@@ -142,28 +142,30 @@ module "nwp_consumer_ecmwf_live_ecs_task" {
   ]
 
   container-env_vars = [
+    { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
+    { "name" : "MODEL", "value" : "hres-ifs-india" },
     { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data" },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy
     { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "ECMWF_AWS_REGION", "value" : "eu-west-1" },
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "india" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = [
   {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
+  values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]
        }]
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
-    "download",
-    "--source=ecmwf-s3",
-    "--sink=s3",
-    "--rdir=ecmwf/raw",
-    "--zdir=ecmwf/data",
-    "--create-latest"
+    "consume"
   ]
 }
 
@@ -174,8 +176,8 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ecs-task_name               = "nwp-consumer-gfs-india"
   ecs-task_type               = "consumer"
   ecs-task_size = {
-    cpu    = 1024
-    memory = 5120
+    cpu    = 512
+    memory = 1024
   }
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
 
@@ -190,23 +192,21 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ]
 
   container-env_vars = [
+    { "name" : "MODEL_REPOSITORY", "value" : "gfs" },
     { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = []
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
-    "download",
-    "--source=gfs",
-    "--sink=s3",
-    "--rdir=gfs/raw",
-    "--zdir=gfs/data",
-    "--create-latest",
-    "--no-rename-vars"
+    "consume"
   ]
 }
 
@@ -246,7 +246,7 @@ module "nwp-consumer-metoffice-live-ecs-task" {
       values: ["METOFFICE_API_KEY"],
     }
   ]
-  container-tag         = "devsjc-major-refactor"
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = ["consume"]
 }
@@ -316,6 +316,7 @@ module "satellite_consumer_ecs" {
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "HISTORY", "value" : "75 minutes" },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,

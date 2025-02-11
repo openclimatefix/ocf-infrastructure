@@ -97,3 +97,8 @@ variable "s3_bucket" {
   EOT
 }
 
+variable "max_ec2_count" {
+    type = number
+    description = "Maximum number of EC2 instances in the EB environment"
+    default = 1
+}

@@ -6,6 +6,7 @@
 # 1.3 - ECS Cluster
 # 2.0 - S3 bucket for NWP data
 # 2.1 - S3 bucket for Satellite data
+# 2.2 - S3 bucket for Forecast data
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - Secret containing environment variables for the Satellite consumer
 # 3.2 - Secret containing HF read access
@@ -73,7 +74,7 @@ module "s3-nwp-bucket" {
   region              = var.region
   domain              = local.domain
   service_name        = "nwp"
-  lifecycled_prefixes = ["ecmwf/data", "ecmwf/raw", "gfs/data", "gfs/raw"]
+  lifecycled_prefixes = ["ecmwf", "gfs", "metoffice"]
 }
 
 # 2.1
@@ -83,7 +84,17 @@ module "s3-satellite-bucket" {
   region              = var.region
   domain              = local.domain
   service_name        = "satellite"
-  lifecycled_prefixes = ["data"]
+  lifecycled_prefixes = ["data", "raw"]
+}
+
+# 2.2
+module "s3-forecast-bucket" {
+  source              = "../../modules/storage/s3-private"
+  environment         = local.environment
+  region              = var.region
+  domain              = local.domain
+  service_name        = "forecast"
+  lifecycled_prefixes = [""]
 }
 
 # 3.0
@@ -114,65 +125,18 @@ import {
 
 # 4.0
 module "nwp_consumer_ecmwf_live_ecs_task" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=37046a3"
 
   ecs-task_name               = "nwp-consumer-ecmwf-india"
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
   ecs-task_size = {
-      cpu    = 2048
-      memory = 10240
+      cpu    = 512
+      memory = 1024
   }
-
 
   aws-region                    = var.region
   aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
-
-  s3-buckets = [{ 
-    id: module.s3-nwp-bucket.bucket_id,
-    access_policy_arn: module.s3-nwp-bucket.write_policy_arn
-}]
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
-    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
-    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "ECMWF_AREA", "value" : "india" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-  ]
-  container-secret_vars = ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]
-  container-tag         = var.version-nwp
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "download",
-    "--source=ecmwf-s3",
-    "--sink=s3",
-    "--rdir=ecmwf/raw",
-    "--zdir=ecmwf/data",
-    "--create-latest"
-  ]
-}
-
-# 4.1
-module "nwp_consumer_gfs_live_ecs_task" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=205465e"
-
-  ecs-task_name               = "nwp-consumer-gfs-india"
-  ecs-task_type               = "consumer"
-  ecs-task_size = {
-    cpu    = 1024
-    memory = 5120
-    storage = 60
-  }
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-  aws-secretsmanager_secret_arn = aws_secretsmanager_secret.nwp_consumer_secret.arn
 
   s3-buckets = [
     {
@@ -182,29 +146,77 @@ module "nwp_consumer_gfs_live_ecs_task" {
   ]
 
   container-env_vars = [
+    { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
+    { "name" : "MODEL", "value" : "hres-ifs-india" },
     { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
+    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data" },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
+    { "name" : "ECMWF_AWS_REGION", "value" : "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ECMWF_AREA", "value" : "india" },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
+  values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]
+       }]
+  container-tag         = var.version-nwp
+  container-name        = "openclimatefix/nwp-consumer"
+  container-command     = [
+    "consume"
+  ]
+}
+
+# 4.1
+module "nwp_consumer_gfs_live_ecs_task" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=37046a3"
+
+  ecs-task_name               = "nwp-consumer-gfs-india"
+  ecs-task_type               = "consumer"
+  ecs-task_size = {
+    cpu    = 512
+    memory = 1024
+  }
+  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3-nwp-bucket.bucket_id,
+      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
+    }
+  ]
+
+  container-env_vars = [
+    { "name" : "MODEL_REPOSITORY", "value" : "gfs" },
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data" },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
     { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-secret_vars = []
   container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = [
-    "download",
-    "--source=gfs",
-    "--sink=s3",
-    "--rdir=gfs/raw",
-    "--zdir=gfs/data",
-    "--create-latest",
-    "--no-rename-vars"
+    "consume"
   ]
 }
 
 # 4.2
 module "nwp-consumer-metoffice-live-ecs-task" {
-    source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=f0ecf51"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=37046a3"
 
   ecs-task_name = "nwp-consumer-metoffice-india"
   ecs-task_type = "consumer"
@@ -238,7 +250,7 @@ module "nwp-consumer-metoffice-live-ecs-task" {
       values: ["METOFFICE_API_KEY"],
     }
   ]
-  container-tag         = "devsjc-major-refactor"
+  container-tag         = var.version-nwp
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = ["consume"]
 }
@@ -311,6 +323,7 @@ module "satellite_consumer_ecs" {
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "HISTORY", "value" : "75 minutes" }
   ]
   container-secret_vars = ["API_KEY", "API_SECRET"]
   container-tag         = var.satellite-consumer
@@ -320,47 +333,59 @@ module "satellite_consumer_ecs" {
 }
 
 
-# 4.5 - Forecast - Client RU
+# 4.5 - Forecast - Client RUVNL
 module "forecast" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/forecast_generic?ref=f0ecf51"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=7045011"
 
-  region      = var.region
-  environment = local.environment
-  app-name    = "forecast"
-  ecs_config  = {
-    docker_image   = "openclimatefix/india_forecast_app"
-    docker_version = var.version-forecast
-    memory_mb      = 4096
-    cpu            = 1024
-  }
-  rds_config = {
-    database_secret_arn             = module.postgres-rds.secret.arn
-    database_secret_read_policy_arn = module.postgres-rds.secret-policy.arn
-  }
-  s3_nwp_bucket = {
-    bucket_id              = module.s3-nwp-bucket.bucket_id
-    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
-    datadir                = "ecmwf/data"
-  }
-  s3_satellite_bucket = {
-    bucket_id              = module.s3-satellite-bucket.bucket_id
-    bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn
-    datadir                = "data"
-  }
+  aws-region                    = var.region
+  aws-environment               = local.environment
 
-  // this isnt really needed
-  s3_ml_bucket = {
-    bucket_id              = module.s3-nwp-bucket.bucket_id
-    bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn
-  }
-  loglevel      = "INFO"
+  s3-buckets = [
+    {
+      id : module.s3-nwp-bucket.bucket_id,
+      access_policy_arn : module.s3-nwp-bucket.read_policy_arn
+    },
+    {
+      id : module.s3-forecast-bucket.bucket_id,
+      access_policy_arn : module.s3-forecast-bucket.write_policy_arn
+    }
+  ]
+
+  ecs-task_name               = "forecast"
+  ecs-task_type               = "forecast"
   ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  sentry_dsn = var.sentry_dsn
+  ecs-task_size = {
+    memory = 3072
+    cpu    = 1024
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
+    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
+    { "name" : "NWP_MO_GLOBAL_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/metoffice/data/latest.zarr" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    { "name" : "USE_SATELLITE", "value": "False"},
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.s3-forecast-bucket.bucket_id}/RUVNL"}
+      ]
+
+  container-secret_vars = [
+       {secret_policy_arn: module.postgres-rds.secret.arn,
+        values: ["DB_URL"]
+       }
+       ]
+
+  container-tag         = var.version-forecast
+  container-name        = "india_forecast_app"
+  container-registry    = "openclimatefix"
+  container-command     = []
 }
 
 # 4.6 - Forecast - Client AD
 module "forecast-ad" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=73255a4"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=7045011"
 
   aws-region                    = var.region
   aws-environment               = local.environment
@@ -373,6 +398,10 @@ module "forecast-ad" {
     {
       id : module.s3-nwp-bucket.bucket_id,
       access_policy_arn : module.s3-nwp-bucket.write_policy_arn
+    },
+    {
+      id : module.s3-forecast-bucket.bucket_id,
+      access_policy_arn : module.s3-forecast-bucket.write_policy_arn
     }
   ]
 
@@ -394,7 +423,8 @@ module "forecast-ad" {
     { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
     { "name" : "USE_SATELLITE", "value": "True"},
-    { "name" : "CLIENT_NAME", "value": "ad"}
+    { "name" : "CLIENT_NAME", "value": "ad"},
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.s3-forecast-bucket.bucket_id}/ad"},
       ]
 
   container-secret_vars = [
@@ -414,7 +444,7 @@ module "forecast-ad" {
 
 # 5.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=f0ecf51"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=244a67d"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain

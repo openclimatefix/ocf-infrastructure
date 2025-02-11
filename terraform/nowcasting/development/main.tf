@@ -18,11 +18,12 @@ The componentes ares:
 3.4 - Satellite Consumer
 3.5 - Satellite Data Tailor Clean up
 3.6 - PV Consumer
-3.7 - GSP Consumer (From PVLive)
-3.8 - GSP Consumer - GSP Day After
-3.9 - GSP Consumer - National Day After
+3.7 - PVLive Consumer (From PVLive)
+3.8 - PVLive Consumer - GSP Day After
+3.9 - PVLive Consumer - National Day After
+3.10 - NESO Forecast Consumer
 4.1 - Metrics
-4.2 - Forecast PVnet 1
+4.2 - Cloudcasting app
 4.3 - Forecast National XG
 4.4 - Forecast PVnet 2
 4.5 - Forecast PVnet ECMWF only
@@ -35,6 +36,7 @@ The componentes ares:
 6.3 - PVSite ML bucket
 6.4 - PVSite Forecast
 6.5 - PVSite Database Clean Up
+7.1 - Open Data PVnet
 
 Variables used across all modules
 ======*/
@@ -107,6 +109,7 @@ module "api" {
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
     { "name" : "ADJUST_MW_LIMIT", "value" : "1000" },
     { "name" : "N_HISTORY_DAYS", "value" : "2" },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
   ]
   container-name = "nowcasting_api"
   container-tag  = var.api_version
@@ -117,6 +120,7 @@ module "api" {
     { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
     { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
   ]
+  max_ec2_count = 2
 }
 
 # 2.1
@@ -207,6 +211,11 @@ module "nwp-ecmwf" {
   ecs-task_type               = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
 
+  ecs-task_size = {
+    cpu = 512
+    memory = 1024
+  }
+
   aws-region                    = var.region
   aws-environment               = local.environment
 
@@ -216,29 +225,30 @@ module "nwp-ecmwf" {
   }]
 
   container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
+    { "name" : "AWS_REGION", "value" : "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data" },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy ones
     { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
     { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
     { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
     { "name" : "ECMWF_AREA", "value" : "uk" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" }
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["ECMWF_AWS_ACCESS_KEY", "ECMWF_AWS_ACCESS_SECRET"]}
+  values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]}
   ]
-  container-tag         = var.nwp_version
+  container-tag         = var.nwp_ecmwf_version
   container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "download",
-    "--source=ecmwf-s3",
-    "--sink=s3",
-    "--rdir=ecmwf/raw",
-    "--zdir=ecmwf/data",
-    "--create-latest"
-  ]
+  container-command     = ["consume"]
 }
 
 # 3.4 Sat Consumer
@@ -270,7 +280,7 @@ module "sat" {
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "HISTORY", "value" : "120 minutes" },
+    { "name" : "HISTORY", "value" : "180 minutes" },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
@@ -311,7 +321,7 @@ module "sat_clean_up" {
     { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "HISTORY", "value" : "120 minutes" },
+    { "name" : "HISTORY", "value" : "180 minutes" },
     { "name" : "CLEANUP",  "value" : "1" },
 
   ]
@@ -365,7 +375,7 @@ module "pv" {
 module "gsp-consumer" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "gsp"
+  ecs-task_name = "pvlive"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -390,7 +400,7 @@ module "gsp-consumer" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/gspconsumer"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
@@ -399,7 +409,7 @@ module "gsp-consumer" {
 module "gsp-consumer-day-after-gsp" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "gsp-day-after"
+  ecs-task_name = "pvlive-gsp-day-after"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -424,7 +434,7 @@ module "gsp-consumer-day-after-gsp" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/gspconsumer"
+  container-name        = "openclimatefix/pvliveconsumer"
   container-registry = "docker.io"
   container-command     = []
 }
@@ -433,7 +443,7 @@ module "gsp-consumer-day-after-gsp" {
 module "gsp-consumer-day-after-national" {
   source = "../../modules/services/ecs_task"
 
-  ecs-task_name = "national-day-after"
+  ecs-task_name = "pvlive-national-day-after"
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
@@ -458,7 +468,38 @@ module "gsp-consumer-day-after-national" {
   values: ["DB_URL"]}
   ]
   container-tag         = var.gsp_version
-  container-name        = "openclimatefix/gspconsumer"
+  container-name        = "openclimatefix/pvliveconsumer"
+  container-registry = "docker.io"
+  container-command     = []
+}
+
+# 3.10
+module "neso-forecast-consumer" {
+  source = "../../modules/services/ecs_task"
+
+  ecs-task_name = "neso-forecast"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 256
+    memory = 512
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+
+  s3-buckets = []
+
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+  ]
+  container-secret_vars = [
+  {secret_policy_arn: module.database.forecast-database-secret.arn,
+  values: ["DB_URL"]}
+  ]
+  container-tag         = var.neso_forecast_consumer_version
+  container-name        = "openclimatefix/neso_solar_consumer_api"
   container-registry = "docker.io"
   container-command     = []
 }
@@ -495,7 +536,47 @@ module "metrics" {
   s3-buckets = []
 }
 
-# 4.2 - We have removed PVnet 1
+# 4.2
+module "cloudcasting" {
+source = "../../modules/services/ecs_task"
+
+  aws-region                    = var.region
+  aws-environment               = local.environment
+
+  s3-buckets = [
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    },
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
+    }
+  ]
+
+  ecs-task_name               = "cloudcasting"
+  ecs-task_type               = "forecast"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    memory = 4096
+    cpu    = 1024
+  }
+
+  container-env_vars = [
+    { "name" : "AWS_REGION", "value" : var.region },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "OUTPUT_PREDICTION_DIRECTORY", "value":"s3://${module.s3.s3-sat-bucket.id}/cloudcasting_forecast"},
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
+  ]
+
+  container-secret_vars = []
+
+  container-tag         = var.cloudcasting_app_version
+  container-name        = "openclimatefix/cloudcasting-app"
+  container-registry    = "ghcr.io"
+  container-command     = []
+}
 
 # 4.3
 module "national_forecast" {
@@ -529,7 +610,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "NWP_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name": "ML_MODEL_BUCKET", "value": "s3://${module.forecasting_models_bucket.bucket_id}/"}
+    { "name": "ML_MODEL_BUCKET", "value": module.forecasting_models_bucket.bucket_id}
   ]
 
   container-secret_vars = [
@@ -559,6 +640,10 @@ source = "../../modules/services/ecs_task"
     {
       id : module.s3.s3-sat-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
   ]
 
@@ -582,7 +667,8 @@ source = "../../modules/services/ecs_task"
     { "name" : "SAVE_GSP_SUM", "value": "true"},
     { "name" : "RUN_EXTRA_MODELS",  "value": "true"},
     { "name" : "DAY_AHEAD_MODEL",  "value": "false"},
-    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true"}
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true"},
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
   container-secret_vars = [
@@ -608,6 +694,10 @@ source = "../../modules/services/ecs_task"
     {
       id : module.s3.s3-nwp-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
   ]
 
@@ -630,7 +720,8 @@ source = "../../modules/services/ecs_task"
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "false"},
     {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"}
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
+    {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
   container-secret_vars = [
@@ -661,6 +752,10 @@ source = "../../modules/services/ecs_task"
     {
       id : module.s3.s3-sat-bucket.id,
       access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
+    },
+    {
+      id : module.forecasting_models_bucket.bucket_id,
+      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
     }
 
   ]
@@ -684,7 +779,8 @@ source = "../../modules/services/ecs_task"
     {"name": "USE_ADJUSTER", "value": "true"},
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "true"},
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "false"}
+    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
+    {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
   container-secret_vars = [
@@ -917,4 +1013,10 @@ module "pvsite_database_clean_up" {
                  }
                     ]
   container-command = []
+}
+
+
+# 7.1 Open Data PVnet - Public s3 bucket
+module "open_data_pvnet_s3" {
+  source = "../../modules/storage/open-data-pvnet-s3"
 }

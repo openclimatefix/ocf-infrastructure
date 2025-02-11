@@ -24,12 +24,19 @@ def determine_latest_zarr(bucket: str, prefix: str):
             size_old += obj.size
 
     # If the sizes are different, create a new latest.zarr
+    s3hook.log.info(f"size_old={size_old}, size_new={size_new}")
     if size_old != size_new and size_new > 500 * 1e3:  # Expecting at least 500KB
-        # Delete the old latest.zarr, if it exists
+
+        # delete latest.zarr
+        s3hook.log.info(f"Deleting {prefix}/latest.zarr/")
         if prefix + "/latest.zarr/" in prefixes:
             s3hook.log.debug(f"Deleting {prefix}/latest.zarr/")
             keys_to_delete = s3hook.list_keys(bucket_name=bucket, prefix=prefix + "/latest.zarr/")
             s3hook.delete_objects(bucket=bucket, keys=keys_to_delete)
+
+        # move latest zarr file to latest.zarr using s3 batch jobs
+        s3hook.log.info(f"Creating {prefix}/latest.zarr/")
+
         # Copy the new latest.zarr
         s3hook.log.info(f"Copying {zarrs[0]} to {prefix}/latest.zarr/")
         source_keys = s3hook.list_keys(bucket_name=bucket, prefix=zarrs[0])
@@ -40,6 +47,7 @@ def determine_latest_zarr(bucket: str, prefix: str):
                 dest_bucket_name=bucket,
                 dest_bucket_key=prefix + "/latest.zarr/" + key.split(zarrs[0])[-1],
             )
+
     else:
         s3hook.log.info("No changes to latest.zarr required")
 

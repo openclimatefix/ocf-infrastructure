@@ -22,6 +22,11 @@ variable "nwp_version" {
   description = "The NWP version"
 }
 
+variable "nwp_ecmwf_version" {
+  description = "The ECMWF NWP version"
+  default="1.0.9"
+}
+
 variable "sat_version" {
   description = "The Satellite version"
 }
@@ -117,4 +122,16 @@ variable "sentry_dsn_api" {
   type        = string
   description = "The Sentry DSN for all backend components"
   default     = ""
+}
+
+variable "neso_forecast_consumer_version" {
+  type        = string
+  description = "The version of the neso forecast consumer"
+  default     = "1.0.3"
+}
+
+variable "cloudcasting_app_version" {
+  type        = string
+  description = "The version of the cloucasting app forecast consumer"
+  default     = "0.0.2"
 }
