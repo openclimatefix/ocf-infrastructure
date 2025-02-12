@@ -34,10 +34,8 @@ satellite_error_message = (
 )
 
 satellite_both_files_missing_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed. " 
-    "But its ok, this is only used for cleaning up the EUMETSAT customisation, "
-    "but the satellite consumer should also do this. "
-    "No out of office hours support is required."
+    "⚠️ Tried to update the database to show when the latest satellite data was collected, " 
+    "but could not find the 5-min or the 15-min satellite files."
 )
 
 satellite_clean_up_error_message = (
