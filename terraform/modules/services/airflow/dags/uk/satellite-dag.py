@@ -94,7 +94,6 @@ with DAG(
     satellite_update_5min = BashOperator(
         task_id=f"{region}-satellite-update-5min",
         bash_command=command_5min,
-        on_failure_callback=None,
     )
 
     file_15min = f"s3://nowcasting-sat-{env}/data/latest/latest_15.zarr.zip"
