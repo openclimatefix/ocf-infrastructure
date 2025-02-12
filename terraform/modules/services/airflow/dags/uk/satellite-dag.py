@@ -26,21 +26,24 @@ cluster = f"Nowcasting-{env}"
 
 satellite_error_message = (
     "⚠️ The task {{ ti.task_id }} failed. "
-    "But its ok, the forecast will automatically move over to a PVNET-ECMWF, "
-    "which doesnt need satellite data. "
+    "But it's OK, the forecast will automatically move over to PVNET-ECMWF, "
+    "which doesn't need satellite data. "
     "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
     "and <https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html|here>. "
-    "No out of office hours support is required, but please log in an incident log."
+    "No out-of-hours support is required, but please log in an incident log."
+)
+
+satellite_both_files_missing_error_message = (
+    ":warning: Tried to update the latest Satellite data, but could not find "
+    "the 5-min or the 15-min satellite files."
 )
 
 satellite_clean_up_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed. " 
-    "But its ok, this is only used for cleaning up the EUMETSAT customisation, "
-    "but the satellite consumer should also do this. "
-    "No out of office hours support is required."
+    "⚠️ The task {{ ti.task_id }} failed. "
+    "But it's OK, this is only used for cleaning up the EUMETSAT customisation, "
+    "and the satellite consumer should also do this. "
+    "No out-of-hours support is required."
 )
-
-# Tasks can still be defined in terraform, or defined here
 
 region = "uk"
 
@@ -91,7 +94,7 @@ with DAG(
     satellite_update_5min = BashOperator(
         task_id=f"{region}-satellite-update-5min",
         bash_command=command_5min,
-        on_failure_callback=slack_message_callback(satellite_error_message),
+        on_failure_callback=None,
     )
 
     file_15min = f"s3://nowcasting-sat-{env}/data/latest/latest_15.zarr.zip"
@@ -103,11 +106,11 @@ with DAG(
     satellite_update_15min = BashOperator(
         task_id=f"{region}-satellite-update-15min",
         bash_command=command_15min,
-        on_failure_callback=slack_message_callback(satellite_error_message),
+        trigger_rule="all_failed",
+        on_failure_callback=slack_message_callback(satellite_both_files_missing_error_message),
     )
 
-    latest_only >> sat_consumer >> [satellite_update_5min, satellite_update_15min]
-
+    latest_only >> sat_consumer >> satellite_update_5min >> satellite_update_15min
 
 with DAG(
     f"{region}-national-satellite-cleanup",
@@ -143,6 +146,5 @@ with DAG(
     )
 
     latest_only_cleanup >> sat_consumer_cleanup
-
 
 
