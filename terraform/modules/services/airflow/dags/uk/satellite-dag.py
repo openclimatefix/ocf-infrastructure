@@ -34,7 +34,7 @@ satellite_error_message = (
 )
 
 satellite_both_files_missing_error_message = (
-    "⚠️ :warning: Tried to update the latest Satellite data, but could not find "
+    "⚠️ Tried to update the latest Satellite data, but could not find "
     "the 5-min or the 15-min satellite files."
 )
 
