@@ -6,7 +6,7 @@ from airflow.decorators import dag
 from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback, slack_message_callback
+from utils.slack import on_failure_callback, slack_message_callback, task_success_if_previous_failed
 
 default_args = {
     "owner": "airflow",
@@ -30,7 +30,7 @@ satellite_error_message = (
     "which doesn't need satellite data. "
     "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
     "and <https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html|here>. "
-    "No out-of-hours support is required, but please log in an incident log."
+    "No out-of-office hours support is required, but please log in an incident log."
 )
 
 satellite_both_files_missing_error_message = (
@@ -80,6 +80,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(satellite_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consumer/sat",
         awslogs_stream_prefix="streaming/sat-consumer",
         awslogs_region="eu-west-1",
@@ -109,7 +110,8 @@ with DAG(
         on_failure_callback=slack_message_callback(satellite_both_files_missing_error_message),
     )
 
-    latest_only >> sat_consumer >> satellite_update_5min >> satellite_update_15min
+    latest_only >> sat_consumer >> satellite_update_5min
+    satellite_update_5min >> satellite_update_15min
 
 with DAG(
     f"{region}-national-satellite-cleanup",
