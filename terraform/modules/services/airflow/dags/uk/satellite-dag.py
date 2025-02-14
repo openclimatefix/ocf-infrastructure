@@ -31,7 +31,6 @@ satellite_error_message = (
     "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
     "and <https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html|here>. "
     "No out-of-office hours support is required, but please log in an incident log."
-    "The exception was {{ exception }} "
 )
 
 satellite_both_files_missing_error_message = (
