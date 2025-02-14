@@ -31,6 +31,7 @@ satellite_error_message = (
     "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
     "and <https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html|here>. "
     "No out-of-office hours support is required, but please log in an incident log."
+    "The exception was {{ exception }} "
 )
 
 satellite_both_files_missing_error_message = (
@@ -141,6 +142,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(satellite_clean_up_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consumer/sat-clean-up",
         awslogs_stream_prefix="streaming/sat-clean-up-consumer",
         awslogs_region="eu-west-1",

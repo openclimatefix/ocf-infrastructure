@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, task_success_if_previous_failed
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -77,6 +77,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(forecast_pvnet_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/forecast/forecast_pvnet",
         awslogs_stream_prefix="streaming/forecast_pvnet-forecast",
         awslogs_region="eu-west-1",
@@ -97,6 +98,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(forecast_ecmwf_error_message),
+        on_success_callback=task_success_if_previous_failed,
         trigger_rule="all_failed",
         awslogs_group="/aws/ecs/forecast/forecast_pvnet_ecmwf",
         awslogs_stream_prefix="streaming/forecast_pvnet_ecmwf-forecast",
@@ -118,6 +120,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(forecast_blend_error_message),
+        on_success_callback=task_success_if_previous_failed,
         trigger_rule="one_success",
         awslogs_group="/aws/ecs/blend/forecast_blend",
         awslogs_stream_prefix="streaming/forecast_blend-blend",
@@ -154,6 +157,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(forecast_pvnet_da_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/forecast/forecast_pvnet_day_ahead",
         awslogs_stream_prefix="streaming/forecast_pvnet_day_ahead-forecast",
         awslogs_region="eu-west-1",
@@ -174,6 +178,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(forecast_blend_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/blend/forecast_blend",
         awslogs_stream_prefix="streaming/forecast_blend-blend",
         awslogs_region="eu-west-1",

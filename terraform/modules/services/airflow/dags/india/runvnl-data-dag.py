@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from utils.slack import slack_message_callback_no_action_required
+from utils.slack import slack_message_callback_no_action_required, task_success_if_previous_failed
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -49,6 +49,7 @@ with DAG(
             },
         },
         on_failure_callback=slack_message_callback_no_action_required,
+        on_success_callback=task_success_if_previous_failed,
         task_concurrency=10,
         awslogs_group="/aws/ecs/consumer/runvl-consumer",
         awslogs_stream_prefix="streaming/runvl-consumer-consumer",

@@ -5,7 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, task_success_if_previous_failed
 from utils.s3 import determine_latest_zarr
 
 default_args = {
@@ -75,6 +75,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(nwp_metoffice_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consumer/nwp-metoffice",
         awslogs_stream_prefix="streaming/nwp-metoffice-consumer",
         awslogs_region="eu-west-1",
@@ -95,6 +96,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(nwp_ecmwf_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consumer/nwp-consumer-ecmwf-uk",
         awslogs_stream_prefix="streaming/nwp-consumer-ecmwf-uk-consumer",
         awslogs_region="eu-west-1",

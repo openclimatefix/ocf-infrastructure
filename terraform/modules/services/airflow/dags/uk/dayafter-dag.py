@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 import os
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, task_success_if_previous_failed
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -56,6 +56,7 @@ with DAG(
             },
         },
         on_failure_callback=slack_message_callback(day_after_error_message),
+        on_success_callback=task_success_if_previous_failed,
         task_concurrency=10,
         awslogs_group="/aws/ecs/consumer/pvlive-national-day-after",
         awslogs_stream_prefix="streaming/pvlive-national-day-after-consumer",
@@ -86,6 +87,7 @@ with DAG(
             },
         },
         on_failure_callback=slack_message_callback(day_after_error_message),
+        on_success_callback=task_success_if_previous_failed,
         task_concurrency=10,
         awslogs_group="/aws/ecs/consumer/pvlive-gsp-day-after",
         awslogs_stream_prefix="streaming/pvlive-gsp-day-after-consumer",
@@ -117,6 +119,7 @@ with DAG(
             },
         },
         on_failure_callback=slack_message_callback(day_after_error_message),
+        on_success_callback=task_success_if_previous_failed,
         task_concurrency=10,
         awslogs_group="/aws/ecs/analysis/metrics",
         awslogs_stream_prefix="streaming/metrics-analysis",

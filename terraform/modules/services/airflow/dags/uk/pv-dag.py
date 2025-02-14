@@ -5,7 +5,7 @@ from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 from airflow.decorators import dag
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, task_success_if_previous_failed
 
 default_args = {
     "owner": "airflow",
@@ -59,6 +59,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(pv_consumer_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consumer/pv",
         awslogs_stream_prefix="streaming/pv-consumer",
         awslogs_region="eu-west-1",
