@@ -14,7 +14,7 @@ default_args = {
     "start_date": datetime.now(tz=timezone.utc) - timedelta(hours=0.5),
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
-    "max_active_runs": 10,
+    "max_active_runs": 1,
     "concurrency": 10,
     "max_active_tasks": 10,
 }
