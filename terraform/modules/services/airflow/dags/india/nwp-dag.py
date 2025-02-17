@@ -35,14 +35,14 @@ nwp_metoffice_error_message = (
 nwp_ecmwf_error_message = (
     "❌ The task {{ ti.task_id }} failed."
     "The forecast will continue running until it runs out of data. "
-    "ECMWF status link is <https://www.nco.ncep.noaa.gov/pmb/nwprod/prodstat/|here> "
+    "ECMWF status link is <https://status.ecmwf.int/|here> "
     "Please see run book for appropriate actions. "
 )
 
 nwp_gfs_error_message = (
     "❌ The task {{ ti.task_id }} failed."
     "The forecast will continue running until it runs out of data. "
-    "ECMWF status link is <https://status.ecmwf.int/|here> "
+    "GFS status link is <https://www.nco.ncep.noaa.gov/pmb/nwprod/prodstat/|here>"
     "Please see run book for appropriate actions. "
 )
 
