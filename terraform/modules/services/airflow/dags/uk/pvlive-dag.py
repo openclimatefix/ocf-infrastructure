@@ -24,9 +24,9 @@ security_group = os.getenv("ECS_SECURITY_GROUP")
 cluster = f"Nowcasting-{env}"
 
 pvlive_error_message = (
-    "❌ The task {{ ti.task_id }} failed. "
-    "This is currently needed for PVNet, "
-    "but we have about 2 hours before things go wrong. "
+    "warning: The task {{ ti.task_id }} failed. "
+    "This is needed for the adjuster in the Forecast."
+    "No out of office hours support needed."
     "Its good to check <https://www.solar.sheffield.ac.uk/pvlive/|PV Live> to see if its working. "
                         )
 
