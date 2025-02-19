@@ -47,6 +47,9 @@ See the README's in the domain folders for more information on their architectur
 - [PVSite Domain](terraform/pvsite/README.md)
 - [Modules](terraform/modules/README.md)
 
+## NWP Data Integration
+ 
+The infrastructure now supports pulling Numerical Weather Predictions (NWPs) from both the Met Office and ECMWF. This enhancement ensures broader and more comprehensive weather data availability for nowcasting and forecasting applications.
 
 ## Terraform Overview
 
