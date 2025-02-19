@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, task_success_if_previous_failed
 
 from airflow.operators.latest_only import LatestOnlyOperator
 
@@ -63,6 +63,7 @@ with DAG(
             },
         },
         on_failure_callback=slack_message_callback(forecast_ruvnl_error_message),
+        on_success_callback=task_success_if_previous_failed,
         task_concurrency=10,
         awslogs_group="/aws/ecs/forecast/forecast",
         awslogs_stream_prefix="streaming/forecast-forecast",
@@ -96,6 +97,7 @@ with DAG(
             },
         },
         on_failure_callback=slack_message_callback(forecast_ad_error_message),
+        on_success_callback=task_success_if_previous_failed,
         task_concurrency=10,
         awslogs_group="/aws/ecs/forecast/forecast-ad",
         awslogs_stream_prefix="streaming/forecast-ad-forecast",

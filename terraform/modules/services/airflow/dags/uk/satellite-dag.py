@@ -6,7 +6,7 @@ from airflow.decorators import dag
 from airflow.operators.bash import BashOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import on_failure_callback, slack_message_callback
+from utils.slack import on_failure_callback, slack_message_callback, task_success_if_previous_failed
 
 default_args = {
     "owner": "airflow",
@@ -30,7 +30,7 @@ satellite_error_message = (
     "which doesn't need satellite data. "
     "EUMETSAT status links are <https://uns.eumetsat.int/uns/|here> "
     "and <https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html|here>. "
-    "No out-of-hours support is required, but please log in an incident log."
+    "No out-of-office hours support is required, but please log in an incident log."
 )
 
 satellite_both_files_missing_error_message = (
@@ -80,36 +80,29 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(satellite_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consumer/sat",
         awslogs_stream_prefix="streaming/sat-consumer",
         awslogs_region="eu-west-1",
     )
 
     file_5min = f"s3://nowcasting-sat-{env}/data/latest/latest.zarr.zip"
-    command_5min = (
-        f'curl -X GET '
-        f'"{url}/v0/solar/GB/update_last_data?component=satellite&file={file_5min}"'
-    )
-
-    satellite_update_5min = BashOperator(
-        task_id=f"{region}-satellite-update-5min",
-        bash_command=command_5min,
-    )
-
     file_15min = f"s3://nowcasting-sat-{env}/data/latest/latest_15.zarr.zip"
-    command_15min = (
+    command_5min_and_15min = (
+        f'curl -X GET '
+        f'"{url}/v0/solar/GB/update_last_data?component=satellite&file={file_5min}; "'
         f'curl -X GET '
         f'"{url}/v0/solar/GB/update_last_data?component=satellite&file={file_15min}"'
     )
 
-    satellite_update_15min = BashOperator(
-        task_id=f"{region}-satellite-update-15min",
-        bash_command=command_15min,
-        trigger_rule="all_failed",
-        on_failure_callback=slack_message_callback(satellite_both_files_missing_error_message),
+    satellite_update_5min = BashOperator(
+        task_id=f"{region}-satellite-update-5min",
+        bash_command=command_5min_and_15min,
     )
+    file_15min = f"s3://nowcasting-sat-{env}/data/latest/latest_15.zarr.zip"
 
-    latest_only >> sat_consumer >> satellite_update_5min >> satellite_update_15min
+
+    latest_only >> sat_consumer >> satellite_update_5min
 
 with DAG(
     f"{region}-national-satellite-cleanup",
@@ -139,6 +132,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(satellite_clean_up_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consumer/sat-clean-up",
         awslogs_stream_prefix="streaming/sat-clean-up-consumer",
         awslogs_region="eu-west-1",

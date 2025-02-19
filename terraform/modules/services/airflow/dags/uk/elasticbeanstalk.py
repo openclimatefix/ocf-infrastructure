@@ -6,7 +6,7 @@ from airflow import DAG
 from airflow.operators.latest_only import LatestOnlyOperator
 from airflow.operators.python import PythonOperator
 from utils.elastic_beanstalk import scale_elastic_beanstalk_instance
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, task_success_if_previous_failed
 
 default_args = {
     "owner": "airflow",
@@ -53,6 +53,7 @@ with DAG(
             op_kwargs={"name": name, "number_of_instances": 2, "sleep_seconds": 60 * 5},
             task_concurrency=2,
             on_failure_callback=slack_message_callback(elb_error_message),
+            on_success_callback=task_success_if_previous_failed,
         )
 
         elb_1 = PythonOperator(
@@ -61,6 +62,7 @@ with DAG(
             op_kwargs={"name": name, "number_of_instances": 1},
             task_concurrency=2,
             on_failure_callback=slack_message_callback(elb_error_message),
+            on_success_callback=task_success_if_previous_failed,
         )
 
         latest_only >> elb_2 >> elb_1

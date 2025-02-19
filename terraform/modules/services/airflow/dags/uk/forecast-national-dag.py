@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.providers.amazon.aws.operators.ecs import EcsRunTaskOperator
 
 from airflow.operators.latest_only import LatestOnlyOperator
-from utils.slack import slack_message_callback
+from utils.slack import slack_message_callback, task_success_if_previous_failed
 
 default_args = {
     "owner": "airflow",
@@ -72,6 +72,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(national_xg_forecast_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/forecast/forecast_national",
         awslogs_stream_prefix="streaming/forecast_national-forecast",
         awslogs_region="eu-west-1",
@@ -92,6 +93,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(forecast_blend_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/blend/forecast_blend",
         awslogs_stream_prefix="streaming/forecast_blend-blend",
         awslogs_region="eu-west-1",
@@ -127,6 +129,7 @@ with DAG(
         },
         task_concurrency=10,
         on_failure_callback=slack_message_callback(neso_forecast_consumer_error_message),
+        on_success_callback=task_success_if_previous_failed,
         awslogs_group="/aws/ecs/consume/neso-forecast",
         awslogs_stream_prefix="streaming/neso-forecast-consume",
         awslogs_region="eu-west-1",
