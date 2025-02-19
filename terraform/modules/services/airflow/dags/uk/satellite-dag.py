@@ -86,9 +86,12 @@ with DAG(
     )
 
     file_5min = f"s3://nowcasting-sat-{env}/data/latest/latest.zarr.zip"
+    file_15min = f"s3://nowcasting-sat-{env}/data/latest/latest_15.zarr.zip"
     command_5min = (
         f'curl -X GET '
-        f'"{url}/v0/solar/GB/update_last_data?component=satellite&file={file_5min}"'
+        f'"{url}/v0/solar/GB/update_last_data?component=satellite&file={file_5min}"; '
+        f'curl -X GET '
+        f'"{url}/v0/solar/GB/update_last_data?component=satellite&file={file_15min}"'
     )
 
     satellite_update_5min = BashOperator(
@@ -96,20 +99,7 @@ with DAG(
         bash_command=command_5min,
     )
 
-    file_15min = f"s3://nowcasting-sat-{env}/data/latest/latest_15.zarr.zip"
-    command_15min = (
-        f'curl -X GET '
-        f'"{url}/v0/solar/GB/update_last_data?component=satellite&file={file_15min}"'
-    )
-
-    satellite_update_15min = BashOperator(
-        task_id=f"{region}-satellite-update-15min",
-        bash_command=command_15min,
-        trigger_rule="all_failed",
-        on_failure_callback=slack_message_callback(satellite_both_files_missing_error_message),
-    )
-
-    latest_only >> sat_consumer >> satellite_update_5min >> satellite_update_15min
+    latest_only >> sat_consumer >> satellite_update_5min
 
 with DAG(
     f"{region}-national-satellite-cleanup",
