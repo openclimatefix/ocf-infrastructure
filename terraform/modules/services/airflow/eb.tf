@@ -38,7 +38,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name = "RootVolumeSize"
-    value = "16"
+    value = "32"
     resource  = ""
   }
 
