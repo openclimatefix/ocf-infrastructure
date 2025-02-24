@@ -683,8 +683,8 @@ module "forecast_pvnet_day_ahead" {
        ]
 
   container-tag         = var.forecast_pvnet_day_ahead_docker_version
-  container-name        = "openclimatefix/pvnet_app"
-  container-registry    = "docker.io"
+  container-name        = "openclimatefix/uk-pvnet-app"
+  container-registry    = "ghcr.io"
   container-command     = []
 }
 
