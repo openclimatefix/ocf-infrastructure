@@ -576,7 +576,7 @@ module "forecast_pvnet" {
 
   container-tag         = var.forecast_pvnet_version
   container-name        = "openclimatefix/pvnet_app"
-  container-registry    = "docker.io"
+  container-registry    = "ghcr.io"
   container-command     = []
 }
 
@@ -630,7 +630,7 @@ module "forecast_pvnet_ecwmf" {
 
   container-tag         = var.forecast_pvnet_ecmwf_version
   container-name        = "openclimatefix/pvnet_app"
-  container-registry    = "docker.io"
+  container-registry    = "ghcr.io"
   container-command     = []
 
 }
