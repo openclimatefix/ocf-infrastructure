@@ -22,6 +22,7 @@ The componentes ares:
 3.8 - PVLive Consumer - GSP Day After
 3.9 - PVLive Consumer - National Day After
 3.10 - NESO Forecast Consumer
+3.11 - Satellite Consumer (new)
 4.1 - Metrics
 4.2 - Cloudcasting app
 4.3 - Forecast National XG
@@ -501,6 +502,40 @@ module "neso-forecast-consumer" {
   container-tag         = var.neso_forecast_consumer_version
   container-name        = "openclimatefix/neso_solar_consumer_api"
   container-registry = "docker.io"
+  container-command     = []
+}
+
+# 3.11
+module "satellite-consumer" {
+  source = "../../modules/services/ecs_task"
+
+  ecs-task_name = "satellite-consumer"
+  ecs-task_type = "consumer"
+  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
+  ecs-task_size = {
+    cpu    = 1024
+    memory = 2048
+  }
+
+  aws-region                     = var.region
+  aws-environment                = local.environment
+  s3-buckets = [
+    {
+      id : module.s3.s3-sat-bucket.id,
+      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
+    }
+  ]
+  container-env_vars = [
+    {"name": "SATCONS_COMMAND", "value": "CONSUME"},
+    {"name": "SATCONS_RESCALE", "value": "true"},
+  ]
+  container-secret_vars = [
+    {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
+    values: ["EUMETSAT_CONSUMER_KEY", "EUMETSAT_CONSUMER_SECRET"]}
+  ]
+  container-tag         = var.satellite_consumer_version
+  container-name        = "openclimatefix/satellite-consumer"
+  container-registry = "ghcr.io"
   container-command     = []
 }
 
