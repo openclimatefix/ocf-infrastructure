@@ -67,13 +67,6 @@ def sat_consumer_dag():
                 "SATCONS_WORKDIR": "s3://nowcasting-sat-{env}/testdata",
             },
         }]},
-        on_failure_callback=slack_message_callback((
-            "⚠️ The task {{ ti.task_id }} failed to collect RSS satellite image data. "
-            "Falling back to 15 minute 0-degree satellite data. "
-            "If in a scheduled period of RSS downtime then no action is required. "
-            "(Can check EUMETSAT RSS status "
-            "<https://masif.eumetsat.int/ossi/webpages/level3.html?ossi_level3_filename=seviri_rss_hr.html&ossi_level2_filename=seviri_rss.html|here>). "
-        )),
         **default_task_args,
     )
 
