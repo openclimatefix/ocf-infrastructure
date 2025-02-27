@@ -61,7 +61,7 @@ def sat_consumer_dag():
     sat_consumer_rss = EcsRunTaskOperator(
         task_id="satellite-consumer-rss",
         overrides={"containerOverrides": [{
-            "name": "satellite-consumer",
+            "name": "satellite-consumer-consumer",
             "environment": [
                 {"name": "SATCONS_SATELLITE", "value": "rss"},
                 {"name": "SATCONS_WORKDIR", "value": "s3://nowcasting-sat-{env}/testdata"},
@@ -74,7 +74,7 @@ def sat_consumer_dag():
         task_id="satellite-consumer-odegree",
         trigger_rule=TriggerRule.ALL_FAILED,
         overrides={"containerOverrides": [{
-            "name": "satellite-consumer",
+            "name": "satellite-consumer-consumer",
             "environment": [
                 {"name": "SATCONS_SATELLITE", "value": "odegree"},
                 {"name": "SATCONS_WORKDIR", "value": "s3://nowcasting-sat-{env}/testdata"},
