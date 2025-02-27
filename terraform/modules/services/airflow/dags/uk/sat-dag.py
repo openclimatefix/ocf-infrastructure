@@ -62,10 +62,10 @@ def sat_consumer_dag():
         task_id="satellite-consumer-rss",
         overrides={"containerOverrides": [{
             "name": "satellite-consumer",
-            "environment": {
-                "SATCONS_SATELLITE": "rss",
-                "SATCONS_WORKDIR": "s3://nowcasting-sat-{env}/testdata",
-            },
+            "environment": [
+                {"name": "SATCONS_SATELLITE", "value": "rss"},
+                {"name": "SATCONS_WORKDIR", "value": "s3://nowcasting-sat-{env}/testdata"},
+            ],
         }]},
         **default_task_args,
     )
@@ -75,10 +75,10 @@ def sat_consumer_dag():
         trigger_rule=TriggerRule.ALL_FAILED,
         overrides={"containerOverrides": [{
             "name": "satellite-consumer",
-            "environment": {
-                "SATCONS_SATELLITE": "odegree",
-                "SATCONS_WORKDIR": "s3://nowcasting-sat-{env}/testdata",
-            },
+            "environment": [
+                {"name": "SATCONS_SATELLITE", "value": "odegree"},
+                {"name": "SATCONS_WORKDIR", "value": "s3://nowcasting-sat-{env}/testdata"},
+            ],
         }]},
         on_failure_callback=slack_message_callback((
             "⚠️ The task {{ ti.task_id }} failed to collect odegree satellite data. "
