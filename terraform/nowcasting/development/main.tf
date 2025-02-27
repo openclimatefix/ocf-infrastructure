@@ -526,8 +526,9 @@ module "satellite-consumer" {
     }
   ]
   container-env_vars = [
-    {"name": "SATCONS_COMMAND", "value": "CONSUME"},
+    {"name": "SATCONS_COMMAND", "value": "consume"},
     {"name": "SATCONS_RESCALE", "value": "true"},
+    {"name": "SATCONS_VALIDATE", "value": "true"},
   ]
   container-secret_vars = [
     {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
