@@ -64,7 +64,7 @@ def sat_consumer_dag():
             "name": "satellite-consumer-consumer",
             "environment": [
                 {"name": "SATCONS_SATELLITE", "value": "rss"},
-                {"name": "SATCONS_WORKDIR", "value": "s3://nowcasting-sat-{env}/testdata"},
+                {"name": "SATCONS_WORKDIR", "value": f"s3://nowcasting-sat-{env}/testdata"},
             ],
         }]},
         **default_task_args,
@@ -77,7 +77,7 @@ def sat_consumer_dag():
             "name": "satellite-consumer-consumer",
             "environment": [
                 {"name": "SATCONS_SATELLITE", "value": "odegree"},
-                {"name": "SATCONS_WORKDIR", "value": "s3://nowcasting-sat-{env}/testdata"},
+                {"name": "SATCONS_WORKDIR", "value": f"s3://nowcasting-sat-{env}/testdata"},
             ],
         }]},
         on_failure_callback=slack_message_callback((
