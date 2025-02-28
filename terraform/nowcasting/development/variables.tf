@@ -135,3 +135,9 @@ variable "cloudcasting_app_version" {
   description = "The version of the cloucasting app forecast consumer"
   default     = "0.0.2"
 }
+
+variable "satellite_consumer_version" {
+  type        = string
+  description = "The version of the satellite consumer"
+  default     = "0.0.2"
+}
