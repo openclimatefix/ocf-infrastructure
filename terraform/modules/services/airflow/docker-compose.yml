@@ -39,7 +39,7 @@ services:
       - data:/airflow
 
   scheduler:
-    image: apache/airflow:2.6.2
+    image: apache/airflow:2.10.5
     container_name: airflow-scheduler
     command: scheduler
     restart: always
@@ -56,12 +56,15 @@ services:
 
 
   webserver:
-    image: apache/airflow:2.6.2
+    image: apache/airflow:2.10.5
     container_name: airflow-webserver
     command: webserver -w 4
     ports:
       - 80:8080
     restart: always
+    post_start:
+      - command: | 
+          /usr/bin/dumb-init -- /entrypoint db migrate
     environment:
       <<: [*airflow-variables, *common-variables]
       AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
@@ -79,7 +82,7 @@ services:
   # only need to (and only able to!) run this once. Commit ref 96b5bb8 has this uncommented.
   # Make sure create a database called "airflow" first!
   #  airflowinit:
-  #    image: apache/airflow:2.6.2
+  #    image: apache/airflow:2.10.5
   #    container_name: airflow-init
   #    environment:
   #      <<: [*airflow-variables, *common-variables]
