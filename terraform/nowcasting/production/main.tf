@@ -573,8 +573,8 @@ module "forecast_pvnet" {
        ]
 
   container-tag         = var.forecast_pvnet_version
-  container-name        = "openclimatefix/pvnet_app"
-  container-registry    = "docker.io"
+  container-name        = "openclimatefix/uk-pvnet-app"
+  container-registry    = "ghcr.io"
   container-command     = []
 }
 
@@ -627,8 +627,8 @@ module "forecast_pvnet_ecwmf" {
        ]
 
   container-tag         = var.forecast_pvnet_ecmwf_version
-  container-name        = "openclimatefix/pvnet_app"
-  container-registry    = "docker.io"
+  container-name        = "openclimatefix/uk-pvnet-app"
+  container-registry    = "ghcr.io"
   container-command     = []
 
 }
@@ -681,8 +681,8 @@ module "forecast_pvnet_day_ahead" {
        ]
 
   container-tag         = var.forecast_pvnet_day_ahead_docker_version
-  container-name        = "openclimatefix/pvnet_app"
-  container-registry    = "docker.io"
+  container-name        = "openclimatefix/uk-pvnet-app"
+  container-registry    = "ghcr.io"
   container-command     = []
 }
 
@@ -752,7 +752,7 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=244a67d"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=acc3040"
 
   aws-environment   = local.environment
   aws-domain        = local.domain
