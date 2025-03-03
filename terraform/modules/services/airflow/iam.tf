@@ -82,6 +82,8 @@ resource "aws_iam_policy" "ecs-run" {
           "ecs:RunTask",
           "ecs:DescribeTasks",
           "ecs:StopTask",
+          "ecs:RegisterTaskDefinition",
+          "ecs:DeregisterTaskDefinition",
           "iam:PassRole",
           "logs:GetLogEvents",
           "logs:GetLogEvents",
