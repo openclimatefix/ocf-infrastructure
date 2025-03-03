@@ -46,13 +46,29 @@ services:
     ports:
       - "8793:8793"
     environment:
-      <<: [*airflow-variables, *common-variables]
+      # <<: [*airflow-variables, *common-variables]
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAG_IGNORE_FILE_SYNTAX: "glob"
+      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+      AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
+      AIRFLOW_UID: "50000"
+      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+      AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      ECS_SUBNET: $ECS_SUBNET
+      ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
     # depends_on:
-    #   airflowinit:
-    #     condition: service_completed_successfully
+    #  airflowinit:
+    #    condition: service_completed_successfully
 
 
   webserver:
@@ -62,11 +78,24 @@ services:
     ports:
       - 80:8080
     restart: always
-    post_start:
-      - command: | 
-          /usr/bin/dumb-init -- /entrypoint db migrate
     environment:
-      <<: [*airflow-variables, *common-variables]
+      # <<: [*airflow-variables, *common-variables]
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAG_IGNORE_FILE_SYNTAX: "glob"
+      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+      AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
+      AIRFLOW_UID: "50000"
+      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+      AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      ECS_SUBNET: $ECS_SUBNET
+      ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
       AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
       FORWARDED_ALLOW_IPS: "*"
       AIRFLOW__WEBSERVER__WORKER_CLASS: "gevent"
@@ -74,9 +103,9 @@ services:
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
-      #  depends_on:
-      #    airflowinit:
-      #      condition: service_completed_successfully
+    # depends_on:
+    #   airflowinit:
+    #     condition: service_completed_successfully
 
 
   # only need to (and only able to!) run this once. Commit ref 96b5bb8 has this uncommented.
