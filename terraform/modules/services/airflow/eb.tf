@@ -123,7 +123,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "ECS_EXECUTION_ROLE_ARN"
-    value     = var.ecs-execution-role-arn
+    value     = var.ecs-execution_role_arn
     resource  = ""
   }
 
