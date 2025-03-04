@@ -127,6 +127,12 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
     resource  = ""
   }
 
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AWS_OWNER_ID"
+    value     = var.aws-owner_id
+    resource  = ""
+  }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
