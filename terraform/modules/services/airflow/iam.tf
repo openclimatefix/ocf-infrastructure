@@ -57,7 +57,7 @@ resource "aws_iam_policy" "cloudwatch" {
         Action = [
           "logs:PutLogEvents",
           "logs:CreateLogStream",
-          "logs.CreateLogGroup",
+          "logs:CreateLogGroup",
           "logs:DescribeLogStreams",
           "logs:DescribeLogGroups",
         ]
