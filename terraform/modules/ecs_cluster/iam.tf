@@ -8,6 +8,14 @@ locals {
   secretsmanager_arn = "arn:aws:secretsmanager:${var.region}:${var.owner_id}"
 }
 
+resource "aws_cloudwatch_log_group" "ecs_default_log_group" {
+  name = "/aws/ecs/${var.name}"
+  retention_in_days = 7
+  tags = {
+    application = "ecs-${var.name}"
+  }
+}
+
 # -- Policies -- #
 
 # Policy document for ECS task execution
