@@ -1,6 +1,26 @@
 volumes:
   data:
 
+# x-airflow-variables: &airflow-variables 
+#   AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+#   AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+#   AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+#   AIRFLOW__CORE__DAG_IGNORE_FILE_SYNTAX: "glob"
+#   AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+#   AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+#   AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
+#   AIRFLOW_UID: "50000"
+#   _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+#   AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
+#   AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+#
+# x-common-variables: &common-variables
+#   SECRET_KEY: ${SECRET_KEY}
+#   ECS_SUBNET: $ECS_SUBNET
+#   ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+#   AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+#   ENVIRONMENT: $ENVIRONMENT
+
 services:
 
   source-init:
@@ -19,88 +39,115 @@ services:
       - data:/airflow
 
   scheduler:
-    image: apache/airflow:2.6.2
+    image: apache/airflow:2.10.5
     container_name: airflow-scheduler
     command: scheduler
     restart: always
     ports:
       - "8793:8793"
     environment:
+      # <<: [*airflow-variables, *common-variables]
       AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
-      SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
-      AIRFLOW_UID: "50000"
+      AIRFLOW__CORE__DAG_IGNORE_FILE_SYNTAX: "glob"
       AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
       AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
       AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
-      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-      ENVIRONMENT: $ENVIRONMENT
-      ECS_SUBNET: $ECS_SUBNET
-      ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      AIRFLOW_UID: "50000"
       _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
       AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
-
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      ECS_SUBNET: $ECS_SUBNET
+      ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      ECS_EXECUTION_ROLE_ARN: $ECS_EXECUTION_ROLE_ARN
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
-    # depends_on:
-    #   airflowinit:
-    #     condition: service_completed_successfully
+    depends_on:
+      airflowmigrate:
+        condition: service_completed_successfully
 
 
   webserver:
-    image: apache/airflow:2.6.2
+    image: apache/airflow:2.10.5
     container_name: airflow-webserver
     command: webserver -w 4
     ports:
       - 80:8080
     restart: always
     environment:
+      # <<: [*airflow-variables, *common-variables]
       AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
-      SECRET_KEY: ${SECRET_KEY}
-      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
       AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAG_IGNORE_FILE_SYNTAX: "glob"
+      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+      AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
+      AIRFLOW_UID: "50000"
+      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+      AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      ECS_SUBNET: $ECS_SUBNET
+      ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      ECS_EXECUTION_ROLE_ARN: $ECS_EXECUTION_ROLE_ARN
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
       FORWARDED_ALLOW_IPS: "*"
       AIRFLOW__WEBSERVER__WORKER_CLASS: "gevent"
       _AIRFLOW_PATCH_GEVENT: "1"
-      AIRFLOW_UID: "50000"
-      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
-      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
-      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-      ENVIRONMENT: $ENVIRONMENT
-      ECS_SUBNET: $ECS_SUBNET
-      ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
-      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
-      AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
-      #  depends_on:
-      #    airflowinit:
-      #      condition: service_completed_successfully
+    depends_on:
+      airflowmigrate:
+        condition: service_completed_successfully
 
+
+  airflowmigrate:
+    image: apache/airflow:2.10.5
+    container_name: airflow-migrate
+    command: airflow db migrate
+    volumes:
+      - data:/airflow
+    environment:
+      # <<: [*airflow-variables, *common-variables]
+      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
+      AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAG_IGNORE_FILE_SYNTAX: "glob"
+      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
+      AIRFLOW__LOGGING__LOGGING_LEVEL: $LOGLEVEL
+      AIRFLOW_UID: "50000"
+      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
+      AIRFLOW_CONN_SLACK_API_DEFAULT: ${AIRFLOW_CONN_SLACK_API_DEFAULT}
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      ECS_SUBNET: $ECS_SUBNET
+      ECS_SECURITY_GROUP: $ECS_SECURITY_GROUP
+      ECS_EXECUTION_ROLE_ARN: $ECS_EXECUTION_ROLE_ARN
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      ENVIRONMENT: $ENVIRONMENT
+    user: "${AIRFLOW_UID:-50000}:0"
 
   # only need to (and only able to!) run this once. Commit ref 96b5bb8 has this uncommented.
   # Make sure create a database called "airflow" first!
   #  airflowinit:
-  #    image: apache/airflow:2.6.2
+  #    image: apache/airflow:2.10.5
   #    container_name: airflow-init
   #    environment:
-  #      AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
-  #      SECRET_KEY: ${SECRET_KEY}
-  #      AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
-  #      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${DB_URL}
+  #      <<: [*airflow-variables, *common-variables]
   #      _AIRFLOW_DB_UPGRADE: 'True'
   #      _AIRFLOW_WWW_USER_CREATE: 'True'
   #      _AIRFLOW_WWW_USER_USERNAME: 'airflow'
   #      _AIRFLOW_WWW_USER_PASSWORD: ${PASSWORD}
-  #      AIRFLOW__CORE__DAGS_FOLDER: "/airflow/dags"
-  #      AIRFLOW__LOGGING__BASE_LOG_FOLDER: "/airflow/logs"
-  #      AIRFLOW_UID: "50000"
   #    user: "${AIRFLOW_UID:-50000}:0"
   #    command: >
   #      bash -c "echo 'Installing dependencies'
@@ -130,3 +177,4 @@ services:
     # depends_on:
     #   airflowinit:
     #     condition: service_completed_successfully
+
