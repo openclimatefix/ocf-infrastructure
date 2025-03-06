@@ -8,6 +8,8 @@ locals {
   secretsmanager_arn = "arn:aws:secretsmanager:${var.region}:${var.owner_id}"
 }
 
+# --- Default ECS Log group --- #
+
 resource "aws_cloudwatch_log_group" "ecs_default_log_group" {
   name = "/aws/ecs/${var.name}"
   retention_in_days = 7
@@ -16,10 +18,10 @@ resource "aws_cloudwatch_log_group" "ecs_default_log_group" {
   }
 }
 
-# -- Policies -- #
+# -- Execution Policies -- #
 
 # Policy document for ECS task execution
-data "aws_iam_policy_document" "ecs_task_execution_policy_document" {
+data "aws_iam_policy_document" "ecs_assume_role_policy_document" {
   statement {
     effect = "Allow"
 
@@ -90,16 +92,46 @@ resource "aws_iam_policy" "write_cloudwatch_policy" {
     policy = data.aws_iam_policy_document.cloudwatch_policy_document.json
 }
 
-# -- Role -- #
+# Policy document for regional S3 access
+data "aws_iam_policy_document" "s3_policy_document" {
+  version = "2012-10-17"
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+      "s3:GetObjectAttributes"
+    ]
+    resources = ["arn:aws:s3:::*"]
+    condition = {
+      test     = "StringEquals"
+      variable = "aws:region"
+      values   = [${var.region}]
+    }
+  }
+}
+# Associated policy
+resource "aws_iam_policy" "s3_policy" {
+    name        = "ecs-cluster-${var.name}-read-write-s3-policy"
+    path        = "/ecs-cluster/${var.name}/s3/"
+    description = "Policy to read and write to S3 in the ${var.region} region"
+
+    policy = data.aws_iam_policy_document.s3_policy_document.json
+}
+
+# -- Execution Role -- #
 
 # Create role for ECS task execution
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecs-cluster_${var.name}_task-execution-role"
   path = "/ecs-cluster/${var.name}/"
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_policy_document.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy_document.json
 }
 
 # Attach policies to role
+# This needs secrets access to pass them to the container when creating the task
 resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attachment" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -112,3 +144,24 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.read_regional_secrets_policy.arn
 }
+
+# --- Task Role --- #
+
+# Create role for ECS task running
+# * This needs S3 access but not secrets access
+resource "aws_iam_role" "ecs_task_role" {
+  name = "ecs-cluster_${var.name}_task-role"
+  path = "/ecs-cluster/${var.name}/"
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy_document.json
+}
+
+# Attach policies to role
+resource "aws_iam_role_policy_attachment" "esc-task-role-policy-attachment-cloudwatch" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.write_cloudwatch_policy.arn
+}
+resource "Aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment-s3" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.s3_policy.arn
+}
+
