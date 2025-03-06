@@ -454,7 +454,7 @@ module "airflow" {
   ecs-subnet_id             = module.network.public_subnet_ids[0]
   ecs-security_group        = module.network.default_security_group_id
   ecs-execution_role_arn    = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_role_arn          = module.ecs.ecs_task_run_role_arn
+  ecs-task_role_arn         = module.ecs-cluster.ecs_task_run_role_arn
   aws-owner_id              = module.network.owner_id
   slack_api_conn            = var.apikey-slack
   dags_folder               = "india"
