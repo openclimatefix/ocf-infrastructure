@@ -149,19 +149,19 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
 
 # Create role for ECS task running
 # * This needs S3 access but not secrets access
-resource "aws_iam_role" "ecs_task_role" {
-  name = "ecs-cluster_${var.name}_task-role"
+resource "aws_iam_role" "ecs_task_run_role" {
+  name = "ecs-cluster_${var.name}_task-run-role"
   path = "/ecs-cluster/${var.name}/"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role_policy_document.json
 }
 
 # Attach policies to role
-resource "aws_iam_role_policy_attachment" "esc-task-role-policy-attachment-cloudwatch" {
-  role       = aws_iam_role.ecs_task_role.name
+resource "aws_iam_role_policy_attachment" "esc-task-run-role-policy-attachment-cloudwatch" {
+  role       = aws_iam_role.ecs_task_run_role.name
   policy_arn = aws_iam_policy.write_cloudwatch_policy.arn
 }
-resource "Aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment-s3" {
-  role       = aws_iam_role.ecs_task_role.name
+resource "Aws_iam_role_policy_attachment" "ecs-task-run-role-policy-attachment-s3" {
+  role       = aws_iam_role.ecs_task_run_role.name
   policy_arn = aws_iam_policy.s3_policy.arn
 }
 
