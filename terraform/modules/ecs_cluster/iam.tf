@@ -105,7 +105,7 @@ data "aws_iam_policy_document" "s3_policy_document" {
       "s3:GetObjectAttributes"
     ]
     resources = ["arn:aws:s3:::*"]
-    condition = {
+    condition {
       test     = "StringEquals"
       variable = "aws:region"
       values   = ["${var.region}"]
