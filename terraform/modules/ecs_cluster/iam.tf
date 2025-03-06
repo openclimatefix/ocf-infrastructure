@@ -160,7 +160,7 @@ resource "aws_iam_role_policy_attachment" "esc-task-run-role-policy-attachment-c
   role       = aws_iam_role.ecs_task_run_role.name
   policy_arn = aws_iam_policy.write_cloudwatch_policy.arn
 }
-resource "Aws_iam_role_policy_attachment" "ecs-task-run-role-policy-attachment-s3" {
+resource "aws_iam_role_policy_attachment" "ecs-task-run-role-policy-attachment-s3" {
   role       = aws_iam_role.ecs_task_run_role.name
   policy_arn = aws_iam_policy.s3_policy.arn
 }
