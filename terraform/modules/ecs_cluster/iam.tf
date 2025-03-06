@@ -108,7 +108,7 @@ data "aws_iam_policy_document" "s3_policy_document" {
     condition = {
       test     = "StringEquals"
       variable = "aws:region"
-      values   = [${var.region}]
+      values   = ["${var.region}"]
     }
   }
 }
