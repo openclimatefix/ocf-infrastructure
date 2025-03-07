@@ -107,7 +107,7 @@ data "aws_iam_policy_document" "s3_policy_document" {
     resources = ["arn:aws:s3:::*"]
     condition {
       test     = "StringEquals"
-      variable = "aws:region"
+      variable = "aws:RequestedRegion"
       values   = ["${var.region}"]
     }
   }
