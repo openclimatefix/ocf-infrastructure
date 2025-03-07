@@ -1,4 +1,4 @@
-# create s3 bucket for application verions and copy DAGs to it
+# Create S3 Bucket for Airflow to pick up dags from
 
 locals {
   dags_loc = "${path.module}/dags/${var.dags_folder}"
@@ -47,21 +47,3 @@ resource "aws_iam_policy" "read-policy" {
   })
 }
 
-
-# resource "aws_s3_object" "dags" {
-#   for_each = fileset("${local.dags_loc}/", "*")
-#
-#   bucket = aws_s3_bucket.airflow-s3.id
-#   key    = "./dags/${each.value}"
-#   source = "${local.dags_loc}/${each.value}"
-#   etag   = filemd5("${local.dags_loc}/${each.value}")
-# }
-
-# resource "aws_s3_object" "dags-utils" {
-#   for_each = fileset("${path.module}/dags/utils", "*")
-#
-#   bucket = aws_s3_bucket.airflow-s3.id
-#   key    = "./dags/utils/${each.value}"
-#   source = "${path.module}/dags/utils/${each.value}"
-#   etag   = filemd5("${path.module}/dags/utils/${each.value}")
-# }
