@@ -698,7 +698,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
     { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false }, # On dev all models should run
+    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false" }, # On dev all models should run
     { "name" : "DAY_AHEAD_MODEL", "value": "false" },
     { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
     { "name" : "ALLOW_ADJUSTER", "value": "true" },
