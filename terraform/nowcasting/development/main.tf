@@ -750,14 +750,14 @@ source = "../../modules/services/ecs_task"
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    {"name": "USE_ADJUSTER", "value": "false"},
-    {"name": "SAVE_GSP_SUM", "value": "true"},
-    {"name": "RUN_EXTRA_MODELS",  "value": "false"},
-    {"name": "DAY_AHEAD_MODEL",  "value": "false"},
-    {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
-    {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
+    { "name" : "SENTRY_DSN", "value": var.sentry_dsn },
+    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false }, # On dev allow all models to run
+    { "name" : "ALLOW_ADJUSTER", "value": "true" },
+    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
+    { "name" : "DAY_AHEAD_MODEL", "value": "false" },
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
+    { "name" : "FILTER_BAD_FORECASTS", "value": "false" }, # On dev we save even the bad forecasts
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
   container-secret_vars = [
