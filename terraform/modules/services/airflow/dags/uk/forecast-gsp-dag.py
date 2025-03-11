@@ -26,21 +26,15 @@ cluster = f"Nowcasting-{env}"
 # Tasks can still be defined in terraform, or defined here
 
 forecast_pvnet_error_message = (
-    "⚠️ The task {{ ti.task_id }} failed,"
-    " but its ok. PVNET-ECMWF only will run next. "
-    "No out of hours support is required."
+    "❌ The task {{ ti.task_id }} failed. This means all PVNet models including ECMWF-only have "
+    "failed to run. We have about 6 hours before the blend services need this. "
+    "Please see run book for appropriate actions."
 )
 
 forecast_pvnet_da_error_message = (
     "❌ The task {{ ti.task_id }} failed. "
     "This would ideally be fixed before for DA actions at 09.00. "
     "Please see run book for appropriate actions."
-)
-
-forecast_ecmwf_error_message = (
-    "❌ The task {{ ti.task_id }} failed. This is only run after the main PVnet has failed. "
-    "We have about 6 hours before the blend services need this. "
-    "Please see run book for appropriate actions. "
 )
 
 forecast_blend_error_message = (
@@ -82,27 +76,6 @@ with DAG(
         awslogs_region="eu-west-1",
     )
 
-    forecast_ecmwf = EcsRunTaskOperator(
-        task_id=f"{region}-gsp-forecast-pvnet-2-ecmwf",
-        task_definition="forecast_pvnet_ecmwf",
-        cluster=cluster,
-        overrides={},
-        launch_type="FARGATE",
-        network_configuration={
-            "awsvpcConfiguration": {
-                "subnets": [subnet],
-                "securityGroups": [security_group],
-                "assignPublicIp": "ENABLED",
-            },
-        },
-        task_concurrency=10,
-        on_failure_callback=slack_message_callback(forecast_ecmwf_error_message),
-        trigger_rule="all_failed",
-        awslogs_group="/aws/ecs/forecast/forecast_pvnet_ecmwf",
-        awslogs_stream_prefix="streaming/forecast_pvnet_ecmwf-forecast",
-        awslogs_region="eu-west-1",
-    )
-
     forecast_blend = EcsRunTaskOperator(
         task_id=f"{region}-forecast-blend-pvnet-2",
         task_definition="forecast_blend",
@@ -125,7 +98,6 @@ with DAG(
     )
 
     latest_only >> forecast >> forecast_blend
-    forecast >> forecast_ecmwf >> forecast_blend
 
 
 with DAG(
