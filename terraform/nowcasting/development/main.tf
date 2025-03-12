@@ -27,9 +27,8 @@ The componentes ares:
 4.2 - Cloudcasting app
 4.3 - Forecast National XG
 4.4 - Forecast PVnet 2
-4.5 - Forecast PVnet ECMWF only
-4.6 - Forecast PVnet DA
-4.7 - Forecast Blend
+4.5 - Forecast PVnet DA
+4.6 - Forecast Blend
 5.1 - OCF Dashboard
 5.2 - Airflow instance
 6.1 - PVSite database
@@ -698,11 +697,12 @@ source = "../../modules/services/ecs_task"
     { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
     { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name" : "USE_ADJUSTER", "value": "true"},
-    { "name" : "SAVE_GSP_SUM", "value": "true"},
-    { "name" : "RUN_EXTRA_MODELS",  "value": "true"},
-    { "name" : "DAY_AHEAD_MODEL",  "value": "false"},
-    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true"},
+    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false" }, # On dev all models should run
+    { "name" : "DAY_AHEAD_MODEL", "value": "false" },
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
+    { "name" : "ALLOW_ADJUSTER", "value": "true" },
+    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
+    { "name" : "FILTER_BAD_FORECASTS", "value": "false" }, # On dev we save even the bad forecasts
     { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
   ]
 
@@ -719,60 +719,6 @@ source = "../../modules/services/ecs_task"
 }
 
 # 4.5
-module "forecast_pvnet_ecwmf" {
-source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
-    },
-    {
-      id : module.forecasting_models_bucket.bucket_id,
-      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
-    }
-  ]
-
-  ecs-task_name               = "forecast_pvnet_ecmwf"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 8192
-    cpu    = 2048
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    {"name": "USE_ADJUSTER", "value": "false"},
-    {"name": "SAVE_GSP_SUM", "value": "true"},
-    {"name": "RUN_EXTRA_MODELS",  "value": "false"},
-    {"name": "DAY_AHEAD_MODEL",  "value": "false"},
-    {"name": "USE_ECMWF_ONLY",  "value": "true"}, # THIS IS THE IMPORTANT one
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
-    {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
-  ]
-
-  container-secret_vars = [
-       {secret_policy_arn: module.database.forecast-database-secret.arn,
-        values: ["DB_URL"]
-       }
-       ]
-
-  container-tag         = var.forecast_pvnet_version
-  container-name        = "openclimatefix/uk-pvnet-app"
-  container-registry    = "ghcr.io"
-  container-command     = []
-}
-
-
-# 4.6
 module "forecast_pvnet_day_ahead" {
 source = "../../modules/services/ecs_task"
 
@@ -811,7 +757,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
     { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    {"name": "USE_ADJUSTER", "value": "true"},
+    {"name": "ALLOW_ADJUSTER", "value": "true"},
     {"name": "RUN_EXTRA_MODELS",  "value": "false"},
     {"name": "DAY_AHEAD_MODEL",  "value": "true"},
     {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
@@ -862,7 +808,7 @@ module "analysis_dashboard" {
   ]
 }
 
-# 4.7
+# 4.6
 module "forecast_blend" {
   source = "../../modules/services/ecs_task"
 
@@ -899,16 +845,18 @@ module "forecast_blend" {
 module "airflow" {
   source = "../../modules/services/airflow"
 
-  aws-environment   = local.environment
-  aws-domain        = local.domain
-  aws-vpc_id        = module.networking.vpc_id
-  aws-subnet_id       = module.networking.public_subnet_ids[0]
-  airflow-db-connection-url        = module.database.forecast-database-secret-airflow-url
-  docker-compose-version       = "0.0.6"
-  ecs-subnet_id = module.networking.public_subnet_ids[0]
-  ecs-security_group=module.networking.default_security_group_id
-  aws-owner_id = module.networking.owner_id
-  slack_api_conn=var.airflow_conn_slack_api_default
+  aws-environment            = local.environment
+  aws-domain                 = local.domain
+  aws-vpc_id                 = module.networking.vpc_id
+  aws-subnet_id              = module.networking.public_subnet_ids[0]
+  airflow-db-connection-url  = module.database.forecast-database-secret-airflow-url
+  docker-compose-version     = "0.0.12"
+  ecs-subnet_id              = module.networking.public_subnet_ids[0]
+  ecs-security_group         = module.networking.default_security_group_id
+  ecs-execution_role_arn     = module.ecs.ecs_task_execution_role_arn
+  ecs-task_role_arn          = module.ecs.ecs_task_run_role_arn
+  aws-owner_id               = module.networking.owner_id
+  slack_api_conn             = var.airflow_conn_slack_api_default
 }
 
 # 6.1

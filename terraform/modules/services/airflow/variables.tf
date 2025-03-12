@@ -47,6 +47,16 @@ variable "ecs-subnet_id" {
   type = string
 }
 
+variable "ecs-execution_role_arn" {
+  description = "The role with which to execute ecs tasks"
+  type = string
+}
+
+variable "ecs-task_role_arn" {
+  description = "The role with which to run ecs tasks"
+  type = string
+}
+
 variable "docker-compose-version" {
   description = "The version of this for ocf. This helps bump the docker compose file"
   type = string

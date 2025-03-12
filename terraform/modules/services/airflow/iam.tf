@@ -57,6 +57,7 @@ resource "aws_iam_policy" "cloudwatch" {
         Action = [
           "logs:PutLogEvents",
           "logs:CreateLogStream",
+          "logs:CreateLogGroup",
           "logs:DescribeLogStreams",
           "logs:DescribeLogGroups",
         ]
@@ -82,6 +83,9 @@ resource "aws_iam_policy" "ecs-run" {
           "ecs:RunTask",
           "ecs:DescribeTasks",
           "ecs:StopTask",
+          "ecs:RegisterTaskDefinition",
+          "ecs:DeregisterTaskDefinition",
+          "ecs:TagResource",
           "iam:PassRole",
           "logs:GetLogEvents",
           "logs:GetLogEvents",
