@@ -558,7 +558,7 @@ module "forecast_pvnet" {
     { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
     { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false" }, # On prod only run critical models
+    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "true" }, # On prod only run critical models
     { "name" : "FILTER_BAD_FORECASTS", "value": "true" }, # On prod we don't save bad forecasts
     { "name" : "ALLOW_ADJUSTER", "value": "true"},
     { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true"},
