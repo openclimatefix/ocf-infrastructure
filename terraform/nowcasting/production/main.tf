@@ -669,11 +669,14 @@ module "forecast_pvnet_day_ahead" {
     { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
     { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
     { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    {"name": "USE_ADJUSTER", "value": "true"},
-    {"name": "RUN_EXTRA_MODELS",  "value": "false"},
-    {"name": "DAY_AHEAD_MODEL",  "value": "true"},
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "false"}
+    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false" }, # This needs to be False for DA
+    { "name" : "FILTER_BAD_FORECASTS", "value": "true" }, # On prod we don't save bad forecasts
+    { "name" : "ALLOW_ADJUSTER", "value": "true"},
+    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true"},
+    { "name" : "DAY_AHEAD_MODEL",  "value": "true"},
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "false"}, # legacy model
   ]
+
 
   container-secret_vars = [
        {secret_policy_arn: module.database.forecast-database-secret.arn,
