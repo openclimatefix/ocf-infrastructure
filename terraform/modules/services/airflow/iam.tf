@@ -91,7 +91,8 @@ resource "aws_iam_policy" "ecs-run" {
           "logs:GetLogEvents",
           "logs:GetLogRecord",
           "logs:GetLogGroupFields",
-          "logs:GetQueryResults"
+          "logs:GetQueryResults",
+          "ec2:DescribeLaunchTemplates"
         ]
         Effect   = "Allow"
         Resource = "*"
