@@ -28,6 +28,7 @@ More details:
 and [Airflow Dag](https://github.com/openclimatefix/ocf-infrastructure/blob/main/terraform/modules/services/airflow/dags/uk/nwp-dag.py)
  - AWS logs: 
  - Met Office: [aws/ecs/consumer/nwp-metoffice](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fconsumer$252Fnwp-metoffice)  
+ 
 - ECMWF UK: [aws/ecs/consumer/nwp-consumer-ecmwf-uk](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fconsumer$252Fnwp-consumer-ecmwf-uk)  
 
 
