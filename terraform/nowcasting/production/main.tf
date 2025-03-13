@@ -212,21 +212,24 @@ module "nwp-ecmwf" {
   }]
 
   container-env_vars = [
-  { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
+     { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
   { "name" : "AWS_REGION", "value" : "eu-west-1" },
-  { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
-  { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-  { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data" },
-  { "name" : "LOGLEVEL", "value" : "DEBUG" },
-  { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-  { "name" : "CONCURRENCY", "value" : "false" },
-  # legacy ones
-  { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-  { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
-  { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-  { "name" : "ECMWF_AREA", "value" : "uk" },
-  { "name" : "ENVIRONMENT", "value" : local.environment }
-]
+    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data" },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy ones
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ECMWF_AREA", "value" : "uk" },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" }
+  ]
+
 
     container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
