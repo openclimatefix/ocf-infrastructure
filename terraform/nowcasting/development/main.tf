@@ -694,16 +694,17 @@ source = "../../modules/services/ecs_task"
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn },
     { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false" }, # On dev all models should run
     { "name" : "DAY_AHEAD_MODEL", "value": "false" },
     { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
     { "name" : "ALLOW_ADJUSTER", "value": "true" },
     { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
     { "name" : "FILTER_BAD_FORECASTS", "value": "false" }, # On dev we save even the bad forecasts
-    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" },
+    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
   ]
 
   container-secret_vars = [
@@ -754,14 +755,15 @@ source = "../../modules/services/ecs_task"
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    {"name": "ALLOW_ADJUSTER", "value": "true"},
-    {"name": "RUN_EXTRA_MODELS",  "value": "false"},
-    {"name": "DAY_AHEAD_MODEL",  "value": "true"},
-    {"name": "USE_OCF_DATA_SAMPLER", "value": "true"},
-    {"name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
+    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn },
+    { "name" : "ALLOW_ADJUSTER", "value": "true" },
+    { "name" : "RUN_EXTRA_MODELS",  "value": "false" },
+    { "name" : "DAY_AHEAD_MODEL",  "value": "true" },
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
+    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" },
+    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
   ]
 
   container-secret_vars = [

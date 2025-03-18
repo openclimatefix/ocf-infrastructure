@@ -555,16 +555,17 @@ module "forecast_pvnet" {
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn },
     { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "true" }, # On prod only run critical models
     { "name" : "FILTER_BAD_FORECASTS", "value": "true" }, # On prod we don't save bad forecasts
-    { "name" : "ALLOW_ADJUSTER", "value": "true"},
-    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true"},
-    { "name" : "DAY_AHEAD_MODEL",  "value": "false"},
-    { "name" : "USE_OCF_DATA_SAMPLER", "value": "false"}, # legacy model
+    { "name" : "ALLOW_ADJUSTER", "value": "true" },
+    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
+    { "name" : "DAY_AHEAD_MODEL",  "value": "false" },
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "false" }, # legacy model
     { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
+    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
   ]
 
   container-secret_vars = [
@@ -666,15 +667,16 @@ module "forecast_pvnet_day_ahead" {
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
+    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
+    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
+    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn },
     { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false" }, # This needs to be False for DA
     { "name" : "FILTER_BAD_FORECASTS", "value": "true" }, # On prod we don't save bad forecasts
-    { "name" : "ALLOW_ADJUSTER", "value": "true"},
-    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true"},
-    { "name" : "DAY_AHEAD_MODEL",  "value": "true"},
-    { "name" : "USE_OCF_DATA_SAMPLER", "value": "false"}, # legacy model
+    { "name" : "ALLOW_ADJUSTER", "value": "true" },
+    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
+    { "name" : "DAY_AHEAD_MODEL",  "value": "true" },
+    { "name" : "USE_OCF_DATA_SAMPLER", "value": "false" }, # legacy model
+    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
   ]
 
 
