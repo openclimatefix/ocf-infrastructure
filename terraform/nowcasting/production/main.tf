@@ -565,7 +565,7 @@ module "forecast_pvnet" {
     { "name" : "DAY_AHEAD_MODEL",  "value": "false" },
     { "name" : "USE_OCF_DATA_SAMPLER", "value": "false" }, # legacy model
     { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" }
-    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
+    { "name" : "RAISE_MODEL_FAILURE", "value": "critical" },
   ]
 
   container-secret_vars = [
@@ -676,7 +676,7 @@ module "forecast_pvnet_day_ahead" {
     { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
     { "name" : "DAY_AHEAD_MODEL",  "value": "true" },
     { "name" : "USE_OCF_DATA_SAMPLER", "value": "false" }, # legacy model
-    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
+    { "name" : "RAISE_MODEL_FAILURE", "value": "critical" },
   ]
 
 

@@ -704,7 +704,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
     { "name" : "FILTER_BAD_FORECASTS", "value": "false" }, # On dev we save even the bad forecasts
     { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" },
-    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
+    { "name" : "RAISE_MODEL_FAILURE", "value": "critical" },
   ]
 
   container-secret_vars = [
@@ -763,7 +763,7 @@ source = "../../modules/services/ecs_task"
     { "name" : "DAY_AHEAD_MODEL",  "value": "true" },
     { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
     { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" },
-    { "name" : "RAISE_MODEL_FAILURE", "value", "critical" },
+    { "name" : "RAISE_MODEL_FAILURE", "value": "critical" },
   ]
 
   container-secret_vars = [
