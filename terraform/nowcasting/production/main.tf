@@ -784,7 +784,7 @@ module "pvsite_database" {
   db_name                     = "pvsite"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
-  engine_version = "15.7"
+  engine_version = "15.8"
 }
 
 # 6.2
