@@ -164,8 +164,8 @@ module "nwp-metoffice" {
   ecs-task_type = "consumer"
   ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
   ecs-task_size = {
-    cpu    = 1024
-    memory = 8192
+    cpu    = 512
+    memory = 1024
   }
 
   aws-region                     = var.region
@@ -185,6 +185,9 @@ module "nwp-metoffice" {
     { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    { "name" : "MODEL", "value" : "um-ukv-2km" },
+    { "name" : "MODEL_REPOSITORY", "value" : "metoffice-datahub" },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
@@ -192,14 +195,7 @@ module "nwp-metoffice" {
   ]
   container-tag         = var.nwp_version
   container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "download",
-    "--source=metoffice",
-    "--sink=s3",
-    "--rdir=raw-metoffice",
-    "--zdir=data-metoffice",
-    "--create-latest"
-  ]
+  container-command     = ["consume"]
 }
 
 
