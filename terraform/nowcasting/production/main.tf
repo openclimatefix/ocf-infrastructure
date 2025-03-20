@@ -70,7 +70,7 @@ module "s3" {
 
 # 0.4
 module "ecs" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=7e48923"
   name = "Nowcasting-${local.environment}"
   region = var.region
   owner_id = module.networking.owner_id
@@ -758,16 +758,18 @@ module "forecast_blend" {
 
 # 5.2
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=acc3040"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=7e48923"
 
   aws-environment   = local.environment
   aws-domain        = local.domain
   aws-vpc_id        = module.networking.vpc_id
   aws-subnet_id       = module.networking.public_subnet_ids[0]
   airflow-db-connection-url        = module.database.forecast-database-secret-airflow-url
-  docker-compose-version       = "0.0.5"
+  docker-compose-version       = "0.0.6"
   ecs-subnet_id = module.networking.public_subnet_ids[0]
   ecs-security_group=module.networking.default_security_group_id
+  ecs-execution_role_arn     = module.ecs.ecs_task_execution_role_arn
+  ecs-task_role_arn          = module.ecs.ecs_task_run_role_arn
   aws-owner_id = module.networking.owner_id
   slack_api_conn=var.airflow_conn_slack_api_default
 
