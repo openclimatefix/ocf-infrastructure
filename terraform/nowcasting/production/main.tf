@@ -188,8 +188,6 @@ module "nwp-metoffice" {
     "--create-latest"
   ]
 }
-
-
 # 3.3
 module "nwp-ecmwf" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=2b68542"
@@ -210,7 +208,6 @@ module "nwp-ecmwf" {
     id : module.s3.s3-nwp-bucket.id
     access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
   }]
-
   container-env_vars = [
      { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
   { "name" : "AWS_REGION", "value" : "eu-west-1" },
@@ -229,8 +226,6 @@ module "nwp-ecmwf" {
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "LOGLEVEL", "value" : "DEBUG" }
   ]
-
-
     container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
   values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]}
@@ -239,7 +234,6 @@ module "nwp-ecmwf" {
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = ["consume"]
 }
-
 
 # 3.4 Sat Consumer
 module "sat" {
