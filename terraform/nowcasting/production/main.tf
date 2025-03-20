@@ -765,7 +765,7 @@ module "airflow" {
   aws-vpc_id        = module.networking.vpc_id
   aws-subnet_id       = module.networking.public_subnet_ids[0]
   airflow-db-connection-url        = module.database.forecast-database-secret-airflow-url
-  docker-compose-version       = "0.0.5"
+  docker-compose-version       = "0.0.6"
   ecs-subnet_id = module.networking.public_subnet_ids[0]
   ecs-security_group=module.networking.default_security_group_id
   ecs-execution_role_arn     = module.ecs.ecs_task_execution_role_arn
