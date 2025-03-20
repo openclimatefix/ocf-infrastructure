@@ -70,7 +70,7 @@ module "s3" {
 
 # 0.4
 module "ecs" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=2747e85"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/ecs_cluster?ref=7e48923"
   name = "Nowcasting-${local.environment}"
   region = var.region
   owner_id = module.networking.owner_id
