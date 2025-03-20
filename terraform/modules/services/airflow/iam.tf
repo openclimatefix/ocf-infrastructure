@@ -83,7 +83,7 @@ resource "aws_iam_policy" "ecs-run" {
           "ecs:RunTask",
           "ecs:DescribeTasks",
           "ecs:StopTask",
-	  "ecs:DescribeTaskDefinition",
+          "ecs:DescribeTaskDefinition",
           "ecs:RegisterTaskDefinition",
           "ecs:DeregisterTaskDefinition",
           "ecs:TagResource",
