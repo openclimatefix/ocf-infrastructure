@@ -188,8 +188,6 @@ module "nwp-metoffice" {
     "--create-latest"
   ]
 }
-
-
 # 3.3
 module "nwp-ecmwf" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/ecs_task?ref=2b68542"
@@ -210,8 +208,25 @@ module "nwp-ecmwf" {
     id : module.s3.s3-nwp-bucket.id
     access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
   }]
-
   container-env_vars = [
+
+     { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
+  { "name" : "AWS_REGION", "value" : "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data" },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "CONCURRENCY", "value" : "false" },
+    # legacy ones
+    { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
+    { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
+    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
+    { "name" : "ECMWF_AREA", "value" : "uk" },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" }
+  ]
   { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
   { "name" : "AWS_REGION", "value" : "eu-west-1" },
   { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
@@ -227,7 +242,6 @@ module "nwp-ecmwf" {
   { "name" : "ECMWF_AREA", "value" : "uk" },
   { "name" : "ENVIRONMENT", "value" : local.environment }
 ]
-
     container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
   values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]}
@@ -236,7 +250,6 @@ module "nwp-ecmwf" {
   container-name        = "openclimatefix/nwp-consumer"
   container-command     = ["consume"]
 }
-
 
 # 3.4 Sat Consumer
 module "sat" {
