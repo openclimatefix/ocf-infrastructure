@@ -30,6 +30,7 @@ resource "aws_secretsmanager_secret_version" "db-secret-version" {
       port : "5432",
       url : "postgresql://main:${random_password.db-password.result}@${aws_db_instance.postgres-db.address}:5432/${aws_db_instance.postgres-db.db_name}"
       DB_URL : "postgresql://main:${random_password.db-password.result}@${aws_db_instance.postgres-db.address}:5432/${aws_db_instance.postgres-db.db_name}"
+      DATABASE_URL : "postgresql://main:${random_password.db-password.result}@${aws_db_instance.postgres-db.address}:5432/${aws_db_instance.postgres-db.db_name}"
       OCF_PV_DB_URL : "postgresql://main:${random_password.db-password.result}@${aws_db_instance.postgres-db.address}:5432/${aws_db_instance.postgres-db.db_name}"
   })
 }
