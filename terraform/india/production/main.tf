@@ -39,7 +39,7 @@ module "network" {
 
 # 1.1
 module "postgres-rds" {
-  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=6e24edf"
+  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=3c9abc3"
   region               = local.region
   environment          = local.environment
   vpc_id               = module.network.vpc_id
