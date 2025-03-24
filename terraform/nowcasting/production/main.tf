@@ -121,7 +121,7 @@ module "api" {
 
 # 2.1
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=7b0c0e0"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=3c9abc3"
 
   region               = var.region
   environment          = local.environment
