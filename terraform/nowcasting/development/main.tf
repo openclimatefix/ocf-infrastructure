@@ -188,6 +188,7 @@ module "nwp-metoffice" {
     { "name" : "CONCURRENCY", "value" : "false" },
     { "name" : "MODEL", "value" : "um-ukv-2km" },
     { "name" : "MODEL_REPOSITORY", "value" : "metoffice-datahub" },
+    { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/data-metoffice" },
   ]
   container-secret_vars = [
   {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
