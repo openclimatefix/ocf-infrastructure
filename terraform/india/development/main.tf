@@ -10,16 +10,10 @@
 # 3.0 - Secret containing environment variables for the NWP consumer
 # 3.1 - Secret containing environment variables for the Satellite consumer
 # 3.2 - Secret containing HF read access
-# 4.0 - ECS task definition for the ECMWF consumer
-# 4.1 - ECS task definition for the GFS consumer
-# 4.2 - ECS task definition for the MetOffice consumer
-# 4.3 - ECS task definition for Collection RUVNL data
-# 4.4 - Satellite Consumer
-# 4.5 - ECS task definition for the Forecast - Client RU
-# 4.6 - ECS task definition for the Forecast - Client AD
-# 5.0 - Airflow EB Instance
-# 5.1 - India API EB Instance
-# 5.2 - India Analysis Dashboard
+# 4.0 - Airflow EB Instance
+# 5.0 - India API EB Instance
+# 5.1 - India Analysis Dashboard
+# 6.0 - Development group
 
 locals {
   environment = "development"
@@ -53,7 +47,6 @@ module "postgres-rds" {
 # 1.2
 module "ec2-bastion" {
   source = "../../modules/networking/ec2_bastion"
-
   region            = local.region
   vpc_id            = module.network.vpc_id
   public_subnets_id = module.network.public_subnet_ids[0]
@@ -66,7 +59,6 @@ module "ecs-cluster" {
   region   = local.region
   owner_id = module.network.owner_id
 }
-
 
 # 2.0
 module "s3-nwp-bucket" {
@@ -112,336 +104,8 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
 resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
   name = "${local.environment}/huggingface/token"
 }
-
-# TODO temporary import statement remove this
-import {
-  to = aws_secretsmanager_secret.huggingface_consumer_secret
-  id = "arn:aws:secretsmanager:ap-south-1:008129123253:secret:development/huggingface/token-rke1Kp"
-}
-
-# 4.0
-module "nwp_consumer_ecmwf_live_ecs_task" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name               = "nwp-consumer-ecmwf-india"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_size = {
-      cpu    = 512
-      memory = 1024
-  }
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
-    }
-  ]
-
-  container-env_vars = [
-    { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
-    { "name" : "MODEL", "value" : "hres-ifs-india" },
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
-    { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data" },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "CONCURRENCY", "value" : "false" },
-    # legacy
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
-    { "name" : "ECMWF_AWS_REGION", "value" : "eu-west-1" },
-    { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-    { "name" : "ECMWF_AREA", "value" : "india" },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-  ]
-  container-secret_vars = [
-  {secret_policy_arn:aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]
-       }]
-  container-tag         = var.version-nwp
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "consume"
-  ]
-}
-
-# 4.1
-module "nwp_consumer_gfs_live_ecs_task" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name               = "nwp-consumer-gfs-india"
-  ecs-task_type               = "consumer"
-  ecs-task_size = {
-    cpu    = 512
-    memory = 1024
-  }
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
-    }
-  ]
-
-  container-env_vars = [
-    { "name" : "MODEL_REPOSITORY", "value" : "gfs" },
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ZARRDIR", "value" : "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data" },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "CONCURRENCY", "value" : "false" },
-    # legacy
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3-nwp-bucket.bucket_id },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-  ]
-  container-secret_vars = []
-  container-tag         = var.version-nwp
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = [
-    "consume"
-  ]
-}
-
-# 4.2
-module "nwp-consumer-metoffice-live-ecs-task" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "nwp-consumer-metoffice-india"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 512
-    memory = 1024
-  }
-
-  aws-region = var.region
-  aws-environment = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3-nwp-bucket.bucket_id
-      access_policy_arn : module.s3-nwp-bucket.write_policy_arn
-    }
-  ]
-
-  container-env_vars = [
-    { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "METOFFICE_ORDER_ID", "value" : "india-11params-54steps" },
-    { "name" : "MODEL_REPOSITORY", "value" : "metoffice-datahub" },
-    { "name" : "CONCURRENCY", "value" : "false" },
-    { "name" : "ZARRDIR", "value" : format("s3://%s/metoffice/data", module.s3-nwp-bucket.bucket_id) },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-  ]
-  container-secret_vars = [
-    {
-      secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
-      values: ["METOFFICE_API_KEY"],
-    }
-  ]
-  container-tag         = var.version-nwp
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = ["consume"]
-}
-
-
-# 4.3
-module "ruvnl_consumer_ecs" {
-  source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  ecs-task_name               = "runvl-consumer"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 512
-    cpu    = 256
-  }
-
-  s3-buckets = []
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-  ]
-  container-secret_vars = [{
-        secret_policy_arn: module.postgres-rds.secret.arn,
-        values: ["DB_URL"]
-       }]
-  container-tag         = var.version-runvl-consumer
-  container-name        = "ruvnl_consumer_app"
-  container-registry    = "openclimatefix"
-  container-command     = [
-    "--write-to-db",
-  ]
-}
-
-# 4.4 - Satellite Consumer
-module "satellite_consumer_ecs" {
-  source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3-satellite-bucket.bucket_id,
-      access_policy_arn : module.s3-satellite-bucket.write_policy_arn
-    }
-  ]
-
-  ecs-task_name               = "sat-consumer"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 5120
-    cpu    = 1024
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "USE_IODC", "value" : "True" },
-    { "name" : "SAVE_DIR", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/data" },
-    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3-satellite-bucket.bucket_id}/raw" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "HISTORY", "value" : "75 minutes" },
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
-        values: ["API_KEY", "API_SECRET"]
-       }]
-  container-tag         = var.satellite-consumer
-  container-name        = "satip"
-  container-registry    = "openclimatefix"
-  container-command     = []
-}
-
-
-
-# 4.5 - Forecast - Client RUVNL
-module "forecast" {
-  source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.read_policy_arn
-    },
-    {
-      id : module.s3-forecast-bucket.bucket_id,
-      access_policy_arn : module.s3-forecast-bucket.write_policy_arn
-    }
-  ]
-
-  ecs-task_name               = "forecast"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 3072
-    cpu    = 1024
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
-    { "name" : "NWP_MO_GLOBAL_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/metoffice/data/latest.zarr" },
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name" : "USE_SATELLITE", "value": "False"},
-    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.s3-forecast-bucket.bucket_id}/RUVNL"}
-      ]
-
-  container-secret_vars = [
-       {secret_policy_arn: module.postgres-rds.secret.arn,
-        values: ["DB_URL"]
-       }
-       ]
-
-  container-tag         = var.version-forecast
-  container-name        = "india_forecast_app"
-  container-registry    = "openclimatefix"
-  container-command     = []
-}
-
-
-# 4.6 - Forecast - Client AD
-module "forecast-ad" {
-  source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3-satellite-bucket.bucket_id,
-      access_policy_arn : module.s3-satellite-bucket.read_policy_arn
-    },
-    {
-      id : module.s3-nwp-bucket.bucket_id,
-      access_policy_arn : module.s3-nwp-bucket.read_policy_arn
-    },
-    {
-      id : module.s3-forecast-bucket.bucket_id,
-      access_policy_arn : module.s3-forecast-bucket.write_policy_arn
-    }
-  ]
-
-  ecs-task_name               = "forecast-ad"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 3072
-    cpu    = 1024
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_GFS_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/gfs/data/latest.zarr" },
-    { "name" : "NWP_MO_GLOBAL_ZARR_PATH", "value": "s3://${module.s3-nwp-bucket.bucket_id}/metoffice/data/latest.zarr" },
-    { "name" : "SATELLITE_ZARR_PATH", "value": "s3://${module.s3-satellite-bucket.bucket_id}/data/latest/iodc_latest.zarr.zip" },
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name" : "USE_SATELLITE", "value": "True"},
-    { "name" : "CLIENT_NAME", "value": "ad"},
-    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.s3-forecast-bucket.bucket_id}/ad"},
-      ]
-
-  container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.huggingface_consumer_secret.arn,
-        values: ["HUGGINGFACE_TOKEN"]
-       },
-       {secret_policy_arn: module.postgres-rds.secret.arn,
-        values: ["DB_URL"]
-       }
-       ]
-
-  container-tag         = var.version-forecast-ad
-  container-name        = "india_forecast_app"
-  container-registry    = "openclimatefix"
-  container-command     = []
-}
-
     
-# 5.0
+# 4.0
 module "airflow" {
   source                    = "../../modules/services/airflow"
   aws-environment           = local.environment
@@ -460,7 +124,7 @@ module "airflow" {
   dags_folder               = "india"
 }
 
-# 5.1
+# 5.0
 module "india-api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
@@ -519,6 +183,7 @@ module "analysis_dashboard" {
   ]
 }
 
+# 6.0
 module "developer_group" {
   source = "../../modules/user_groups"
   region = var.region

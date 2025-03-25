@@ -8,35 +8,17 @@ The componentes ares:
 0.3 - S3 buckets
 0.4 - ECS cluster
 0.5 - S3 bucket for forecasters
+0.6 - Database
 1.1 - API
-2.1 - Database
-2.2 - NWP Consumer Secret
-2.3 - Satellite Consumer Secret
-2.4 - PV Secret
-3.2 - NWP Consumer (MetOffice National)
-3.3 - NWP Consumer (ECMWF UK)
-3.4 - Satellite Consumer
-3.5 - Satellite Data Tailor Clean up
-3.6 - PV Consumer
-3.7 - PVLive Consumer (From PVLive)
-3.8 - PVLive Consumer - GSP Day After
-3.9 - PVLive Consumer - National Day After
-3.10 - NESO Forecast Consumer
-3.11 - Satellite Consumer (new)
-4.1 - Metrics
-4.2 - Cloudcasting app
-4.3 - Forecast National XG
-4.4 - Forecast PVnet 2
-4.5 - Forecast PVnet DA
-4.6 - Forecast Blend
-5.1 - OCF Dashboard
-5.2 - Airflow instance
-6.1 - PVSite database
-6.2 - PVSite API
-6.3 - PVSite ML bucket
-6.4 - PVSite Forecast
-6.5 - PVSite Database Clean Up
-7.1 - Open Data PVnet
+2.1 - NWP Consumer Secret
+2.2 - Satellite Consumer Secret
+2.3 - PV Secret
+3.1 - Airflow EB instance
+4.1 - OCF Dashboard
+5.1 - PVSite database
+5.2 - PVSite API
+5.3 - PVSite ML bucket
+6.1 - Open Data PVnet
 
 Variables used across all modules
 ======*/
@@ -56,7 +38,6 @@ module "networking" {
 # 0.2
 module "ec2-bastion" {
   source = "../../modules/networking/ec2_bastion"
-
   region            = var.region
   vpc_id            = module.networking.vpc_id
   public_subnets_id = module.networking.public_subnet_ids[0]
@@ -66,7 +47,6 @@ module "ec2-bastion" {
 # 0.3
 module "s3" {
   source = "../../modules/storage/s3-trio"
-
   region      = var.region
   environment = local.environment
 }
@@ -82,12 +62,20 @@ module "ecs" {
 # 0.5
 module "forecasting_models_bucket" {
   source = "../../modules/storage/s3-private"
-
   region              = var.region
   environment         = local.environment
   service_name        = "national-forecaster-models"
   domain              = local.domain
   lifecycled_prefixes = []
+}
+
+# 0.6
+module "database" {
+  source = "../../modules/storage/database-pair"
+  region               = var.region
+  environment          = local.environment
+  db_subnet_group_name = module.networking.private_subnet_group_name
+  vpc_id               = module.networking.vpc_id
 }
 
 # 1.1
@@ -124,658 +112,38 @@ module "api" {
 }
 
 # 2.1
-module "database" {
-  source = "../../modules/storage/database-pair"
-
-  region               = var.region
-  environment          = local.environment
-  db_subnet_group_name = module.networking.private_subnet_group_name
-  vpc_id               = module.networking.vpc_id
-}
-
-# 2.2
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
   name = "${local.environment}/data/nwp-consumer"
 }
 
-
-# 2.3
+# 2.2
 resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
   name = "${local.environment}/data/satellite-consumer"
 }
 
-# 2.4
-# TODO remove
-import {
-  to = aws_secretsmanager_secret.pv_consumer_secret
-  id = "arn:aws:secretsmanager:eu-west-1:008129123253:secret:development/consumer/solar_sheffield-2Tyskm"
-}
-
+# 2.3
 resource "aws_secretsmanager_secret" "pv_consumer_secret" {
   name = "${local.environment}/data/solar-sheffield"
 }
 
-
-# 3.2
-module "nwp-metoffice" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "nwp-metoffice"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 512
-    memory = 1024
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id
-      access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
-    }
-  ]
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : "eu-west-1" },
-    { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "METOFFICE_ORDER_ID", "value" : "uk-12params-42steps" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "CONCURRENCY", "value" : "false" },
-    { "name" : "MODEL", "value" : "um-ukv-2km" },
-    { "name" : "MODEL_REPOSITORY", "value" : "metoffice-datahub" },
-    { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/data-metoffice" },
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["METOFFICE_API_KEY"]}
-  ]
-  container-tag         = var.nwp_version
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = ["consume"]
-}
-
-
-# 3.3
-module "nwp-ecmwf" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name               = "nwp-consumer-ecmwf-uk"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-
-  ecs-task_size = {
-    cpu = 512
-    memory = 1024
-  }
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [{
-    id : module.s3.s3-nwp-bucket.id
-    access_policy_arn : module.s3.iam-policy-s3-nwp-write.arn
-  }]
-
-  container-env_vars = [
-  { "name" : "MODEL_REPOSITORY", "value" : "ecmwf-realtime" },
-  { "name" : "AWS_REGION", "value" : "eu-west-1" },
-  { "name" : "ECMWF_REALTIME_S3_REGION", "value": "eu-west-1" },
-  { "name" : "ECMWF_REALTIME_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-  { "name" : "ZARRDIR", "value" : "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data" },
-  { "name" : "LOGLEVEL", "value" : "DEBUG" },
-  { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-  { "name" : "CONCURRENCY", "value" : "false" },
-  # legacy ones
-  { "name" : "AWS_S3_BUCKET", "value" : module.s3.s3-nwp-bucket.id },
-  { "name" : "ECMWF_AWS_REGION", "value": "eu-west-1" },
-  { "name" : "ECMWF_AWS_S3_BUCKET", "value" : "ocf-ecmwf-production" },
-  { "name" : "ECMWF_AREA", "value" : "uk" },
-  { "name" : "ENVIRONMENT", "value" : local.environment }
-]
-
-  container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.nwp_consumer_secret.arn,
-  values: ["ECMWF_REALTIME_S3_ACCESS_KEY", "ECMWF_REALTIME_S3_ACCESS_SECRET"]}
-  ]
-  container-tag         = var.nwp_ecmwf_version
-  container-name        = "openclimatefix/nwp-consumer"
-  container-command     = ["consume"]
-}
-
-# 3.4 Sat Consumer
-module "sat" {
-  source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
-    }
-  ]
-
-  ecs-task_name               = "sat"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 5120
-    cpu    = 1024
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "SAVE_DIR", "value" : "s3://${module.s3.s3-sat-bucket.id}/data" },
-    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "HISTORY", "value" : "180 minutes" },
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
-        values: ["API_KEY", "API_SECRET"]
-       }]
-  container-tag         = var.sat_version
-  container-name        = "openclimatefix/satip"
-  container-registry = "docker.io"
-  container-command     = []
-}
-
-# 3.5 Sat Data Tailor clean up
-module "sat_clean_up" {
-  source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
-    }
-  ]
-
-  ecs-task_name               = "sat-clean-up"
-  ecs-task_type               = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 1024
-    cpu    = 512
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "SAVE_DIR", "value" : "s3://${module.s3.s3-sat-bucket.id}/data" },
-    { "name" : "SAVE_DIR_NATIVE", "value" : "s3://${module.s3.s3-sat-bucket.id}/raw" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "HISTORY", "value" : "180 minutes" },
-    { "name" : "CLEANUP",  "value" : "1" },
-
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
-        values: ["API_KEY", "API_SECRET"]
-       }]
-  container-tag         = var.sat_version
-  container-name        = "openclimatefix/satip"
-  container-registry = "docker.io"
-  container-command     = []
-}
-
-# 3.6
-module "pv" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "pv"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 256
-    memory = 512
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  s3-buckets = []
-
-  container-env_vars = [
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "INFO"},
-    { "name" : "PROVIDER", "value" : "solar_sheffield_passiv"},
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.pvsite_database.secret.arn,
-  values: ["DB_URL"]},
-  {secret_policy_arn: aws_secretsmanager_secret.pv_consumer_secret.arn,
-  values: ["SS_USER_ID", "SS_KEY", "SS_URL"]}
-  ]
-  container-tag         = var.pv_ss_version
-  container-name        = "openclimatefix/pvconsumer"
-  container-registry = "docker.io"
-  container-command     = []
-}
-
-
-# 3.7
-module "gsp-consumer" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "pvlive"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 256
-    memory = 512
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  s3-buckets = []
-
-  container-env_vars = [
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "DEBUG"},
-    { "name" :"REGIME", "value" : "in-day"},
-    { "name" :"N_GSPS", "value" : "317"}
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.database.forecast-database-secret.arn,
-  values: ["DB_URL"]}
-  ]
-  container-tag         = var.gsp_version
-  container-name        = "openclimatefix/pvliveconsumer"
-  container-registry = "docker.io"
-  container-command     = []
-}
-
-# 3.8
-module "gsp-consumer-day-after-gsp" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "pvlive-gsp-day-after"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 256
-    memory = 512
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  s3-buckets = []
-
-  container-env_vars = [
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "DEBUG"},
-    { "name" :"REGIME", "value" : "day-after"},
-    { "name" :"N_GSPS", "value" : "317"}
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.database.forecast-database-secret.arn,
-  values: ["DB_URL"]}
-  ]
-  container-tag         = var.gsp_version
-  container-name        = "openclimatefix/pvliveconsumer"
-  container-registry = "docker.io"
-  container-command     = []
-}
-
-# 3.9
-module "gsp-consumer-day-after-national" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "pvlive-national-day-after"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 256
-    memory = 512
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  s3-buckets = []
-
-  container-env_vars = [
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" :"REGIME", "value" : "day-after"},
-    { "name" :"N_GSPS", "value" : "0"},
-    { "name" :"INCLUDE_NATIONAL", "value" : "True"},
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.database.forecast-database-secret.arn,
-  values: ["DB_URL"]}
-  ]
-  container-tag         = var.gsp_version
-  container-name        = "openclimatefix/pvliveconsumer"
-  container-registry = "docker.io"
-  container-command     = []
-}
-
-# 3.10
-module "neso-forecast-consumer" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "neso-forecast"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 256
-    memory = 512
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  s3-buckets = []
-
-  container-env_vars = [
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.database.forecast-database-secret.arn,
-  values: ["DB_URL"]}
-  ]
-  container-tag         = var.neso_forecast_consumer_version
-  container-name        = "openclimatefix/neso_solar_consumer_api"
-  container-registry = "docker.io"
-  container-command     = []
-}
-
-# 3.11
-module "satellite-consumer" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "satellite-consumer"
-  ecs-task_type = "consumer"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 1024
-    memory = 2048
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-  s3-buckets = [
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
-    }
-  ]
-  container-env_vars = [
-    {"name": "SATCONS_COMMAND", "value": "consume"},
-    {"name": "SATCONS_RESCALE", "value": "true"},
-    {"name": "SATCONS_VALIDATE", "value": "true"},
-  ]
-  container-secret_vars = [
-    {secret_policy_arn: aws_secretsmanager_secret.satellite_consumer_secret.arn,
-    values: ["EUMETSAT_CONSUMER_KEY", "EUMETSAT_CONSUMER_SECRET"]}
-  ]
-  container-tag         = var.satellite_consumer_version
-  container-name        = "openclimatefix/satellite-consumer"
-  container-registry = "ghcr.io"
-  container-command     = []
+# 3.1
+module "airflow" {
+  source = "../../modules/services/airflow"
+  aws-environment            = local.environment
+  aws-domain                 = local.domain
+  aws-vpc_id                 = module.networking.vpc_id
+  aws-subnet_id              = module.networking.public_subnet_ids[0]
+  airflow-db-connection-url  = module.database.forecast-database-secret-airflow-url
+  docker-compose-version     = "0.0.12"
+  ecs-subnet_id              = module.networking.public_subnet_ids[0]
+  ecs-security_group         = module.networking.default_security_group_id
+  ecs-execution_role_arn     = module.ecs.ecs_task_execution_role_arn
+  ecs-task_role_arn          = module.ecs.ecs_task_run_role_arn
+  aws-owner_id               = module.networking.owner_id
+  slack_api_conn             = var.airflow_conn_slack_api_default
 }
 
 # 4.1
-module "metrics" {
-  source = "../../modules/services/ecs_task"
-
-  aws-environment = local.environment
-  aws-region = var.region
-
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_name = "metrics"
-  ecs-task_type = "analysis"
-  ecs-task_size = {
-    cpu = 256
-    memory = 512
-  }
-
-  container-name = "openclimatefix/nowcasting_metrics"
-  container-tag = var.metrics_version
-  container-registry = "docker.io"
-  container-command = []
-  container-env_vars = [
-    {"name": "LOGLEVEL", "value": "DEBUG"},
-    {"name": "USE_PVNET_GSP_SUM", "value": "true"},
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "ENVIRONMENT", "value": local.environment},
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.database.forecast-database-secret.arn,
-  values: ["DB_URL"]}
-  ]
-  s3-buckets = []
-}
-
-# 4.2
-module "cloudcasting" {
-source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
-    },
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-write.arn
-    }
-  ]
-
-  ecs-task_name               = "cloudcasting"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 4096
-    cpu    = 1024
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "OUTPUT_PREDICTION_DIRECTORY", "value":"s3://${module.s3.s3-sat-bucket.id}/cloudcasting_forecast"},
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip"},
-  ]
-
-  container-secret_vars = []
-
-  container-tag         = var.cloudcasting_app_version
-  container-name        = "openclimatefix/cloudcasting-app"
-  container-registry    = "ghcr.io"
-  container-command     = []
-}
-
-# 4.3
-module "national_forecast" {
-source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
-    },
-    {
-      id : module.forecasting_models_bucket.bucket_id,
-      access_policy_arn : module.forecasting_models_bucket.read_policy_arn
-    }
-  ]
-
-  ecs-task_name               = "forecast_national"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 11264
-    cpu    = 2048
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "NWP_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr"},
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-    { "name": "ML_MODEL_BUCKET", "value": module.forecasting_models_bucket.bucket_id}
-  ]
-
-  container-secret_vars = [
-       {secret_policy_arn: module.database.forecast-database-secret.arn,
-        values: ["DB_URL"]
-       }
-       ]
-
-  container-tag         = var.national_forecast_version
-  container-name        = "openclimatefix/gradboost_pv"
-  container-registry    = "docker.io"
-  container-command     = []
-}
-
-# 4.4
-module "forecast_pvnet" {
-source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
-    },
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
-    },
-    {
-      id : module.forecasting_models_bucket.bucket_id,
-      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
-    }
-  ]
-
-  ecs-task_name               = "forecast_pvnet"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 10240
-    cpu    = 2048
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn },
-    { "name" : "RUN_CRITICAL_MODELS_ONLY", "value": "false" }, # On dev all models should run
-    { "name" : "DAY_AHEAD_MODEL", "value": "false" },
-    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
-    { "name" : "ALLOW_ADJUSTER", "value": "true" },
-    { "name" : "ALLOW_SAVE_GSP_SUM", "value": "true" },
-    { "name" : "FILTER_BAD_FORECASTS", "value": "false" }, # On dev we save even the bad forecasts
-    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" },
-    { "name" : "RAISE_MODEL_FAILURE", "value": "critical" },
-  ]
-
-  container-secret_vars = [
-       {secret_policy_arn: module.database.forecast-database-secret.arn,
-        values: ["DB_URL"]
-       }
-       ]
-
-  container-tag         = var.forecast_pvnet_version
-  container-name        = "openclimatefix/uk-pvnet-app"
-  container-registry    = "ghcr.io"
-  container-command     = []
-}
-
-# 4.5
-module "forecast_pvnet_day_ahead" {
-source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
-    },
-    {
-      id : module.s3.s3-sat-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-sat-read.arn
-    },
-    {
-      id : module.forecasting_models_bucket.bucket_id,
-      access_policy_arn : module.forecasting_models_bucket.write_policy_arn
-    }
-
-  ]
-
-  ecs-task_name               = "forecast_pvnet_day_ahead"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 10240
-    cpu    = 2048
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "NWP_ECMWF_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/ecmwf/data/latest.zarr" },
-    { "name" : "NWP_UKV_ZARR_PATH", "value":"s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
-    { "name" : "SATELLITE_ZARR_PATH", "value":"s3://${module.s3.s3-sat-bucket.id}/data/latest/latest.zarr.zip" },
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn },
-    { "name" : "ALLOW_ADJUSTER", "value": "true" },
-    { "name" : "RUN_EXTRA_MODELS",  "value": "false" },
-    { "name" : "DAY_AHEAD_MODEL",  "value": "true" },
-    { "name" : "USE_OCF_DATA_SAMPLER", "value": "true" },
-    { "name" : "SAVE_BATCHES_DIR", "value": "s3://${module.forecasting_models_bucket.bucket_id}/pvnet_batches" },
-    { "name" : "RAISE_MODEL_FAILURE", "value": "critical" },
-  ]
-
-  container-secret_vars = [
-       {secret_policy_arn: module.database.forecast-database-secret.arn,
-        values: ["DB_URL"]
-       }
-       ]
-
-  container-tag         = var.forecast_pvnet_day_ahead_docker_version
-  container-name        = "openclimatefix/uk-pvnet-app"
-  container-registry    = "ghcr.io"
-  container-command     = []
-}
-
-# 5.1
 module "analysis_dashboard" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
@@ -807,61 +175,9 @@ module "analysis_dashboard" {
   ]
 }
 
-# 4.6
-module "forecast_blend" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "forecast_blend"
-  ecs-task_type = "blend"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 512
-    memory = 1024
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  container-env_vars = [
-        {"name": "LOGLEVEL", "value" : "INFO"},
-        {"name": "OCF_ENVIRONMENT", "value": local.environment},
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.database.forecast-database-secret.arn,
-  values: ["DB_URL"]}
-  ]
-  container-tag         = var.forecast_blend_version
-  container-name        = "openclimatefix/uk_pv_forecast_blend"
-  container-registry = "docker.io"
-  s3-buckets = []
-  container-command = []
-}
-
-
-# 5.2
-module "airflow" {
-  source = "../../modules/services/airflow"
-
-  aws-environment            = local.environment
-  aws-domain                 = local.domain
-  aws-vpc_id                 = module.networking.vpc_id
-  aws-subnet_id              = module.networking.public_subnet_ids[0]
-  airflow-db-connection-url  = module.database.forecast-database-secret-airflow-url
-  docker-compose-version     = "0.0.12"
-  ecs-subnet_id              = module.networking.public_subnet_ids[0]
-  ecs-security_group         = module.networking.default_security_group_id
-  ecs-execution_role_arn     = module.ecs.ecs_task_execution_role_arn
-  ecs-task_role_arn          = module.ecs.ecs_task_run_role_arn
-  aws-owner_id               = module.networking.owner_id
-  slack_api_conn             = var.airflow_conn_slack_api_default
-}
-
-# 6.1
+# 5.1
 module "pvsite_database" {
   source = "../../modules/storage/postgres"
-
   region                      = var.region
   environment                 = local.environment
   db_subnet_group_name        = module.networking.private_subnet_group_name
@@ -871,7 +187,7 @@ module "pvsite_database" {
   allow_major_version_upgrade = true
 }
 
-# 6.2
+# 5.2
 module "pvsite_api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
@@ -901,11 +217,9 @@ module "pvsite_api" {
   ]
 }
 
-
-# 6.3
+# 5.3
 module "pvsite_ml_bucket" {
   source = "../../modules/storage/s3-private"
-
   region              = var.region
   environment         = local.environment
   service_name        = "site-forecaster-models"
@@ -913,92 +227,7 @@ module "pvsite_ml_bucket" {
   lifecycled_prefixes = []
 }
 
-# 6.4
-module "pvsite_forecast" {
-source = "../../modules/services/ecs_task"
-
-  aws-region                    = var.region
-  aws-environment               = local.environment
-
-  s3-buckets = [
-    {
-      id : module.s3.s3-nwp-bucket.id,
-      access_policy_arn : module.s3.iam-policy-s3-nwp-read.arn
-    },
-    {
-      id : module.pvsite_ml_bucket.bucket_id,
-      access_policy_arn : module.pvsite_ml_bucket.read_policy_arn
-    }
-  ]
-
-  ecs-task_name               = "pvsite_forecast"
-  ecs-task_type               = "forecast"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    memory = 4096
-    cpu    = 1024
-  }
-
-  container-env_vars = [
-    { "name" : "AWS_REGION", "value" : var.region },
-    { "name" : "OCF_ENVIRONMENT", "value" : local.environment },
-    { "name" : "LOGLEVEL", "value" : "DEBUG" },
-    { "name" : "NWP_ZARR_PATH", "value": "s3://${module.s3.s3-nwp-bucket.id}/data-metoffice/latest.zarr" },
-    { "name" : "SENTRY_DSN",  "value": var.sentry_dsn},
-  ]
-
-  container-secret_vars = [
-       {secret_policy_arn: module.pvsite_database.secret.arn,
-        values: ["OCF_PV_DB_URL"]
-       }
-       ]
-
-  container-tag         = var.pvsite_forecast_version
-  container-name        = "openclimatefix/pvsite_forecast"
-  container-registry    = "docker.io"
-  container-command     = []
-}
-
-
-# 6.5
-module "pvsite_database_clean_up" {
-  source = "../../modules/services/ecs_task"
-
-  ecs-task_name = "database_clean_up"
-  ecs-task_type = "clean"
-  ecs-task_execution_role_arn = module.ecs.ecs_task_execution_role_arn
-  ecs-task_size = {
-    cpu    = 256
-    memory = 512
-  }
-
-  aws-region                     = var.region
-  aws-environment                = local.environment
-
-  container-env_vars = [
-        {"name": "LOGLEVEL", "value" : "INFO"},
-        {"name": "OCF_ENVIRONMENT", "value": local.environment},
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
-    { "name" : "SAVE_DIR", "value" :  "s3://${module.pvsite_ml_bucket.bucket_id}/database" },
-  ]
-  container-secret_vars = [
-  {secret_policy_arn: module.pvsite_database.secret.arn,
-  values: ["DB_URL"]},
-  ]
-  container-tag         = var.database_cleanup_version
-  container-name        = "openclimatefix/pvsite_database_cleanup"
-  container-registry = "docker.io"
-  s3-buckets = [
-                { id : module.pvsite_ml_bucket.bucket_id,
-                  access_policy_arn = module.pvsite_ml_bucket.write_policy_arn
-                 }
-                    ]
-  container-command = []
-}
-
-
-# 7.1 Open Data PVnet - Public s3 bucket
+# 6.1 Open Data PVnet - Public s3 bucket
 module "open_data_pvnet_s3" {
   source = "../../modules/storage/open-data-pvnet-s3"
 }
