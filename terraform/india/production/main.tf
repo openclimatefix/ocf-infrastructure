@@ -106,7 +106,7 @@ resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
 
 # 4.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=a5624a7"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=0601e74"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
