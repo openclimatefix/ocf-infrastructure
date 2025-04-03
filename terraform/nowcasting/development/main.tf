@@ -2,7 +2,6 @@
 
 This is the main terraform code for the UK platform. It is used to deploy the platform to AWS.
 
-The componentes ares:
 0.1 - Networking
 0.2 - EC2 bastion
 0.3 - S3 buckets
