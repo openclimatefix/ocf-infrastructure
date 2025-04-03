@@ -60,7 +60,7 @@ module "forecasting_models_bucket" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/s3-private?ref=2747e85"
   region              = var.region
   environment         = local.environment
-  service_name        = "national-forecast-models"
+  service_name        = "national-forecaster-models"
   domain              = local.domain
   lifecycled_prefixes = []
 }
