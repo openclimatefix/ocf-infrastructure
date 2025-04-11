@@ -145,6 +145,7 @@ resource "aws_iam_policy" "elb-auto-scaling"{
 			"Action": [
 				"s3:*",
 				"ec2:DescribeLaunchTemplates",
+				"ec2:DescribeLaunchTemplateVersions",
 				"ec2:DescribeSecurityGroups",
 				"ec2:DescribeImages",
 				"ec2:DescribeInstances",
