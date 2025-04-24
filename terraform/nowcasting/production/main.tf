@@ -67,12 +67,12 @@ module "forecasting_models_bucket" {
 
 # 0.6
 module "database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=3c9abc3"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/database-pair?ref=a79aaa8"
   region               = var.region
   environment          = local.environment
   db_subnet_group_name = module.networking.private_subnet_group_name
   vpc_id               = module.networking.vpc_id
-  engine_version       = "15.8"
+  engine_version       = "17.2"
 }
 
 # 1.1
