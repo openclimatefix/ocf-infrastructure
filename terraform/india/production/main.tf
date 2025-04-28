@@ -32,7 +32,7 @@ module "network" {
 
 # 1.1
 module "postgres-rds" {
-  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=3c9abc3"
+  source               = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=a79aaa8"
   region               = local.region
   environment          = local.environment
   vpc_id               = module.network.vpc_id
@@ -40,7 +40,7 @@ module "postgres-rds" {
   db_name              = "indiadb"
   rds_instance_class   = "db.t3.small"
   allow_major_version_upgrade  = true
-  engine_version = "16.4"
+  engine_version = "17.2"
 }
 
 # 1.2
