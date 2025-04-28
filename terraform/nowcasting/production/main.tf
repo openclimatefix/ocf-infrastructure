@@ -169,7 +169,7 @@ module "analysis_dashboard" {
 
 # 5.1
 module "pvsite_database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=6e24edf"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=a79aaa8"
   region                      = var.region
   environment                 = local.environment
   db_subnet_group_name        = module.networking.private_subnet_group_name
@@ -177,7 +177,7 @@ module "pvsite_database" {
   db_name                     = "pvsite"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
-  engine_version = "15.8"
+  engine_version = "17.2"
 }
 
 # 5.2
