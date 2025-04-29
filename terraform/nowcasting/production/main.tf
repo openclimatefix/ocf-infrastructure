@@ -72,7 +72,7 @@ module "database" {
   environment          = local.environment
   db_subnet_group_name = module.networking.private_subnet_group_name
   vpc_id               = module.networking.vpc_id
-  engine_version       = "17.2"
+  engine_version       = "15.8"
 }
 
 # 1.1
