@@ -169,7 +169,7 @@ module "analysis_dashboard" {
 
 # 5.1
 import {
-  to = pvsite_database
+  to = pvsite_database.aws_db_instance.postgres-db
   id = "sites-production"
 }
 module "pvsite_database" {
