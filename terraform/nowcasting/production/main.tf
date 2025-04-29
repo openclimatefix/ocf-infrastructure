@@ -169,10 +169,10 @@ module "analysis_dashboard" {
 
 # 5.1
 import {
-  to = module.pvsite_database.aws_db_instance.postgres-db
+  to = module.sites_database.aws_db_instance.postgres-db
   id = "sites-production"
 }
-module "pvsite_database" {
+module "sites_database" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=a79aaa8"
   region                      = var.region
   environment                 = local.environment
