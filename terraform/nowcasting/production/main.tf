@@ -72,7 +72,7 @@ module "database" {
   environment          = local.environment
   db_subnet_group_name = module.networking.private_subnet_group_name
   vpc_id               = module.networking.vpc_id
-  engine_version       = "17.2"
+  engine_version       = "15.8"
 }
 
 # 1.1
@@ -146,7 +146,7 @@ module "analysis_dashboard" {
   container-command  = ["streamlit", "run", "main.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
   container-env_vars = [
     { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
-    { "name" : "SITES_DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "SITES_DB_URL", "value" :  module.sites_database.default_db_connection_url},
     { "name" : "SHOW_PVNET_GSP_SUM", "value" : "true" },
     { "name" : "ORIGINS", "value" : "*" },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
@@ -168,16 +168,20 @@ module "analysis_dashboard" {
 }
 
 # 5.1
-module "pvsite_database" {
+import {
+  to = module.sites_database.aws_db_instance.postgres-db
+  id = "sites-production"
+}
+module "sites_database" {
   source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=a79aaa8"
   region                      = var.region
   environment                 = local.environment
   db_subnet_group_name        = module.networking.private_subnet_group_name
   vpc_id                      = module.networking.vpc_id
-  db_name                     = "pvsite"
+  db_name                     = "sites"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
-  engine_version = "17.2"
+  engine_version = "15.8"
 }
 
 # 5.2
@@ -191,7 +195,7 @@ module "pvsite_api" {
   container-command  = ["poetry", "run", "uvicorn", "pv_site_api.main:app", "--host", "0.0.0.0", "--port", "80"]
   container-env_vars = [
     { "name" : "PORT", "value" : "80" },
-    { "name" : "DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
+    { "name" : "DB_URL", "value" :  module.sites_database.default_db_connection_url},
     { "name" : "FAKE", "value" : "0" },
     { "name" : "ORIGINS", "value" : "*" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_monitor_dsn_api },
