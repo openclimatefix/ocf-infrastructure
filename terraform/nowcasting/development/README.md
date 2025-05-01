@@ -26,8 +26,10 @@ More details:
    - Code: [nwp-consumer](https://github.com/openclimatefix/nwp-consumer)
    - [Terraform](https://github.com/openclimatefix/ocf-infrastructure/tree/main/terraform/modules/services/nwp) 
 and [Airflow Dag](https://github.com/openclimatefix/ocf-infrastructure/blob/main/terraform/modules/services/airflow/dags/uk/nwp-dag.py)
-   - AWS logs: [aws/ecs/consumer/nwp](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fconsumer$252Fnwp$252F) 
-and [aws/ecs/consumer/nwp-national](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fconsumer$252Fnwp-national$252F) 
+   - AWS logs: 
+      - Met Office: [aws/ecs/consumer/nwp](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fconsumer$252Fnwp$252F) 
+     - Met Office National:[aws/ecs/consumer/nwp-national](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fconsumer$252Fnwp-national$252F) 
+     - ECMWF UK: [aws/ecs/consumer/nwp-consumer-ecmwf-uk](https://eu-west-1.signin.aws.amazon.com/oauth?client_id=arn%3Aaws%3Aiam%3A%3A015428540659%3Auser%2Fcloudwatch&code_challenge=4j_ubgv2RxQQ-xsZ5Y5J-MWyqC-3gA78tBfIRAbXzDk&code_challenge_method=SHA-256&redirect_uri=https%3A%2F%2Feu-west-1.console.aws.amazon.com%2Fcloudwatch%2Fhome%3Fregion%3Deu-west-1%26state%3DhashArgs%2523logsV2%253Alog-groups%252Flog-group%252F%2524252Faws%2524252Fecs%2524252Fconsumer%2524252Fnwp-consumer-ecmwf-uk%2524252F%26ca-oauth-flow-id%3DQvBp%26isauthcode%3Dtrue&response_type=code)
 
 ### 🌍Satellite Consumer (ECS Task)
 Gets the latest satellite data from the EUMETSAT and saves the data to S3. This is run on ECS and is triggered by airflow. This is currently part of the `nowcasting` project.
