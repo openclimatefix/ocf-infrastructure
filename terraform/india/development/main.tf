@@ -113,7 +113,7 @@ module "airflow" {
   aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
-  aws-owner_id                  = module.network.owner_id
+  aws-owner_id              = module.network.owner_id
   docker-compose-version    = "0.0.11"
   dags_folder               = "india"
     container-env_vars = [

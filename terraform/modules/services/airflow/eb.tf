@@ -90,6 +90,13 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   }
 
   setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "AWS_OWNER_ID"
+    value     = var.aws-owner_id
+    resource  = ""
+  }
+
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.aws-vpc_id
