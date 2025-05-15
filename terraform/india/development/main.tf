@@ -117,6 +117,8 @@ module "airflow" {
   dags_folder               = "india"
     container-env_vars = [
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.apikey-slack },
+    { "name" : "AIRFLOW_UID", "value" : 50000 },
+    { "name" : "AWS_DEFAULT_REGION", "value", var.region},
     { "name" : "AWS_OWNER_ID", "value" : module.network.owner_id },
     { "name" : "DB_URL", "value" :  "${module.postgres-rds.instance_connection_url}/airflow"},
     { "name" : "ECS_EXECUTION_ROLE_ARN", "value" : module.ecs-cluster.ecs_task_execution_role_arn},
@@ -125,6 +127,7 @@ module "airflow" {
     { "name" : "ECS_TASK_ROLE_ARN", "value" : module.ecs-cluster.ecs_task_run_role_arn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
   ]
 }
 

@@ -136,6 +136,7 @@ module "airflow" {
   container-env_vars = [
     { "name" : "AIRFLOW_UID", "value" : 50000 },
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.airflow_conn_slack_api_default },
+    { "name" : "AWS_DEFAULT_REGION", "value", var.region},
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
@@ -149,6 +150,7 @@ module "airflow" {
     { "name" : "ECS_SUBNET", "value" : module.networking.public_subnet_ids[0] },
     { "name" : "ECS_TASK_ROLE_ARN", "value" : module.ecs.ecs_task_run_role_arn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
   ]
 }
