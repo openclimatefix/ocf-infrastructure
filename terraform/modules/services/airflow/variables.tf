@@ -25,53 +25,32 @@ variable "aws-subnet_id" {
   type        = string
 }
 
-variable "aws-owner_id" {
-  description = "The owner id of AWS account the airflow instnace is created under"
-  type = string
-}
-
 // EB Environment Configuration -------------------------------------------------
-
-variable "airflow-db-connection-url" {
-  description = "The connection url to the database to store airflow metadata"
-  type = string
-}
-
-variable "ecs-security_group" {
-  description = "The security group for airflow ecs tasks"
-  type = string
-}
-
-variable "ecs-subnet_id" {
-  description = "The subnet on which to run airflow ecs tasks"
-  type = string
-}
-
-variable "ecs-execution_role_arn" {
-  description = "The role with which to execute ecs tasks"
-  type = string
-}
-
-variable "ecs-task_role_arn" {
-  description = "The role with which to run ecs tasks"
-  type = string
-}
 
 variable "docker-compose-version" {
   description = "The version of this for ocf. This helps bump the docker compose file"
   type = string
 }
 
-variable "slack_api_conn" {
-  type = string
-  description = "The slack connection string for airflow"
-  default = "not-set"
-}
 
 variable "dags_folder" {
     type = string
     description = "The folder containing the desired dags"
     default = "uk"
+}
+
+variable container-env_vars {
+  type = list(object({
+      name = string
+      value = string
+  }))
+  description = <<EOT
+    container-env_vars = {
+      name : "Name of the environment variable"
+      value : "Value of the environment variable"
+    }
+    container-env_vars : "Environment variables to be set in the container"
+  EOT
 }
 
 

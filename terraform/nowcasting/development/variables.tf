@@ -33,6 +33,16 @@ variable "auth_dashboard_client_id" {
   default     = "not-set"
 }
 
+variable "airflow_auth_username" {
+    description = "The Auth username for airflow that should be used"
+    default     = "not-set"
+}
+
+variable "airflow_auth_password" {
+    description = "The Auth username for airflow that should be used"
+    default     = "not-set"
+}
+
 variable "auth_api_audience" {
   description = "The Auth API Audience that should be used"
   default     = "not-set"

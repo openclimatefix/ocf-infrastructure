@@ -132,14 +132,25 @@ module "airflow" {
   aws-domain                 = local.domain
   aws-vpc_id                 = module.networking.vpc_id
   aws-subnet_id              = module.networking.public_subnet_ids[0]
-  airflow-db-connection-url  = module.database.forecast-database-secret-airflow-url
-  docker-compose-version     = "0.0.12"
-  ecs-subnet_id              = module.networking.public_subnet_ids[0]
-  ecs-security_group         = module.networking.default_security_group_id
-  ecs-execution_role_arn     = module.ecs.ecs_task_execution_role_arn
-  ecs-task_role_arn          = module.ecs.ecs_task_run_role_arn
-  aws-owner_id               = module.networking.owner_id
-  slack_api_conn             = var.airflow_conn_slack_api_default
+  docker-compose-version     = "0.0.13"
+  container-env_vars = [
+    { "name" : "AIRFLOW_UID", "value" : 50000 },
+    { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.airflow_conn_slack_api_default },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_USERNAME", "value" : var.airflow_auth_username },
+    { "name" : "AUTH0_PASSWORD", "value" : var.airflow_auth_password },
+    { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AWS_OWNER_ID", "value" : module.networking.owner_id },
+    { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-airflow-url},
+    { "name" : "ECS_EXECUTION_ROLE_ARN", "value" : module.ecs.ecs_task_execution_role_arn},
+    { "name" : "ECS_SECURITY_GROUP", "value" : module.networking.default_security_group_id },
+    { "name" : "ECS_SUBNET", "value" : module.networking.public_subnet_ids[0] },
+    { "name" : "ECS_TASK_ROLE_ARN", "value" : module.ecs.ecs_task_run_role_arn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+  ]
 }
 
 # 4.1

@@ -50,25 +50,15 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   # https://is.gd/vfB51g
   # This should be the minimally required set for Docker.
 
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_URL"
-    value     = var.airflow-db-connection-url
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "AIRFLOW_UID"
-    value     = "50000"
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "AWS_DEFAULT_REGION"
-    value     = var.aws-region
-    resource  = ""
+  # use dynamic over all the container environment variables
+  dynamic "setting" {
+      for_each = var.container-env_vars
+      content {
+          namespace = "aws:elasticbeanstalk:application:environment"
+          name      = "${setting.value["name"]}"
+          value     = "${setting.value["value"]}"
+          resource  = ""
+      }
   }
 
   setting {
@@ -94,78 +84,8 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ENVIRONMENT"
-    value     = var.aws-environment
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
     name      = "BUCKET"
     value     = aws_s3_bucket.airflow-s3.id
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ECS_SUBNET"
-    value     = var.ecs-subnet_id
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ECS_SECURITY_GROUP"
-    value     = var.ecs-security_group
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ECS_EXECUTION_ROLE_ARN"
-    value     = var.ecs-execution_role_arn
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ECS_TASK_ROLE_ARN"
-    value     = var.ecs-task_role_arn
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "AWS_OWNER_ID"
-    value     = var.aws-owner_id
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "LOGLEVEL"
-    value     = "INFO"
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_URL"
-    value     = var.airflow-db-connection-url
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "AIRFLOW_CONN_SLACK_API_DEFAULT"
-    value     = var.slack_api_conn
-    resource  = ""
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "AWS_DEFAULT_REGION"
-    value     = var.aws-region
     resource  = ""
   }
 
