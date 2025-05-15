@@ -113,9 +113,9 @@ module "airflow" {
   aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
+  aws-owner_id                  = module.network.owner_id
   docker-compose-version    = "0.0.11"
   dags_folder               = "india"
-  owner_id                  = module.network.owner_id
     container-env_vars = [
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.apikey-slack },
     { "name" : "AIRFLOW_UID", "value" : 50000 },
