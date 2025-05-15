@@ -4,7 +4,7 @@
 # Instance role needs to be able to kick off ECS tasks
 
 locals {
-  secretsmanager_arn = "arn:aws:secretsmanager:${var.aws-region}:${var.container-env_vars["AWS_OWNER_ID"]}"
+  secretsmanager_arn = "arn:aws:secretsmanager:${var.aws-region}:${var.aws-owner_id}"
 }
 
 data "aws_iam_policy_document" "service" {

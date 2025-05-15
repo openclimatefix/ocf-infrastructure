@@ -19,6 +19,11 @@ variable "aws-vpc_id" {
   description = "The id of the vpc where this application will run"
 }
 
+variable "aws-owner_id" {
+  description = "The owner id of AWS account the airflow instnace is created under"
+  type = string
+}
+
 
 variable "aws-subnet_id" {
   description = "Subnet id where this application will run"

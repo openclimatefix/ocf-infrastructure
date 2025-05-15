@@ -133,6 +133,7 @@ module "airflow" {
   aws-vpc_id                 = module.networking.vpc_id
   aws-subnet_id              = module.networking.public_subnet_ids[0]
   docker-compose-version     = "0.0.13"
+  owner_id                  = module.network.owner_id
   container-env_vars = [
     { "name" : "AIRFLOW_UID", "value" : 50000 },
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.airflow_conn_slack_api_default },
@@ -143,7 +144,6 @@ module "airflow" {
     { "name" : "AUTH0_USERNAME", "value" : var.airflow_auth_username },
     { "name" : "AUTH0_PASSWORD", "value" : var.airflow_auth_password },
     { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
-    { "name" : "AWS_OWNER_ID", "value" : module.networking.owner_id },
     { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-airflow-url},
     { "name" : "ECS_EXECUTION_ROLE_ARN", "value" : module.ecs.ecs_task_execution_role_arn},
     { "name" : "ECS_SECURITY_GROUP", "value" : module.networking.default_security_group_id },
