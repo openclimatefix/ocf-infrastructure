@@ -41,7 +41,7 @@ module "postgres-rds" {
   db_name                     = "indiadb"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
-  engine_version              = "16.4"
+  engine_version              = "16.8"
 }
 
 # 1.2
