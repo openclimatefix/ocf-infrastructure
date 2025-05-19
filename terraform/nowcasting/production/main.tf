@@ -143,7 +143,7 @@ module "airflow" {
     { "name" : "ECS_TASK_ROLE_ARN", "value" : module.ecs.ecs_task_run_role_arn },
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "LOGLEVEL", "value" : "INFO" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
   ]
 }
 
