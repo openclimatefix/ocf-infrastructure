@@ -123,8 +123,8 @@ module "airflow" {
   aws-environment   = local.environment
   aws-domain        = local.domain
   aws-vpc_id        = module.networking.vpc_id
-  aws-subnet_id       = module.networking.public_subnet_ids[0]
-  aws-owner_id               = module.networking.owner_id
+  aws-subnet_id     = module.networking.public_subnet_ids[0]
+  aws-owner_id      = module.networking.owner_id
   docker-compose-version       = "0.0.7"
     container-env_vars = [
     { "name" : "AIRFLOW_UID", "value" : 50000 },
