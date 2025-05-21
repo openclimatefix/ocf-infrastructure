@@ -24,6 +24,16 @@ variable "auth_api_audience" {
   default     = "not-set"
 }
 
+variable "airflow_auth_username" {
+    description = "The Auth username for airflow that should be used"
+    default     = "not-set"
+}
+
+variable "airflow_auth_password" {
+    description = "The Auth username for airflow that should be used"
+    default     = "not-set"
+}
+
 variable "internal_ui_version" {
   description = "The Internal UI version"
   default     = "main"
