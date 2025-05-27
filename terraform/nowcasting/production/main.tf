@@ -77,7 +77,7 @@ module "database" {
 
 # 1.1
 module "api" {
-  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=17d6cfc"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=c967013"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
