@@ -107,6 +107,7 @@ module "api" {
     { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
     { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
   ]
+  min_ec2_count = 2
   max_ec2_count = 2
 }
 
