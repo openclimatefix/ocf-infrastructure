@@ -103,12 +103,11 @@ module "api" {
   container-registry = "openclimatefix"
   eb-app_name    = "nowcasting-api"
   eb-instance_type = "t3.small"
-  min_ec2_count = "2"
-  max_ec2_count = "2"
   s3_bucket = [
     { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
     { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
   ]
+  min_ec2_count = 2
   max_ec2_count = 2
 }
 
