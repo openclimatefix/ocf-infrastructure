@@ -81,7 +81,7 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
-    value     = "1"
+    value     = var.min_ec2_count
     resource  = ""
   }
   setting {

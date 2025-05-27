@@ -102,3 +102,12 @@ variable "max_ec2_count" {
     description = "Maximum number of EC2 instances in the EB environment"
     default = 1
 }
+
+variable "min_ec2_count" {
+    type = number
+    description = "Minimum number of EC2 instances in the EB environment"
+    default = 1
+}
+
+
+

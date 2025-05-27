@@ -130,13 +130,13 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
-    value     = var.eb_ec2_min_size
+    value     = "1"
     resource  = ""
   }
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
-    value     = var.eb_ec2_max_size
+    value     = "1"
     resource  = ""
   }
 
