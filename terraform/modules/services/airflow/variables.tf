@@ -58,4 +58,14 @@ variable container-env_vars {
   EOT
 }
 
+variable "eb_ec2_min_size" {
+  description = "The minimum number of EC2 instances in the EB environment"
+  type = string
+  default = "1"
+}
 
+variable "eb_ec2_max_size" {
+  description = "The maximum number of EC2 instances in the EB environment"
+  type = string
+  default = "1"
+}
