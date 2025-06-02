@@ -72,7 +72,7 @@ module "database" {
   environment          = local.environment
   db_subnet_group_name = module.networking.private_subnet_group_name
   vpc_id               = module.networking.vpc_id
-  engine_version       = "15.8"
+  engine_version       = "15.12"
 }
 
 # 1.1
@@ -195,7 +195,7 @@ module "sites_database" {
   db_name                     = "sites"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
-  engine_version = "15.8"
+  engine_version = "15.12"
 }
 
 # 5.2
