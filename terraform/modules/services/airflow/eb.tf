@@ -44,7 +44,7 @@ resource "aws_elastic_beanstalk_environment" "eb-api-env" {
 
   # the next line IS NOT RANDOM,
   # see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
-  solution_stack_name = "64bit Amazon Linux 2 v3.8.0 running Docker"
+  solution_stack_name = "64bit Amazon Linux 2023 v4.5.1 running Docker"
 
   # There are a LOT of settings, see here for the basic list:
   # https://is.gd/vfB51g
