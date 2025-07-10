@@ -106,21 +106,28 @@ resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
 
 # 4.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=a79aaa8"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=81fca80"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
-  airflow-db-connection-url = "${module.postgres-rds.instance_connection_url}/airflow"
-  docker-compose-version    = "0.0.12"
-  ecs-subnet_id             = module.network.public_subnet_ids[0]
-  ecs-security_group        = module.network.default_security_group_id
-  ecs-execution_role_arn    = module.ecs-cluster.ecs_task_execution_role_arn
-  ecs-task_role_arn         = module.ecs-cluster.ecs_task_run_role_arn
   aws-owner_id              = module.network.owner_id
-  slack_api_conn            = var.apikey-slack
+  docker-compose-version    = "0.0.11"
   dags_folder               = "india"
+  container-env_vars = [
+    { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.apikey-slack },
+    { "name" : "AIRFLOW_UID", "value" : 50000 },
+    { "name" : "AWS_DEFAULT_REGION", "value": local.region},
+    { "name" : "DB_URL", "value" :  "${module.postgres-rds.instance_connection_url}/airflow"},
+    { "name" : "ECS_EXECUTION_ROLE_ARN", "value" : module.ecs-cluster.ecs_task_execution_role_arn},
+    { "name" : "ECS_SECURITY_GROUP", "value" : module.network.default_security_group_id },
+    { "name" : "ECS_SUBNET", "value" : module.network.public_subnet_ids[0] },
+    { "name" : "ECS_TASK_ROLE_ARN", "value" : module.ecs-cluster.ecs_task_run_role_arn },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "LOGLEVEL", "value" : "INFO" },
+  ]
 }
 
 # 5.1

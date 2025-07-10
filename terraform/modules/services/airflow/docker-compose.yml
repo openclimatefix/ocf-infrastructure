@@ -73,7 +73,6 @@ services:
       AUTH0_AUDIENCE: $AUTH0_AUDIENCE
       _PIP_ADDITIONAL_REQUIREMENTS: "icechunk==0.2.17 xarray==2025.6.1"
 
-
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
@@ -115,7 +114,6 @@ services:
       AIRFLOW__WEBSERVER__WORKER_CLASS: "gevent"
       _AIRFLOW_PATCH_GEVENT: "1"
       _PIP_ADDITIONAL_REQUIREMENTS: "icechunk==0.2.17 xarray==2025.6.1"
-
     user: "${AIRFLOW_UID:-50000}:0"
     volumes:
       - data:/airflow
@@ -152,7 +150,6 @@ services:
       AWS_OWNER_ID: $AWS_OWNER_ID
       ENVIRONMENT: $ENVIRONMENT
       _PIP_ADDITIONAL_REQUIREMENTS: "icechunk==0.2.17 xarray==2025.6.1"
-
     user: "${AIRFLOW_UID:-50000}:0"
 
   # only need to (and only able to!) run this once. Commit ref 96b5bb8 has this uncommented.
