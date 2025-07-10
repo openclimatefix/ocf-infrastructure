@@ -116,7 +116,7 @@ module "airflow" {
   aws-owner_id              = module.network.owner_id
   docker-compose-version    = "0.0.11"
   dags_folder               = "india"
-    container-env_vars = [
+  container-env_vars = [
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.apikey-slack },
     { "name" : "AIRFLOW_UID", "value" : 50000 },
     { "name" : "AWS_DEFAULT_REGION", "value": var.region},
