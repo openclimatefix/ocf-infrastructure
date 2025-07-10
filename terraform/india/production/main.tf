@@ -106,14 +106,14 @@ resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
 
 # 4.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=a79aaa8"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=81fca80"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   airflow-db-connection-url = "${module.postgres-rds.instance_connection_url}/airflow"
-  docker-compose-version    = "0.0.12"
+  docker-compose-version    = "0.0.13"
   ecs-subnet_id             = module.network.public_subnet_ids[0]
   ecs-security_group        = module.network.default_security_group_id
   ecs-execution_role_arn    = module.ecs-cluster.ecs_task_execution_role_arn
