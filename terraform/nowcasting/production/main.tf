@@ -121,7 +121,7 @@ resource "aws_secretsmanager_secret" "satellite_consumer_secret" {
 
 # 3.1
 module "airflow" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=81fca80"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=1c022de"
   aws-environment   = local.environment
   aws-domain        = local.domain
   aws-vpc_id        = module.networking.vpc_id
