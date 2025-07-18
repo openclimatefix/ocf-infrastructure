@@ -113,11 +113,17 @@ module "airflow" {
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   aws-owner_id              = module.network.owner_id
-  docker-compose-version    = "0.0.13"
+  docker-compose-version    = "0.0.14"
   dags_folder               = "india"
   container-env_vars = [
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.apikey-slack },
     { "name" : "AIRFLOW_UID", "value" : 50000 },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_USERNAME", "value" : var.airflow_auth_username },
+    { "name" : "AUTH0_PASSWORD", "value" : var.airflow_auth_password },
+    { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AWS_DEFAULT_REGION", "value": local.region},
     { "name" : "DB_URL", "value" :  "${module.postgres-rds.instance_connection_url}/airflow"},
     { "name" : "ECS_EXECUTION_ROLE_ARN", "value" : module.ecs-cluster.ecs_task_execution_role_arn},
