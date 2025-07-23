@@ -69,3 +69,8 @@ variable "sentry_dsn_api" {
   description = "The Sentry DSN for all backend components"
   default     = ""
 }
+
+variable "airflow_url" {
+    description = "The URL for the Airflow instance"
+    default     = "not-set"
+}
