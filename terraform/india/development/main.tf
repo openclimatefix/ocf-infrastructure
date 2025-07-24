@@ -114,7 +114,7 @@ module "airflow" {
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   aws-owner_id              = module.network.owner_id
-  docker-compose-version    = "0.0.12"
+  docker-compose-version    = "0.0.13"
   dags_folder               = "india"
   container-env_vars = [
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.apikey-slack },
@@ -134,6 +134,7 @@ module "airflow" {
     { "name" : "ENVIRONMENT", "value" : local.environment },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "LOGLEVEL", "value" : "INFO" },
+    { "name" : "URL", "value" : var.airflow_url },
   ]
 }
 

@@ -56,3 +56,8 @@ variable "airflow_auth_password" {
     description = "The Auth username for airflow that should be used"
     default     = "not-set"
 }
+
+variable "airflow_url" {
+    description = "The URL for the Airflow instance"
+    default     = "not-set"
+}
