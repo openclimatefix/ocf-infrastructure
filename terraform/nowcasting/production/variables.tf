@@ -66,3 +66,7 @@ variable "airflow_conn_slack_api_default" {
   default     = "not-set"
 }
 
+variable "airflow_url" {
+    description = "The URL for the Airflow instance"
+    default     = "not-set"
+}
