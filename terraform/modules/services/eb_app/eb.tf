@@ -48,6 +48,12 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     }
 
   setting {
+    namespace   = "aws:autoscaling:launchconfiguration"
+    name        = "RootVolumeSize"
+    value       = var.ec2-storage-gb
+  },
+
+  setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.aws-vpc_id
