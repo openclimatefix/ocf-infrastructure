@@ -193,7 +193,8 @@ module "analysis_dashboard" {
   eb-instance_type = "t3.small"
   s3_bucket = [
     { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn },
-    { bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn }
+    { bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn },
+    { bucket_read_policy_arn = module.s3-forecast-bucket.read_policy_arn }
   ]
 }
 
