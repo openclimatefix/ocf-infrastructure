@@ -109,5 +109,11 @@ variable "min_ec2_count" {
     default = 1
 }
 
+variable "ec2-storage-gb" {
+    type = number
+    description = "Size of the EBS volume in GB"
+    default = 8
+}
+
 
 
