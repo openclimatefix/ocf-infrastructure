@@ -106,14 +106,14 @@ resource "aws_secretsmanager_secret" "huggingface_consumer_secret" {
 
 # 4.0
 module "airflow" {
-  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=81fca80"
+  source                    = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/airflow?ref=def2bc2"
   aws-environment           = local.environment
   aws-region                = local.region
   aws-domain                = local.domain
   aws-vpc_id                = module.network.vpc_id
   aws-subnet_id             = module.network.public_subnet_ids[0]
   aws-owner_id              = module.network.owner_id
-  docker-compose-version    = "0.0.15"
+  docker-compose-version    = "0.0.16"
   dags_folder               = "india"
   container-env_vars = [
     { "name" : "AIRFLOW_CONN_SLACK_API_DEFAULT", "value" : var.apikey-slack },
