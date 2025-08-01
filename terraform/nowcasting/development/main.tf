@@ -186,6 +186,7 @@ module "analysis_dashboard" {
   s3_bucket = [
     { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
     { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
+    { bucket_read_policy_arn = module.forecasting_models_bucket.read_policy_arn }
   ]
 }
 
