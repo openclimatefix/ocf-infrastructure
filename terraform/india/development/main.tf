@@ -77,7 +77,7 @@ module "s3-satellite-bucket" {
   region              = var.region
   domain              = local.domain
   service_name        = "satellite"
-  lifecycled_prefixes = ["data", "raw", "rss", "odegree", "iodc"]
+  lifecycled_prefixes = ["data", "raw", "iodc"]
 }
 
 # 2.2
