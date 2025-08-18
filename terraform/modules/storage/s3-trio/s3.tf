@@ -144,4 +144,26 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
     status = "Enabled"
   }
 
+  rule {
+    id      = "remove_old_rss_files"
+    filter {
+      prefix = "rss/"
+    }
+    expiration {
+      days = 7
+    }
+    status = "Enabled"
+  }
+
+  rule {
+    id      = "remove_old_odegree_files"
+    filter {
+      prefix = "odegree/"
+    }
+    expiration {
+      days = 7
+    }
+    status = "Enabled"
+  }
+
 }
