@@ -191,6 +191,7 @@ module "analysis_dashboard" {
   container-port = 8501
   eb-app_name    = "analysis-dashboard"
   eb-instance_type = "t3.small"
+  ec2-storage-gb = 16
   s3_bucket = [
     { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn },
     { bucket_read_policy_arn = module.s3-satellite-bucket.read_policy_arn },
