@@ -89,17 +89,23 @@ and [Airflow Dag (GSP)](https://github.com/openclimatefix/ocf-infrastructure/blo
    - AWS logs: [aws/ecs/forecast_blend/](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fecs$252Fforecast_blend$252F)
 
 ### 🚀 UK API (Elastic Beanstalk App)
-The API loads forecasts and true values from the database and present the data in an easy to read way. This is run on Elastic Beantstalk. We use Auth0 to authenticate this API.
+The API loads forecasts and true values from the database and present the data in an easy to read way. This is run on Elastic Beanstalk. We use Auth0 to authenticate this API.
    - Code: [uk-pv-national-gsp-api](https://github.com/openclimatefix/uk-pv-national-gsp-api)
    - [Terraform](https://github.com/openclimatefix/ocf-infrastructure/tree/main/terraform/modules/services/api) 
    - [AWS logs on development](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Felasticbeanstalk$252Fnowcasting-api-development$252Fvar$252Flog$252Feb-docker$252Fcontainers$252Feb-current-app$252Fstdouterr.log)
- and [AWS logs on production](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Felasticbeanstalk$252Fnowcasting-api-production$252Fvar$252Flog$252Feb-docker$252Fcontainers$252Feb-current-app$252Fstdouterr.log)
+ and [AWS logs on production](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Felasticbeanstalk$252Fuk-development-nowcasting-api$252Fvar$252Flog$252Feb-docker$252Fcontainers$252Feb-current-app$252Fstdouterr.log)
 
 ### 🚀 Site API (Elastic Beanstalk App)
-The API loads forecasts and true values from the database and present the data in an easy to read way. This is run on Elastic Beantstalk. We use Auth0 to authenticate this API.
+The API loads forecasts and true values from the database and present the data in an easy to read way. This is run on Elastic Beanstalk. We use Auth0 to authenticate this API.
    - Code: [pv-site-api](https://github.com/openclimatefix/pv-site-api)
    - [Terraform](https://github.com/openclimatefix/ocf-infrastructure/tree/main/terraform/modules/services/api_site) 
-   - [AWS logs](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Felasticbeanstalk$252Fpvsite-production-api-sites$252Fvar$252Flog$252Feb-docker$252Fcontainers$252Feb-current-app$252Fstdouterr.log)
+   - [AWS logs](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Felasticbeanstalk$252Fuk-development-sites-api$252Fvar$252Flog$252Feb-docker$252Fcontainers$252Feb-current-app$252Fstdouterr.log)
+
+### 🚀 Cloudcasting API (Elastic Beanstalk App)
+The API loads forecasts and true values from the database and present the data in an easy to read way. This is run on Elastic Beanstalk. We use Auth0 to authenticate this API.
+   - Code: [gsoc-cloudcasting-api](https://github.com/openclimatefix/gsoc-cloudcasting-api)
+   - [Terraform](https://github.com/openclimatefix/ocf-infrastructure/tree/main/terraform/modules/services/cloudcasting-api) 
+   - [AWS logs](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Felasticbeanstalk$252Fuk-development-cloudcasting-api$252Fvar$252Flog$252Feb-docker$252Fcontainers$252Feb-current-app$252Fstdouterr.log)
 
 ### Other components:
 - Databases: We have a few postgres database that store the PV and forecast data. These is run on RDS.
