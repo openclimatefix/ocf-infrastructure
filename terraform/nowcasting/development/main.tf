@@ -111,6 +111,35 @@ module "api" {
   max_ec2_count = 2
 }
 
+#1.2
+module "cloudcasting_api" {
+  source = "../../modules/services/eb_app"
+  domain = local.domain
+  aws-region = var.region
+  aws-environment = local.environment
+  aws-subnet_id = module.networking.public_subnet_ids[0]
+  aws-vpc_id = module.networking.vpc_id
+  container-command = ["docker", "compose", "up", "--build", "--remove-orphans"]
+  container-env_vars = [
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
+    { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "S3_BUCKET_NAME", "value" : var.s3_cloudcasting_bucket_name },
+    { "name" : "S3_REGION_NAME", "value" : var.s3_cloudcasting_region_name },
+    { "name" : "S3_ACCESS_KEY_ID", "value" : var.s3_access_key_id },
+    { "name" : "S3_SECRET_ACCESS_KEY", "value" : var.s3_secret_access_key },
+    { "name" : "S3_DOWNLOAD_INTERVAL", "value" : var.s3_download_interval },
+    { "name" : "RELOAD", "value" : var.cloudcasting_reload},
+  ]
+  container-name = "cloudcasting_api"
+  container-tag  = var.api_version
+  container-registry = "openclimatefix"
+  eb-app_name    = "cloudcasting-api"
+  eb-instance_type = "t3.micro"
+}
+
 # 2.1
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
   name = "${local.environment}/data/nwp-consumer"
