@@ -16,10 +16,21 @@ resource "aws_lambda_function" "api" {
     variables = {}
   }
 
+  tags = {
+    name = "${var.app_name}"
+    type = "lambda"
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logs,
     aws_cloudwatch_log_group.api,
   ]
+}
+
+resource "aws_lambda_provisioned_concurrency_config" "lambda_concurrentl_limit" {
+  function_name                     = aws_lambda_alias.api.function_name
+  provisioned_concurrent_executions = 1
+  qualifier                         = aws_lambda_alias.api.name
 }
 
 

@@ -251,7 +251,7 @@ module "open_data_pvnet_s3" {
 
 # 7.0
 module "open_quartz_solar" {
-  source = "../../modules/services/lambda_api"
+  source = "../../modules/services/lambda_app"
   aws-region              = var.region
   aws-environment         = local.environment
   app_name        = "open-quartz-solar-api"
