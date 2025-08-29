@@ -16,7 +16,7 @@ variable app_name {
 variable container-registry {
   type = string
   description = "Container registry where container resides"
-  default = "ghcr.io/openclimatefix"
+  default = "ghcr.io"
 }
 
 variable container-name {

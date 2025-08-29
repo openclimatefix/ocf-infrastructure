@@ -252,9 +252,9 @@ module "open_data_pvnet_s3" {
 # 7.0
 module "open_quartz_solar" {
   source = "../../modules/services/lambda_api"
-  region              = var.region
-  environment         = local.environment
-  service_name        = "open-quartz-solar-api"
+  aws-region              = var.region
+  aws-environment         = local.environment
+  app_name        = "open-quartz-solar-api"
   container-tag  = var.open_quartz_solar
-  container-registry = "openclimatefix"
+  container-name = "openclimatefix/open-source-quartz-solar-forecast"
 }
