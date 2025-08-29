@@ -269,4 +269,5 @@ module "open_quartz_solar" {
   container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "open-quartz-solar-api"
   eb-instance_type = "t3.micro"
+  s3_bucket = []
 }
