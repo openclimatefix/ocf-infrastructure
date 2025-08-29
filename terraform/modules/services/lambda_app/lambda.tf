@@ -12,10 +12,6 @@ resource "aws_lambda_function" "api" {
   package_type     = "Image"
   timeout          = 10
 
-  environment {
-    variables = {}
-  }
-
   tags = {
     name = "${var.app_name}"
     type = "lambda"
