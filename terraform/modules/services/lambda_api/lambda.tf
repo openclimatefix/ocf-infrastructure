@@ -17,7 +17,6 @@ resource "aws_lambda_function" "api" {
   }
 
   depends_on = [
-    null_resource.image,
     aws_iam_role_policy_attachment.lambda_logs,
     aws_cloudwatch_log_group.api,
   ]
