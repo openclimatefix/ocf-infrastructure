@@ -251,10 +251,22 @@ module "open_data_pvnet_s3" {
 
 # 7.0
 module "open_quartz_solar" {
-  source = "../../modules/services/lambda_app"
-  aws-region              = var.region
-  aws-environment         = local.environment
-  app_name        = "open-quartz-solar-api"
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["uv", "run", "uvicorn", "api.v1.api:app", "--host", "0.0.0.0", "--port", "80"]
+  container-env_vars = [
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "ORIGINS", "value" : "*" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "ENVIRONMENT", "value" : "development" },
+  ]
+  container-name = "open-source-quartz-solar-forecast"
   container-tag  = var.open_quartz_solar
-  container-name = "openclimatefix/open-source-quartz-solar-forecast"
+  container-registry = "openclimatefix"
+  eb-app_name    = "open-quartz-solar-api"
+  eb-instance_type = "t3.micro"
 }
