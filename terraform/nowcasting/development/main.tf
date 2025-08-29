@@ -266,7 +266,8 @@ module "open_quartz_solar" {
   ]
   container-name = "open-source-quartz-solar-forecast"
   container-tag  = var.open_quartz_solar
-  container-registry = "openclimatefix"
+  container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "open-quartz-solar-api"
   eb-instance_type = "t3.micro"
+  s3_bucket = []
 }
