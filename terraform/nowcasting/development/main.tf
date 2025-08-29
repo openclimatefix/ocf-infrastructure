@@ -18,6 +18,7 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 5.2 - PVSite API
 5.3 - PVSite ML bucket
 6.1 - Open Data PVnet
+7.0 - API Open Quartz Solar
 
 Variables used across all modules
 ======*/
@@ -245,4 +246,15 @@ module "pvsite_ml_bucket" {
 # 6.1 Open Data PVnet - Public s3 bucket
 module "open_data_pvnet_s3" {
   source = "../../modules/storage/open-data-pvnet-s3"
+}
+
+
+# 7.0
+module "open_quartz_solar" {
+  source = "../../modules/services/lambda_api"
+  region              = var.region
+  environment         = local.environment
+  service_name        = "open-quartz-solar-api"
+  container-tag  = var.open_quartz_solar
+  container-registry = "openclimatefix"
 }

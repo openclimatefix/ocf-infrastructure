@@ -74,3 +74,9 @@ variable "airflow_url" {
     description = "The URL for the Airflow instance"
     default     = "not-set"
 }
+
+variable "open_quartz_solar" {
+  type = string
+  description = "Docker version fro the open quartz solar API"
+  default = "api-v1"
+}
