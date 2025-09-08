@@ -168,7 +168,7 @@ module "analysis_dashboard" {
   aws-environment    = local.environment
   aws-subnet_id      = module.network.public_subnet_ids[0]
   aws-vpc_id         = module.network.vpc_id
-  container-command  = ["streamlit", "run", "main_india.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
+  container-command  = ["uv", "run", "streamlit", "run", "main_india.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
   container-env_vars = [
     { "name" : "DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
     { "name" : "SITES_DB_URL", "value" :  module.postgres-rds.default_db_connection_url},
