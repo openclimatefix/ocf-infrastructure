@@ -173,7 +173,7 @@ module "analysis_dashboard" {
   aws-subnet_id      = module.network.public_subnet_ids[0]
   aws-vpc_id         = module.network.vpc_id
   container-command  = [
-    "streamlit", "run", "main_india.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0",
+    "uv", "run", "streamlit", "run", "main_india.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0",
     "--server.address=0.0.0.0", "–server.enableCORS False"
   ]
   container-env_vars = [
