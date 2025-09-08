@@ -166,7 +166,7 @@ module "analysis_dashboard" {
   aws-environment    = local.environment
   aws-subnet_id      = module.networking.public_subnet_ids[0]
   aws-vpc_id         = module.networking.vpc_id
-  container-command  = ["streamlit", "run", "main.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
+  container-command  = ["uv", "run", "streamlit", "run", "main.py", "--server.port=8501", "--browser.serverAddress=0.0.0.0", "--server.address=0.0.0.0", "–server.enableCORS False"]
   container-env_vars = [
     { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
     { "name" : "SITES_DB_URL", "value" :  module.pvsite_database.default_db_connection_url},
