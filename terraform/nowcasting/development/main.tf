@@ -282,7 +282,7 @@ module "data_platform_database" {
   environment                 = local.environment
   db_subnet_group_name        = module.networking.private_subnet_group_name
   vpc_id                      = module.networking.vpc_id
-  db_name                     = "data-platform"
+  db_name                     = "dataplatform"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
 }
