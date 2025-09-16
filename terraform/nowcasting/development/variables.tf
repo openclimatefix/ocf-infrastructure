@@ -77,6 +77,13 @@ variable "airflow_url" {
 
 variable "open_quartz_solar" {
   type = string
-  description = "Docker version fro the open quartz solar API"
+  description = "Docker version for the open quartz solar API"
   default = "api-v1"
+}
+
+
+variable "data_platform_api_version" {
+  type = string
+  description = "Docker verions for the data platformapi
+  default = "update-build-location"
 }
