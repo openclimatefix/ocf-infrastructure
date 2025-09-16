@@ -297,7 +297,7 @@ module "data_platform_api" {
   aws-vpc_id         = module.networking.vpc_id
   container-command  = ["/app"]
   container-env_vars = [
-    { "name" : "DATABASE_URL", "value" : "development" },
+    { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
   ]
   container-name = "data-platform-api"
   container-tag  = var.data_platform_api_version
