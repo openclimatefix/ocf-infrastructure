@@ -298,6 +298,7 @@ module "data_platform_api" {
   container-command  = ["/app"]
   container-env_vars = [
     { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
   ]
   container-name = "data-platform-api"
   container-tag  = var.data_platform_api_version
