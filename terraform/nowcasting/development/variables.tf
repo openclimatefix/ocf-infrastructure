@@ -84,6 +84,6 @@ variable "open_quartz_solar" {
 
 variable "data_platform_api_version" {
   type = string
-  description = "Docker verions for the data platformapi
+  description = "Docker verions for the data platform api"
   default = "update-build-location"
 }
