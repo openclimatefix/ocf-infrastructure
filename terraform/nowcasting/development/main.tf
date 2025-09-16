@@ -19,6 +19,8 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 5.3 - PVSite ML bucket
 6.1 - Open Data PVnet
 7.0 - API Open Quartz Solar
+8.0 - Data Platform Database
+8.1 - Data Platform API
 
 Variables used across all modules
 ======*/
@@ -268,6 +270,39 @@ module "open_quartz_solar" {
   container-tag  = var.open_quartz_solar
   container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "open-quartz-solar-api"
+  eb-instance_type = "t3.micro"
+  s3_bucket = []
+}
+
+
+# 8.0 Data Platform - Database
+module "data_platform_database" {
+  source = "../../modules/storage/postgres"
+  region                      = var.region
+  environment                 = local.environment
+  db_subnet_group_name        = module.networking.private_subnet_group_name
+  vpc_id                      = module.networking.vpc_id
+  db_name                     = "data-platform"
+  rds_instance_class          = "db.t3.small"
+  allow_major_version_upgrade = true
+}
+
+# 8.1 Data Platform - API
+module "data_platform_api" {
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.private_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["go","run", "cmd/main.go"]
+  container-env_vars = [
+    { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
+  ]
+  container-name = "data-platform-api"
+  container-tag  = var.data_platform_api_version
+  container-registry = "ghcr.io/openclimatefix"
+  eb-app_name    = "data-platform-api"
   eb-instance_type = "t3.micro"
   s3_bucket = []
 }
