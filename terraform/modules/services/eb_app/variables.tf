@@ -70,9 +70,9 @@ variable container-port {
   default = 80
 }
 
-variable container-internal-port {
+variable container-host-port {
   type = number
-  description = "Port on which the container internally runs on"
+  description = "Host Port feed to container port"
   default = 80
 }
 

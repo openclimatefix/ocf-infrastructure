@@ -306,6 +306,6 @@ module "data_platform_api" {
   eb-app_name    = "data-platform-api"
   eb-instance_type = "t3.micro"
   s3_bucket = []
-  container-internal-port = "50051"
+  container-host-port = "50051"
   container-port = "50051"
 }
