@@ -70,6 +70,12 @@ variable container-port {
   default = 80
 }
 
+variable container-internal-port {
+  type = number
+  description = "Port on which the container internally runs on"
+  default = 80
+}
+
 // EB configuration --------------------------------------------------------
 
 variable eb-app_name {
