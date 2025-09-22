@@ -293,7 +293,8 @@ module "data_platform_api" {
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
-  aws-subnet_id      = module.networking.private_subnet_ids[0]
+  # TODO change to private
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
   aws-vpc_id         = module.networking.vpc_id
   container-command  = ["/app"]
   container-env_vars = [
