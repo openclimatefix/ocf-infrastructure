@@ -70,6 +70,12 @@ variable container-port {
   default = 80
 }
 
+variable container-host-port {
+  type = number
+  description = "Host Port feed to container port"
+  default = 80
+}
+
 // EB configuration --------------------------------------------------------
 
 variable eb-app_name {
