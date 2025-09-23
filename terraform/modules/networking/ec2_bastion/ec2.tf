@@ -28,5 +28,5 @@ resource "aws_instance" "ec2-bastion" {
 
 resource "aws_eip" "ip-bastion" {
   instance = aws_instance.ec2-bastion.id
-  vpc      = true
+  domain      = "vpc"
 }
