@@ -6,8 +6,8 @@ resource "aws_security_group" "sg" {
   vpc_id      = var.aws-vpc_id
 
   ingress {
-    from_port = var.ingress_from_port
-    to_port   = var.ingress_to_port
+    from_port = "80"
+    to_port   = "80"
     protocol  = "tcp"
     self      = true
   }
@@ -23,4 +23,14 @@ resource "aws_security_group" "sg" {
   tags = {
     Environment = var.aws-environment
   }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_traffic_ipv4" {
+  count = var.ingress_extra_port != -1 ? 1 : 0
+
+  security_group_id = var.ingress_extra_port.sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = var.ingress_extra_port
+  ip_protocol       = "tcp"
+  to_port           = var.ingress_extra_port
 }

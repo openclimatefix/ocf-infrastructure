@@ -76,16 +76,11 @@ variable container-host-port {
   default = 80
 }
 
-variable ingress_from_port {
+variable ingress_extra_port {
   type = number
-  description = "The from port, used for ingress"
-  default = 80
-}
-
-variable ingress_to_port {
-  type = number
-  description = "The to port, used for ingress"
-  default = 80
+  description = "extra ingress ports to open up"
+  // If left as -1, no extra ports will be opened
+  default = -1 
 }
 
 // EB configuration --------------------------------------------------------
