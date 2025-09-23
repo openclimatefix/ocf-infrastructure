@@ -6,10 +6,20 @@ resource "aws_security_group" "sg" {
   vpc_id      = var.aws-vpc_id
 
   ingress {
-    from_port = var.ingress_from_port
-    to_port   = var.ingress_to_port
+    from_port = "80"
+    to_port   = "80"
     protocol  = "tcp"
     self      = true
+  }
+
+  # TODO tidy this up, as its only needed for Data Platform
+  # 
+  ingress {
+    from_port        = "50051"
+    to_port          = "50051"
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
   egress {
