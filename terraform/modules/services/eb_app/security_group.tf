@@ -19,13 +19,21 @@ resource "aws_vpc_security_group_ingress_rule" "basic" {
   referenced_security_group_id = aws_security_group.sg.id
 }
 
-resource "aws_vpc_security_group_egress_rule" "basic" {
+resource "aws_vpc_security_group_egress_rule" "basic_ipv4" {
 
   security_group_id = aws_security_group.sg.id
   from_port        = 0
   to_port          = 0
   ip_protocol         = "-1"
   cidr_ipv4        = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_egress_rule" "basic_ipv6" {
+
+  security_group_id = aws_security_group.sg.id
+  from_port        = 0
+  to_port          = 0
+  ip_protocol         = "-1"
   cidr_ipv6        = "::/0"
 }
 
