@@ -309,4 +309,6 @@ module "data_platform_api" {
   s3_bucket = []
   container-host-port = "50051"
   container-port = "50051"
+  ingress_from_port = "50051"
+  ingress_to_port = "50051"
 }
