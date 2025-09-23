@@ -78,13 +78,13 @@ variable container-host-port {
 
 variable ingress_from_port {
   type = number
-  description = "The from port, used for ingress
+  description = "The from port, used for ingress"
   default = 80
 }
 
 variable ingress_to_port {
   type = number
-  description = "The to port, used for ingress
+  description = "The to port, used for ingress"
   default = 80
 }
 
