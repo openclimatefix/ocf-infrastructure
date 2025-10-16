@@ -300,7 +300,7 @@ module "data_platform_api" {
     { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
   ]
-  container-name = "data-platform-api"
+  container-name = "data-platform"
   container-tag  = var.data_platform_api_version
   container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "data-platform-api"
