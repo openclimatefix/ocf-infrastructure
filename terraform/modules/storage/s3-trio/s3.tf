@@ -117,7 +117,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
       prefix = "data/"
     }
     expiration {
-      days = 7
+      days = 31
     }
     status = "Enabled"
   }
@@ -139,7 +139,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
       prefix = "cloudcasting_forecast/"
     }
     expiration {
-      days = 7
+      days = 31
     }
     status = "Enabled"
   }
@@ -150,7 +150,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
       prefix = "rss/"
     }
     expiration {
-      days = 7
+      days = 31
     }
     status = "Enabled"
   }
@@ -161,7 +161,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "sat-bucket-lifecycle" {
       prefix = "odegree/"
     }
     expiration {
-      days = 7
+      days = 31
     }
     status = "Enabled"
   }
