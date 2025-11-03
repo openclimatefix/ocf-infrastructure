@@ -58,7 +58,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
           prefix = "${rule.value}/"
         }
         expiration {
-          days = 7
+          days = 31
         }
     }
   }
