@@ -295,7 +295,7 @@ module "data_platform_api" {
   aws-environment    = local.environment
   aws-subnet_id      = module.networking.private_subnet_ids[0]
   aws-vpc_id         = module.networking.vpc_id
-  container-command  = ["/app"]
+  container-command  = ["/dp-server"]
   container-env_vars = [
     { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
     { "name" : "LOGLEVEL", "value" : "DEBUG" },
