@@ -42,10 +42,21 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
   rule {
     id      = "remove_old_ecmwf"
     filter {
-      prefix = "ecmwf/data/"
+      prefix = "ecmwf/"
     }
     expiration {
-      days = 7
+      days = 30
+    }
+    status = "Enabled"
+  }
+
+  rule {
+    id      = "remove_old_ecmwf_nl"
+    filter {
+      prefix = "ecmwf-nl/"
+    }
+    expiration {
+      days = 30
     }
     status = "Enabled"
   }
@@ -56,11 +67,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "nwp-bucket-lifecycle" {
       prefix = "metoffice/"
     }
     expiration {
-      days = 7
+      days = 30
     }
     status = "Enabled"
   }
-
 }
 
 
