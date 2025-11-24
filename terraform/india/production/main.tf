@@ -145,7 +145,7 @@ module "india-api" {
   aws-environment    = local.environment
   aws-subnet_id      = module.network.public_subnet_ids[0]
   aws-vpc_id         = module.network.vpc_id
-  container-command  = ["quartzapi]
+  container-command  = ["quartzapi"]
   container-env_vars = [
     { "name" : "SOURCE", "value" : "quartzdb" },
     { "name" : "PORT", "value" : "80" },
