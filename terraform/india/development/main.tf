@@ -146,9 +146,9 @@ module "india-api" {
   aws-environment    = local.environment
   aws-subnet_id      = module.network.public_subnet_ids[0]
   aws-vpc_id         = module.network.vpc_id
-  container-command  = []
+  container-command  = ["quartzapi"]
   container-env_vars = [
-    { "name" : "SOURCE", "value" : "indiadb" },
+    { "name" : "SOURCE", "value" : "quartzdb" },
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
