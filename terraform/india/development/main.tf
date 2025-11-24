@@ -156,8 +156,9 @@ module "india-api" {
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value": local.environment},
   ]
-  container-name = "india-api"
+  container-name = "quartz-api"
   container-tag  = var.version-india_api
+  container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "india-api"
   s3_bucket = [
     { bucket_read_policy_arn = module.s3-nwp-bucket.read_policy_arn }
