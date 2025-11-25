@@ -34,7 +34,7 @@ module "networking" {
 
 # 0.2
 module "ec2-bastion" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=53a4ac9"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=9f9d856"
   region            = var.region
   vpc_id            = module.networking.vpc_id
   public_subnets_id = module.networking.public_subnet_ids[0]
