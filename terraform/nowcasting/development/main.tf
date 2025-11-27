@@ -157,6 +157,7 @@ module "airflow" {
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "URL", "value" : var.airflow_url },
+    { "name" : "DATA_PLATFORM_HOST", "value": data_platform_api.api_url}, 
   ]
 }
 
@@ -179,6 +180,7 @@ module "analysis_dashboard" {
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
     { "name" : "REGION", "value": local.domain},
     { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "DATA_PLATFORM_HOST", "value": data_platform_api.api_url}, 
   ]
   container-name = "analysis-dashboard"
   container-tag  = var.internal_ui_version
