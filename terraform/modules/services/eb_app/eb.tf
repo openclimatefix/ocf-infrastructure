@@ -60,6 +60,12 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     resource = ""
   }
   setting {
+    namespace = "aws:ec2:vpc"
+    name      = "ELBScheme"
+    value     = var.elbscheme
+    resource  = ""
+  }
+  setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = aws_security_group.sg.id
@@ -99,12 +105,6 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     resource  = ""
   }
 
-  setting {
-    namespace = "aws:ec2:vpc"
-    name      = "ELBScheme"
-    value     = var.elbscheme
-    resource  = ""
-  }
 
   ###=========================== Logging ========================== ###
 

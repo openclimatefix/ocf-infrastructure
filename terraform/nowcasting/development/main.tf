@@ -303,7 +303,7 @@ module "data_platform_api" {
   container-name = "data-platform"
   container-tag  = var.data_platform_api_version
   container-registry = "ghcr.io/openclimatefix"
-  eb-app_name    = "data-platform-api"
+  eb-app_name    = "data-platform-api-v2"
   eb-instance_type = "t3.micro"
   s3_bucket = []
   container-host-port = "50051"
