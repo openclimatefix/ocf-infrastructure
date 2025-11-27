@@ -311,4 +311,5 @@ module "data_platform_api" {
   container-host-port = "50051"
   container-port = "50051"
   elbscheme="internal"
+  elb_ports=["80","50051"]
 }

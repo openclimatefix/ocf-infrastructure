@@ -76,6 +76,12 @@ variable container-host-port {
   default = 80
 }
 
+variable elb_ports {
+  type = list
+  description = "List of ports for listeners for the load balancer"
+  default = ["80"]
+}
+
 // EB configuration --------------------------------------------------------
 
 variable eb-app_name {
