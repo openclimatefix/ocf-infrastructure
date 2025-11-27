@@ -99,6 +99,12 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     resource  = ""
   }
 
+  setting {
+    namespace = "aws:ec2:vpc"
+    name      = "ELBScheme"
+    value     = var.elbscheme
+    resource  = ""
+  }
 
   ###=========================== Logging ========================== ###
 

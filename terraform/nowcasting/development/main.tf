@@ -308,4 +308,5 @@ module "data_platform_api" {
   s3_bucket = []
   container-host-port = "50051"
   container-port = "50051"
+  elbscheme="internal"
 }

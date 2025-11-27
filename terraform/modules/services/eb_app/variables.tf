@@ -115,5 +115,11 @@ variable "min_ec2_count" {
     default = 1
 }
 
+variable "elbscheme" {
+  type = string
+  description = "Either public or internal for the load balancer."
+  default = "public"
+}
+
 
 
