@@ -81,8 +81,8 @@ variable container-port-mappings {
       host : "The port number on your host machine where you want to receive traffic"
     }
     container-port-mappings : "Mapping of ports to and from container"
-    default = [{"host":"80", "to":"container"}]
   EOT
+  default = [{"host":"80", "container":"80"}]
 }
 
 // EB configuration --------------------------------------------------------
