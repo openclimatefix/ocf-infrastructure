@@ -157,6 +157,7 @@ module "airflow" {
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "URL", "value" : var.airflow_url },
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
   ]
 }
 
@@ -179,11 +180,14 @@ module "analysis_dashboard" {
     { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
     { "name" : "REGION", "value": local.domain},
     { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
   ]
   container-name = "analysis-dashboard"
   container-tag  = var.internal_ui_version
   container-registry = "ghcr.io/openclimatefix"
-  container-port = 8501
+  container-port-mappings = [
+    {"host":"80", "container": "8501"},
+  ]
   eb-app_name    = "internal-ui"
   eb-instance_type = "t3.small"
   s3_bucket = [
@@ -303,10 +307,13 @@ module "data_platform_api" {
   container-name = "data-platform"
   container-tag  = var.data_platform_api_version
   container-registry = "ghcr.io/openclimatefix"
-  eb-app_name    = "data-platform-api-v2"
+  eb-app_name    = "data-platform-api"
   eb-instance_type = "t3.micro"
   s3_bucket = []
-  container-host-port = "50051"
-  container-port = "50051"
+  container-port-mappings = [
+    {"host":"50051", "container": "50051"},
+    {"host":"80", "container": "50051"},
+  ]
   elbscheme="internal"
+  elb_ports=["80","50051"]
 }

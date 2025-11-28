@@ -64,16 +64,25 @@ variable container-command {
   description = "Command to run in the container"
 }
 
-variable container-port {
-  type = number
-  description = "Port on which the container listens"
-  default = 80
+variable elb_ports {
+  type = list
+  description = "List of ports for listeners for the load balancer"
+  default = ["80"]
 }
 
-variable container-host-port {
-  type = number
-  description = "Host Port feed to container port"
-  default = 80
+variable container-port-mappings {
+  type = list(object({
+      host = string
+      container = string
+  }))
+  description = <<EOT
+    container-port-mappings = {
+      container : "The port number within the container that's listening for connections"
+      host : "The port number on your host machine where you want to receive traffic"
+    }
+    container-port-mappings : "Mapping of ports to and from container"
+  EOT
+  default = [{"host":"80", "container":"80"}]
 }
 
 // EB configuration --------------------------------------------------------
