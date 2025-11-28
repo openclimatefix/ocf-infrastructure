@@ -190,7 +190,7 @@ module "analysis_dashboard" {
   container-tag      = var.analysis_dashboard_version
   container-registry = "ghcr.io/openclimatefix"
   container-port-mappings = [
-    {"host":"80", "container: "8501"},
+    {"host":"80", "container": "8501"},
   ]
   eb-app_name    = "analysis-dashboard"
   eb-instance_type = "t3.small"

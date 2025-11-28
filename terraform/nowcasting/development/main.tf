@@ -186,7 +186,7 @@ module "analysis_dashboard" {
   container-tag  = var.internal_ui_version
   container-registry = "ghcr.io/openclimatefix"
   container-port-mappings = [
-    {"host":"80", "container: "8501"},
+    {"host":"80", "container": "8501"},
   ]
   eb-app_name    = "internal-ui"
   eb-instance_type = "t3.small"
@@ -311,8 +311,8 @@ module "data_platform_api" {
   eb-instance_type = "t3.micro"
   s3_bucket = []
   container-port-mappings = [
-    {"host":"50051", "container: "50051"},
-    {"host":"80", "container: "50051"},
+    {"host":"50051", "container": "50051"},
+    {"host":"80", "container": "50051"},
   ]
   elbscheme="internal"
   elb_ports=["80","50051"]
