@@ -17,10 +17,11 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 5.1 - PVSite database
 5.2 - PVSite API
 5.3 - PVSite ML bucket
-6.1 - Open Data PVnet
-7.0 - API Open Quartz Solar
+6.1 - Open Data PVnet (dev only)
+7.0 - API Open Quartz Solar (dev only)
 8.0 - Data Platform Database
 8.1 - Data Platform API
+9.0 - Primaries API
 
 Variables used across all modules
 ======*/
@@ -316,4 +317,33 @@ module "data_platform_api" {
   ]
   elbscheme="internal"
   elb_ports=["80","50051"]
+}
+
+
+# 9.0 Primaries API
+module "primaries-api" {
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = local.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.network.public_subnet_ids[0]
+  aws-vpc_id         = module.network.vpc_id
+  container-command  = ["quartzapi"]
+  container-env_vars = [
+    { "name" : "SOURCE", "value" : "dataplatform" },
+    { "name" : "SOURCE", "value" : "dataplatform" },
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
+    { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
+  ]
+  container-name = "quartz-api"
+  container-tag  = var.version-primaries-api
+  container-registry = "ghcr.io/openclimatefix"
+  eb-app_name    = "primaries-api"
+  s3_bucket = []
 }

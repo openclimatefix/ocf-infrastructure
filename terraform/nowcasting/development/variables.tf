@@ -87,3 +87,9 @@ variable "data_platform_api_version" {
   description = "Docker verions for the data platform api"
   default = "update-build-location"
 }
+
+variable "version-primaries-api" {
+  type = string
+  description = "Docker verions for the data primaries api"
+  default = "0.4.0"
+}
