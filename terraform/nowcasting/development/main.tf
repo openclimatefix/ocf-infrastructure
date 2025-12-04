@@ -331,7 +331,7 @@ module "primaries-api" {
   container-command  = ["quartzapi"]
   container-env_vars = [
     { "name" : "SOURCE", "value" : "dataplatform" },
-    { "name" : "SOURCE", "value" : "dataplatform" },
+    { "name" : "ROUTERS", "value" : "substations" },
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
