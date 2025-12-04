@@ -16,6 +16,8 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 5.1 - PVSite database
 5.2 - PVSite API
 5.3 - PVSite ML bucket
+6.0 - Data Platform Database
+6.1 - Data Platform API
 
 Variables used across all modules
 ======*/
@@ -237,3 +239,41 @@ module "pvsite_ml_bucket" {
   lifecycled_prefixes = []
 }
 
+# 6.0 Data Platform - Database
+module "data_platform_database" {
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=23f3802"
+  region                      = var.region
+  environment                 = local.environment
+  db_subnet_group_name        = module.networking.private_subnet_group_name
+  vpc_id                      = module.networking.vpc_id
+  db_name                     = "dataplatform"
+  rds_instance_class          = "db.t3.small"
+  allow_major_version_upgrade = true
+}
+
+# 6.1 Data Platform - API
+module "data_platform_api" {
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=23f3802"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.private_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["/dp-server"]
+  container-env_vars = [
+    { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+  ]
+  container-name = "data-platform"
+  container-tag  = var.data_platform_api_version
+  container-registry = "ghcr.io/openclimatefix"
+  eb-app_name    = "data-platform-api"
+  eb-instance_type = "t3.micro"
+  s3_bucket = []
+  container-port-mappings = [
+    {"host":"50051", "container": "50051"},
+    {"host":"80", "container": "50051"},
+  ]
+  elbscheme="internal"
+  elb_ports=["80","50051"]
+}
