@@ -171,6 +171,7 @@ module "analysis_dashboard" {
     { "name" : "REGION", "value": local.domain},
     { "name" : "ENVIRONMENT", "value": local.environment},
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
   ]
   container-name = "analysis-dashboard" 
   container-tag  = var.internal_ui_version
