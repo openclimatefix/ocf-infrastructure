@@ -88,7 +88,7 @@ variable "data_platform_api_version" {
   default = "update-build-location"
 }
 
-variable "version-api" {
+variable "quartz-api" {
   type = string
   description = "Docker image tag for the quartz api"
   default = "0.3.4"

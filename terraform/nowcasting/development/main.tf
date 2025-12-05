@@ -342,7 +342,7 @@ module "quartz-api" {
     { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
   ]
   container-name = "quartz-api"
-  container-tag  = var.version-api
+  container-tag  = var.quartz-api
   container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "quartz-api"
   s3_bucket = []
