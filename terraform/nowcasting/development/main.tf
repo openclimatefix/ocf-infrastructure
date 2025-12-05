@@ -321,7 +321,7 @@ module "data_platform_api" {
 
 
 # 9.0 Primaries API
-module "primaries-api" {
+module "quartz-api-primaries" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
   aws-region         = var.region
@@ -344,6 +344,6 @@ module "primaries-api" {
   container-name = "quartz-api"
   container-tag  = var.version-primaries-api
   container-registry = "ghcr.io/openclimatefix"
-  eb-app_name    = "primaries-api"
+  eb-app_name    = "quartz-api-primaries"
   s3_bucket = []
 }
