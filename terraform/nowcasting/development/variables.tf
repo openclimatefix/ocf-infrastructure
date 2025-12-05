@@ -91,5 +91,5 @@ variable "data_platform_api_version" {
 variable "version-primaries-api" {
   type = string
   description = "Docker verions for the data primaries api"
-  default = "0.4.0"
+  default = "0.3.4"
 }
