@@ -328,7 +328,7 @@ module "primaries-api" {
   aws-environment    = local.environment
   aws-subnet_id      = module.networking.public_subnet_ids[0]
   aws-vpc_id         = module.networking.vpc_id
-  container-command  = ["quartzapi"]
+  container-command  = ["quartz-api"]
   container-env_vars = [
     { "name" : "SOURCE", "value" : "dataplatform" },
     { "name" : "ROUTERS", "value" : "substations" },
