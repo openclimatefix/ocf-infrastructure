@@ -324,16 +324,16 @@ module "data_platform_api" {
 module "primaries-api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
-  aws-region         = local.region
+  aws-region         = var.region
   aws-environment    = local.environment
-  aws-subnet_id      = module.network.public_subnet_ids[0]
-  aws-vpc_id         = module.network.vpc_id
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
   container-command  = ["quartzapi"]
   container-env_vars = [
     { "name" : "SOURCE", "value" : "dataplatform" },
     { "name" : "ROUTERS", "value" : "substations" },
     { "name" : "PORT", "value" : "80" },
-    { "name" : "DB_URL", "value" : module.postgres-rds.default_db_connection_url },
+    { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
