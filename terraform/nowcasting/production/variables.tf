@@ -70,3 +70,9 @@ variable "airflow_url" {
     description = "The URL for the Airflow instance"
     default     = "not-set"
 }
+
+variable "data_platform_api_version" {
+  type = string
+  description = "Docker verions for the data platform api"
+  default = "0.15.0"
+}
