@@ -93,3 +93,9 @@ variable "quartz-api" {
   description = "Docker image tag for the quartz api"
   default = "0.3.4"
 }
+
+variable "uk-national-quartz-api" {
+  type = string
+  description = "Docker image tag for the uk national quartz api"
+  default = "0.3.4"
+}
