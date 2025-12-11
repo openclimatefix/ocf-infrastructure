@@ -136,7 +136,7 @@ module "uk-national-quartz-api" {
     { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
     # legacy, we shouldnt need this in the future, 
-    # but we might need this for status in the mean time
+    # but we need this for status in the mean time
     { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
   ]
   container-name = "quartz-api"
