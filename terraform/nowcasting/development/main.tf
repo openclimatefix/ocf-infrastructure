@@ -128,7 +128,6 @@ module "uk-national-quartz-api" {
     { "name" : "SOURCE", "value" : "dataplatform" },
     { "name" : "ROUTERS", "value" : "uk_national" },
     { "name" : "PORT", "value" : "80" },
-    { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value": local.environment},
     { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
@@ -136,6 +135,9 @@ module "uk-national-quartz-api" {
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
+    # legacy, we shouldnt need this in the future, 
+    # but we might need this for status in the mean time
+    { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
   ]
   container-name = "quartz-api"
   container-tag  = var.uk-national-quartz-api
