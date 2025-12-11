@@ -129,16 +129,13 @@ module "uk-national-quartz-api" {
     { "name" : "ROUTERS", "value" : "uk_national" },
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
-    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
-    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value": local.environment},
     { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
     { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
-    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
-    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
   ]
   container-name = "quartz-api"
   container-tag  = var.uk-national-quartz-api
