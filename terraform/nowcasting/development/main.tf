@@ -140,7 +140,7 @@ module "uk-national-quartz-api" {
   container-name = "quartz-api"
   container-tag  = var.uk-national-quartz-api
   container-registry = "ghcr.io/openclimatefix"
-  eb-app_name    = "quartz-api"
+  eb-app_name    = "uk-national-quartz-api"
   s3_bucket = []
 }
 
