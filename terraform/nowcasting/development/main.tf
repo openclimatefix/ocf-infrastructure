@@ -115,6 +115,38 @@ module "api" {
   max_ec2_count = 2
 }
 
+# 1.2
+module "uk-national-quartz-api" {
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["quartz-api"]
+  container-env_vars = [
+    { "name" : "SOURCE", "value" : "dataplatform" },
+    { "name" : "ROUTERS", "value" : "uk_national" },
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
+    { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
+    # legacy, we shouldnt need this in the future, 
+    # but we need this for status in the mean time
+    { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
+  ]
+  container-name = "quartz-api"
+  container-tag  = var.uk-national-quartz-api
+  container-registry = "ghcr.io/openclimatefix"
+  eb-app_name    = "uk-national-quartz-api"
+  s3_bucket = []
+}
+
+
 # 2.1
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
   name = "${local.environment}/data/nwp-consumer"
