@@ -367,7 +367,7 @@ module "quartz-api" {
     { "name" : "PORT", "value" : "80" },
     { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
-    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value": local.environment},
     { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
