@@ -99,3 +99,8 @@ variable "uk-national-quartz-api" {
   description = "Docker image tag for the uk national quartz api"
   default = "0.3.4"
 }
+
+variable "apitally_client_id" {
+  description = "The client id for APItally"
+  default = ""
+}
