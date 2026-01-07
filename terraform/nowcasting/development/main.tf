@@ -9,6 +9,7 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 0.5 - S3 bucket for forecasters
 0.6 - Database
 1.1 - API
+1.2 - UK-National API
 2.1 - NWP Consumer Secret
 2.2 - Satellite Consumer Secret
 2.3 - PV Secret
@@ -135,10 +136,12 @@ module "uk-national-quartz-api" {
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
     { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
+    { "name" : "AUTH0_CLIENT_ID", "value": var.auth_client_id},
     { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
     # legacy, we shouldnt need this in the future, 
     # but we need this for status in the mean time
     { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
+    { "name" : "HOST_URL", "value":"http://uk-development-uk-national-quartz-api.eu-west-1.elasticbeanstalk.com"}
   ]
   container-name = "quartz-api"
   container-tag  = var.uk-national-quartz-api
@@ -369,11 +372,13 @@ module "quartz-api" {
     { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_CLIENT_ID", "value": var.auth_client_id},
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value": local.environment},
     { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
     { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
     { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
+    { "name" : "HOST_URL", "value":"http://uk-development-quartz-api.eu-west-1.elasticbeanstalk.com"}
   ]
   container-name = "quartz-api"
   container-tag  = var.quartz-api
