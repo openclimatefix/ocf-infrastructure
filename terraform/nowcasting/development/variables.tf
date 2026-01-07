@@ -38,6 +38,11 @@ variable "airflow_auth_username" {
     default     = "not-set"
 }
 
+variable "auth_client_id" {
+  description = "The Auth client id that should be used"
+  default     = "not-set"
+}
+
 variable "airflow_auth_password" {
     description = "The Auth username for airflow that should be used"
     default     = "not-set"
