@@ -9,6 +9,7 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 0.5 - S3 bucket for forecasters
 0.6 - Database
 1.1 - API
+1.2 - UK-National API
 2.1 - NWP Consumer Secret
 2.2 - Satellite Consumer Secret
 2.3 - PV Secret
@@ -17,10 +18,11 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 5.1 - PVSite database
 5.2 - PVSite API
 5.3 - PVSite ML bucket
-6.1 - Open Data PVnet
-7.0 - API Open Quartz Solar
+6.1 - Open Data PVnet (dev only)
+7.0 - API Open Quartz Solar (dev only)
 8.0 - Data Platform Database
 8.1 - Data Platform API
+9.0 - Primaries API
 
 Variables used across all modules
 ======*/
@@ -100,6 +102,7 @@ module "api" {
     { "name" : "ADJUST_MW_LIMIT", "value" : "1000" },
     { "name" : "N_HISTORY_DAYS", "value" : "2" },
     { "name" : "ENVIRONMENT", "value" : local.environment },
+    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
   ]
   container-name = "nowcasting_api"
   container-tag  = var.api_version
@@ -113,6 +116,41 @@ module "api" {
   min_ec2_count = 2
   max_ec2_count = 2
 }
+
+# 1.2
+module "uk-national-quartz-api" {
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["quartz-api"]
+  container-env_vars = [
+    { "name" : "SOURCE", "value" : "dataplatform" },
+    { "name" : "ROUTERS", "value" : "uk_national" },
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
+    { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
+    { "name" : "AUTH0_CLIENT_ID", "value": var.auth_client_id},
+    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
+    # legacy, we shouldnt need this in the future, 
+    # but we need this for status in the mean time
+    { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
+    { "name" : "HOST_URL", "value":"http://uk-development-uk-national-quartz-api.eu-west-1.elasticbeanstalk.com"}
+  ]
+  container-name = "quartz-api"
+  container-tag  = var.uk-national-quartz-api
+  container-registry = "ghcr.io/openclimatefix"
+  eb-app_name    = "uk-national-quartz-api"
+  s3_bucket = []
+}
+
 
 # 2.1
 resource "aws_secretsmanager_secret" "nwp_consumer_secret" {
@@ -316,4 +354,36 @@ module "data_platform_api" {
   ]
   elbscheme="internal"
   elb_ports=["80","50051"]
+}
+
+
+# 9.0 Primaries API
+module "quartz-api" {
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.networking.public_subnet_ids[0]
+  aws-vpc_id         = module.networking.vpc_id
+  container-command  = ["quartz-api"]
+  container-env_vars = [
+    { "name" : "SOURCE", "value" : "dataplatform" },
+    { "name" : "ROUTERS", "value" : "substations" },
+    { "name" : "PORT", "value" : "80" },
+    { "name" : "DB_URL", "value" : module.database.forecast-database-secret-url },
+    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
+    { "name" : "AUTH0_AUDIENCE", "value" : var.auth_api_audience },
+    { "name" : "AUTH0_CLIENT_ID", "value": var.auth_client_id},
+    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
+    { "name" : "ENVIRONMENT", "value": local.environment},
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
+    { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
+    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
+    { "name" : "HOST_URL", "value":"http://uk-development-quartz-api.eu-west-1.elasticbeanstalk.com"}
+  ]
+  container-name = "quartz-api"
+  container-tag  = var.quartz-api
+  container-registry = "ghcr.io/openclimatefix"
+  eb-app_name    = "quartz-api"
+  s3_bucket = []
 }

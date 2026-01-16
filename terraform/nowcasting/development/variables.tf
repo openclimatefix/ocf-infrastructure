@@ -38,6 +38,11 @@ variable "airflow_auth_username" {
     default     = "not-set"
 }
 
+variable "auth_client_id" {
+  description = "The Auth client id that should be used"
+  default     = "not-set"
+}
+
 variable "airflow_auth_password" {
     description = "The Auth username for airflow that should be used"
     default     = "not-set"
@@ -86,4 +91,21 @@ variable "data_platform_api_version" {
   type = string
   description = "Docker verions for the data platform api"
   default = "update-build-location"
+}
+
+variable "quartz-api" {
+  type = string
+  description = "Docker image tag for the quartz api"
+  default = "0.3.4"
+}
+
+variable "uk-national-quartz-api" {
+  type = string
+  description = "Docker image tag for the uk national quartz api"
+  default = "0.3.4"
+}
+
+variable "apitally_client_id" {
+  description = "The client id for APItally"
+  default = ""
 }
