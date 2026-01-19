@@ -70,3 +70,9 @@ variable "airflow_url" {
     description = "The URL for the Airflow instance"
     default     = "not-set"
 }
+
+
+variable "apitally_client_id" {
+  description = "The client id for APItally"
+  default = ""
+}
