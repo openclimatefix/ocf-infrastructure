@@ -9,7 +9,7 @@ Terraform infrastructure-as-code for cloud environments.
 
 [![ease of contribution: medium](https://img.shields.io/badge/ease%20of%20contribution:%20medium-f4900c)](https://github.com/openclimatefix/ocf-meta-repo?tab=readme-ov-file#how-easy-is-it-to-get-involved)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
   <a href="https://app.terraform.io/app/openclimatefix/workspaces" alt="Terraform Cloud">
@@ -35,16 +35,18 @@ folders within the `terraform` directory, along with reusable modules and unitte
 ocf-infrastructure:
   terraform: # Contains all the terraform code for OCF's cloud infrastructure
     modules: # Portable terraform modules defining specific cloud infrastructure blocks
-    nowcasting: # Specific code for the nowcasting domain's cloud infrastructure
-    pvsite: # Specific code for the nowcasting domain's cloud infrastruture
+    nowcasting: # Specific code for the nowcasting domain's cloud infrastructure (includes PV site services)
+      development: # Development environment configuration
+      production: # Production environment configuration
+    india: # India-specific infrastructure
     unittests: # Specific infrastructure code for a environment to test the modules
   local-stack: # Code to run the terraform stack locally for local testing/development
   .github: # Contains github-specific code for automated CI workflows
 ```
 
 See the README's in the domain folders for more information on their architecture:
-- [Nowcasting Domain](terraform/nowcasting/README.md)
-- [PVSite Domain](terraform/pvsite/README.md)
+- [Nowcasting Domain (Development)](terraform/nowcasting/development/README.md)
+- [Nowcasting Domain (Production)](terraform/nowcasting/production/README.md)
 - [Modules](terraform/modules/README.md)
 
 
@@ -93,6 +95,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/felix-se-cat"><img src="https://avatars.githubusercontent.com/u/145403025?v=4?s=100" width="100px;" alt="Felix"/><br /><sub><b>Felix</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=felix-se-cat" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Pradyumn-cloud"><img src="https://avatars.githubusercontent.com/u/183612033?v=4?s=100" width="100px;" alt="Pradyumn Prasad"/><br /><sub><b>Pradyumn Prasad</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=Pradyumn-cloud" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vedantvakharia"><img src="https://avatars.githubusercontent.com/u/180512004?v=4?s=100" width="100px;" alt="Vedant Vakharia"/><br /><sub><b>Vedant Vakharia</b></sub></a><br /><a href="https://github.com/openclimatefix/ocf-infrastructure/commits?author=vedantvakharia" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>

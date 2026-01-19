@@ -149,6 +149,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "vedantvakharia",
+      "name": "Vedant Vakharia",
+      "avatar_url": "https://avatars.githubusercontent.com/u/180512004?v=4",
+      "profile": "https://github.com/vedantvakharia",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
