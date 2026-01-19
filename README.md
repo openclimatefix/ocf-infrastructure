@@ -35,16 +35,18 @@ folders within the `terraform` directory, along with reusable modules and unitte
 ocf-infrastructure:
   terraform: # Contains all the terraform code for OCF's cloud infrastructure
     modules: # Portable terraform modules defining specific cloud infrastructure blocks
-    nowcasting: # Specific code for the nowcasting domain's cloud infrastructure
-    pvsite: # Specific code for the nowcasting domain's cloud infrastruture
+    nowcasting: # Specific code for the nowcasting domain's cloud infrastructure (includes PV site services)
+      development: # Development environment configuration
+      production: # Production environment configuration
+    india: # India-specific infrastructure
     unittests: # Specific infrastructure code for a environment to test the modules
   local-stack: # Code to run the terraform stack locally for local testing/development
   .github: # Contains github-specific code for automated CI workflows
 ```
 
 See the README's in the domain folders for more information on their architecture:
-- [Nowcasting Domain](terraform/nowcasting/README.md)
-- [PVSite Domain](terraform/pvsite/README.md)
+- [Nowcasting Domain (Development)](terraform/nowcasting/development/README.md)
+- [Nowcasting Domain (Production)](terraform/nowcasting/production/README.md)
 - [Modules](terraform/modules/README.md)
 
 
