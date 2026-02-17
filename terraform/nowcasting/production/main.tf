@@ -150,6 +150,7 @@ module "airflow" {
     { "name" : "LOGLEVEL", "value" : "INFO" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn },
     { "name" : "URL", "value" : var.airflow_url },
+    { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
   ]
 }
 
