@@ -308,7 +308,7 @@ module "open_quartz_solar" {
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value" : "development" },
     { "name" : "APITALLY_ENVIRONMENT", "value" : "open-quartz-development"},
-    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
+    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_open_quartz_client_id},
   ]
   container-name = "open-source-quartz-solar-forecast"
   container-tag  = var.open_quartz_solar
