@@ -109,3 +109,8 @@ variable "apitally_client_id" {
   description = "The client id for APItally"
   default = ""
 }
+
+variable "apitally_open_quartz_client_id" {
+  description = "The client id for APItally for open quartz"
+  default = ""
+}
