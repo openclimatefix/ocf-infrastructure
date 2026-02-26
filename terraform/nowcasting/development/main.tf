@@ -307,6 +307,8 @@ module "open_quartz_solar" {
     { "name" : "ORIGINS", "value" : "*" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value" : "development" },
+    { "name" : "APITALLY_ENVIRONMENT", "value" : "open-quartz-development"},
+    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_open_quartz_client_id},
   ]
   container-name = "open-source-quartz-solar-forecast"
   container-tag  = var.open_quartz_solar
@@ -327,6 +329,7 @@ module "data_platform_database" {
   db_name                     = "dataplatform"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
+  engine_version = "18.2"
 }
 
 # 8.1 Data Platform - API

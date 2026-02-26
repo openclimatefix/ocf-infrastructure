@@ -252,6 +252,7 @@ module "data_platform_database" {
   db_name                     = "dataplatform"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
+  engine_version = "17.4"
 }
 
 # 6.1 Data Platform - API

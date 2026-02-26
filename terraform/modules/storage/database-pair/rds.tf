@@ -2,7 +2,7 @@
 
 resource "aws_db_instance" "db-forecast" {
   allocated_storage            = 150
-  max_allocated_storage        = 500
+  max_allocated_storage        = 700
   engine                       = "postgres"
   engine_version               = var.engine_version
   instance_class               = "db.t3.medium"
