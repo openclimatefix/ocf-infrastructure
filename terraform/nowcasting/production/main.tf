@@ -320,7 +320,7 @@ module "data_platform_api" {
 
 
 # 7.0 Primaries API
-module "quartz-api" {
+module "uk-primaries-quartz-api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
   aws-region         = var.region
