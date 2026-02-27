@@ -88,7 +88,7 @@ variable "uk-national-quartz-api" {
   default = "0.4.4"
 }
 
-variable "quartz-api" {
+variable "uk-primaries-quartz-api" {
   type = string
   description = "Docker image tag for the quartz api"
   default = "0.3.27"
