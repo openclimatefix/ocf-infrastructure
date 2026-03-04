@@ -341,7 +341,7 @@ module "uk-primaries-quartz-api" {
     { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
     { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
     { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
-    { "name" : "HOST_URL", "value":"http://uk-development-quartz-api.eu-west-1.elasticbeanstalk.com"}
+    { "name" : "HOST_URL", "value":"https://ukpn-api.quartz.solar"}
   ]
   container-name = "quartz-api"
   container-tag  = var.uk-primaries-quartz-api
