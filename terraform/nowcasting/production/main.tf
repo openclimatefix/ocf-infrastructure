@@ -19,7 +19,7 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 5.3 - PVSite ML bucket
 6.0 - Data Platform Database
 6.1 - Data Platform API
-9.0 - Primaries API
+7.0 - Primaries API
 
 Variables used across all modules
 ======*/
@@ -341,7 +341,7 @@ module "uk-primaries-quartz-api" {
     { "name" : "DATA_PLATFORM_HOST", "value": module.data_platform_api.api_url}, 
     { "name" : "DATA_PLATFORM_PORT", "value": "50051"}, 
     { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
-    { "name" : "HOST_URL", "value":"http://uk-development-quartz-api.eu-west-1.elasticbeanstalk.com"}
+    { "name" : "HOST_URL", "value":"http://uk-production-quartz-api.eu-west-1.elasticbeanstalk.com"}
   ]
   container-name = "quartz-api"
   container-tag  = var.uk-primaries-quartz-api
