@@ -14,6 +14,8 @@
 # 5.0 - India API EB Instance
 # 5.1 - India Analysis Dashboard
 # 6.0 - Development group
+# 7.0 - Data Platform Database
+# 7.1 - Data Platform API
 
 locals {
   environment = "development"
@@ -205,4 +207,44 @@ module "analysis_dashboard" {
 module "developer_group" {
   source = "../../modules/user_groups"
   region = var.region
+}
+
+# 7.0 Data Platform - Database
+module "data_platform_database" {
+  source = "../../modules/storage/postgres"
+  region                      = var.region
+  environment                 = local.environment
+  db_subnet_group_name        = module.network.private_subnet_group_name
+  vpc_id                      = module.network.vpc_id
+  db_name                     = "dataplatform"
+  rds_instance_class          = "db.t3.small"
+  allow_major_version_upgrade = true
+  engine_version = "17.4"
+}
+
+# 7.1 Data Platform - API
+module "data_platform_api" {
+  source             = "../../modules/services/eb_app"
+  domain             = local.domain
+  aws-region         = var.region
+  aws-environment    = local.environment
+  aws-subnet_id      = module.network.private_subnet_ids[0]
+  aws-vpc_id         = module.network.vpc_id
+  container-command  = ["/dp-server"]
+  container-env_vars = [
+    { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
+    { "name" : "LOGLEVEL", "value" : "DEBUG" },
+  ]
+  container-name = "data-platform"
+  container-tag  = var.data_platform_api_version
+  container-registry = "ghcr.io/openclimatefix"
+  eb-app_name    = "data-platform-api"
+  eb-instance_type = "t3.micro"
+  s3_bucket = []
+  container-port-mappings = [
+    {"host":"50051", "container": "50051"},
+    {"host":"80", "container": "50051"},
+  ]
+  elbscheme="internal"
+  elb_ports=["80","50051"]
 }
