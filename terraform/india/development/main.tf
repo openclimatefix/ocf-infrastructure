@@ -214,8 +214,8 @@ module "data_platform_database" {
   source = "../../modules/storage/postgres"
   region                      = var.region
   environment                 = local.environment
-  db_subnet_group_name        = module.networking.private_subnet_group_name
-  vpc_id                      = module.networking.vpc_id
+  db_subnet_group_name        = module.network.private_subnet_group_name
+  vpc_id                      = module.network.vpc_id
   db_name                     = "dataplatform"
   rds_instance_class          = "db.t3.small"
   allow_major_version_upgrade = true
@@ -228,8 +228,8 @@ module "data_platform_api" {
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
-  aws-subnet_id      = module.networking.private_subnet_ids[0]
-  aws-vpc_id         = module.networking.vpc_id
+  aws-subnet_id      = module.network.private_subnet_ids[0]
+  aws-vpc_id         = module.network.vpc_id
   container-command  = ["/dp-server"]
   container-env_vars = [
     { "name" : "DATABASE_URL", "value" : module.data_platform_database.default_db_connection_url },
