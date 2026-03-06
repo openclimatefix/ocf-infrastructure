@@ -30,3 +30,5 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDP8S/3KanshwQvlwYhul0x5rV6uHuB95irWB
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDRHZ+upEeb1wj/t0GU8OPSUhYT2/452N81h3QiWby6oF6VJvmdiTOLfZRMA/mZcbUs3/qK+aygiaCS+dXhwGguVDf0ZgEhrUN482RrMb1YIZ5GdXfI0Jm2W18eN4n1uY16nO5tk4aSWQK6KN7iQyf++Co/83G4v31XMl4Md0xVX5NoMS9Wnb1ydvwh03EUTGzySWHD3IfAhYm8nQLN4swzKe4H2H0znE6sRUPSYPqJ0Hahg9yykB0RHBHnRxvZs7RbX3E9ZYCR/0Rloi6x/wrALg78TRML5ybVviqdQDPxRD8UEr75WXTYedyX+cXK/2ZHkS4SONwIyjwXiVduLxIouJHZtsMh+GPovA5y9O7p/hhWlbF13vaH+wSd2gLdwNOeoCJV3VzsCWXd6tmJMV4bCXgghT2Fj3Q2rjayZePIyaq/DCOC3/t8T7iTcu2TgvVnJ4vEJoesMR+Izgn6SqZd0qzD+o9xAe4F2wK5ZzQFgXV+02eFsB3SMJk81E+Gzik=" >> /home/ec2-user/.ssh/authorized_keys
 # Pavan
 echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP0hRna5TUXC8+ymGxMcgyLQI8xA/LEG0OUKnEDNupat pavan@openclimatefix.org" >> /home/ec2-user/.ssh/authorized_keys
+# Mohit
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHdoRiiL33eTCoOWHBwnbvI+MPQSjGsjIb/ZWDU7tFHx mohitkatyal@mac" >> /home/ec2-user/.ssh/authorized_keys
