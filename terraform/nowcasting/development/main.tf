@@ -361,7 +361,7 @@ module "data_platform_api" {
 
 
 # 9.0 Primaries API
-module "quartz-api" {
+module "uk-primaries-quartz-api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
   aws-region         = var.region
@@ -385,7 +385,7 @@ module "quartz-api" {
     { "name" : "HOST_URL", "value":"http://uk-development-quartz-api.eu-west-1.elasticbeanstalk.com"}
   ]
   container-name = "quartz-api"
-  container-tag  = var.quartz-api
+  container-tag  = var.uk-primaries-quartz-api
   container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "quartz-api"
   s3_bucket = []
