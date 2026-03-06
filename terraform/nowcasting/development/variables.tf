@@ -96,7 +96,7 @@ variable "data_platform_api_version" {
 variable "uk-primaries-quartz-api" {
   type = string
   description = "Docker image tag for the quartz api"
-  default = "0.3.4"
+  default = "0.3.27"
 }
 
 variable "uk-national-quartz-api" {
