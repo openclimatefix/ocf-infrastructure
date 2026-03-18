@@ -1,7 +1,7 @@
 # IAM policy for reading rds secret
 
 resource "aws_iam_policy" "rds-secret-iam-policy" {
-  name        = "${var.db_name}-rds-secret-policy"
+  name        = "${var.db_name}-rds-secret-policy-${var.region}"
   path        = "/rds/"
   description = "Read access to RDS secret, in order to connect to database"
 
