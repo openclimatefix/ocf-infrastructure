@@ -197,7 +197,7 @@ module "analysis_dashboard" {
 
 # 6.0 Data Platform - Database
 module "data_platform_database" {
-  source = "../../modules/storage/postgres"
+  source                      = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=98f486d"
   region                      = var.region
   environment                 = local.environment
   db_subnet_group_name        = module.network.private_subnet_group_name
@@ -210,7 +210,7 @@ module "data_platform_database" {
 
 # 6.1 Data Platform - API
 module "data_platform_api" {
-  source             = "../../modules/services/eb_app"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=98f486d"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
