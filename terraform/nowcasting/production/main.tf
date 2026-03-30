@@ -145,6 +145,7 @@ module "uk-national-quartz-api" {
   container-tag  = var.uk-national-quartz-api
   container-registry = "ghcr.io/openclimatefix"
   eb-app_name    = "uk-national-quartz-api"
+  eb-instance_type = "t3.medium"
   s3_bucket = []
 }
 
