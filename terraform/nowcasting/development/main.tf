@@ -8,8 +8,7 @@ This is the main terraform code for the UK platform. It is used to deploy the pl
 0.4 - ECS cluster
 0.5 - S3 bucket for forecasters
 0.6 - Database
-1.1 - API
-1.2 - UK-National API
+1.1 - UK-National API
 2.1 - NWP Consumer Secret
 2.2 - Satellite Consumer Secret
 2.3 - PV Secret
@@ -82,42 +81,8 @@ module "database" {
   vpc_id               = module.networking.vpc_id
 }
 
-# 1.1
-module "api" {
-  source             = "../../modules/services/eb_app"
-  domain             = local.domain
-  aws-region         = var.region
-  aws-environment    = local.environment
-  aws-subnet_id      = module.networking.public_subnet_ids[0]
-  aws-vpc_id         = module.networking.vpc_id
-  container-command  = ["uvicorn", "nowcasting_api.main:app", "--host", "0.0.0.0", "--port", "80"]
-  container-env_vars = [
-    { "name" : "DB_URL", "value" :  module.database.forecast-database-secret-url},
-    { "name" : "ORIGINS", "value" : "*" },
-    { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
-    { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
-    { "name" : "AUTH0_API_AUDIENCE", "value" : var.auth_api_audience },
-    { "name" : "AUTH0_RULE_NAMESPACE", "value" : "https://openclimatefix.org"},
-    { "name" : "AUTH0_CLIENT_ID", "value" : var.auth_dashboard_client_id },
-    { "name" : "ADJUST_MW_LIMIT", "value" : "1000" },
-    { "name" : "N_HISTORY_DAYS", "value" : "2" },
-    { "name" : "ENVIRONMENT", "value" : local.environment },
-    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
-  ]
-  container-name = "nowcasting_api"
-  container-tag  = var.api_version
-  container-registry = "openclimatefix"
-  eb-app_name    = "nowcasting-api"
-  eb-instance_type = "t3.small"
-  s3_bucket = [
-    { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
-    { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn }
-  ]
-  min_ec2_count = 2
-  max_ec2_count = 2
-}
 
-# 1.2
+# 1.1
 module "uk-national-quartz-api" {
   source             = "../../modules/services/eb_app"
   domain             = local.domain
