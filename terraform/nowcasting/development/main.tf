@@ -193,7 +193,7 @@ module "analysis_dashboard" {
     {"host":"80", "container": "8501"},
   ]
   eb-app_name    = "internal-ui"
-  eb-instance_type = "t3.small"
+  eb-instance_type = "t3.medium"
   s3_bucket = [
     { bucket_read_policy_arn = module.s3.iam-policy-s3-nwp-read.arn },
     { bucket_read_policy_arn = module.s3.iam-policy-s3-sat-read.arn },
