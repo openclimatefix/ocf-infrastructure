@@ -80,7 +80,7 @@ module "database" {
 
 # 1.1
 module "uk-national-quartz-api" {
-  source             = "../../modules/services/eb_app"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=742b07c"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
@@ -286,7 +286,7 @@ module "data_platform_api" {
 
 # 7.0 Primaries API
 module "uk-primaries-quartz-api" {
-  source             = "../../modules/services/eb_app"
+  source             = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/services/eb_app?ref=742b07c"
   domain             = local.domain
   aws-region         = var.region
   aws-environment    = local.environment
