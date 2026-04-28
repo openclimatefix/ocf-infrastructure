@@ -245,7 +245,7 @@ module "pvsite_ml_bucket" {
 
 # 6.0 Data Platform - Database
 module "data_platform_database" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=23f3802"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/storage/postgres?ref=742b07c"
   region                      = var.region
   environment                 = local.environment
   db_subnet_group_name        = module.networking.private_subnet_group_name
