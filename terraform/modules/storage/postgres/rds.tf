@@ -43,4 +43,9 @@ resource "aws_db_parameter_group" "parameter-group" {
     value = "1.1"
   }
 
+  parameter {
+    name  = "shared_preload_libraries"
+    value = "pg_stat_statements,pg_tle,pg_cron"
+  }
+
 }
