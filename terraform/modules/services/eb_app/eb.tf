@@ -31,7 +31,7 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "RootVolumeType"
-    value     = "gp2"
+    value     = "gp3"
     resource  = ""
   }
 
