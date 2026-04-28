@@ -28,6 +28,20 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     resource  = ""
   }
 
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "RootVolumeType"
+    value     = "gp2"
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "RootVolumeSize"
+    value     = "32"
+    resource  = ""
+  }
+
   # the next line IS NOT RANDOM,
   # see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html
   solution_stack_name = "64bit Amazon Linux 2 v3.8.0 running Docker"
