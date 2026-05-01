@@ -225,6 +225,8 @@ module "pvsite_api" {
     { "name" : "AUTH0_DOMAIN", "value" : var.auth_domain },
     { "name" : "AUTH0_ALGORITHM", "value" : "RS256" },
     { "name" : "ENVIRONMENT", "value" : "production" },
+    { "name" : "APITALLY_CLIENT_ID", "value" : var.apitally_client_id},
+    { "name" : "APITALLY_ENVIRONMENT", "value" : "uk-sites-production" },
   ]
   container-name = "nowcasting_site_api"
   container-tag  = var.pvsite_api_version
