@@ -93,7 +93,7 @@ module "uk-national-quartz-api" {
   container-command  = ["quartz-api"]
   container-env_vars = [
     { "name" : "SOURCE", "value" : "dataplatform" },
-    { "name" : "ROUTERS", "value" : "uk_national" },
+    { "name" : "ROUTERS", "value" : "uk_national,v1" },
     { "name" : "PORT", "value" : "80" },
     { "name" : "SENTRY_DSN", "value" : var.sentry_dsn_api },
     { "name" : "ENVIRONMENT", "value": local.environment},
