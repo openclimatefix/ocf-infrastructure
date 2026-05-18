@@ -47,7 +47,7 @@ module "postgres-rds" {
 
 # 1.2
 module "ec2-bastion" {
-  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=9f9d856"
+  source = "github.com/openclimatefix/ocf-infrastructure//terraform/modules/networking/ec2_bastion?ref=46c312d"
   region            = local.region
   vpc_id            = module.network.vpc_id
   public_subnets_id = module.network.public_subnet_ids[0]
